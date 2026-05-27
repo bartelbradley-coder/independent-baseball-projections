@@ -56,22 +56,6 @@
 .yest-pnl.neg { color: var(--red); }
 .yest-clv { font-size: 9px; color: var(--text-4); min-width: 44px; text-align: right; }
 
-/* Follow CTA */
-.follow-cta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: rgba(29,161,242,0.07);
-  border: 1px solid rgba(29,161,242,0.2);
-  border-radius: 10px;
-  padding: 14px 20px;
-  margin-top: 12px;
-  text-decoration: none;
-}
-.follow-cta:hover { background: rgba(29,161,242,0.12); }
-.follow-cta-text { font-size: 13px; color: #60b4f0; font-weight: 500; }
-.follow-cta-handle { font-family: 'Oswald', sans-serif; font-size: 15px; color: #93c5fd; font-weight: 700; letter-spacing: 0.04em; }
 </style>
 </head>
 <body>
@@ -89,7 +73,6 @@
   </div>
   <div class="nav-right">
     <span class="nav-updated" id="last-updated">—</span>
-    <a class="nav-twitter" href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
   </div>
 </nav>
 
@@ -127,7 +110,7 @@
 <footer>
   FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 18 Log-Odds Adjustments + Platt Calibration<br>
   For informational purposes only. Gambling involves risk — never bet more than you can afford to lose. Past model performance does not guarantee future results. 18+ only.<br>
-  <a href="model.html">Model Overview</a> · <a href="performance.html">Performance</a> · <a href="history.html">Pick History</a> · <a href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
+  <a href="model.html">Model Overview</a> · <a href="performance.html">Performance</a> · <a href="history.html">Pick History</a>
 </footer>
 
 <script>
@@ -182,14 +165,10 @@ function renderEmptyState(data) {
     <div class="no-picks-yet">
       <div class="np-icon">⏰</div>
       <div class="np-title">Picks Posted by 9:30 AM PT</div>
-      <div class="np-sub">The model runs each morning after lineups and odds are available.<br>Follow <strong>@FairLineMLB</strong> on X for pick alerts.</div>
+      <div class="np-sub">The model runs each morning after lineups and odds are available.<br>Check back after 9:30 AM Pacific Time.</div>
       ${yestHTML}
       ${stripHTML}
-    </div>
-    <a class="follow-cta" href="https://twitter.com/FairLineMLB" target="_blank">
-      <span class="follow-cta-text">Get notified when picks drop →</span>
-      <span class="follow-cta-handle">@FairLineMLB</span>
-    </a>`;
+    </div>`;
 }
 
 function formatOdds(ml) {
@@ -321,11 +300,7 @@ function render(data) {
   } else {
     const gridClass = main.length === 1 ? 'pick-grid single-pick' : 'pick-grid';
     document.getElementById('picks-container').innerHTML =
-      `<div class="${gridClass}">` + main.map(pickCardHTML).join('') + '</div>' +
-      `<a class="follow-cta" href="https://twitter.com/FairLineMLB" target="_blank" style="margin-top:16px">
-        <span class="follow-cta-text">Follow for live pick alerts →</span>
-        <span class="follow-cta-handle">@FairLineMLB</span>
-      </a>`;
+      `<div class="${gridClass}">` + main.map(pickCardHTML).join('') + '</div>';
   }
 
   // Marginal picks
