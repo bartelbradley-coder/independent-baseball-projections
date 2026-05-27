@@ -166,6 +166,13 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 .calib-pct    { font-size:9px; font-weight:600; color:var(--text-2); }
 .calib-n      { font-size:8px; color:var(--text-4); }
 
+/* Rolling win rate chart */
+.rolling-chart-wrap { position: relative; }
+
+/* Edge bucket bar chart */
+.edge-bar-row { margin-bottom: 9px; }
+.edge-bar-row:last-child { margin-bottom: 0; }
+
 /* Calendar heatmap */
 .calendar-wrap { display:flex; gap:3px; overflow-x:auto; padding-bottom:4px; }
 .cal-week { display:flex; flex-direction:column; gap:3px; }
@@ -212,6 +219,14 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
     <div class="sec-lbl">Cumulative P&amp;L Curve — 2026 Season</div>
     <div class="card" style="padding:16px 20px">
       <div class="pnl-curve-wrap" id="pnl-curve"><div class="loading" style="padding:20px">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- Rolling Win Rate Chart -->
+  <div class="section" id="rolling-section" style="display:none">
+    <div class="sec-lbl">Rolling 20-Pick Win Rate</div>
+    <div class="card" style="padding:16px 20px">
+      <div id="rolling-chart"></div>
     </div>
   </div>
 
@@ -263,6 +278,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
       <div class="card">
         <div class="card-title">⚡ Edge Tier Performance</div>
         <div class="card-sub">2026 season · win rate and ROI by model edge</div>
+        <div id="edge-bars" style="margin-bottom:14px"></div>
         <table class="edge-table" id="edge-table">
           <thead><tr><th>Tier</th><th>Bets</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
           <tbody id="edge-tbody"><tr><td colspan="6" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
@@ -371,6 +387,12 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
       <button class="filter-btn" data-filter="strong">8%+ Edge</button>
       <button class="filter-btn" data-filter="value">5–8% Edge</button>
       <div class="filter-sep"></div>
+      <button class="filter-btn" data-filter="dog">🐶 Dogs</button>
+      <button class="filter-btn" data-filter="fav">Favs</button>
+      <div class="filter-sep"></div>
+      <button class="filter-btn" data-filter="home">Home</button>
+      <button class="filter-btn" data-filter="away">Away</button>
+      <div class="filter-sep"></div>
       <input class="search-input" id="search-input" type="text" placeholder="🔍 Team or pitcher…" autocomplete="off">
     </div>
 
@@ -421,6 +443,7 @@ async function loadAll() {
 
     renderSummary(allRows);
     renderCurve((h && h.pnl_curve) ? h.pnl_curve : []);
+    renderRollingWinRate(allRows);
     renderBreakdowns(allRows);
     renderCalibration(allRows);
     renderCalendar(allRows);
@@ -527,6 +550,24 @@ function renderClv(p) {
 function renderEdgeTiers(p) {
   const tiers = (p && p.edge_tiers) ? p.edge_tiers : [];
   if (tiers.length > 0) {
+    // Visual bar chart above the table
+    const maxAbsRoi = Math.max(...tiers.map(t => Math.abs(t.roi || 0)), 0.01);
+    document.getElementById('edge-bars').innerHTML = tiers.map(t => {
+      const barW  = Math.min(100, (Math.abs(t.roi || 0) / maxAbsRoi) * 100).toFixed(0);
+      const col   = (t.roi || 0) >= 0 ? 'var(--green)' : 'var(--red)';
+      const roiStr = ((t.roi || 0) >= 0 ? '+' : '') + ((t.roi || 0) * 100).toFixed(1) + '%';
+      return `<div class="edge-bar-row">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;font-size:10px">
+          <span style="color:var(--text-3);font-weight:600">${t.label}</span>
+          <span style="font-family:'JetBrains Mono',monospace;color:${col};font-weight:700">${roiStr} ROI</span>
+        </div>
+        <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:100px;overflow:hidden">
+          <div style="height:100%;width:${barW}%;background:${col};border-radius:100px;transition:width 0.4s"></div>
+        </div>
+        <div style="font-size:9px;color:var(--text-4);margin-top:2px">${t.wins}W–${t.losses}L · ${(t.win_rate*100).toFixed(1)}% win rate · ${t.bets} bets</div>
+      </div>`;
+    }).join('');
+
     document.getElementById('edge-tbody').innerHTML = tiers.map(t => `
       <tr>
         <td><span class="edge-tier-badge ${t.class||'et-all'}">${t.label}</span></td>
@@ -582,7 +623,11 @@ function getFilteredSorted(rows) {
   if (activeFilter === 'W') r = r.filter(x => x.result === 'W');
   else if (activeFilter === 'L') r = r.filter(x => x.result === 'L');
   else if (activeFilter === 'strong') r = r.filter(x => x.edge != null && x.edge >= 0.08);
-  else if (activeFilter === 'value') r = r.filter(x => x.edge != null && x.edge >= 0.05 && x.edge < 0.08);
+  else if (activeFilter === 'value')  r = r.filter(x => x.edge != null && x.edge >= 0.05 && x.edge < 0.08);
+  else if (activeFilter === 'dog')    r = r.filter(x => x.odds != null && x.odds > 0);
+  else if (activeFilter === 'fav')    r = r.filter(x => x.odds != null && x.odds <= 0);
+  else if (activeFilter === 'home')   r = r.filter(x => x.side && x.side.toUpperCase() === 'HOME');
+  else if (activeFilter === 'away')   r = r.filter(x => x.side && x.side.toUpperCase() === 'AWAY');
   if (activeMonth !== 'all') r = r.filter(x => x.date && x.date.slice(0,7) === activeMonth);
   if (activeSearch) {
     const q = activeSearch.toLowerCase();
@@ -671,6 +716,57 @@ function renderTable(rows) {
       renderTable(allRows);
     });
   });
+}
+
+// ── Rolling 20-pick win rate chart ───────────────────────────────────────────
+function renderRollingWinRate(rows) {
+  const WINDOW = 20;
+  const settled = rows
+    .filter(r => r.result === 'W' || r.result === 'L')
+    .sort((a, b) => a.date.localeCompare(b.date));
+  if (settled.length < WINDOW + 3) return;
+  document.getElementById('rolling-section').style.display = 'block';
+
+  const rates = [];
+  for (let i = WINDOW - 1; i < settled.length; i++) {
+    const wins = settled.slice(i - WINDOW + 1, i + 1).filter(r => r.result === 'W').length;
+    rates.push(wins / WINDOW);
+  }
+
+  const W = 800, H = 80, padT = 8, padB = 8, innerH = H - padT - padB;
+  const minV = 0.30, maxV = 0.75, range = maxV - minV;
+  const xFor = i => (i / Math.max(rates.length - 1, 1)) * W;
+  const yFor = v => padT + innerH * (1 - (v - minV) / range);
+
+  const BREAK_EVEN = 0.524;
+  const beY   = yFor(BREAK_EVEN).toFixed(1);
+  const lastV = rates[rates.length - 1];
+  const col   = lastV >= BREAK_EVEN ? 'var(--green)' : 'var(--red)';
+  const pts   = rates.map((v, i) => `${xFor(i).toFixed(1)},${yFor(v).toFixed(1)}`).join(' ');
+
+  const gridLines = [0.40, 0.50, 0.60, 0.70].map(v =>
+    `<line x1="0" y1="${yFor(v).toFixed(1)}" x2="${W}" y2="${yFor(v).toFixed(1)}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`)
+    .join('');
+
+  // Shaded area between line and break-even
+  const areaCol = lastV >= BREAK_EVEN ? 'rgba(34,197,94,0.07)' : 'rgba(239,68,68,0.07)';
+  const firstX = xFor(0).toFixed(1), lastX = xFor(rates.length - 1).toFixed(1);
+  const areaPath = `M${firstX},${yFor(rates[0]).toFixed(1)} ` +
+    rates.slice(1).map((v, i) => `L${xFor(i+1).toFixed(1)},${yFor(v).toFixed(1)}`).join(' ') +
+    ` L${lastX},${beY} L${firstX},${beY} Z`;
+
+  document.getElementById('rolling-chart').innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:80px">
+      ${gridLines}
+      <line x1="0" y1="${beY}" x2="${W}" y2="${beY}" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="5 3"/>
+      <path d="${areaPath}" fill="${areaCol}"/>
+      <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${lastX}" cy="${yFor(lastV).toFixed(1)}" r="3.5" fill="${col}"/>
+    </svg>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:10px;color:var(--text-4);flex-wrap:wrap;gap:6px">
+      <span>Rolling ${WINDOW}-pick window · ${rates.length} data points · dashed line = ~52.4% break-even</span>
+      <span>Current: <strong style="color:${col}">${(lastV*100).toFixed(1)}%</strong> win rate</span>
+    </div>`;
 }
 
 // ── Streak + Breakdowns (#4) ─────────────────────────────────────────────────

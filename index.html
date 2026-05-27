@@ -343,7 +343,9 @@
 
 /* ── Mobile: compact pick card ── */
 @media (max-width: 520px) {
-  .prob-compare { display: none; }
+  .prob-compare { gap: 3px; margin: 8px 0 10px; }
+  .prob-label { font-size: 8px; width: 32px; }
+  .prob-val { font-size: 10px; width: 60px; }
   .book-odds-row { flex-wrap: wrap; gap: 5px; padding: 6px 10px; }
   .bor-books { gap: 8px; }
   .bor-shop { margin-left: 0; margin-top: 2px; }
@@ -356,6 +358,31 @@
   .share-btn { display: none; } /* show only on desktop */
   .top-pick-banner { font-size: 8px; }
 }
+
+/* ── Stale / completed card ── */
+.pick-card.card-stale { opacity: 0.62; }
+
+/* ── Historical context chip ── */
+.hist-context {
+  font-size: 10px; color: var(--text-3); line-height: 1.55;
+  margin: 0 0 10px; padding: 6px 11px;
+  background: rgba(99,102,241,0.07);
+  border: 1px solid rgba(99,102,241,0.18); border-radius: 6px;
+}
+.hist-context strong { color: var(--indigo-lt); }
+
+/* ── Posted-before-pitch badge ── */
+.before-pitch {
+  font-size: 9px; color: var(--text-4);
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 4px; padding: 1px 6px;
+  display: inline-flex; align-items: center; gap: 3px; white-space: nowrap;
+}
+
+/* ── Countdown chip ── */
+.countdown-chip { transition: color 0.3s; }
+.countdown-chip.starting-soon { color: var(--amber) !important; }
+.countdown-chip.game-over { color: var(--text-4) !important; opacity: 0.6; }
 
 /* ── Pick card redesign ── */
 .matchup-teams { display: flex; align-items: baseline; gap: 7px; margin-bottom: 3px; flex-wrap: wrap; }
@@ -571,6 +598,8 @@ const picksMap = {};
 let _unitSize = parseFloat(localStorage.getItem('fairline_unit_size') || '0');
 let _histRef  = null; // history data reference for tracker result lookup
 let _mainPicksRef = []; // today's main picks for share-all
+let _histContextFn = null;      // set in render() — returns hist-context HTML for a pick
+let _countdownTimerStarted = false;
 
 // ── Share on X/Twitter ────────────────────────────────────────────────────────
 function shareOnX(id) {
@@ -647,6 +676,14 @@ function isLiveGame(p) {
   if (isNaN(start)) return false;
   const now   = Date.now();
   return now > start && now < start + 3.5 * 60 * 60 * 1000;
+}
+
+// ── Is game finished? (>3.5h past start) ─────────────────────────────────────
+function isGameOver(p) {
+  if (!p.game_time) return false;
+  const start = new Date(p.game_time).getTime();
+  if (isNaN(start)) return false;
+  return Date.now() > start + 3.5 * 60 * 60 * 1000;
 }
 
 // ── Mini sparkline SVG ────────────────────────────────────────────────────────
@@ -853,6 +890,45 @@ function formatGameTime(utcStr) {
   } catch(e) { return null; }
 }
 
+// Returns "3h 24m" style string when game is within 5h, null otherwise
+function countdownText(gameTimeStr) {
+  if (!gameTimeStr) return null;
+  const start = new Date(gameTimeStr).getTime();
+  if (isNaN(start)) return null;
+  const diff = start - Date.now();
+  if (diff <= 0 || diff > 5 * 3600000) return null;
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m`;
+  return 'soon';
+}
+
+// "Xh Ym before first pitch" — how far ahead the pick was posted
+function getPostedBeforeGame(p) {
+  if (!p.game_time || !p.posted_at) return null;
+  const gameStart = new Date(p.game_time);
+  if (isNaN(gameStart.getTime())) return null;
+  const mo = p.posted_at.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!mo) return null;
+  let h = parseInt(mo[1]);
+  const min = parseInt(mo[2]);
+  if (mo[3].toUpperCase() === 'PM' && h < 12) h += 12;
+  if (mo[3].toUpperCase() === 'AM' && h === 12) h = 0;
+  // CDT = UTC−5 (baseball season Apr–Oct)
+  const postedMs = Date.UTC(
+    gameStart.getUTCFullYear(), gameStart.getUTCMonth(), gameStart.getUTCDate(),
+    h + 5, min, 0
+  );
+  const diffMs = gameStart.getTime() - postedMs;
+  if (diffMs <= 0 || diffMs > 20 * 3600000) return null;
+  const dh = Math.floor(diffMs / 3600000);
+  const dm = Math.floor((diffMs % 3600000) / 60000);
+  return dh > 0
+    ? `${dh}h ${dm > 0 ? dm + 'm ' : ''}before first pitch`
+    : `${dm}m before first pitch`;
+}
+
 function windCompass(degrees) {
   const dirs = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
   return dirs[Math.round(degrees / 22.5) % 16];
@@ -879,6 +955,42 @@ function tierLabel(edge) {
   return ['MARGINAL', 'marginal'];
 }
 
+// ── Historical context lookup ─────────────────────────────────────────────────
+// Returns a function: pick → HTML string (or null if not enough data)
+function buildHistContextFn(histRows) {
+  const settled = (histRows || []).filter(r => r.result === 'W' || r.result === 'L');
+  if (settled.length < 10) return () => null;
+  return function(pick) {
+    const isDog  = (pick.odds || 0) > 0;
+    const isHome = (pick.side || '').toUpperCase() === 'HOME';
+    const matches = settled.filter(r => {
+      if ((r.odds > 0) !== isDog) return false;
+      if (r.side && pick.side && (r.side.toUpperCase() === 'HOME') !== isHome) return false;
+      return Math.abs((r.odds || 0) - (pick.odds || 0)) <= 40;
+    });
+    if (matches.length < 5) return null;
+    const w      = matches.filter(r => r.result === 'W').length;
+    const l      = matches.length - w;
+    const pnl    = matches.reduce((s, r) => s + (r.pnl_u || 0), 0);
+    const winPct = (w / matches.length * 100).toFixed(0);
+    const side   = isHome ? 'Home' : 'Road';
+    const type   = isDog  ? 'dog'  : 'fav';
+    function fmtO(o) {
+      const r5 = Math.round(o / 5) * 5;
+      return r5 >= 0 ? '+' + r5 : String(r5);
+    }
+    const lo = fmtO(pick.odds - 40);
+    const hi = fmtO(pick.odds + 40);
+    const pnlStr = (pnl >= 0 ? '+' : '') + pnl.toFixed(1) + 'u';
+    const pnlCol = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+    return `<div class="hist-context">📊 <strong>${side} ${type} ${lo}–${hi}</strong> this season: ` +
+      `<span style="color:var(--text-2);font-weight:600">${w}W–${l}L</span> ` +
+      `<span style="color:var(--text-4)">(${winPct}%)</span> · ` +
+      `<span style="color:${pnlCol};font-weight:600">${pnlStr}</span> ` +
+      `<span style="color:var(--text-4);font-size:9px">n=${matches.length}</span></div>`;
+  };
+}
+
 // ── Parse SP info from meta string ───────────────────────────────────────────
 function parseSP(meta) {
   if (!meta) return null;
@@ -901,6 +1013,7 @@ function pickCardHTML(p, isTopPick = false) {
   const kellyStr = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—';
   const isDog    = p.odds > 0;
   const isLive   = isLiveGame(p);
+  const isOver   = isGameOver(p);
 
   // Matchup parse
   let awayTeam = p.game || '', homeTeam = '';
@@ -913,15 +1026,28 @@ function pickCardHTML(p, isTopPick = false) {
   const cardId = 'card-' + (p.pick || '').replace(/\s/g,'') + (p.game || '').replace(/\s/g,'');
   picksMap[cardId] = p;
 
-  // Posted + game time + LIVE badge
+  // Posted + game time (live countdown) + LIVE badge
   const gameTimeStr = formatGameTime(p.game_time);
+  const cdText      = countdownText(p.game_time);
+  const chipText    = isOver ? '✓ Final'
+                    : cdText ? 'Starts in ' + cdText
+                    : gameTimeStr;
+  const chipCls     = 'game-time-chip' +
+                      (isOver ? ' countdown-chip game-over'
+                      : cdText ? ' countdown-chip' : '');
+  const timeAttr    = p.game_time ? ` data-game-time-utc="${p.game_time}"` : '';
+  const timeChipHTML = chipText
+    ? `<span class="${chipCls}"${timeAttr}>⏱ ${chipText}</span>` : '';
+  const beforePitch  = getPostedBeforeGame(p);
+  const beforeHTML   = beforePitch
+    ? `<span class="before-pitch">📌 ${beforePitch}</span>` : '';
   const liveHTML = isLive
     ? `<span class="live-badge"><span class="live-dot"></span>LIVE</span>`
     : '';
   const postedHTML = p.posted_at
-    ? `<div class="pick-posted"><span class="posted-dot"></span>Posted ${p.posted_at}${gameTimeStr ? `<span class="game-time-chip">⏱ ${gameTimeStr}</span>` : ''}${liveHTML}</div>`
-    : (gameTimeStr
-        ? `<div class="pick-posted"><span class="game-time-chip">⏱ ${gameTimeStr}</span>${liveHTML}</div>`
+    ? `<div class="pick-posted"><span class="posted-dot"></span>Posted ${p.posted_at} ${timeChipHTML}${beforeHTML}${liveHTML}</div>`
+    : (timeChipHTML
+        ? `<div class="pick-posted">${timeChipHTML}${beforeHTML}${liveHTML}</div>`
         : (isLive ? `<div class="pick-posted">${liveHTML}</div>` : ''));
 
   // SP line — show both pitchers when available: "⚾ Gausman vs. Freeland"
@@ -932,6 +1058,9 @@ function pickCardHTML(p, isTopPick = false) {
         ? `<div class="sp-line">⚾ <strong>${spText}</strong> <span style="color:var(--text-4);font-size:10px">vs.</span> <strong>${oppSP}</strong></div>`
         : `<div class="sp-line">⚾ <strong>${spText}</strong></div>`)
     : '';
+
+  // Historical context: how has this pick type (side × dog/fav × odds range) performed this season
+  const histContextHTML = _histContextFn ? (_histContextFn(p) || '') : '';
 
   // Matchup line
   const matchupHTML = homeTeam
@@ -951,18 +1080,26 @@ function pickCardHTML(p, isTopPick = false) {
   }
   const matchLabelHTML = `<span class="bc-matchlabel ${isDog ? 'dog' : 'fav'}">${matchLabelText}</span>`;
 
-  // BET callout
-  const betHTML = `
-    <div class="bet-callout">
-      <div class="bet-callout-inner">
-        <span class="bc-check">✓</span>
-        <span class="bc-label">BET</span>
-        <span class="bc-team">${p.pick || '—'}</span>
-        <span class="bc-odds">${formatOdds(p.odds)}</span>
-        ${matchLabelHTML}
-        ${p.side ? `<span class="bc-side">${isHomePick ? 'Home' : 'Away'}</span>` : ''}
-      </div>
-    </div>`;
+  // BET callout — dimmed with FINAL label when game is over
+  const betHTML = isOver
+    ? `<div class="bet-callout" style="opacity:0.35">
+         <div class="bet-callout-inner">
+           <span class="bc-check" style="color:var(--text-4)">⏳</span>
+           <span class="bc-label" style="color:var(--text-4)">FINAL</span>
+           <span class="bc-team" style="color:var(--text-3)">${p.pick || '—'}</span>
+           <span class="bc-odds" style="color:var(--text-4)">${formatOdds(p.odds)}</span>
+         </div>
+       </div>`
+    : `<div class="bet-callout">
+         <div class="bet-callout-inner">
+           <span class="bc-check">✓</span>
+           <span class="bc-label">BET</span>
+           <span class="bc-team">${p.pick || '—'}</span>
+           <span class="bc-odds">${formatOdds(p.odds)}</span>
+           ${matchLabelHTML}
+           ${p.side ? `<span class="bc-side">${isHomePick ? 'Home' : 'Away'}</span>` : ''}
+         </div>
+       </div>`;
 
   // Line movement indicator: compare opening Pinnacle (line_open) to current best odds
   function lineMovementHTML() {
@@ -987,7 +1124,13 @@ function pickCardHTML(p, isTopPick = false) {
         <div class="bor-book"><span class="bor-bname">${bestBookName || 'Best avail.'}</span> <span class="bor-bval best">${bestOdds} ✓</span></div>
         ${lineMovementHTML()}
       </div>
-      <a class="bor-shop" href="https://www.covers.com/sports/mlb/matchups" target="_blank" rel="noopener">🔍 Shop all lines</a>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0">
+        <a class="bor-shop" href="https://www.pinnacle.com/en/baseball/mlb/matchups/" target="_blank" rel="noopener">Pinnacle</a>
+        <span style="color:var(--border);font-size:8px">·</span>
+        <a class="bor-shop" href="https://sportsbook.draftkings.com/leagues/baseball/mlb" target="_blank" rel="noopener">DraftKings</a>
+        <span style="color:var(--border);font-size:8px">·</span>
+        <a class="bor-shop" href="https://sportsbook.fanduel.com/baseball" target="_blank" rel="noopener">FanDuel</a>
+      </div>
     </div>`;
 
   // Probability comparison bars — 3 rows: Market / Model / Edge
@@ -1118,7 +1261,7 @@ function pickCardHTML(p, isTopPick = false) {
     : '';
 
   return `
-    <div class="pick-card ${tierClass}${isTopPick ? ' top-pick' : ''}">
+    <div class="pick-card ${tierClass}${isTopPick ? ' top-pick' : ''}${isOver ? ' card-stale' : ''}">
       ${topPickBannerHTML}
       <div class="pick-header-row">
         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1;min-width:0">
@@ -1133,6 +1276,7 @@ function pickCardHTML(p, isTopPick = false) {
         <div class="pick-badge ${tierClass}">✓ ${tierClass === 'marginal' ? 'MARGINAL' : 'VALUE'}</div>
       </div>
       ${spHTML}
+      ${histContextHTML}
       ${matchupHTML}
       ${betHTML}
       ${oddsRowHTML}
@@ -1146,6 +1290,10 @@ function pickCardHTML(p, isTopPick = false) {
 
 // ── Main render ───────────────────────────────────────────────────────────────
 function render(data, hist) {
+  // Build historical context lookup and start countdown timer (both idempotent)
+  _histContextFn = buildHistContextFn((hist && hist.rows) ? hist.rows : []);
+  startCountdownTimer();
+
   // Date header
   if (data.date) {
     const d = new Date(data.date + 'T12:00:00');
@@ -1306,6 +1454,36 @@ function render(data, hist) {
     document.getElementById('yesterday-section').style.display = 'block';
     document.getElementById('yesterday-card').innerHTML = buildYesterdayHTML(yest);
   }
+}
+
+// ── Live countdown updater ────────────────────────────────────────────────────
+function startCountdownTimer() {
+  if (_countdownTimerStarted) return;
+  _countdownTimerStarted = true;
+  setInterval(() => {
+    document.querySelectorAll('[data-game-time-utc]').forEach(el => {
+      const gt    = el.dataset.gameTimeUtc;
+      const start = new Date(gt).getTime();
+      if (isNaN(start)) return;
+      const now  = Date.now();
+      const diff = start - now;
+      if (now > start + 3.5 * 3600000) {
+        el.textContent = '⏱ ✓ Final';
+        el.classList.add('game-over');
+        el.classList.remove('starting-soon');
+      } else if (now > start) {
+        el.textContent = '⏱ Live';
+        el.style.color = 'var(--green)';
+      } else if (diff <= 5 * 3600000) {
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const txt = h > 0 ? `Starts in ${h}h ${m}m` : (m > 0 ? `Starts in ${m}m` : 'Starting soon');
+        el.textContent = '⏱ ' + txt;
+        el.classList.toggle('starting-soon', h === 0 && m <= 30);
+      }
+      // > 5h away — leave as static time, don't touch
+    });
+  }, 30 * 1000);
 }
 
 // ── Auto-refresh ──────────────────────────────────────────────────────────────
