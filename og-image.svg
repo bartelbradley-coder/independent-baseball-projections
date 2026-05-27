@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Accent bar -->
+  <rect x="0" y="0" width="1200" height="6" fill="url(#accent)"/>
+
+  <!-- Logo area -->
+  <text x="80" y="130" font-family="Georgia, serif" font-size="52" fill="#f1f5f9" font-weight="700" letter-spacing="4">⚾ FAIRLINE MLB</text>
+
+  <!-- Tagline -->
+  <text x="80" y="185" font-family="Arial, sans-serif" font-size="22" fill="#94a3b8">Quantitative Win Probability · Dual-Poisson Model</text>
+
+  <!-- Divider -->
+  <rect x="80" y="210" width="1040" height="1" fill="#334155"/>
+
+  <!-- Stats row -->
+  <g transform="translate(80, 280)">
+    <!-- Stat 1 -->
+    <rect x="0" y="0" width="220" height="110" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="110" y="48" font-family="Arial, sans-serif" font-size="13" fill="#64748b" text-anchor="middle" font-weight="700" letter-spacing="2">2026 SEASON</text>
+    <text x="110" y="92" font-family="Georgia, serif" font-size="36" fill="#f1f5f9" text-anchor="middle" font-weight="700">28W–13L</text>
+
+    <!-- Stat 2 -->
+    <rect x="240" y="0" width="220" height="110" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="350" y="48" font-family="Arial, sans-serif" font-size="13" fill="#64748b" text-anchor="middle" font-weight="700" letter-spacing="2">P&amp;L UNITS</text>
+    <text x="350" y="92" font-family="Georgia, serif" font-size="36" fill="#22c55e" text-anchor="middle" font-weight="700">+19.5u</text>
+
+    <!-- Stat 3 -->
+    <rect x="480" y="0" width="220" height="110" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="590" y="48" font-family="Arial, sans-serif" font-size="13" fill="#64748b" text-anchor="middle" font-weight="700" letter-spacing="2">AVG CLV</text>
+    <text x="590" y="92" font-family="Georgia, serif" font-size="36" fill="#22c55e" text-anchor="middle" font-weight="700">+0.72%</text>
+
+    <!-- Stat 4 -->
+    <rect x="720" y="0" width="220" height="110" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="830" y="48" font-family="Arial, sans-serif" font-size="13" fill="#64748b" text-anchor="middle" font-weight="700" letter-spacing="2">BACKTEST ROI</text>
+    <text x="830" y="92" font-family="Georgia, serif" font-size="36" fill="#f59e0b" text-anchor="middle" font-weight="700">+10.4%</text>
+  </g>
+
+  <!-- Description -->
+  <text x="80" y="450" font-family="Arial, sans-serif" font-size="20" fill="#94a3b8">Daily MLB value bets · Edge vs. no-vig Pinnacle · Half-Kelly sizing · CLV tracked</text>
+
+  <!-- URL -->
+  <text x="80" y="570" font-family="Arial, sans-serif" font-size="18" fill="#6366f1" font-weight="600">bartelbradley-coder.github.io/fairline-mlb</text>
+
+  <!-- Baseball decoration -->
+  <circle cx="1100" cy="400" r="110" fill="none" stroke="#334155" stroke-width="1.5"/>
+  <circle cx="1100" cy="400" r="80" fill="none" stroke="#1e3a5f" stroke-width="1"/>
+  <text x="1100" y="430" font-family="Arial, sans-serif" font-size="80" text-anchor="middle" fill="#1e293b">⚾</text>
+  <text x="1100" y="430" font-family="Arial, sans-serif" font-size="80" text-anchor="middle" fill="#334155" opacity="0.4">⚾</text>
+</svg>

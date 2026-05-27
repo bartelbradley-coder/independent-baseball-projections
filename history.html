@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FairLine MLB — Results & Track Record</title>
 <meta name="description" content="Live 2026 results, CLV tracking, edge tier breakdown, and full pick history for FairLine MLB.">
+<meta property="og:title" content="FairLine MLB — Results & Track Record">
+<meta property="og:description" content="Live 2026 results. Every pick logged with result, CLV, and P&L. Full transparency — 28W-13L, +19.5u.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://bartelbradley-coder.github.io/fairline-mlb/og-image.svg">
+<meta property="og:url" content="https://bartelbradley-coder.github.io/fairline-mlb/history.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FairLine MLB — Results & Track Record">
+<meta name="twitter:description" content="Live 2026 MLB betting results with CLV tracking and full pick history.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚾</text></svg>">
 <link rel="stylesheet" href="style.css">
 <style>
@@ -117,6 +125,23 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 
 .backtest-note { font-size: 10px; color: var(--text-4); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); line-height: 1.5; }
 
+/* Search input */
+.search-input {
+  padding: 5px 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text-2); font-size: 11px; font-family: 'Inter', sans-serif;
+  width: 160px; outline: none; flex-shrink: 0;
+}
+.search-input:focus { border-color: rgba(99,102,241,0.4); }
+.search-input::placeholder { color: var(--text-4); }
+
+/* Kelly ROI table (reuses edge-table styles) */
+.kelly-table { width: 100%; border-collapse: collapse; }
+.kelly-table th { font-size: 8.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+.kelly-table td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 12px; color: var(--text-3); }
+.kelly-table tr:last-child td { border-bottom: none; }
+
 /* Streak + breakdown pills */
 .breakdown-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
 .streak-pill { padding: 10px 16px; border-radius: 10px; font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; display:flex; align-items:center; gap:8px; }
@@ -221,6 +246,42 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
     </div>
   </div>
 
+  <!-- Kelly Size ROI Breakdown -->
+  <div class="section" id="kelly-section" style="display:none">
+    <div class="sec-lbl">Kelly Size vs. ROI — Does Bigger Confidence Pay Off?</div>
+    <div class="analytics-row">
+      <div class="card">
+        <div class="card-title">📐 ROI by Recommended Bet Size</div>
+        <div class="card-sub">2026 season · half-Kelly units on a 10u bankroll</div>
+        <table class="kelly-table" id="kelly-table">
+          <thead><tr><th>Kelly Size</th><th>Bets</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+          <tbody id="kelly-tbody"><tr><td colspan="6" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
+        </table>
+        <div style="font-size:10px;color:var(--text-4);margin-top:10px;line-height:1.5">
+          Higher Kelly sizing = model's higher confidence. Positive correlation between size and ROI validates the model's probability estimates.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🧠 What Kelly Size Means</div>
+        <div class="card-sub">How the model allocates confidence</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px">
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-2);margin-bottom:3px">1.5u+ picks</div>
+            <div style="font-size:11px;color:var(--text-3);line-height:1.5">Model and market agree on a substantial pricing gap. Multiple factors align, edge is large and unambiguous.</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-2);margin-bottom:3px">0.5–1.5u picks</div>
+            <div style="font-size:11px;color:var(--text-3);line-height:1.5">Solid edge with a meaningful signal. Standard-confidence plays that represent the bulk of the model's recommendations.</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-2);margin-bottom:3px">&lt; 0.5u picks</div>
+            <div style="font-size:11px;color:var(--text-3);line-height:1.5">Modest edge above threshold. Lower confidence — useful for tracking but sized small intentionally.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Monthly ROI -->
   <div class="section" id="monthly-section" style="display:none">
     <div class="sec-lbl">Monthly ROI — 2026 Season</div>
@@ -283,6 +344,8 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
       <div class="filter-sep"></div>
       <button class="filter-btn" data-filter="strong">8%+ Edge</button>
       <button class="filter-btn" data-filter="value">5–8% Edge</button>
+      <div class="filter-sep"></div>
+      <input class="search-input" id="search-input" type="text" placeholder="🔍 Team or pitcher…" autocomplete="off">
     </div>
 
     <div class="card" style="padding:0;overflow:hidden" id="table-wrap">
@@ -304,6 +367,7 @@ let sortCol = 'date';
 let sortDir = 'desc';
 let activeFilter = 'all';
 let activeMonth = 'all';
+let activeSearch = '';
 
 function formatOdds(ml) {
   if (!ml && ml !== 0) return '—';
@@ -336,6 +400,7 @@ async function loadAll() {
     renderCalendar(allRows);
     renderClv(p);
     renderEdgeTiers(p);
+    renderKellyROI(p);
     renderMonthly(p);
     renderBacktest();
     injectMonthFilter(allRows);
@@ -492,6 +557,14 @@ function getFilteredSorted(rows) {
   else if (activeFilter === 'strong') r = r.filter(x => x.edge != null && x.edge >= 0.08);
   else if (activeFilter === 'value') r = r.filter(x => x.edge != null && x.edge >= 0.05 && x.edge < 0.08);
   if (activeMonth !== 'all') r = r.filter(x => x.date && x.date.slice(0,7) === activeMonth);
+  if (activeSearch) {
+    const q = activeSearch.toLowerCase();
+    r = r.filter(x =>
+      (x.game  && x.game.toLowerCase().includes(q)) ||
+      (x.pick  && x.pick.toLowerCase().includes(q)) ||
+      (x.pitcher && x.pitcher.toLowerCase().includes(q))
+    );
+  }
 
   r.sort((a, b) => {
     let av = a[sortCol], bv = b[sortCol];
@@ -629,7 +702,7 @@ function renderBreakdowns(rows) {
 
 // ── Calibration Chart (#3) ────────────────────────────────────────────────────
 function renderCalibration(rows) {
-  const settled = rows.filter(r => r.result === 'W' || r.result === 'L' && r.model_prob != null);
+  const settled = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.model_prob != null);
   if (settled.length < 8) return;
   document.getElementById('calib-section').style.display = 'block';
 
@@ -743,12 +816,34 @@ function injectMonthFilter(rows) {
   filtersEl.appendChild(sel);
 }
 
+// ── Kelly ROI breakdown ───────────────────────────────────────────────────────
+function renderKellyROI(p) {
+  const tiers = (p && p.kelly_roi_tiers) ? p.kelly_roi_tiers : [];
+  if (tiers.length === 0) return;
+  document.getElementById('kelly-section').style.display = 'block';
+  document.getElementById('kelly-tbody').innerHTML = tiers.map(t => `
+    <tr>
+      <td style="font-weight:600;color:var(--text-2)">${t.label}</td>
+      <td>${t.bets}</td>
+      <td>${t.wins}–${t.losses}</td>
+      <td>${(t.win_rate * 100).toFixed(1)}%</td>
+      <td style="color:${t.roi >= 0 ? 'var(--green)' : 'var(--red)'}">${t.roi >= 0 ? '+' : ''}${(t.roi * 100).toFixed(1)}%</td>
+      <td style="color:${t.units >= 0 ? 'var(--green)' : 'var(--red)'}">${t.units >= 0 ? '+' : ''}${t.units.toFixed(1)}u</td>
+    </tr>`).join('');
+}
+
 // ── Filter buttons ────────────────────────────────────────────────────────────
 document.getElementById('filters').addEventListener('click', e => {
   const btn = e.target.closest('.filter-btn');
   if (!btn) return;
   activeFilter = btn.dataset.filter;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+  renderTable(allRows);
+});
+
+// ── Search input ──────────────────────────────────────────────────────────────
+document.getElementById('search-input').addEventListener('input', e => {
+  activeSearch = e.target.value.trim();
   renderTable(allRows);
 });
 
