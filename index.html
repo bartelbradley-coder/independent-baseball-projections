@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FairLine MLB — Today's Picks</title>
 <meta name="description" content="Daily MLB win probability picks from a quantitative Dual-Poisson model. Model edge vs. no-vig Pinnacle lines, Half-Kelly sizing, CLV tracked.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚾</text></svg>">
 <link rel="stylesheet" href="style.css">
 <style>
 .page-header { margin-bottom: 28px; }
@@ -38,6 +39,39 @@
 }
 
 .single-pick { max-width: 540px; }
+
+/* Yesterday's results */
+.yest-section { margin-top: 28px; }
+.yest-title { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-4); margin-bottom: 10px; }
+.yest-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 5px; }
+.yest-row:last-child { margin-bottom: 0; }
+.yest-game { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; color: var(--text-2); }
+.yest-pick { font-size: 11px; color: var(--text-3); }
+.yest-right { display: flex; align-items: center; gap: 10px; }
+.yest-result { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700; min-width: 22px; text-align: center; }
+.yest-result.W { color: var(--green); }
+.yest-result.L { color: var(--red); }
+.yest-pnl { font-size: 11px; font-weight: 600; min-width: 44px; text-align: right; }
+.yest-pnl.pos { color: var(--green); }
+.yest-pnl.neg { color: var(--red); }
+.yest-clv { font-size: 9px; color: var(--text-4); min-width: 44px; text-align: right; }
+
+/* Follow CTA */
+.follow-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(29,161,242,0.07);
+  border: 1px solid rgba(29,161,242,0.2);
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin-top: 12px;
+  text-decoration: none;
+}
+.follow-cta:hover { background: rgba(29,161,242,0.12); }
+.follow-cta-text { font-size: 13px; color: #60b4f0; font-weight: 500; }
+.follow-cta-handle { font-family: 'Oswald', sans-serif; font-size: 15px; color: #93c5fd; font-weight: 700; letter-spacing: 0.04em; }
 </style>
 </head>
 <body>
@@ -50,6 +84,7 @@
   <div class="nav-links">
     <a class="nav-link active" href="index.html">Today's Picks</a>
     <a class="nav-link" href="performance.html">Performance</a>
+    <a class="nav-link" href="history.html">History</a>
     <a class="nav-link" href="model.html">Model</a>
   </div>
   <div class="nav-right">
@@ -92,7 +127,7 @@
 <footer>
   FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 18 Log-Odds Adjustments + Platt Calibration<br>
   For informational purposes only. Gambling involves risk — never bet more than you can afford to lose. Past model performance does not guarantee future results. 18+ only.<br>
-  <a href="model.html">Model Overview</a> · <a href="performance.html">Full Performance History</a> · <a href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
+  <a href="model.html">Model Overview</a> · <a href="performance.html">Performance</a> · <a href="history.html">Pick History</a> · <a href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
 </footer>
 
 <script>
@@ -103,13 +138,58 @@ async function loadPicks() {
     const data = await res.json();
     render(data);
   } catch (e) {
-    document.getElementById('picks-container').innerHTML = `
-      <div class="no-picks-yet">
-        <div class="np-icon">⏰</div>
-        <div class="np-title">Picks Posted by 9:30 AM PT</div>
-        <div class="np-sub">The model runs each morning after lineups and odds are available.<br>Check back after 9:30 AM Pacific Time.</div>
+    renderEmptyState(null);
+  }
+}
+
+function renderEmptyState(data) {
+  const yestPicks = data && data.yesterday_picks ? data.yesterday_picks : [];
+  const s = data && data.season ? data.season : null;
+
+  let yestHTML = '';
+  if (yestPicks.length > 0) {
+    const totalPnl = yestPicks.reduce((sum, p) => sum + (p.pnl_u || 0), 0);
+    const wins = yestPicks.filter(p => p.result === 'W').length;
+    const losses = yestPicks.filter(p => p.result === 'L').length;
+    yestHTML = `
+      <div class="yest-section">
+        <div class="yest-title">Yesterday's Results · ${wins}W–${losses}L · ${totalPnl >= 0 ? '+' : ''}${totalPnl.toFixed(1)}u</div>
+        ${yestPicks.map(p => {
+          const pnlClass = (p.pnl_u || 0) >= 0 ? 'pos' : 'neg';
+          const pnlStr = p.pnl_u != null ? ((p.pnl_u >= 0 ? '+' : '') + p.pnl_u.toFixed(1) + 'u') : '—';
+          const clvStr = p.clv != null ? 'CLV ' + (p.clv >= 0 ? '+' : '') + (p.clv * 100).toFixed(1) + '%' : '';
+          return `<div class="yest-row">
+            <div>
+              <div class="yest-game">${p.game || '—'}</div>
+              <div class="yest-pick">${p.pick || ''}${p.odds ? ' · ' + formatOdds(p.odds) : ''}${p.edge ? ' · +' + (p.edge * 100).toFixed(1) + '% edge' : ''}</div>
+            </div>
+            <div class="yest-right">
+              <div class="yest-clv">${clvStr}</div>
+              <div class="yest-pnl ${pnlClass}">${pnlStr}</div>
+              <div class="yest-result ${p.result}">${p.result || '—'}</div>
+            </div>
+          </div>`;
+        }).join('')}
       </div>`;
   }
+
+  const stripHTML = s ? `
+    <div class="record-strip" style="margin-bottom:16px">
+      <div class="stat-pill"><div class="stat-lbl">2026 Season</div><div class="stat-val white">${s.wins}W–${s.losses}L</div><div class="stat-sub">${s.units >= 0 ? '+' : ''}${(s.units||0).toFixed(1)}u</div></div>
+    </div>` : '';
+
+  document.getElementById('picks-container').innerHTML = `
+    <div class="no-picks-yet">
+      <div class="np-icon">⏰</div>
+      <div class="np-title">Picks Posted by 9:30 AM PT</div>
+      <div class="np-sub">The model runs each morning after lineups and odds are available.<br>Follow <strong>@FairLineMLB</strong> on X for pick alerts.</div>
+      ${yestHTML}
+      ${stripHTML}
+    </div>
+    <a class="follow-cta" href="https://twitter.com/FairLineMLB" target="_blank">
+      <span class="follow-cta-text">Get notified when picks drop →</span>
+      <span class="follow-cta-handle">@FairLineMLB</span>
+    </a>`;
 }
 
 function formatOdds(ml) {
@@ -237,16 +317,15 @@ function render(data) {
   const marginal = (data.picks || []).filter(p => p.edge < 0.02);
 
   if (main.length === 0) {
-    document.getElementById('picks-container').innerHTML = `
-      <div class="no-picks-yet">
-        <div class="np-icon">🔍</div>
-        <div class="np-title">No Value Bets Today</div>
-        <div class="np-sub">The model found no edges ≥ 2% against Pinnacle's no-vig line today.<br>This is expected — the model only flags genuine value, not every game.</div>
-      </div>`;
+    renderEmptyState(data);
   } else {
     const gridClass = main.length === 1 ? 'pick-grid single-pick' : 'pick-grid';
     document.getElementById('picks-container').innerHTML =
-      `<div class="${gridClass}">` + main.map(pickCardHTML).join('') + '</div>';
+      `<div class="${gridClass}">` + main.map(pickCardHTML).join('') + '</div>' +
+      `<a class="follow-cta" href="https://twitter.com/FairLineMLB" target="_blank" style="margin-top:16px">
+        <span class="follow-cta-text">Follow for live pick alerts →</span>
+        <span class="follow-cta-handle">@FairLineMLB</span>
+      </a>`;
   }
 
   // Marginal picks

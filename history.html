@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FairLine MLB — Pick History</title>
+<meta name="description" content="Complete pick history for FairLine MLB — every bet logged with result, CLV, and P&L. Full transparency.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚾</text></svg>">
+<link rel="stylesheet" href="style.css">
+<style>
+.page-title { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+.page-subtitle { font-size: 12px; color: var(--text-3); margin-bottom: 24px; }
+
+.summary-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+.summary-row .stat-pill { flex: 1; min-width: 110px; }
+
+/* P&L curve */
+.pnl-curve-wrap { height: 64px; display: flex; align-items: flex-end; gap: 2px; overflow: hidden; }
+.pnl-seg { flex: 1; border-radius: 2px 2px 0 0; min-height: 2px; transition: opacity 0.15s; }
+.pnl-seg:hover { opacity: 0.75; }
+.pnl-seg.pos { background: var(--green); }
+.pnl-seg.neg { background: var(--red); border-radius: 0 0 2px 2px; }
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  align-items: center;
+}
+.filter-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-3);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-btn:hover { color: var(--text-2); background: rgba(255,255,255,0.04); }
+.filter-btn.active { background: rgba(99,102,241,0.15); border-color: rgba(99,102,241,0.35); color: var(--indigo-lt); }
+.filter-sep { width: 1px; height: 20px; background: var(--border); }
+
+/* Sort headers */
+.picks-table th { cursor: pointer; user-select: none; }
+.picks-table th:hover { color: var(--text-3); }
+.sort-asc::after  { content: ' ↑'; }
+.sort-desc::after { content: ' ↓'; }
+
+/* Responsive hide */
+@media (max-width: 700px) {
+  .hide-sm { display: none; }
+}
+
+.pnl-pos { color: var(--green); font-weight: 600; }
+.pnl-neg { color: var(--red);   font-weight: 600; }
+
+.no-history {
+  text-align: center;
+  padding: 56px 24px;
+  color: var(--text-4);
+}
+.no-history .nh-icon { font-size: 40px; margin-bottom: 14px; }
+.no-history .nh-title { font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-3); margin-bottom: 8px; }
+.no-history .nh-sub { font-size: 12px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-logo">⚾</div>
+    <div class="nav-name">FAIRLINE <em>MLB</em></div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Today's Picks</a>
+    <a class="nav-link" href="performance.html">Performance</a>
+    <a class="nav-link active" href="history.html">History</a>
+    <a class="nav-link" href="model.html">Model</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-updated" id="last-updated">—</span>
+    <a class="nav-twitter" href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-title">Pick History</div>
+  <div class="page-subtitle">Every bet logged · results, CLV, and P&L · full transparency</div>
+
+  <!-- Summary pills -->
+  <div class="summary-row" id="summary-row">
+    <div class="loading">Loading…</div>
+  </div>
+
+  <!-- P&L Curve -->
+  <div class="section">
+    <div class="sec-lbl">Cumulative P&L Curve</div>
+    <div class="card" style="padding:16px 20px">
+      <div class="pnl-curve-wrap" id="pnl-curve"><div class="loading" style="padding:20px">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="section">
+    <div class="sec-lbl">All Settled Picks</div>
+
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="W">Wins</button>
+      <button class="filter-btn" data-filter="L">Losses</button>
+      <div class="filter-sep"></div>
+      <button class="filter-btn" data-filter="strong">8%+ Edge</button>
+      <button class="filter-btn" data-filter="value">5–8% Edge</button>
+    </div>
+
+    <div class="card" style="padding:0;overflow:hidden" id="table-wrap">
+      <div class="loading">Loading…</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 18 Log-Odds Adjustments + Platt Calibration<br>
+  For informational purposes only. Gambling involves risk — never bet more than you can afford to lose. Past model performance does not guarantee future results. 18+ only.<br>
+  <a href="model.html">Model Overview</a> · <a href="performance.html">Performance</a> · <a href="index.html">Today's Picks</a> · <a href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
+</footer>
+
+<script>
+let allRows = [];
+let sortCol = 'date';
+let sortDir = 'desc';
+let activeFilter = 'all';
+
+function formatOdds(ml) {
+  if (!ml && ml !== 0) return '—';
+  return ml > 0 ? '+' + ml : String(ml);
+}
+function pct(v, d=1) {
+  if (v == null) return '—';
+  return (v >= 0 ? '+' : '') + (v * 100).toFixed(d) + '%';
+}
+
+async function loadHistory() {
+  try {
+    const res = await fetch('data/history.json?v=' + Date.now());
+    if (!res.ok) throw new Error('No data');
+    const d = await res.json();
+
+    if (d.updated_at) {
+      document.getElementById('last-updated').textContent = 'Updated ' + d.updated_at;
+    }
+
+    allRows = d.rows || [];
+    renderSummary(allRows);
+    renderCurve(d.pnl_curve || []);
+    renderTable(allRows);
+  } catch (e) {
+    renderEmpty();
+  }
+}
+
+function renderEmpty() {
+  document.getElementById('summary-row').innerHTML = '';
+  document.getElementById('pnl-curve').innerHTML = '<div style="color:var(--text-4);font-size:12px;padding:12px 0">No settled picks yet.</div>';
+  document.getElementById('table-wrap').innerHTML = `
+    <div class="no-history">
+      <div class="nh-icon">📋</div>
+      <div class="nh-title">No Settled Picks Yet</div>
+      <div class="nh-sub">The pick history table fills in as picks are logged and settled each day.<br>Check back after the first batch of games result.</div>
+    </div>`;
+  document.getElementById('filters').style.display = 'none';
+}
+
+function renderSummary(rows) {
+  const settled = rows.filter(r => r.result === 'W' || r.result === 'L');
+  const wins = settled.filter(r => r.result === 'W').length;
+  const losses = settled.filter(r => r.result === 'L').length;
+  const totalPnl = settled.reduce((s, r) => s + (r.pnl_u || 0), 0);
+  const roi = settled.length > 0 ? totalPnl / settled.length : 0;
+  const clvRows = rows.filter(r => r.clv != null);
+  const avgClv = clvRows.length > 0 ? clvRows.reduce((s, r) => s + r.clv, 0) / clvRows.length : null;
+  const winRate = settled.length > 0 ? wins / settled.length : null;
+
+  document.getElementById('summary-row').innerHTML = `
+    <div class="stat-pill"><div class="stat-lbl">Record</div><div class="stat-val white">${wins}W–${losses}L</div><div class="stat-sub">${settled.length} bets</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Total P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${totalPnl >= 0 ? '+' : ''}${totalPnl.toFixed(1)}u</div><div class="stat-sub">flat $100/bet</div></div>
+    <div class="stat-pill"><div class="stat-lbl">ROI / Bet</div><div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${pct(roi)}</div><div class="stat-sub">per settled bet</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Win Rate</div><div class="stat-val white">${winRate != null ? (winRate*100).toFixed(1)+'%' : '—'}</div><div class="stat-sub">vs. ~52% break-even</div></div>
+    ${avgClv != null ? `<div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${avgClv >= 0 ? 'green' : 'red'}">${pct(avgClv)}</div><div class="stat-sub">n=${clvRows.length}</div></div>` : ''}
+  `;
+}
+
+function renderCurve(curve) {
+  if (curve.length === 0) {
+    document.getElementById('pnl-curve').innerHTML = '<div style="color:var(--text-4);font-size:12px;padding:12px 0">Accumulates as picks settle.</div>';
+    return;
+  }
+  const maxAbs = Math.max(...curve.map(v => Math.abs(v)), 0.01);
+  document.getElementById('pnl-curve').innerHTML = curve.map((v, i) => {
+    const prev = i === 0 ? 0 : curve[i - 1];
+    const delta = v - prev;
+    const h = Math.max(2, Math.round(Math.abs(delta) / (maxAbs / curve.length || 0.01) * 40));
+    return `<div class="pnl-seg ${delta >= 0 ? 'pos' : 'neg'}" style="height:${h}px" title="${v >= 0 ? '+' : ''}${v.toFixed(1)}u"></div>`;
+  }).join('');
+}
+
+function getFilteredSorted(rows) {
+  let r = [...rows];
+  if (activeFilter === 'W') r = r.filter(x => x.result === 'W');
+  else if (activeFilter === 'L') r = r.filter(x => x.result === 'L');
+  else if (activeFilter === 'strong') r = r.filter(x => x.edge != null && x.edge >= 0.08);
+  else if (activeFilter === 'value') r = r.filter(x => x.edge != null && x.edge >= 0.05 && x.edge < 0.08);
+
+  r.sort((a, b) => {
+    let av = a[sortCol], bv = b[sortCol];
+    if (av == null) av = sortDir === 'asc' ? Infinity : -Infinity;
+    if (bv == null) bv = sortDir === 'asc' ? Infinity : -Infinity;
+    if (typeof av === 'string') return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    return sortDir === 'asc' ? av - bv : bv - av;
+  });
+  return r;
+}
+
+function renderTable(rows) {
+  const filtered = getFilteredSorted(rows);
+
+  if (filtered.length === 0) {
+    document.getElementById('table-wrap').innerHTML = `
+      <div class="no-history">
+        <div class="nh-icon">🔍</div>
+        <div class="nh-title">No Picks Match This Filter</div>
+        <div class="nh-sub">Try a different filter or view all picks.</div>
+      </div>`;
+    return;
+  }
+
+  const cols = [
+    { key: 'date',      label: 'Date',     cls: '' },
+    { key: 'game',      label: 'Game',     cls: '' },
+    { key: 'pick',      label: 'Pick',     cls: '' },
+    { key: 'odds',      label: 'Odds',     cls: 'hide-sm' },
+    { key: 'edge',      label: 'Edge',     cls: 'hide-sm' },
+    { key: 'model_prob',label: 'Model%',   cls: 'hide-sm' },
+    { key: 'result',    label: 'Result',   cls: '' },
+    { key: 'clv',       label: 'CLV',      cls: 'hide-sm' },
+    { key: 'pnl_u',     label: 'P&L',      cls: '' },
+  ];
+
+  const thHTML = cols.map(c => {
+    let cls = c.cls;
+    if (c.key === sortCol) cls += (sortDir === 'asc' ? ' sort-asc' : ' sort-desc');
+    return `<th class="${cls.trim()}" data-col="${c.key}">${c.label}</th>`;
+  }).join('');
+
+  const trHTML = filtered.map(r => {
+    const resultCls = r.result === 'W' ? 'result-w' : r.result === 'L' ? 'result-l' : 'result-p';
+    const pnlCls = (r.pnl_u || 0) >= 0 ? 'pnl-pos' : 'pnl-neg';
+    const clvCls = r.clv == null ? 'clv-neu' : r.clv >= 0 ? 'clv-pos' : 'clv-neg';
+    const edgeStr = r.edge != null ? '+' + (r.edge * 100).toFixed(1) + '%' : '—';
+    const probStr = r.model_prob != null ? (r.model_prob * 100).toFixed(1) + '%' : '—';
+    const pnlStr  = r.pnl_u != null ? (r.pnl_u >= 0 ? '+' : '') + r.pnl_u.toFixed(1) + 'u' : '—';
+    const clvStr  = r.clv != null ? pct(r.clv) : '—';
+    // Format date as "May 27"
+    const dateStr = r.date ? (() => { try { return new Date(r.date + 'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}); } catch(e){ return r.date; } })() : '—';
+    return `<tr>
+      <td style="color:var(--text-4);font-family:'JetBrains Mono',monospace;font-size:11px">${dateStr}</td>
+      <td style="color:var(--text-2);font-weight:500">${r.game || '—'}</td>
+      <td>${r.pick || '—'}</td>
+      <td class="hide-sm" style="font-family:'JetBrains Mono',monospace;font-size:11px">${formatOdds(r.odds)}</td>
+      <td class="hide-sm" style="color:var(--amber)">${edgeStr}</td>
+      <td class="hide-sm">${probStr}</td>
+      <td><span class="${resultCls}">${r.result || '—'}</span></td>
+      <td class="hide-sm ${clvCls}">${clvStr}</td>
+      <td class="${pnlCls}">${pnlStr}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('table-wrap').innerHTML = `
+    <table class="picks-table">
+      <thead><tr>${thHTML}</tr></thead>
+      <tbody>${trHTML}</tbody>
+    </table>`;
+
+  // Sort click handlers
+  document.querySelectorAll('#table-wrap .picks-table th').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+      else { sortCol = col; sortDir = col === 'date' ? 'desc' : 'desc'; }
+      renderTable(allRows);
+    });
+  });
+}
+
+// Filter buttons
+document.getElementById('filters').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  activeFilter = btn.dataset.filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+  renderTable(allRows);
+});
+
+loadHistory();
+</script>
+</body>
+</html>

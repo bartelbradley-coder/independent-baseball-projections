@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FairLine MLB — Performance Dashboard</title>
 <meta name="description" content="Full performance history for FairLine MLB — ROI, CLV tracking, Sharpe ratio, win rate by edge tier.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚾</text></svg>">
 <link rel="stylesheet" href="style.css">
 <style>
 .page-title { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
@@ -80,6 +81,7 @@
   <div class="nav-links">
     <a class="nav-link" href="index.html">Today's Picks</a>
     <a class="nav-link active" href="performance.html">Performance</a>
+    <a class="nav-link" href="history.html">History</a>
     <a class="nav-link" href="model.html">Model</a>
   </div>
   <div class="nav-right">
@@ -169,7 +171,7 @@
 <footer>
   FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 18 Log-Odds Adjustments + Platt Calibration<br>
   For informational purposes only. Gambling involves risk — never bet more than you can afford to lose. Past model performance does not guarantee future results. 18+ only.<br>
-  <a href="model.html">Model Overview</a> · <a href="index.html">Today's Picks</a> · <a href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
+  <a href="model.html">Model Overview</a> · <a href="index.html">Today's Picks</a> · <a href="history.html">Pick History</a> · <a href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
 </footer>
 
 <script>
@@ -200,7 +202,7 @@ function render(d) {
   const s = d.season || {};
   const l = d.last30 || {};
   document.getElementById('metrics-row').innerHTML = `
-    <div class="stat-pill"><div class="stat-lbl">2026 Record</div><div class="stat-val white">${s.wins||0}W–${s.losses||0}L</div><div class="stat-sub">${pct((s.roi||0)/100,1)} ROI</div></div>
+    <div class="stat-pill"><div class="stat-lbl">2026 Record</div><div class="stat-val white">${s.wins||0}W–${s.losses||0}L</div><div class="stat-sub">${pct(s.roi||0)} ROI</div></div>
     <div class="stat-pill"><div class="stat-lbl">Season Units</div><div class="stat-val ${(s.units||0)>=0?'green':'red'}">${(s.units||0)>=0?'+':''}${(s.units||0).toFixed(1)}u</div><div class="stat-sub">${s.bets||0} bets</div></div>
     <div class="stat-pill"><div class="stat-lbl">Last 30</div><div class="stat-val ${(l.units||0)>=0?'green':'red'}">${l.wins||0}–${l.losses||0}</div><div class="stat-sub">${(l.units||0)>=0?'+':''}${(l.units||0).toFixed(1)}u</div></div>
     <div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${(d.avg_clv||0)>=0?'green':'red'}">${pct(d.avg_clv)}</div><div class="stat-sub">vs. close · n=${d.clv_count||0}</div></div>
