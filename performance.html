@@ -148,9 +148,9 @@
 
   <!-- BACKTESTED ROI -->
   <div class="section">
-    <div class="sec-lbl">Backtested ROI — Out-of-Sample 2022–2024 · Flat $100/Bet · 5%+ Edge</div>
+    <div class="sec-lbl">Backtested Model Validation — Out-of-Sample 2022–2024 · Not Live Results</div>
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px">
         <div>
           <div class="card-title" style="margin-bottom:4px">Improving Every Out-of-Sample Year</div>
           <div class="card-sub" style="margin-bottom:0">vs. −4.0% baseline (bet every game, full vig drain) · 7,359 games backtested</div>
@@ -158,9 +158,27 @@
         <div style="font-family:'Oswald',sans-serif;font-size:32px;font-weight:700;color:var(--green)">+10.4%</div>
       </div>
       <div id="backtest-chart"></div>
+      <!-- Backtested model stats — clearly labeled as not live -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+        <div class="stat-pill" style="opacity:0.8">
+          <div class="stat-lbl">Sharpe Ratio</div>
+          <div class="stat-val amber">1.82</div>
+          <div class="stat-sub">backtested · annualized</div>
+        </div>
+        <div class="stat-pill" style="opacity:0.8">
+          <div class="stat-lbl">Brier Score</div>
+          <div class="stat-val white">0.234</div>
+          <div class="stat-sub">vs. 0.250 market</div>
+        </div>
+        <div class="stat-pill" style="opacity:0.8">
+          <div class="stat-lbl">Max Drawdown</div>
+          <div class="stat-val red">−12.4u</div>
+          <div class="stat-sub">backtested</div>
+        </div>
+      </div>
       <div class="backtest-note">
-        Backtested on 7,359 out-of-sample games (2022–2024). Each year trained on prior seasons only — no lookahead.
-        Brier Score: <strong style="color:var(--text-2)">0.234</strong> vs. 0.250 market · Sharpe: <strong style="color:var(--text-2)">1.82</strong> · Max Drawdown: <strong style="color:var(--red)">−12.4u</strong>
+        All figures above are <strong style="color:var(--text-2)">out-of-sample backtest results</strong> (2022–2024). Each year trained on prior seasons only — no lookahead bias.
+        Live 2026 results appear in the sections above as picks settle.
       </div>
     </div>
   </div>
@@ -197,16 +215,15 @@ function render(d) {
     document.getElementById('perf-subtitle').textContent = 'Last settled: ' + d.updated_at;
   }
 
-  // Key metrics
+  // Key metrics — live stats only
   const s = d.season || {};
   const l = d.last30 || {};
+  const hasLive = (s.bets || 0) > 0;
   document.getElementById('metrics-row').innerHTML = `
-    <div class="stat-pill"><div class="stat-lbl">2026 Record</div><div class="stat-val white">${s.wins||0}W–${s.losses||0}L</div><div class="stat-sub">${pct(s.roi||0)} ROI</div></div>
-    <div class="stat-pill"><div class="stat-lbl">Season Units</div><div class="stat-val ${(s.units||0)>=0?'green':'red'}">${(s.units||0)>=0?'+':''}${(s.units||0).toFixed(1)}u</div><div class="stat-sub">${s.bets||0} bets</div></div>
+    <div class="stat-pill"><div class="stat-lbl">2026 Record</div><div class="stat-val white">${s.wins||0}W–${s.losses||0}L</div><div class="stat-sub">${hasLive ? pct(s.roi||0) + ' ROI' : 'season in progress'}</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Season Units</div><div class="stat-val ${(s.units||0)>=0?'green':'red'}">${(s.units||0)>=0?'+':''}${(s.units||0).toFixed(1)}u</div><div class="stat-sub">${s.bets||0} bets · live 2026</div></div>
     <div class="stat-pill"><div class="stat-lbl">Last 30</div><div class="stat-val ${(l.units||0)>=0?'green':'red'}">${l.wins||0}–${l.losses||0}</div><div class="stat-sub">${(l.units||0)>=0?'+':''}${(l.units||0).toFixed(1)}u</div></div>
     <div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${(d.avg_clv||0)>=0?'green':'red'}">${pct(d.avg_clv)}</div><div class="stat-sub">vs. close · n=${d.clv_count||0}</div></div>
-    <div class="stat-pill"><div class="stat-lbl">Sharpe Ratio</div><div class="stat-val amber">1.82</div><div class="stat-sub">backtested · annualized</div></div>
-    <div class="stat-pill"><div class="stat-lbl">Brier Score</div><div class="stat-val white">0.234</div><div class="stat-sub">vs. 0.250 market</div></div>
   `;
 
   // Season ROI
@@ -223,12 +240,19 @@ function render(d) {
     }).join('');
     document.getElementById('season-roi-chart').className = 'monthly-chart';
   } else {
-    document.getElementById('season-roi-chart').innerHTML = '<div style="color:var(--text-4);font-size:12px;padding:20px 0">No settled picks yet for 2026 season.</div>';
+    document.getElementById('season-roi-chart').innerHTML = `
+      <div style="color:var(--text-4);font-size:12px;padding:16px 0;line-height:1.7">
+        Live monthly ROI will appear here as 2026 picks settle.<br>
+        <span style="color:var(--text-3)">Backtested 2022–2024: +0.7% → +9.1% → +10.4% across 3,045 bets.</span>
+      </div>`;
   }
 
   if (s.bets) {
     document.getElementById('season-disclaimer').textContent =
       `${s.bets} picks settled · flat $100/bet · 5%+ edge threshold · results update nightly`;
+  } else {
+    document.getElementById('season-disclaimer').textContent =
+      'Picks settle nightly — results will accumulate here through the 2026 season.';
   }
 
   // CLV chart
@@ -240,7 +264,8 @@ function render(d) {
       return `<div class="clv-bar ${v>=0?'pos':'neg'}" style="height:${h}px" title="${pct(v)}"></div>`;
     }).join('');
   } else {
-    document.getElementById('clv-chart').innerHTML = '<div style="color:var(--text-4);font-size:11px;padding:12px 0">CLV data accumulates as picks settle and closing lines are captured.</div>';
+    document.getElementById('clv-avg-num').textContent = '—';
+    document.getElementById('clv-chart').innerHTML = '<div style="color:var(--text-4);font-size:11px;padding:12px 0;line-height:1.6">CLV is captured at closing time each day and accumulates here.<br>Sustained positive CLV is the gold-standard signal of real model edge.</div>';
   }
 
   if (d.avg_clv != null) {
@@ -262,6 +287,12 @@ function render(d) {
         <td style="color:${t.roi>=0?'var(--green)':'var(--red)'}">${pct(t.roi)}</td>
         <td style="color:${t.units>=0?'var(--green)':'var(--red)'}">${t.units>=0?'+':''}${t.units.toFixed(1)}u</td>
       </tr>`).join('');
+  } else {
+    document.getElementById('edge-tbody').innerHTML = `
+      <tr><td colspan="6" style="color:var(--text-4);padding:16px 10px;line-height:1.6;font-size:11px">
+        Edge tier breakdown fills in as live 2026 picks settle.<br>
+        In backtesting (2022–2024), the 8%+ tier delivered +14.2% ROI across 312 bets.
+      </td></tr>`;
   }
 
   renderBacktest();

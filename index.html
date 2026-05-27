@@ -40,6 +40,50 @@
 
 .single-pick { max-width: 540px; }
 
+/* Posted-at timestamp on pick card */
+.pick-posted {
+  font-size: 9px;
+  color: var(--text-4);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+}
+.pick-posted .posted-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--green); margin-right: 5px; vertical-align: middle; }
+
+/* Glossary */
+.glossary-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-4);
+  cursor: pointer;
+  margin-bottom: 16px;
+  user-select: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+.glossary-toggle:hover { color: var(--text-3); }
+.glossary-toggle .gt-arrow { transition: transform 0.2s; }
+.glossary-toggle.open .gt-arrow { transform: rotate(90deg); }
+.glossary-panel {
+  display: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+}
+.gl-item { }
+.gl-term { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--indigo-lt); margin-bottom: 2px; }
+.gl-def  { font-size: 11px; color: var(--text-3); line-height: 1.5; }
+@media (max-width: 600px) { .glossary-panel { grid-template-columns: 1fr; } }
+
 /* Yesterday's results */
 .yest-section { margin-top: 28px; }
 .yest-title { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-4); margin-bottom: 10px; }
@@ -89,6 +133,23 @@
   <!-- Correlated picks warning (shown if needed) -->
   <div class="corr-warning" id="corr-warning" style="display:none">
     ⚠️ <span id="corr-text"></span>
+  </div>
+
+  <!-- GLOSSARY -->
+  <div class="section" style="margin-bottom:16px">
+    <div class="glossary-toggle" id="glossary-toggle">
+      <span class="gt-arrow">▶</span> How to read these picks
+    </div>
+    <div class="glossary-panel" id="glossary-panel" style="display:none">
+      <div class="gl-item"><div class="gl-term">Model Prob</div><div class="gl-def">The model's estimate of the true win probability for this team, blended 75% model / 25% market.</div></div>
+      <div class="gl-item"><div class="gl-term">Market Prob</div><div class="gl-def">Pinnacle's no-vig implied probability — the sharpest publicly available market price, used as the benchmark.</div></div>
+      <div class="gl-item"><div class="gl-term">Edge</div><div class="gl-def">Model Prob minus Market Prob. Positive edge means the model thinks this team is underpriced. Only picks ≥ 2% edge are shown.</div></div>
+      <div class="gl-item"><div class="gl-term">Fair Odds</div><div class="gl-def">What the American moneyline odds would be if the market priced the game at the model's probability with zero vig.</div></div>
+      <div class="gl-item"><div class="gl-term">Break-Even</div><div class="gl-def">The win rate you need to profit at these odds long-term. If Model Prob > Break-Even, there's positive expected value.</div></div>
+      <div class="gl-item"><div class="gl-term">Half-Kelly</div><div class="gl-def">Recommended bet size using the Kelly Criterion at 50% fractional scaling on a 10-unit bankroll. Reduces variance vs. full Kelly.</div></div>
+      <div class="gl-item"><div class="gl-term">CLV</div><div class="gl-def">Closing Line Value — how much the line moved toward our pick after we logged it. Positive CLV is the gold-standard signal of real edge.</div></div>
+      <div class="gl-item"><div class="gl-term">SP</div><div class="gl-def">Starting Pitcher listed on the pick card. The model's pitcher signals (xFIP, rest, trend) are based on this starter being on the mound.</div></div>
+    </div>
   </div>
 
   <!-- TODAY'S PICKS -->
@@ -186,27 +247,26 @@ function pickCardHTML(p) {
   const edgePct = (p.edge * 100).toFixed(1);
   const barWidth = Math.min(100, (p.edge / 0.12) * 100).toFixed(0);
   const [tierText, tierClass] = tierLabel(p.edge);
-  const modelProbPct = (p.model_prob * 100).toFixed(1);
-  const marketProbPct = (p.market_prob * 100).toFixed(1);
-  const breakEvenPct = (p.break_even * 100).toFixed(1);
+  const modelProbPct = p.model_prob ? (p.model_prob * 100).toFixed(1) : '—';
+  const marketProbPct = p.market_prob ? (p.market_prob * 100).toFixed(1) : '—';
+  const breakEvenPct = p.break_even ? (p.break_even * 100).toFixed(1) : '—';
   const kellyStr = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—';
 
-  const lmHTML = p.line_open && p.line_current ? `
-    <div class="mkt-item">
-      <div class="mkt-lbl">LINE</div>
-      <div class="mkt-val">${formatOdds(p.line_open)} → <strong>${formatOdds(p.line_current)}</strong></div>
-      ${p.sharp_movement ? '<div class="mkt-badge sharp">Sharp</div>' : p.steam_move ? '<div class="mkt-badge steam">Steam</div>' : ''}
-    </div>
-    <div class="mkt-sep"></div>` : '';
+  // Posted timestamp — green dot + time if available
+  const postedHTML = p.posted_at
+    ? `<div class="pick-posted"><span class="posted-dot"></span>Posted ${p.posted_at} · pre-game</div>`
+    : '';
 
-  const ouHTML = (p.model_total || p.market_total) ? `
+  // Pinnacle line at bet time
+  const lmHTML = p.line_current ? `
     <div class="mkt-item">
-      <div class="mkt-lbl">O/U MODEL</div>
-      <div class="mkt-val">${p.model_total || '—'} / <strong>Mkt ${p.market_total || '—'}</strong></div>
+      <div class="mkt-lbl">Pinnacle Line</div>
+      <div class="mkt-val"><strong>${formatOdds(p.line_current)}</strong></div>
     </div>` : '';
 
   return `
     <div class="pick-card ${tierClass}">
+      ${postedHTML}
       <div class="pick-type-row">
         <div class="pick-tier">⭐ ${tierText} · ${p.pick_type || 'MONEYLINE'}</div>
         <div class="pick-badge ${tierClass}">✓ ${tierClass === 'marginal' ? 'MARGINAL' : 'VALUE'}</div>
@@ -223,7 +283,7 @@ function pickCardHTML(p) {
         <div class="ps-box">
           <div class="ps-lbl">Best Odds</div>
           <div class="ps-val amber">${formatOdds(p.best_odds || p.odds)}</div>
-          <div class="ps-sub">${p.best_book || 'Pinnacle'}</div>
+          <div class="ps-sub">at bet time</div>
         </div>
         <div class="ps-box">
           <div class="ps-lbl">Market Prob</div>
@@ -237,7 +297,7 @@ function pickCardHTML(p) {
         </div>
       </div>
 
-      ${(lmHTML || ouHTML) ? `<div class="pick-mkt-row">${lmHTML}${ouHTML}</div>` : ''}
+      ${lmHTML ? `<div class="pick-mkt-row">${lmHTML}</div>` : ''}
 
       <div class="be-kelly-row">
         <div class="bk-box">
@@ -263,11 +323,20 @@ function pickCardHTML(p) {
 }
 
 function render(data) {
-  // Date header
+  // Date header + dynamic page title
   if (data.date) {
     const d = new Date(data.date + 'T12:00:00');
-    document.getElementById('page-date').textContent =
-      d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' }) + ' Value Bets';
+    const dateStr = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+    document.getElementById('page-date').textContent = dateStr + ' Value Bets';
+
+    // Count picks for title: "3 Value Bets · 1 Strong — FairLine MLB"
+    const mainPicks = (data.picks || []).filter(p => (p.edge || 0) >= 0.02);
+    const strongCount = mainPicks.filter(p => (p.edge || 0) >= 0.08).length;
+    if (mainPicks.length > 0) {
+      const titleStr = mainPicks.length + ' Value Bet' + (mainPicks.length !== 1 ? 's' : '') +
+        (strongCount > 0 ? ' · ' + strongCount + ' Strong' : '') + ' — FairLine MLB';
+      document.title = titleStr;
+    }
   }
 
   // Last updated
@@ -312,6 +381,14 @@ function render(data) {
 }
 
 loadPicks();
+
+// Glossary toggle
+document.getElementById('glossary-toggle').addEventListener('click', function() {
+  const panel = document.getElementById('glossary-panel');
+  const open = panel.style.display !== 'none';
+  panel.style.display = open ? 'none' : 'grid';
+  this.classList.toggle('open', !open);
+});
 </script>
 </body>
 </html>

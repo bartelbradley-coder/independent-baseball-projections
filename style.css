@@ -344,7 +344,36 @@ footer a:hover { color: var(--text-2); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 700px) {
+  /* Layout */
   .pick-grid { grid-template-columns: 1fr; }
-  nav { padding: 0 16px; gap: 16px; }
-  .page { padding: 24px 16px 48px; }
+  nav { padding: 0 12px; gap: 8px; }
+  .page { padding: 20px 14px 48px; }
+
+  /* Nav: hide "updated" timestamp on small screens, shrink links */
+  .nav-updated { display: none; }
+  .nav-link { padding: 5px 9px; font-size: 12px; }
+  .nav-name { font-size: 14px; }
+
+  /* Pick card: shrink large matchup text */
+  .pick-matchup { font-size: 20px; }
+  .ps-val { font-size: 15px; }
+
+  /* History / performance tables: allow horizontal scroll */
+  .card { overflow-x: auto; }
+  .picks-table { min-width: 480px; }
+  .edge-table  { min-width: 420px; }
+
+  /* Two-col grids stack on mobile */
+  .two-col, .three-col { grid-template-columns: 1fr !important; }
+
+  /* Stat pills: allow natural wrapping */
+  .metrics-row { gap: 6px; }
+  .metrics-row .stat-pill { min-width: 80px; }
+
+  /* Record strip pills smaller on mobile */
+  .record-strip .stat-pill { padding: 8px 12px; }
+  .stat-val { font-size: 18px; }
+
+  /* Footer: smaller */
+  footer { font-size: 10px; padding: 18px 14px; }
 }
