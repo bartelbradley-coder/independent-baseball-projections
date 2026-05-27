@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FairLine MLB — Model Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.5; }
+.wrap { width: 1100px; margin: 0 auto; padding: 30px 28px 44px; }
+
+/* ── HEADER ── */
+.hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 20px; border-bottom: 1px solid rgba(99,102,241,0.18); position: relative; }
+.hdr::before { content: ''; position: absolute; bottom: -1px; left: 0; width: 100px; height: 1px; background: linear-gradient(90deg, #6366f1, transparent); }
+.brand-row { display: flex; align-items: center; gap: 14px; }
+.brand-icon { width: 46px; height: 46px; background: linear-gradient(135deg, #4f46e5, #7c3aed); border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; box-shadow: 0 0 24px rgba(99,102,241,0.28); }
+.brand-name { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 0.06em; color: #f1f5f9; }
+.brand-name em { color: #818cf8; font-style: normal; }
+.brand-sub { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #334155; margin-top: 2px; }
+.hdr-pills { display: flex; gap: 7px; flex-wrap: wrap; justify-content: flex-end; }
+.hdr-pill { padding: 4px 10px; border-radius: 5px; font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid; }
+.p-ind { background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.3); color: #a5b4fc; }
+.p-tea { background: rgba(20,184,166,0.1); border-color: rgba(20,184,166,0.3); color: #5eead4; }
+.p-vio { background: rgba(139,92,246,0.1); border-color: rgba(139,92,246,0.3); color: #c4b5fd; }
+.p-sla { background: rgba(148,163,184,0.07); border-color: rgba(148,163,184,0.15); color: #94a3b8; }
+
+/* ── MODEL SIGNATURE BAR ── */
+.msig { display: flex; background: rgba(255,255,255,0.018); border: 1px solid rgba(99,102,241,0.12); border-radius: 10px; overflow: hidden; margin-bottom: 22px; }
+.msig-cell { flex: 1; padding: 11px 13px; border-right: 1px solid rgba(255,255,255,0.04); }
+.msig-cell:last-child { border-right: none; }
+.msig-lbl { font-size: 7.5px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #334155; margin-bottom: 4px; }
+.msig-val { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; color: #c7d2fe; letter-spacing: 0.04em; line-height: 1.15; }
+.msig-sub { font-size: 8.5px; color: #334155; margin-top: 2px; line-height: 1.3; }
+
+/* ── SECTION ── */
+.section { margin-bottom: 24px; }
+.sec-lbl { font-size: 8.5px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #334155; margin-bottom: 11px; display: flex; align-items: center; gap: 10px; }
+.sec-lbl::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.04); }
+
+/* ── PIPELINE ── */
+.pipeline { display: flex; align-items: stretch; background: rgba(255,255,255,0.018); border: 1px solid rgba(99,102,241,0.12); border-radius: 12px; overflow: hidden; }
+.pipe-stage { flex: 1; display: flex; flex-direction: column; padding: 11px 7px; border-right: 1px solid rgba(255,255,255,0.04); }
+.pipe-stage:last-child { border-right: none; }
+.pipe-top { display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.04); margin-bottom: 8px; }
+.pipe-num { font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 600; color: #4f46e5; }
+.pipe-glyph { font-size: 17px; line-height: 1; }
+.pipe-name { font-family: 'Oswald', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #cbd5e1; line-height: 1.2; }
+.pipe-io { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.pio-row { display: flex; gap: 4px; align-items: flex-start; }
+.pio-lbl { font-family: 'JetBrains Mono', monospace; font-size: 6.5px; font-weight: 700; padding: 1px 3px; border-radius: 2px; flex-shrink: 0; margin-top: 1px; line-height: 1.3; }
+.pio-in  { background: rgba(148,163,184,0.1); color: #64748b; }
+.pio-out { background: rgba(99,102,241,0.12); color: #818cf8; }
+.pio-text { font-size: 7.5px; color: #3d4f65; line-height: 1.35; }
+
+/* ── MATH GRID ── */
+.math-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+.math-block { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.055); border-radius: 10px; padding: 15px; border-left: 2px solid; }
+.math-block.ci { border-left-color: #6366f1; }
+.math-block.cv { border-left-color: #8b5cf6; }
+.math-block.ct { border-left-color: #14b8a6; }
+.math-block.cs { border-left-color: #0ea5e9; }
+.math-block.ca { border-left-color: #f59e0b; }
+.math-block.ce { border-left-color: #10b981; }
+.math-hdr { font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.11em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.ci .math-hdr { color: #818cf8; } .cv .math-hdr { color: #c4b5fd; } .ct .math-hdr { color: #5eead4; }
+.cs .math-hdr { color: #7dd3fc; } .ca .math-hdr { color: #fbbf24; } .ce .math-hdr { color: #34d399; }
+.f-lbl { font-size: 8px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #334155; margin-top: 9px; margin-bottom: 4px; }
+.f-lbl:first-of-type { margin-top: 0; }
+.fbox { background: rgba(0,0,0,0.35); border: 1px solid rgba(99,102,241,0.13); border-radius: 7px; padding: 11px 13px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.85; color: #c7d2fe; white-space: pre; }
+.v  { color: #34d399; } .fn { color: #a78bfa; } .n { color: #fbbf24; }
+.op { color: #e2e8f0; } .cm { color: #3f4f65; font-style: italic; font-size: 10px; } .hl { color: #f1f5f9; font-weight: 600; }
+.math-note { font-size: 9.5px; color: #475569; margin-top: 8px; line-height: 1.5; }
+.math-note strong { color: #94a3b8; font-weight: 600; }
+
+/* ── SIGNAL IMPORTANCE ── */
+.imp-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
+.imp-group { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.055); border-radius: 10px; padding: 14px; border-top: 2px solid; }
+.ig-ind { border-top-color: #6366f1; } .ig-tea { border-top-color: #14b8a6; } .ig-amb { border-top-color: #f59e0b; }
+.imp-ghdr { display: flex; align-items: center; gap: 8px; margin-bottom: 11px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.imp-gtitle { font-family: 'Oswald', sans-serif; font-size: 10.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.ig-ind .imp-gtitle { color: #818cf8; } .ig-tea .imp-gtitle { color: #5eead4; } .ig-amb .imp-gtitle { color: #fbbf24; }
+.imp-gcount { font-size: 8px; color: #334155; margin-left: auto; }
+.sig-row { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
+.sig-row:last-child { margin-bottom: 0; }
+.sig-idx { font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 600; color: #374155; min-width: 22px; flex-shrink: 0; }
+.sig-name { font-size: 9px; color: #64748b; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sig-bar-wrap { width: 72px; height: 5px; background: rgba(255,255,255,0.04); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+.sig-bar { height: 100%; border-radius: 3px; }
+.ig-ind .sig-bar { background: linear-gradient(90deg, #4f46e5, #818cf8); }
+.ig-tea .sig-bar { background: linear-gradient(90deg, #0d9488, #5eead4); }
+.ig-amb .sig-bar { background: linear-gradient(90deg, #d97706, #fbbf24); }
+.sig-val { font-family: 'JetBrains Mono', monospace; font-size: 8.5px; color: #475569; min-width: 28px; text-align: right; flex-shrink: 0; }
+
+/* ── FEATURE GRID ── */
+.feature-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
+.feat-col { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.055); border-radius: 10px; padding: 14px; }
+.feat-col-hdr { display: flex; align-items: center; gap: 9px; margin-bottom: 11px; padding-bottom: 9px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.feat-col-icon { font-size: 14px; flex-shrink: 0; }
+.feat-col-title { font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #cbd5e1; }
+.feat-col-src { font-size: 8.5px; color: #334155; margin-top: 1px; }
+.feat-item { margin-bottom: 9px; }
+.feat-item:last-child { margin-bottom: 0; }
+.feat-name { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; color: #818cf8; margin-bottom: 2px; }
+.feat-desc { font-size: 10px; color: #475569; line-height: 1.42; }
+
+/* ── VALIDATION ── */
+.val-wrap { display: grid; grid-template-columns: auto 1fr; gap: 13px; }
+.val-metrics { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 11px; }
+.val-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.055); border-radius: 10px; padding: 14px 12px; text-align: center; min-width: 128px; }
+.val-lbl { font-size: 8px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #334155; margin-bottom: 8px; line-height: 1.35; }
+.val-num { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.val-num.g { color: #22c55e; } .val-num.i { color: #818cf8; } .val-num.a { color: #f59e0b; }
+.val-num.r { color: #ef4444; } .val-num.w { color: #f1f5f9; }
+.val-sub { font-size: 8.5px; color: #334155; line-height: 1.4; }
+.roi-block { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.055); border-radius: 10px; padding: 16px 20px; display: flex; flex-direction: column; justify-content: center; }
+.roi-title { font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #22c55e; margin-bottom: 3px; }
+.roi-sub { font-size: 9px; color: #334155; margin-bottom: 14px; }
+.roi-row { display: flex; align-items: center; gap: 11px; margin-bottom: 8px; }
+.roi-row:last-child { margin-bottom: 0; }
+.roi-row.baseline { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04); }
+.roi-year { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #475569; min-width: 46px; }
+.roi-year.dim { color: #334155; }
+.roi-bar-wrap { flex: 1; height: 7px; background: rgba(255,255,255,0.03); border-radius: 4px; overflow: hidden; }
+.roi-fill { height: 100%; border-radius: 4px; }
+.roi-fill.pos { background: linear-gradient(90deg, #16a34a, #22c55e); }
+.roi-fill.neg { background: linear-gradient(90deg, #b91c1c, #ef4444); }
+.roi-pct { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; min-width: 44px; text-align: right; }
+.roi-pct.pos { color: #22c55e; } .roi-pct.neg { color: #ef4444; }
+.roi-meta { font-size: 8.5px; color: #334155; min-width: 90px; text-align: right; }
+
+/* ── FOOTER ── */
+.footer { margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: space-between; }
+.footer-l { font-size: 9px; color: #1e293b; letter-spacing: 0.05em; line-height: 1.6; }
+.footer-r { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; color: #1e293b; letter-spacing: 0.12em; }
+</style>
+</head>
+<body>
+<link rel="stylesheet" href="style.css">
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-logo">⚾</div>
+    <div class="nav-name">FAIRLINE <em>MLB</em></div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Today\'s Picks</a>
+    <a class="nav-link" href="performance.html">Performance</a>
+    <a class="nav-link active" href="model.html">Model</a>
+  </div>
+  <div class="nav-right">
+    <a class="nav-twitter" href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
+  </div>
+</nav>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="brand-row">
+    <div class="brand-icon">⚾</div>
+    <div>
+      <div class="brand-name">FAIRLINE <em>MLB</em></div>
+      <div class="brand-sub">Model Architecture · Technical Reference · Dual-Poisson Win Probability Engine</div>
+    </div>
+  </div>
+  <div class="hdr-pills">
+    <div class="hdr-pill p-ind">23 Live Signals</div>
+    <div class="hdr-pill p-ind">18 Log-Odds Adj.</div>
+    <div class="hdr-pill p-vio">Dual-Poisson</div>
+    <div class="hdr-pill p-tea">Platt Calibrated</div>
+    <div class="hdr-pill p-sla">CLV Tracked</div>
+    <div class="hdr-pill p-sla">7,359 Games OOS</div>
+  </div>
+</div>
+
+<!-- MODEL SIGNATURE BAR -->
+<div class="msig">
+  <div class="msig-cell">
+    <div class="msig-lbl">Model Type</div>
+    <div class="msig-val">Dual-Poisson</div>
+    <div class="msig-sub">λ_home + λ_away → CDF</div>
+  </div>
+  <div class="msig-cell">
+    <div class="msig-lbl">Feature Layers</div>
+    <div class="msig-val">3 · 23 signals</div>
+    <div class="msig-sub">pitcher / sit. / market</div>
+  </div>
+  <div class="msig-cell">
+    <div class="msig-lbl">Adjustments</div>
+    <div class="msig-val">18 log-odds</div>
+    <div class="msig-sub">logit(p) += Σ αᵢ</div>
+  </div>
+  <div class="msig-cell">
+    <div class="msig-lbl">Calibration</div>
+    <div class="msig-val">Platt sigmoid</div>
+    <div class="msig-sub">A = 0.585 · B = +0.014</div>
+  </div>
+  <div class="msig-cell">
+    <div class="msig-lbl">Bet Filter</div>
+    <div class="msig-val">edge ≥ 2%</div>
+    <div class="msig-sub">vs. no-vig Pinnacle</div>
+  </div>
+  <div class="msig-cell">
+    <div class="msig-lbl">Sizing Method</div>
+    <div class="msig-val">½-Kelly / 3u</div>
+    <div class="msig-sub">bankroll fraction</div>
+  </div>
+  <div class="msig-cell">
+    <div class="msig-lbl">OOS Period</div>
+    <div class="msig-val">2022 – 2024</div>
+    <div class="msig-sub">3 seasons, sequential</div>
+  </div>
+  <div class="msig-cell">
+    <div class="msig-lbl">Brier Score</div>
+    <div class="msig-val" style="color:#34d399">0.234</div>
+    <div class="msig-sub">vs. 0.250 market · ↓ better</div>
+  </div>
+</div>
+
+<!-- PIPELINE -->
+<div class="section">
+  <div class="sec-lbl">Inference Pipeline — Input → Transform → Output at Each Stage</div>
+  <div class="pipeline">
+
+    <div class="pipe-stage">
+      <div class="pipe-top">
+        <div class="pipe-num">01</div>
+        <div class="pipe-glyph">📡</div>
+        <div class="pipe-name">Data Ingestion</div>
+      </div>
+      <div class="pipe-io">
+        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">Cron trigger · game schedule · ump assignments · weather coords</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">Raw JSON: odds, lineups, weather, ump_id, FIP data per game</div></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-top">
+        <div class="pipe-num">02</div>
+        <div class="pipe-glyph">⚙️</div>
+        <div class="pipe-name">Feature Eng.</div>
+      </div>
+      <div class="pipe-io">
+        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">Raw JSON dicts per game</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">23 float features (home/away): xFIP, OPS splits, park, weather, ump…</div></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-top">
+        <div class="pipe-num">03</div>
+        <div class="pipe-glyph" style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#818cf8">λ</div>
+        <div class="pipe-name">λ Construction</div>
+      </div>
+      <div class="pipe-io">
+        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">RS₃ᵧᵣ, RS_L15, park_factor, book O/U</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">(λ_home, λ_away) floats — expected runs per team</div></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-top">
+        <div class="pipe-num">04</div>
+        <div class="pipe-glyph">📊</div>
+        <div class="pipe-name">Poisson Win Prob</div>
+      </div>
+      <div class="pipe-io">
+        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">(λ_home, λ_away)</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">p_base ∈ (0,1) — exact CDF summation</div></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-top">
+        <div class="pipe-num">05</div>
+        <div class="pipe-glyph" style="font-family:'JetBrains Mono',monospace;font-size:15px;color:#818cf8">Σα</div>
+        <div class="pipe-name">Log-Odds Adj.</div>
+      </div>
+      <div class="pipe-io">
+        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">p_base + 18 αᵢ float signals</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">p_adj — logit(p_base)+Σαᵢ → sigmoid</div></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-top">
+        <div class="pipe-num">06</div>
+        <div class="pipe-glyph" style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#5eead4">σ</div>
+        <div class="pipe-name">Platt Calib.</div>
+      </div>
+      <div class="pipe-io">
+        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">p_adj (raw model output)</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">p_cal — σ(0.585·logit(p_adj)+0.014)</div></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-top">
+        <div class="pipe-num">07</div>
+        <div class="pipe-glyph">⚡</div>
+        <div class="pipe-name">Edge Detection</div>
+      </div>
+      <div class="pipe-io">
+        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">p_cal + p_nv_Pinnacle</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">edge float; bet_flag if ≥ 0.02</div></div>
+      </div>
+    </div>
+
+    <div class="pipe-stage">
+      <div class="pipe-top">
+        <div class="pipe-num">08</div>
+        <div class="pipe-glyph">💰</div>
+        <div class="pipe-name">Kelly Sizing</div>
+      </div>
+      <div class="pipe-io">
+        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">edge, decimal_odds, bankroll</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">stake (units); cap 3u; log → picks_log.csv</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CORE MATHEMATICS -->
+<div class="section">
+  <div class="sec-lbl">Core Mathematics — Formulas Behind Each Pipeline Stage</div>
+  <div class="math-grid">
+
+    <div class="math-block ci">
+      <div class="math-hdr">λ  Run Expectancy Construction</div>
+      <div class="f-lbl">Base lambda — form-blended, park-adjusted</div>
+      <div class="fbox"><span class="v">λ_base</span> <span class="op">=</span> (<span class="n">0.65</span> × <span class="v">RS₃ᵧᵣ</span> <span class="op">+</span> <span class="n">0.35</span> × <span class="v">RS_L15</span>) <span class="op">/</span> <span class="v">G</span>
+         × <span class="v">park_factor</span>
+<span class="cm">// RS₃ᵧᵣ: 3yr rolling RS/G · RS_L15: last 15G avg</span></div>
+      <div class="f-lbl">Log-odds stacking — 18 factors, logit space</div>
+      <div class="fbox"><span class="fn">logit</span>(<span class="v">p</span>) <span class="op">=</span> <span class="fn">log</span>(<span class="v">p</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">−</span> <span class="v">p</span>))
+
+<span class="fn">logit</span>(<span class="v">p_adj</span>) <span class="op">=</span> <span class="fn">logit</span>(<span class="v">p_base</span>) <span class="op">+</span> <span class="fn">Σᵢ</span> <span class="v">αᵢ</span>
+<span class="cm">// 18 αᵢ ∈ ℝ · logit prevents p ∉ (0,1)</span>
+
+<span class="v">p_adj</span> <span class="op">=</span> <span class="fn">sigmoid</span>(<span class="fn">logit</span>(<span class="v">p_adj</span>))</div>
+      <div class="math-note">65/35 blend weights recent L15 performance to capture hot/cold streaks without overreacting to small samples. Park adjustment applied symmetrically to both offensive and defensive λ.</div>
+    </div>
+
+    <div class="math-block cv">
+      <div class="math-hdr">📊  Poisson Distribution &amp; Win Probability</div>
+      <div class="f-lbl">Run distributions — modeled independently</div>
+      <div class="fbox"><span class="v">R_home</span> <span class="op">~</span> <span class="fn">Poisson</span>(<span class="v">λ_home</span>)
+<span class="v">R_away</span> <span class="op">~</span> <span class="fn">Poisson</span>(<span class="v">λ_away</span>)
+
+<span class="fn">P</span>(<span class="v">X</span><span class="op">=</span><span class="v">k</span> <span class="op">;</span> <span class="v">λ</span>) <span class="op">=</span> <span class="fn">exp</span>(<span class="op">−</span><span class="v">λ</span>) <span class="op">·</span> <span class="v">λ</span><span class="op">^</span><span class="v">k</span> <span class="op">/</span> <span class="v">k</span><span class="op">!</span></div>
+      <div class="f-lbl">Win probability — exact CDF (no simulation)</div>
+      <div class="fbox"><span class="fn">P</span>(home wins) <span class="op">=</span>
+  <span class="fn">Σ</span>_{k=1}^∞ <span class="fn">P</span>(<span class="v">R_home</span><span class="op">=</span><span class="v">k</span>) <span class="op">·</span> <span class="fn">CDF</span><sub>Pois</sub>(<span class="v">λ_away</span><span class="op">,</span> <span class="v">k</span><span class="op">−</span><span class="n">1</span>)
+<span class="cm">// Tie → extra innings as 50/50</span></div>
+      <div class="math-note">No Monte Carlo needed — win prob is computed exactly from Poisson CDFs. Teams are modeled as independent (no run correlation). Pitcher, park, and lineup signals enter via λ; 18 log-odds factors adjust the derived win probability directly.</div>
+    </div>
+
+    <div class="math-block ct">
+      <div class="math-hdr">σ  Platt Scaling Calibration</div>
+      <div class="f-lbl">Sigmoid recalibration — fitted OOS 2022–2024</div>
+      <div class="fbox"><span class="v">p_cal</span> <span class="op">=</span> <span class="fn">σ</span>(<span class="v">A</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_raw</span>) <span class="op">+</span> <span class="v">B</span>)
+
+      <span class="op">=</span> <span class="n">1</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">+</span> <span class="fn">exp</span>(<span class="op">−</span>(<span class="hl">0.585</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_raw</span>)
+                 <span class="op">+</span> <span class="hl">0.014</span>)))</div>
+      <div class="f-lbl">Parameter interpretation</div>
+      <div class="fbox"><span class="hl">A = 0.585</span>  <span class="cm">// &lt; 1: model over-expresses
+          //   confidence; compress toward 50%</span>
+<span class="hl">B = +0.014</span> <span class="cm">// home-team bias correction</span></div>
+      <div class="math-note">Fitted via MLE on 3yr OOS outcomes. Brier Score: <strong>0.234</strong> model vs. <strong>0.250</strong> market — 6.4% improvement. A &lt; 1 confirms the raw Poisson systematically over-prices favorites; calibration compresses the logit toward the empirical base rate.</div>
+    </div>
+
+    <div class="math-block cs">
+      <div class="math-hdr">⚖️  No-Vig Market Probability Strip</div>
+      <div class="f-lbl">American odds → raw implied probability</div>
+      <div class="fbox"><span class="fn">p_raw</span>(<span class="v">ml</span>) <span class="op">=</span> {
+  <span class="op">|</span><span class="v">ml</span><span class="op">|</span> <span class="op">/</span> (<span class="op">|</span><span class="v">ml</span><span class="op">|</span> <span class="op">+</span> <span class="n">100</span>)   <span class="cm">if ml &lt; 0  (favorite)</span>
+  <span class="n">100</span> <span class="op">/</span> (<span class="v">ml</span> <span class="op">+</span> <span class="n">100</span>)    <span class="cm">if ml &gt; 0  (underdog)</span>
+}</div>
+      <div class="f-lbl">Simultaneous both-side margin removal</div>
+      <div class="fbox"><span class="v">hold</span>      <span class="op">=</span> <span class="fn">p_raw</span>(<span class="v">h_ml</span>) <span class="op">+</span> <span class="fn">p_raw</span>(<span class="v">a_ml</span>) <span class="op">−</span> <span class="n">1</span>
+
+<span class="v">p_nv_home</span> <span class="op">=</span> <span class="fn">p_raw</span>(<span class="v">h_ml</span>) <span class="op">/</span>
+            (<span class="fn">p_raw</span>(<span class="v">h_ml</span>) <span class="op">+</span> <span class="fn">p_raw</span>(<span class="v">a_ml</span>))
+<span class="cm">// Pinnacle benchmark: hold ≈ 2.5%</span></div>
+      <div class="math-note">Simultaneous stripping avoids asymmetric vig attribution — equivalent to the multiplicative method. Pinnacle's ~2.5% hold makes its no-vig the tightest available reflection of sharp market consensus.</div>
+    </div>
+
+    <div class="math-block ca">
+      <div class="math-hdr">⚡  Edge Detection &amp; Half-Kelly Sizing</div>
+      <div class="f-lbl">Model edge vs. no-vig Pinnacle</div>
+      <div class="fbox"><span class="v">edge</span> <span class="op">=</span> <span class="v">p_cal</span> <span class="op">−</span> <span class="v">p_nv_Pinnacle</span>
+<span class="cm">// Bet flagged if edge ≥ 0.02</span></div>
+      <div class="f-lbl">Half-Kelly criterion — 50% of full Kelly</div>
+      <div class="fbox"><span class="v">b</span>  <span class="op">=</span> decimal_odds <span class="op">−</span> <span class="n">1</span>
+<span class="v">p</span>  <span class="op">=</span> <span class="v">p_cal</span>  <span class="op">;</span>  <span class="v">q</span> <span class="op">=</span> <span class="n">1</span> <span class="op">−</span> <span class="v">p</span>
+
+<span class="v">f*</span> <span class="op">=</span> <span class="n">0.5</span> <span class="op">×</span> (<span class="v">b</span> <span class="op">·</span> <span class="v">p</span> <span class="op">−</span> <span class="v">q</span>) <span class="op">/</span> <span class="v">b</span>
+<span class="cm">// units = f* × bankroll  ;  cap: 3u</span></div>
+      <div class="math-note">Half-Kelly reduces variance by ~50% with only ~25% EV reduction. The 3u cap prevents over-sizing on high-edge outliers that may reflect data anomalies rather than genuine model confidence.</div>
+    </div>
+
+    <div class="math-block ce">
+      <div class="math-hdr">📈  Closing Line Value — Process Validation</div>
+      <div class="f-lbl">Definition — Pinnacle no-vig both sides</div>
+      <div class="fbox"><span class="v">CLV</span> <span class="op">=</span> <span class="v">p_close_nv</span> <span class="op">−</span> <span class="v">p_open_nv</span>
+<span class="cm">// Snapshot: 3:30 PM PT pre-game lock</span></div>
+      <div class="f-lbl">Interpretation</div>
+      <div class="fbox"><span class="v">CLV</span> <span class="op">&gt;</span> <span class="n">0</span>  → market moved <span class="v">toward</span> pick
+<span class="v">CLV</span> <span class="op">&lt;</span> <span class="n">0</span>  → market moved <span class="v">against</span> pick
+
+<span class="cm">// +1% avg CLV ≈ long-run positive EV
+// Separates skill from short-run variance</span></div>
+      <div class="math-note">CLV is the gold standard for betting process validation — a model can run cold for 50 games but still show positive CLV, confirming the signal is real. Tracked per-bet in <strong>picks_log.csv</strong>, surfaced via <strong>--poster-stats</strong>.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SIGNAL IMPORTANCE -->
+<div class="section">
+  <div class="sec-lbl">Signal Importance — Avg. Abs. Log-Odds Contribution per Factor (αᵢ) · Relative Magnitudes Approximate</div>
+  <div class="imp-grid">
+
+    <div class="imp-group ig-ind">
+      <div class="imp-ghdr">
+        <div class="imp-gtitle">⚾ Pitcher Layer</div>
+        <div class="imp-gcount">5 factors · α₁–α₅</div>
+      </div>
+      <div class="sig-row"><div class="sig-idx">α₁</div><div class="sig-name">Starter xFIP matchup</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:100%"></div></div><div class="sig-val">0.18</div></div>
+      <div class="sig-row"><div class="sig-idx">α₅</div><div class="sig-name">Bullpen xFIP tiered</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:56%"></div></div><div class="sig-val">0.10</div></div>
+      <div class="sig-row"><div class="sig-idx">α₂</div><div class="sig-name">Platoon FIP split</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:50%"></div></div><div class="sig-val">0.09</div></div>
+      <div class="sig-row"><div class="sig-idx">α₃</div><div class="sig-name">SwStr% plate discipline</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:28%"></div></div><div class="sig-val">0.05</div></div>
+      <div class="sig-row"><div class="sig-idx">α₄</div><div class="sig-name">Pitcher form slope L5</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:22%"></div></div><div class="sig-val">0.04</div></div>
+    </div>
+
+    <div class="imp-group ig-tea">
+      <div class="imp-ghdr">
+        <div class="imp-gtitle">🌤 Situational Layer</div>
+        <div class="imp-gcount">6 factors · α₆–α₁₁</div>
+      </div>
+      <div class="sig-row"><div class="sig-idx">α₆</div><div class="sig-name">Park factor</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:67%"></div></div><div class="sig-val">0.12</div></div>
+      <div class="sig-row"><div class="sig-idx">α₁₀</div><div class="sig-name">Defensive OAA → RAA</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:39%"></div></div><div class="sig-val">0.07</div></div>
+      <div class="sig-row"><div class="sig-idx">α₉</div><div class="sig-name">Umpire run tendency</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:33%"></div></div><div class="sig-val">0.06</div></div>
+      <div class="sig-row"><div class="sig-idx">α₇</div><div class="sig-name">Weather — wind carry</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:28%"></div></div><div class="sig-val">0.05</div></div>
+      <div class="sig-row"><div class="sig-idx">α₁₁</div><div class="sig-name">Catcher framing runs</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:22%"></div></div><div class="sig-val">0.04</div></div>
+      <div class="sig-row"><div class="sig-idx">α₈</div><div class="sig-name">Weather — temperature</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:17%"></div></div><div class="sig-val">0.03</div></div>
+    </div>
+
+    <div class="imp-group ig-amb">
+      <div class="imp-ghdr">
+        <div class="imp-gtitle">📈 Market &amp; Lineup Layer</div>
+        <div class="imp-gcount">7 factors · α₁₂–α₁₈</div>
+      </div>
+      <div class="sig-row"><div class="sig-idx">α₁₂</div><div class="sig-name">Lineup OPS split (hand)</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:61%"></div></div><div class="sig-val">0.11</div></div>
+      <div class="sig-row"><div class="sig-idx">α₁₆</div><div class="sig-name">O/U market constraint</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:44%"></div></div><div class="sig-val">0.08</div></div>
+      <div class="sig-row"><div class="sig-idx">α₁₃</div><div class="sig-name">Lineup quality delta</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:39%"></div></div><div class="sig-val">0.07</div></div>
+      <div class="sig-row"><div class="sig-idx">α₁₅</div><div class="sig-name">Home field advantage</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:33%"></div></div><div class="sig-val">0.06</div></div>
+      <div class="sig-row"><div class="sig-idx">α₁₇</div><div class="sig-name">Rolling RS/RA form</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:28%"></div></div><div class="sig-val">0.05</div></div>
+      <div class="sig-row"><div class="sig-idx">α₁₄</div><div class="sig-name">Bullpen availability</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:22%"></div></div><div class="sig-val">0.04</div></div>
+      <div class="sig-row"><div class="sig-idx">α₁₈</div><div class="sig-name">Rest days differential</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:17%"></div></div><div class="sig-val">0.03</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FEATURE ENGINEERING -->
+<div class="section">
+  <div class="sec-lbl">Feature Engineering — 23 Live Signals Across 3 Layers</div>
+  <div class="feature-grid">
+
+    <div class="feat-col">
+      <div class="feat-col-hdr">
+        <div class="feat-col-icon">⚾</div>
+        <div>
+          <div class="feat-col-title">Pitcher Layer</div>
+          <div class="feat-col-src">FanGraphs · Baseball Savant</div>
+        </div>
+      </div>
+      <div class="feat-item"><div class="feat-name">starter_xfip</div><div class="feat-desc">Regressed ERA estimator — normalizes FIP by league LD%, removes BABIP luck and HR/FB variance. Primary pitcher quality signal.</div></div>
+      <div class="feat-item"><div class="feat-name">platoon_fip_split</div><div class="feat-desc">LHH/RHH xFIP delta weighted by opposing lineup handedness % (per-batter split, not team-level).</div></div>
+      <div class="feat-item"><div class="feat-name">swstr_pct</div><div class="feat-desc">Swinging-strike rate from FanGraphs plate discipline. Leading indicator for K% — predicts FIP before results converge.</div></div>
+      <div class="feat-item"><div class="feat-name">bullpen_xfip_tiered</div><div class="feat-desc">Closer (35%) / Setup (25%) / Middle (40%) xFIP blend. Fatigue-adjusted by recent appearance counts per tier.</div></div>
+      <div class="feat-item"><div class="feat-name">pitcher_form_slope</div><div class="feat-desc">OLS slope of xFIP over last 5 starts. Captures momentum and injury-suppressed velocity not yet in season stats.</div></div>
+    </div>
+
+    <div class="feat-col">
+      <div class="feat-col-hdr">
+        <div class="feat-col-icon">🌤</div>
+        <div>
+          <div class="feat-col-title">Situational Layer</div>
+          <div class="feat-col-src">Savant · Open-Meteo · UmpScoreCards</div>
+        </div>
+      </div>
+      <div class="feat-item"><div class="feat-name">park_factor</div><div class="feat-desc">3yr static anchor blended with running 2026 RS/RA splits at ballpark GPS coordinates — updated daily.</div></div>
+      <div class="feat-item"><div class="feat-name">weather_run_delta</div><div class="feat-desc">Wind mph × bearing → HR carry/suppress; temp °F; humidity at first pitch. Converted to expected Δruns/9.</div></div>
+      <div class="feat-item"><div class="feat-name">umpire_run_factor</div><div class="feat-desc">Historical run-impact mean per ump (142 tracked). Tight-zone umps suppress scoring; wide-zone umps inflate λ.</div></div>
+      <div class="feat-item"><div class="feat-name">def_oaa_delta</div><div class="feat-desc">Savant OAA (outs above average) → runs above average vs. league mean → win probability delta.</div></div>
+      <div class="feat-item"><div class="feat-name">catcher_framing_runs</div><div class="feat-desc">Savant pitch-level framing runs (called-strike prob over replacement) → run delta per game.</div></div>
+    </div>
+
+    <div class="feat-col">
+      <div class="feat-col-hdr">
+        <div class="feat-col-icon">📈</div>
+        <div>
+          <div class="feat-col-title">Lineup &amp; Market Layer</div>
+          <div class="feat-col-src">MLB Stats API · Pinnacle / Odds API</div>
+        </div>
+      </div>
+      <div class="feat-item"><div class="feat-name">lineup_ops_split</div><div class="feat-desc">Per-batter OPS vs. LHP/RHP from posted lineups only. Weighted OPS delta vs. team season mean, matched to starter's hand.</div></div>
+      <div class="feat-item"><div class="feat-name">lineup_quality_delta</div><div class="feat-desc">Today's lineup aggregate OPS vs. team season average. Detects rest-day lineups and injury absences.</div></div>
+      <div class="feat-item"><div class="feat-name">bullpen_availability</div><div class="feat-desc">Binary fatigue flag: closer/setup used 2+ times in last 3 days → tier downgrade in bullpen xFIP blend.</div></div>
+      <div class="feat-item"><div class="feat-name">novig_pinnacle_prob</div><div class="feat-desc">Pinnacle moneyline de-juiced via simultaneous margin strip. Sharpest market benchmark — hold ≈ 2.5%.</div></div>
+      <div class="feat-item"><div class="feat-name">book_total_constraint</div><div class="feat-desc">Market O/U λ-scales the Poisson simulation — prevents model run totals from diverging sharply from the sharp total market.</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- VALIDATION -->
+<div class="section">
+  <div class="sec-lbl">Out-of-Sample Validation — 2022–2024 · Flat $100/Bet · 5%+ Edge Threshold</div>
+  <div class="val-wrap">
+
+    <div class="val-metrics">
+      <div class="val-card">
+        <div class="val-lbl">Games<br>Backtested</div>
+        <div class="val-num i">7,359</div>
+        <div class="val-sub">2022–2024 · OOS only</div>
+      </div>
+      <div class="val-card">
+        <div class="val-lbl">Sharpe<br>Ratio</div>
+        <div class="val-num a">1.82</div>
+        <div class="val-sub">annualized · risk-adj.</div>
+      </div>
+      <div class="val-card">
+        <div class="val-lbl">Max<br>Drawdown</div>
+        <div class="val-num r">−12.4u</div>
+        <div class="val-sub">peak-to-trough worst run</div>
+      </div>
+      <div class="val-card">
+        <div class="val-lbl">Brier<br>Score</div>
+        <div class="val-num w">0.234</div>
+        <div class="val-sub">vs. 0.250 market · ↓ better</div>
+      </div>
+    </div>
+
+    <div class="roi-block">
+      <div class="roi-title">+10.4% — Improving Every Out-of-Sample Year</div>
+      <div class="roi-sub">Flat $100/bet · 5%+ edge signals only · vs. −4.0% baseline (bet every game, full vig)</div>
+      <div class="roi-row">
+        <div class="roi-year">2022</div>
+        <div class="roi-bar-wrap"><div class="roi-fill pos" style="width:6.7%"></div></div>
+        <div class="roi-pct pos">+0.7%</div>
+        <div class="roi-meta">975 bets · +6.8u</div>
+      </div>
+      <div class="roi-row">
+        <div class="roi-year">2023</div>
+        <div class="roi-bar-wrap"><div class="roi-fill pos" style="width:87.5%"></div></div>
+        <div class="roi-pct pos">+9.1%</div>
+        <div class="roi-meta">1,093 bets · +99.5u</div>
+      </div>
+      <div class="roi-row">
+        <div class="roi-year">2024</div>
+        <div class="roi-bar-wrap"><div class="roi-fill pos" style="width:100%"></div></div>
+        <div class="roi-pct pos">+10.4%</div>
+        <div class="roi-meta">977 bets · +101.6u</div>
+      </div>
+      <div class="roi-row baseline">
+        <div class="roi-year dim">Baseline</div>
+        <div class="roi-bar-wrap"><div class="roi-fill neg" style="width:38.5%"></div></div>
+        <div class="roi-pct neg">−4.0%</div>
+        <div class="roi-meta" style="color:#334155">all games · vig drain</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-l">
+    FAIRLINE MLB · Dual-Poisson Win Probability Engine · 23 Live Signals · 18 Log-Odds Adjustments · Platt Calibration · Half-Kelly Sizing · CLV Tracked<br>
+    Sources: MLB Stats API · FanGraphs · Baseball Savant · Open-Meteo · UmpScoreCards · Pinnacle (Odds API)
+  </div>
+  <div class="footer-r">@FairLineMLB</div>
+</div>
+
+</div>
+</body>
+</html>

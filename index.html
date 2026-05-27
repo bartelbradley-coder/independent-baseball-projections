@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FairLine MLB — Today's Picks</title>
+<meta name="description" content="Daily MLB win probability picks from a quantitative Dual-Poisson model. Model edge vs. no-vig Pinnacle lines, Half-Kelly sizing, CLV tracked.">
+<link rel="stylesheet" href="style.css">
+<style>
+.page-header { margin-bottom: 28px; }
+.page-title { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+.page-subtitle { font-size: 12px; color: var(--text-3); }
+.page-subtitle span { color: var(--indigo-lt); font-weight: 500; }
+
+.record-strip {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.no-picks-yet {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-4);
+}
+.no-picks-yet .np-icon { font-size: 36px; margin-bottom: 12px; }
+.no-picks-yet .np-title { font-family: 'Oswald', sans-serif; font-size: 18px; color: var(--text-3); margin-bottom: 6px; letter-spacing: 0.05em; }
+.no-picks-yet .np-sub { font-size: 12px; color: var(--text-4); line-height: 1.6; }
+
+.picks-count-badge {
+  font-size: 11px;
+  color: var(--text-4);
+  margin-bottom: 16px;
+}
+
+.single-pick { max-width: 540px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-logo">⚾</div>
+    <div class="nav-name">FAIRLINE <em>MLB</em></div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active" href="index.html">Today's Picks</a>
+    <a class="nav-link" href="performance.html">Performance</a>
+    <a class="nav-link" href="model.html">Model</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-updated" id="last-updated">—</span>
+    <a class="nav-twitter" href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-header">
+    <div class="page-title" id="page-date">Today's Value Bets</div>
+    <div class="page-subtitle">Dual-Poisson model · <span id="signal-count">23</span> live signals · edge vs. no-vig Pinnacle</div>
+  </div>
+
+  <!-- Record strip -->
+  <div class="record-strip" id="record-strip"></div>
+
+  <!-- Correlated picks warning (shown if needed) -->
+  <div class="corr-warning" id="corr-warning" style="display:none">
+    ⚠️ <span id="corr-text"></span>
+  </div>
+
+  <!-- TODAY'S PICKS -->
+  <div class="section">
+    <div class="sec-lbl">Value Bets</div>
+    <div id="picks-container">
+      <div class="loading">Loading picks…</div>
+    </div>
+  </div>
+
+  <!-- MARGINAL PICKS -->
+  <div class="section" id="marginal-section" style="display:none">
+    <div class="sec-lbl">Marginal — Below 2% Edge Threshold</div>
+    <div id="marginal-container"></div>
+  </div>
+
+</div>
+
+<footer>
+  FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 18 Log-Odds Adjustments + Platt Calibration<br>
+  For informational purposes only. Gambling involves risk — never bet more than you can afford to lose. Past model performance does not guarantee future results. 18+ only.<br>
+  <a href="model.html">Model Overview</a> · <a href="performance.html">Full Performance History</a> · <a href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
+</footer>
+
+<script>
+async function loadPicks() {
+  try {
+    const res = await fetch('data/today.json?v=' + Date.now());
+    if (!res.ok) throw new Error('No picks data yet');
+    const data = await res.json();
+    render(data);
+  } catch (e) {
+    document.getElementById('picks-container').innerHTML = `
+      <div class="no-picks-yet">
+        <div class="np-icon">⏰</div>
+        <div class="np-title">Picks Posted by 9:30 AM PT</div>
+        <div class="np-sub">The model runs each morning after lineups and odds are available.<br>Check back after 9:30 AM Pacific Time.</div>
+      </div>`;
+  }
+}
+
+function formatOdds(ml) {
+  if (!ml && ml !== 0) return '—';
+  return ml > 0 ? '+' + ml : String(ml);
+}
+
+function tierLabel(edge) {
+  if (edge >= 0.08) return ['STRONG VALUE', 'strong'];
+  if (edge >= 0.05) return ['VALUE', 'value'];
+  return ['MARGINAL', 'marginal'];
+}
+
+function pickCardHTML(p) {
+  const edgePct = (p.edge * 100).toFixed(1);
+  const barWidth = Math.min(100, (p.edge / 0.12) * 100).toFixed(0);
+  const [tierText, tierClass] = tierLabel(p.edge);
+  const modelProbPct = (p.model_prob * 100).toFixed(1);
+  const marketProbPct = (p.market_prob * 100).toFixed(1);
+  const breakEvenPct = (p.break_even * 100).toFixed(1);
+  const kellyStr = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—';
+
+  const lmHTML = p.line_open && p.line_current ? `
+    <div class="mkt-item">
+      <div class="mkt-lbl">LINE</div>
+      <div class="mkt-val">${formatOdds(p.line_open)} → <strong>${formatOdds(p.line_current)}</strong></div>
+      ${p.sharp_movement ? '<div class="mkt-badge sharp">Sharp</div>' : p.steam_move ? '<div class="mkt-badge steam">Steam</div>' : ''}
+    </div>
+    <div class="mkt-sep"></div>` : '';
+
+  const ouHTML = (p.model_total || p.market_total) ? `
+    <div class="mkt-item">
+      <div class="mkt-lbl">O/U MODEL</div>
+      <div class="mkt-val">${p.model_total || '—'} / <strong>Mkt ${p.market_total || '—'}</strong></div>
+    </div>` : '';
+
+  return `
+    <div class="pick-card ${tierClass}">
+      <div class="pick-type-row">
+        <div class="pick-tier">⭐ ${tierText} · ${p.pick_type || 'MONEYLINE'}</div>
+        <div class="pick-badge ${tierClass}">✓ ${tierClass === 'marginal' ? 'MARGINAL' : 'VALUE'}</div>
+      </div>
+      <div class="pick-matchup">${p.game || '—'}</div>
+      <div class="pick-meta">${p.pick || '—'} · ${p.meta || ''}</div>
+
+      <div class="pick-stats">
+        <div class="ps-box">
+          <div class="ps-lbl">Model Prob</div>
+          <div class="ps-val">${modelProbPct}%</div>
+          <div class="ps-sub">True win %</div>
+        </div>
+        <div class="ps-box">
+          <div class="ps-lbl">Best Odds</div>
+          <div class="ps-val amber">${formatOdds(p.best_odds || p.odds)}</div>
+          <div class="ps-sub">${p.best_book || 'Pinnacle'}</div>
+        </div>
+        <div class="ps-box">
+          <div class="ps-lbl">Market Prob</div>
+          <div class="ps-val">${marketProbPct}%</div>
+          <div class="ps-sub">No-vig Pinnacle</div>
+        </div>
+        <div class="ps-box">
+          <div class="ps-lbl">Fair Odds</div>
+          <div class="ps-val">${p.fair_odds || '—'}</div>
+          <div class="ps-sub">vs. ${formatOdds(p.best_odds || p.odds)} market</div>
+        </div>
+      </div>
+
+      ${(lmHTML || ouHTML) ? `<div class="pick-mkt-row">${lmHTML}${ouHTML}</div>` : ''}
+
+      <div class="be-kelly-row">
+        <div class="bk-box">
+          <div class="bk-lbl">🎯 Break-Even</div>
+          <div class="bk-val">${breakEvenPct}%</div>
+        </div>
+        <div class="bk-box">
+          <div class="bk-lbl">💰 Half-Kelly</div>
+          <div class="bk-val">${kellyStr}</div>
+        </div>
+      </div>
+
+      <div class="edge-bar-wrap">
+        <div class="edge-bar-track">
+          <div class="edge-bar-fill" style="width:${barWidth}%"></div>
+        </div>
+        <div class="edge-bar-label">
+          <div class="edge-lbl">MODEL EDGE · 2% MIN</div>
+          <div class="edge-val">+${edgePct}%</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function render(data) {
+  // Date header
+  if (data.date) {
+    const d = new Date(data.date + 'T12:00:00');
+    document.getElementById('page-date').textContent =
+      d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' }) + ' Value Bets';
+  }
+
+  // Last updated
+  if (data.generated_at) {
+    document.getElementById('last-updated').textContent = 'Updated ' + data.generated_at;
+  }
+
+  // Record strip
+  const strip = document.getElementById('record-strip');
+  if (data.season) {
+    strip.innerHTML = `
+      <div class="stat-pill"><div class="stat-lbl">2026 Season</div><div class="stat-val white">${data.season.wins}W–${data.season.losses}L</div><div class="stat-sub">${data.season.units >= 0 ? '+' : ''}${(data.season.units||0).toFixed(1)}u</div></div>
+      <div class="stat-pill"><div class="stat-lbl">Last 30</div><div class="stat-val ${data.last30.units >= 0 ? 'green' : 'red'}">${data.last30.wins}–${data.last30.losses}</div><div class="stat-sub">${data.last30.units >= 0 ? '+' : ''}${(data.last30.units||0).toFixed(1)}u</div></div>
+      ${data.avg_clv != null ? `<div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${data.avg_clv >= 0 ? 'green' : 'red'}">${data.avg_clv >= 0 ? '+' : ''}${(data.avg_clv*100).toFixed(1)}%</div><div class="stat-sub">vs. close</div></div>` : ''}
+    `;
+  }
+
+  // Correlated warning
+  if (data.correlated_warning) {
+    document.getElementById('corr-warning').style.display = 'flex';
+    document.getElementById('corr-text').textContent = data.correlated_warning;
+  }
+
+  // Main picks
+  const main = (data.picks || []).filter(p => p.edge >= 0.02);
+  const marginal = (data.picks || []).filter(p => p.edge < 0.02);
+
+  if (main.length === 0) {
+    document.getElementById('picks-container').innerHTML = `
+      <div class="no-picks-yet">
+        <div class="np-icon">🔍</div>
+        <div class="np-title">No Value Bets Today</div>
+        <div class="np-sub">The model found no edges ≥ 2% against Pinnacle's no-vig line today.<br>This is expected — the model only flags genuine value, not every game.</div>
+      </div>`;
+  } else {
+    const gridClass = main.length === 1 ? 'pick-grid single-pick' : 'pick-grid';
+    document.getElementById('picks-container').innerHTML =
+      `<div class="${gridClass}">` + main.map(pickCardHTML).join('') + '</div>';
+  }
+
+  // Marginal picks
+  if (marginal.length > 0) {
+    document.getElementById('marginal-section').style.display = 'block';
+    document.getElementById('marginal-container').innerHTML =
+      '<div class="pick-grid">' + marginal.map(pickCardHTML).join('') + '</div>';
+  }
+}
+
+loadPicks();
+</script>
+</body>
+</html>

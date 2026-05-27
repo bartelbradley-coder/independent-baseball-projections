@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FairLine MLB — Performance Dashboard</title>
+<meta name="description" content="Full performance history for FairLine MLB — ROI, CLV tracking, Sharpe ratio, win rate by edge tier.">
+<link rel="stylesheet" href="style.css">
+<style>
+.page-title { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+.page-subtitle { font-size: 12px; color: var(--text-3); margin-bottom: 28px; }
+
+.metrics-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+.metrics-row .stat-pill { flex: 1; min-width: 120px; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+@media (max-width: 700px) {
+  .two-col, .three-col { grid-template-columns: 1fr; }
+}
+
+.card-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 4px;
+}
+
+.card-sub { font-size: 10px; color: var(--text-4); margin-bottom: 16px; }
+
+.clv-avg-display {
+  text-align: center;
+  padding: 16px 0 8px;
+}
+.clv-avg-num {
+  font-family: 'Oswald', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+}
+.clv-avg-lbl { font-size: 10px; color: var(--text-4); margin-top: 4px; }
+
+.edge-table { width: 100%; border-collapse: collapse; }
+.edge-table th { font-size: 8.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+.edge-table td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 12px; color: var(--text-3); }
+.edge-table tr:last-child td { border-bottom: none; }
+.edge-tier-badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.et-strong { background: rgba(99,102,241,0.12); color: var(--indigo-lt); }
+.et-value  { background: rgba(20,184,166,0.1); color: var(--teal); }
+.et-all    { background: rgba(255,255,255,0.05); color: var(--text-3); }
+
+.season-disclaimer {
+  font-size: 10px;
+  color: var(--text-4);
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+.backtest-note {
+  font-size: 10px;
+  color: var(--text-4);
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  line-height: 1.5;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-logo">⚾</div>
+    <div class="nav-name">FAIRLINE <em>MLB</em></div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Today's Picks</a>
+    <a class="nav-link active" href="performance.html">Performance</a>
+    <a class="nav-link" href="model.html">Model</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-updated" id="last-updated">—</span>
+    <a class="nav-twitter" href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-title">Performance Dashboard</div>
+  <div class="page-subtitle" id="perf-subtitle">Loading…</div>
+
+  <!-- KEY METRICS -->
+  <div class="metrics-row" id="metrics-row">
+    <div class="loading">Loading metrics…</div>
+  </div>
+
+  <!-- ROI + CLV row -->
+  <div class="section two-col">
+
+    <!-- LIVE SEASON ROI -->
+    <div class="card">
+      <div class="card-title">📅 2026 Season — Live Results</div>
+      <div class="card-sub" id="season-sub">Updated nightly after games settle</div>
+      <div id="season-roi-chart"><div class="loading">Loading…</div></div>
+      <div class="season-disclaimer" id="season-disclaimer"></div>
+    </div>
+
+    <!-- CLV TRACKING -->
+    <div class="card">
+      <div class="card-title">📈 Closing Line Value — Last 30 Picks</div>
+      <div class="card-sub">Positive = model was right before the market moved</div>
+      <div class="clv-avg-display" id="clv-avg-display">
+        <div class="clv-avg-num" id="clv-avg-num">—</div>
+        <div class="clv-avg-lbl">Average CLV · Last 30 settled picks</div>
+      </div>
+      <div class="clv-chart" id="clv-chart"></div>
+      <div class="clv-zero"></div>
+    </div>
+
+  </div>
+
+  <!-- MONTHLY CONSISTENCY + EDGE TIER -->
+  <div class="section two-col">
+
+    <!-- MONTHLY -->
+    <div class="card">
+      <div class="card-title">📊 Monthly ROI Consistency — 2026</div>
+      <div class="card-sub">Flat $100/bet · 5%+ edge signals only</div>
+      <div class="monthly-chart" id="monthly-chart"></div>
+    </div>
+
+    <!-- EDGE TIER BREAKDOWN -->
+    <div class="card">
+      <div class="card-title">⚡ Edge Tier Performance — 2026 Season</div>
+      <div class="card-sub">Win rate and ROI by model edge bucket</div>
+      <table class="edge-table" id="edge-table">
+        <thead><tr><th>Tier</th><th>Bets</th><th>W–L</th><th>Win %</th><th>ROI</th><th>Units</th></tr></thead>
+        <tbody id="edge-tbody"><tr><td colspan="6" style="color:var(--text-4);padding:16px 10px">No settled data yet</td></tr></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- BACKTESTED ROI -->
+  <div class="section">
+    <div class="sec-lbl">Backtested ROI — Out-of-Sample 2022–2024 · Flat $100/Bet · 5%+ Edge</div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div>
+          <div class="card-title" style="margin-bottom:4px">Improving Every Out-of-Sample Year</div>
+          <div class="card-sub" style="margin-bottom:0">vs. −4.0% baseline (bet every game, full vig drain) · 7,359 games backtested</div>
+        </div>
+        <div style="font-family:'Oswald',sans-serif;font-size:32px;font-weight:700;color:var(--green)">+10.4%</div>
+      </div>
+      <div id="backtest-chart"></div>
+      <div class="backtest-note">
+        Backtested on 7,359 out-of-sample games (2022–2024). Each year trained on prior seasons only — no lookahead.
+        Brier Score: <strong style="color:var(--text-2)">0.234</strong> vs. 0.250 market · Sharpe: <strong style="color:var(--text-2)">1.82</strong> · Max Drawdown: <strong style="color:var(--red)">−12.4u</strong>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 18 Log-Odds Adjustments + Platt Calibration<br>
+  For informational purposes only. Gambling involves risk — never bet more than you can afford to lose. Past model performance does not guarantee future results. 18+ only.<br>
+  <a href="model.html">Model Overview</a> · <a href="index.html">Today's Picks</a> · <a href="https://twitter.com/FairLineMLB" target="_blank">@FairLineMLB</a>
+</footer>
+
+<script>
+async function loadPerformance() {
+  try {
+    const res = await fetch('data/performance.json?v=' + Date.now());
+    if (!res.ok) throw new Error('No data');
+    const d = await res.json();
+    render(d);
+  } catch (e) {
+    document.getElementById('perf-subtitle').textContent = 'Performance data updates nightly after games settle.';
+    renderBacktest();
+  }
+}
+
+function pct(v, decimals=1) {
+  if (v == null) return '—';
+  return (v >= 0 ? '+' : '') + (v * 100).toFixed(decimals) + '%';
+}
+
+function render(d) {
+  if (d.updated_at) {
+    document.getElementById('last-updated').textContent = 'Updated ' + d.updated_at;
+    document.getElementById('perf-subtitle').textContent = 'Last settled: ' + d.updated_at;
+  }
+
+  // Key metrics
+  const s = d.season || {};
+  const l = d.last30 || {};
+  document.getElementById('metrics-row').innerHTML = `
+    <div class="stat-pill"><div class="stat-lbl">2026 Record</div><div class="stat-val white">${s.wins||0}W–${s.losses||0}L</div><div class="stat-sub">${pct((s.roi||0)/100,1)} ROI</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Season Units</div><div class="stat-val ${(s.units||0)>=0?'green':'red'}">${(s.units||0)>=0?'+':''}${(s.units||0).toFixed(1)}u</div><div class="stat-sub">${s.bets||0} bets</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Last 30</div><div class="stat-val ${(l.units||0)>=0?'green':'red'}">${l.wins||0}–${l.losses||0}</div><div class="stat-sub">${(l.units||0)>=0?'+':''}${(l.units||0).toFixed(1)}u</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${(d.avg_clv||0)>=0?'green':'red'}">${pct(d.avg_clv)}</div><div class="stat-sub">vs. close · n=${d.clv_count||0}</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Sharpe Ratio</div><div class="stat-val amber">1.82</div><div class="stat-sub">backtested · annualized</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Brier Score</div><div class="stat-val white">0.234</div><div class="stat-sub">vs. 0.250 market</div></div>
+  `;
+
+  // Season ROI
+  const seasonRoi = d.season_roi_by_month || [];
+  if (seasonRoi.length > 0) {
+    const maxAbs = Math.max(...seasonRoi.map(m => Math.abs(m.roi)), 0.01);
+    document.getElementById('season-roi-chart').innerHTML = seasonRoi.map(m => {
+      const h = Math.max(4, Math.round(Math.abs(m.roi) / maxAbs * 70));
+      return `<div class="mo-col">
+        <div class="mo-bar ${m.roi>=0?'pos':'neg'}" style="height:${h}px"></div>
+        <div class="mo-lbl">${m.month}</div>
+        <div class="mo-val ${m.roi>=0?'pos':'neg'}">${pct(m.roi)}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('season-roi-chart').className = 'monthly-chart';
+  } else {
+    document.getElementById('season-roi-chart').innerHTML = '<div style="color:var(--text-4);font-size:12px;padding:20px 0">No settled picks yet for 2026 season.</div>';
+  }
+
+  if (s.bets) {
+    document.getElementById('season-disclaimer').textContent =
+      `${s.bets} picks settled · flat $100/bet · 5%+ edge threshold · results update nightly`;
+  }
+
+  // CLV chart
+  const clvSeries = d.clv_series || [];
+  if (clvSeries.length > 0) {
+    const maxClv = Math.max(...clvSeries.map(v => Math.abs(v)), 0.01);
+    document.getElementById('clv-chart').innerHTML = clvSeries.slice(-30).map(v => {
+      const h = Math.max(3, Math.round(Math.abs(v) / maxClv * 70));
+      return `<div class="clv-bar ${v>=0?'pos':'neg'}" style="height:${h}px" title="${pct(v)}"></div>`;
+    }).join('');
+  } else {
+    document.getElementById('clv-chart').innerHTML = '<div style="color:var(--text-4);font-size:11px;padding:12px 0">CLV data accumulates as picks settle and closing lines are captured.</div>';
+  }
+
+  if (d.avg_clv != null) {
+    const el = document.getElementById('clv-avg-num');
+    el.textContent = pct(d.avg_clv);
+    el.className = 'clv-avg-num ' + (d.avg_clv >= 0 ? 'green' : 'red');
+    el.style.color = d.avg_clv >= 0 ? 'var(--green)' : 'var(--red)';
+  }
+
+  // Edge tier table
+  const tiers = d.edge_tiers || [];
+  if (tiers.length > 0) {
+    document.getElementById('edge-tbody').innerHTML = tiers.map(t => `
+      <tr>
+        <td><span class="edge-tier-badge ${t.class||'et-all'}">${t.label}</span></td>
+        <td>${t.bets}</td>
+        <td>${t.wins}–${t.losses}</td>
+        <td>${(t.win_rate*100).toFixed(1)}%</td>
+        <td style="color:${t.roi>=0?'var(--green)':'var(--red)'}">${pct(t.roi)}</td>
+        <td style="color:${t.units>=0?'var(--green)':'var(--red)'}">${t.units>=0?'+':''}${t.units.toFixed(1)}u</td>
+      </tr>`).join('');
+  }
+
+  renderBacktest();
+}
+
+function renderBacktest() {
+  const backtest = [
+    { year: '2022', roi: 0.007, bets: 975, units: 6.8 },
+    { year: '2023', roi: 0.091, bets: 1093, units: 99.5 },
+    { year: '2024', roi: 0.104, bets: 977, units: 101.6 },
+    { year: 'Baseline', roi: -0.040, bets: null, units: null, isBaseline: true },
+  ];
+  const maxRoi = 0.104;
+  document.getElementById('backtest-chart').innerHTML = backtest.map(y => `
+    <div class="roi-row">
+      <div class="roi-year" style="${y.isBaseline?'color:var(--text-4)':''}">${y.year}</div>
+      <div class="roi-bar-wrap"><div class="roi-fill ${y.roi>=0?'pos':'neg'}" style="width:${Math.abs(y.roi)/maxRoi*100}%"></div></div>
+      <div class="roi-pct ${y.roi>=0?'pos':'neg'}">${pct(y.roi)}</div>
+      <div class="roi-meta">${y.bets ? y.bets.toLocaleString() + ' bets · +' + y.units + 'u' : 'all games · vig drain'}</div>
+    </div>`).join('');
+}
+
+loadPerformance();
+</script>
+</body>
+</html>
