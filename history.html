@@ -6,13 +6,16 @@
 <title>FairLine MLB — Results & Track Record</title>
 <meta name="description" content="Live 2026 results, CLV tracking, edge tier breakdown, and full pick history for FairLine MLB.">
 <meta property="og:title" content="FairLine MLB — Results & Track Record">
-<meta property="og:description" content="Live 2026 results. Every pick logged with result, CLV, and P&L. Full transparency — 28W-13L, +19.5u.">
+<meta property="og:description" content="Live 2026 results. Every pick logged with result, CLV, and P&L. Full transparency — 166W-138L, +56.7u, +0.46% CLV, +18.6% ROI.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://bartelbradley-coder.github.io/fairline-mlb/og-image.svg">
+<meta property="og:image" content="https://bartelbradley-coder.github.io/fairline-mlb/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:url" content="https://bartelbradley-coder.github.io/fairline-mlb/history.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="FairLine MLB — Results & Track Record">
 <meta name="twitter:description" content="Live 2026 MLB betting results with CLV tracking and full pick history.">
+<meta name="twitter:image" content="https://bartelbradley-coder.github.io/fairline-mlb/og-image.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚾</text></svg>">
 <link rel="stylesheet" href="style.css">
 <style>
@@ -218,6 +221,29 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
     <div id="streak-breakdown"></div>
   </div>
 
+  <!-- Pitcher Performance -->
+  <div class="section" id="pitcher-section" style="display:none">
+    <div class="sec-lbl">Pitcher Performance — 2026 Season (min. 3 picks)</div>
+    <div class="analytics-row">
+      <div class="card">
+        <div class="card-title">📈 Top Pitchers by ROI</div>
+        <div class="card-sub">Best-performing starters when model picks them</div>
+        <table class="edge-table" id="top-pitchers-table">
+          <thead><tr><th>Pitcher</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+          <tbody id="top-pitchers-tbody"><tr><td colspan="5" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">📉 Underperforming Pitchers</div>
+        <div class="card-sub">Starters the model over-rated this season</div>
+        <table class="edge-table" id="bot-pitchers-table">
+          <thead><tr><th>Pitcher</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+          <tbody id="bot-pitchers-tbody"><tr><td colspan="5" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <!-- Analytics row: CLV + Edge tier -->
   <div class="section">
     <div class="analytics-row">
@@ -402,6 +428,7 @@ async function loadAll() {
     renderEdgeTiers(p);
     renderKellyROI(p);
     renderMonthly(p);
+    renderPitcherStats(allRows);
     renderBacktest();
     injectMonthFilter(allRows);
     renderTable(allRows);
@@ -830,6 +857,49 @@ function renderKellyROI(p) {
       <td style="color:${t.roi >= 0 ? 'var(--green)' : 'var(--red)'}">${t.roi >= 0 ? '+' : ''}${(t.roi * 100).toFixed(1)}%</td>
       <td style="color:${t.units >= 0 ? 'var(--green)' : 'var(--red)'}">${t.units >= 0 ? '+' : ''}${t.units.toFixed(1)}u</td>
     </tr>`).join('');
+}
+
+// ── Pitcher performance (#8) ──────────────────────────────────────────────────
+function renderPitcherStats(rows) {
+  const settled = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.pitcher);
+  if (settled.length === 0) return;
+
+  const map = {};
+  for (const r of settled) {
+    const name = r.pitcher;
+    if (!map[name]) map[name] = { w: 0, l: 0, pnl: 0 };
+    map[name].pnl += r.pnl_u || 0;
+    if (r.result === 'W') map[name].w++; else map[name].l++;
+  }
+
+  const entries = Object.entries(map)
+    .map(([name, s]) => ({ name, ...s, n: s.w + s.l, roi: s.pnl / (s.w + s.l) }))
+    .filter(e => e.n >= 3);
+
+  if (entries.length === 0) return;
+  document.getElementById('pitcher-section').style.display = 'block';
+
+  function pitcherRow(e) {
+    const winPct = (e.w / e.n * 100).toFixed(0) + '%';
+    const roiCls = e.roi >= 0 ? 'pnl-pos' : 'pnl-neg';
+    const uCls   = e.pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
+    return `<tr>
+      <td style="font-weight:500;color:var(--text-2)">${e.name}</td>
+      <td>${e.w}–${e.l}</td>
+      <td>${winPct}</td>
+      <td class="${roiCls}">${e.roi >= 0 ? '+' : ''}${(e.roi*100).toFixed(1)}%</td>
+      <td class="${uCls}">${e.pnl >= 0 ? '+' : ''}${e.pnl.toFixed(1)}u</td>
+    </tr>`;
+  }
+
+  const sorted = [...entries].sort((a, b) => b.roi - a.roi);
+  document.getElementById('top-pitchers-tbody').innerHTML =
+    sorted.slice(0, 8).map(pitcherRow).join('') ||
+    '<tr><td colspan="5" style="color:var(--text-4);padding:10px">Not enough data yet.</td></tr>';
+
+  document.getElementById('bot-pitchers-tbody').innerHTML =
+    sorted.slice(-8).reverse().map(pitcherRow).join('') ||
+    '<tr><td colspan="5" style="color:var(--text-4);padding:10px">Not enough data yet.</td></tr>';
 }
 
 // ── Filter buttons ────────────────────────────────────────────────────────────

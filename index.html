@@ -8,7 +8,10 @@
 <meta property="og:title" content="FairLine MLB — Today's Value Bets">
 <meta property="og:description" content="Daily MLB win probability picks from a Dual-Poisson model. Edge vs. no-vig Pinnacle, Half-Kelly sizing, CLV tracked.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://bartelbradley-coder.github.io/fairline-mlb/og-image.svg">
+<meta property="og:image" content="https://bartelbradley-coder.github.io/fairline-mlb/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://bartelbradley-coder.github.io/fairline-mlb/og-image.png">
 <meta property="og:url" content="https://bartelbradley-coder.github.io/fairline-mlb/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="FairLine MLB — Today's Value Bets">
@@ -253,6 +256,75 @@
   margin-left: 8px; display: none;
 }
 
+/* ── Top pick spotlight ── */
+.pick-card.top-pick {
+  border-color: rgba(245,158,11,0.5) !important;
+  box-shadow: 0 0 0 1px rgba(245,158,11,0.15), 0 6px 24px rgba(245,158,11,0.08);
+}
+.top-pick-banner {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--amber);
+  background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 6px; padding: 5px 10px; margin-bottom: 8px;
+}
+
+/* ── Share button ── */
+.share-btn {
+  padding: 3px 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border); border-radius: 5px;
+  font-size: 10px; color: var(--text-4); cursor: pointer;
+  transition: all 0.15s; white-space: nowrap;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 3px;
+}
+.share-btn:hover { color: #1d9bf0; border-color: rgba(29,155,240,0.3); }
+
+/* ── Line movement indicator ── */
+.line-move {
+  font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 4px;
+  margin-left: 6px; white-space: nowrap;
+}
+.line-move.up   { color: var(--green); background: rgba(34,197,94,0.1); }
+.line-move.down { color: var(--red);   background: rgba(239,68,68,0.1); }
+.line-move.flat { color: var(--text-4); }
+
+/* ── Today's in-play results chip ── */
+.today-chip {
+  display: inline-flex; flex-direction: column; align-items: center;
+  padding: 8px 14px; background: rgba(99,102,241,0.07);
+  border: 1px solid rgba(99,102,241,0.25); border-radius: 10px; text-align: center;
+}
+.today-chip .tc-val { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 700; color: var(--indigo-lt); line-height: 1; }
+.today-chip .tc-lbl { font-size: 8px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-4); margin-top: 4px; }
+
+/* ── Share all picks button ── */
+.share-all-row { margin-bottom: 10px; }
+.share-all-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 13px; background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border); border-radius: 6px;
+  font-size: 10px; color: var(--text-4); cursor: pointer; transition: all 0.15s;
+}
+.share-all-btn:hover { color: #1d9bf0; border-color: rgba(29,155,240,0.3); }
+
+/* ── Personal tracker result badges ── */
+.pt-result { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 700; margin-left: auto; }
+.pt-result.W { color: var(--green); }
+.pt-result.L { color: var(--red); }
+
+/* ── Refresh pill (better visibility) ── */
+.refresh-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 9px; color: var(--text-4); font-family: 'JetBrains Mono', monospace;
+  padding: 3px 8px; background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border); border-radius: 6px; margin-left: 6px;
+}
+.refresh-pill .rp-dot {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--green);
+  animation: pulsedot 2s infinite; flex-shrink: 0;
+}
+
 /* Mobile: collapsible analysis */
 .analysis-toggle {
   display: none; width: 100%; margin: 8px 0;
@@ -267,6 +339,22 @@
   .analysis-toggle { display: block; }
   .pick-analysis { display: none; }
   .pick-analysis.open { display: block; }
+}
+
+/* ── Mobile: compact pick card ── */
+@media (max-width: 520px) {
+  .prob-compare { display: none; }
+  .book-odds-row { flex-wrap: wrap; gap: 5px; padding: 6px 10px; }
+  .bor-books { gap: 8px; }
+  .bor-shop { margin-left: 0; margin-top: 2px; }
+  .bc-team { font-size: 17px; }
+  .bc-odds { font-size: 17px; }
+  .bet-callout { padding: 9px 11px; }
+  .bet-callout-inner { gap: 6px; }
+  .fac-chip { font-size: 9px; padding: 2px 6px; }
+  .pick-header-row { flex-wrap: wrap; gap: 4px; }
+  .share-btn { display: none; } /* show only on desktop */
+  .top-pick-banner { font-size: 8px; }
 }
 
 /* ── Pick card redesign ── */
@@ -468,6 +556,31 @@
 // ── Global state ─────────────────────────────────────────────────────────────
 const picksMap = {};
 let _unitSize = parseFloat(localStorage.getItem('fairline_unit_size') || '0');
+let _histRef  = null; // history data reference for tracker result lookup
+let _mainPicksRef = []; // today's main picks for share-all
+
+// ── Share on X/Twitter ────────────────────────────────────────────────────────
+function shareOnX(id) {
+  const p = picksMap[id];
+  if (!p) return;
+  const edge  = (p.edge * 100).toFixed(1);
+  const model = p.model_prob  ? (p.model_prob  * 100).toFixed(1) : null;
+  const mkt   = p.market_prob ? (p.market_prob * 100).toFixed(1) : null;
+  let text = `🎯 FairLine MLB: ${p.pick} ${formatOdds(p.odds)} (+${edge}% edge)`;
+  if (model && mkt) text += `\nModel ${model}% vs. Pinnacle ${mkt}%`;
+  if (p.pitcher) text += `\n⚾ ${p.pitcher}`;
+  text += `\n📊 bartelbradley-coder.github.io/fairline-mlb/`;
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank', 'width=550,height=420');
+}
+
+function shareAllPicks() {
+  const picks = _mainPicksRef;
+  if (!picks || picks.length === 0) return;
+  const lines = picks.map(p => `• ${p.pick} ${formatOdds(p.odds)} +${(p.edge*100).toFixed(1)}% edge`);
+  let text = `⚾ FairLine MLB Picks:\n` + lines.join('\n');
+  text += `\n📊 bartelbradley-coder.github.io/fairline-mlb/`;
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank', 'width=550,height=420');
+}
 
 // Bankroll widget init
 window.addEventListener('DOMContentLoaded', () => {
@@ -597,7 +710,7 @@ function refreshBetButtons() {
 function refreshPersonalTracker() {
   const todayBets = Object.entries(_myBets)
     .filter(([k]) => k.startsWith(_TODAY_KEY + '::'))
-    .map(([, v]) => v);
+    .map(([, v]) => ({ ...v }));
 
   const panel = document.getElementById('personal-tracker');
   if (!panel) return;
@@ -608,20 +721,44 @@ function refreshPersonalTracker() {
   }
   panel.style.display = 'block';
 
-  const totalKelly = todayBets.reduce((s, b) => s + (b.kelly || 0), 0);
-  const usdStr     = (_unitSize > 0 && totalKelly > 0)
+  // Cross-reference with history to show settled results
+  if (_histRef && _histRef.rows) {
+    todayBets.forEach(b => {
+      const match = _histRef.rows.find(r =>
+        r.date === b.date && r.pick === b.pick && r.game === b.game
+      );
+      if (match && (match.result === 'W' || match.result === 'L')) {
+        b.result = match.result;
+        b.pnl_u  = match.pnl_u;
+      }
+    });
+  }
+
+  const settledBets = todayBets.filter(b => b.result);
+  const totalKelly  = todayBets.reduce((s, b) => s + (b.kelly || 0), 0);
+  const settledPnl  = settledBets.reduce((s, b) => s + (b.pnl_u || 0), 0);
+  const usdStr      = (_unitSize > 0 && totalKelly > 0)
     ? ` · <strong style="color:var(--green)">$${Math.round(totalKelly * _unitSize)} risked</strong>` : '';
+  const pnlStr      = settledBets.length > 0
+    ? ` · settled: <strong style="color:${settledPnl>=0?'var(--green)':'var(--red)'}">${settledPnl>=0?'+':''}${settledPnl.toFixed(1)}u</strong>`
+    : '';
 
   document.getElementById('pt-summary').innerHTML =
-    `${todayBets.length} bet${todayBets.length > 1 ? 's' : ''} tracked · ${totalKelly.toFixed(1)}u total action${usdStr}`;
+    `${todayBets.length} bet${todayBets.length > 1 ? 's' : ''} tracked · ${totalKelly.toFixed(1)}u${usdStr}${pnlStr}`;
 
-  document.getElementById('pt-rows').innerHTML = todayBets.map(b => `
-    <div class="pt-row">
+  document.getElementById('pt-rows').innerHTML = todayBets.map(b => {
+    const resultHTML = b.result
+      ? `<span class="pt-result ${b.result}">${b.result}${b.pnl_u != null ? ' ' + (b.pnl_u>=0?'+':'') + b.pnl_u.toFixed(1) + 'u' : ''}</span>`
+      : `<span style="margin-left:auto;color:var(--text-4);font-size:10px">⏳ pending</span>`;
+    const kellyStr = b.kelly ? `<span style="color:var(--green)">${b.kelly.toFixed(1)}u</span>` : '';
+    return `<div class="pt-row">
       <span style="font-weight:600;color:var(--text-2)">${b.pick}</span>
       <span style="color:var(--amber);font-family:'JetBrains Mono',monospace">${formatOdds(b.odds)}</span>
-      <span style="color:var(--text-4)">${b.game}</span>
-      <span style="margin-left:auto;color:var(--green)">${b.kelly ? b.kelly.toFixed(1) + 'u' : '—'}</span>
-    </div>`).join('');
+      <span style="color:var(--text-4);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.game}</span>
+      ${kellyStr}
+      ${resultHTML}
+    </div>`;
+  }).join('');
 }
 
 // ── Main data loader ──────────────────────────────────────────────────────────
@@ -634,6 +771,7 @@ async function loadPicks() {
     ]);
     const data = todayRes.ok ? await todayRes.json() : null;
     const hist = histRes.ok ? await histRes.json() : null;
+    _histRef = hist;
     if (data) render(data, hist);
     else renderEmptyState(null, hist);
   } catch (e) {
@@ -740,7 +878,7 @@ function parseSP(meta) {
 }
 
 // ── Pick card HTML ────────────────────────────────────────────────────────────
-function pickCardHTML(p) {
+function pickCardHTML(p, isTopPick = false) {
   const edgePct  = (p.edge * 100).toFixed(1);
   const barWidth = Math.min(100, (p.edge / 0.12) * 100).toFixed(0);
   const [tierText, tierClass] = tierLabel(p.edge);
@@ -810,6 +948,17 @@ function pickCardHTML(p) {
       </div>
     </div>`;
 
+  // Line movement indicator: compare opening Pinnacle (line_open) to current best odds
+  function lineMovementHTML() {
+    if (!p.line_open || !p.odds) return '';
+    const diff = p.odds - p.line_open;
+    if (Math.abs(diff) < 5) return '';
+    const dir     = diff > 0 ? 'up' : 'down';
+    const label   = diff > 0 ? `📈 +${Math.abs(diff)} pts` : `📉 ${diff} pts`;
+    const tip     = diff > 0 ? 'Line moved in our favor since posting' : 'Line moved against us since posting';
+    return `<span class="line-move ${dir}" title="${tip}">${label}</span>`;
+  }
+
   // Book odds comparison row (Pinnacle reference + best available + shop link)
   const pinnacleOdds = p.line_open ? formatOdds(p.line_open) : null;
   const bestOdds     = formatOdds(p.odds);
@@ -820,6 +969,7 @@ function pickCardHTML(p) {
       <div class="bor-books">
         ${pinnacleOdds ? `<div class="bor-book bor-pinn"><span class="bor-bname">Pinnacle</span> <span class="bor-bval">${pinnacleOdds}</span></div>` : ''}
         <div class="bor-book"><span class="bor-bname">${bestBookName || 'Best avail.'}</span> <span class="bor-bval best">${bestOdds} ✓</span></div>
+        ${lineMovementHTML()}
       </div>
       <a class="bor-shop" href="https://www.covers.com/sports/mlb/matchups" target="_blank" rel="noopener">🔍 Shop all lines</a>
     </div>`;
@@ -944,13 +1094,19 @@ function pickCardHTML(p) {
       ${narrativeHTML}
     </div>` : (factorsHTML + narrativeHTML);
 
+  const topPickBannerHTML = isTopPick
+    ? `<div class="top-pick-banner">⭐ Best Bet Today · Highest Model Edge</div>`
+    : '';
+
   return `
-    <div class="pick-card ${tierClass}">
+    <div class="pick-card ${tierClass}${isTopPick ? ' top-pick' : ''}">
+      ${topPickBannerHTML}
       <div class="pick-header-row">
         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1;min-width:0">
           ${postedHTML ? postedHTML.replace('<div class="pick-posted">', '<div class="pick-posted" style="margin-bottom:0">') : ''}
         </div>
         <button class="bet-toggle" data-bet-id="${cardId}" onclick="toggleBet('${cardId}')">📌 Track</button>
+        <button class="share-btn" onclick="shareOnX('${cardId}')">𝕏</button>
         <button class="copy-btn" data-copy-id="${cardId}" onclick="copyPick('${cardId}')">📋 Copy</button>
       </div>
       <div class="pick-type-row" style="margin-top:6px">
@@ -1026,6 +1182,22 @@ function render(data, hist) {
     }
   }
 
+  // Today's in-play settled results chip
+  if (hist && hist.rows) {
+    const todayStr   = data.date || new Date().toISOString().slice(0, 10);
+    const todayDone  = hist.rows.filter(r => r.date === todayStr && (r.result === 'W' || r.result === 'L'));
+    if (todayDone.length > 0) {
+      const tW  = todayDone.filter(r => r.result === 'W').length;
+      const tL  = todayDone.length - tW;
+      const tPnl = todayDone.reduce((s, r) => s + (r.pnl_u || 0), 0);
+      const pnlCol = tPnl >= 0 ? 'var(--green)' : 'var(--red)';
+      stripHTML += `<div class="today-chip">
+        <div class="tc-val">${tW}W–${tL}L</div>
+        <div class="tc-lbl">Today · <span style="color:${pnlCol}">${tPnl>=0?'+':''}${tPnl.toFixed(1)}u</span></div>
+      </div>`;
+    }
+  }
+
   // Streak chip
   const streak = computeStreak(hist);
   if (streak) {
@@ -1062,11 +1234,22 @@ function render(data, hist) {
   if (main.length === 0) {
     renderEmptyState(data, hist, marginal);
   } else {
+    _mainPicksRef = main;
+    // Identify the top pick (highest edge) for spotlight treatment
+    const topIdx = main.reduce((best, p, i) => p.edge > main[best].edge ? i : best, 0);
     const gridClass = main.length === 1 ? 'pick-grid single-pick' : 'pick-grid';
+    // Share-all button (only if 2+ picks)
+    const shareAllHTML = main.length >= 2
+      ? `<div class="share-all-row"><button class="share-all-btn" onclick="shareAllPicks()">𝕏 Share All ${main.length} Picks</button></div>`
+      : '';
     document.getElementById('picks-container').innerHTML =
-      `<div class="${gridClass}">` + main.map(pickCardHTML).join('') + '</div>';
+      shareAllHTML +
+      `<div class="${gridClass}">` +
+      main.map((p, i) => pickCardHTML(p, i === topIdx)).join('') +
+      '</div>';
     refreshKellyUSD();
     refreshBetButtons();
+    refreshPersonalTracker();
   }
 
   if (marginal.length > 0) {
@@ -1110,8 +1293,9 @@ function updateRefreshUI() {
   const rem = Math.max(0, _nextRefreshAt - Date.now());
   const m = Math.floor(rem / 60000);
   const s = Math.floor((rem % 60000) / 1000);
-  el.style.display = 'inline';
-  el.textContent = `↻ ${m}:${s.toString().padStart(2,'0')}`;
+  el.style.display = 'inline-flex';
+  el.className = 'refresh-pill';
+  el.innerHTML = `<span class="rp-dot"></span>Refreshes in ${m}:${s.toString().padStart(2,'0')}`;
   setTimeout(updateRefreshUI, 5000);
 }
 
