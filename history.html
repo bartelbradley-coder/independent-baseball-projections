@@ -15,11 +15,8 @@
 .summary-row .stat-pill { flex: 1; min-width: 110px; }
 
 /* P&L curve */
-.pnl-curve-wrap { height: 64px; display: flex; align-items: flex-end; gap: 2px; overflow: hidden; }
-.pnl-seg { flex: 1; border-radius: 2px 2px 0 0; min-height: 2px; transition: opacity 0.15s; }
-.pnl-seg:hover { opacity: 0.75; }
-.pnl-seg.pos { background: var(--green); }
-.pnl-seg.neg { background: var(--red); border-radius: 0 0 2px 2px; }
+.pnl-curve-wrap { overflow: hidden; }
+.pnl-curve-meta { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-4); font-family: 'JetBrains Mono', monospace; margin-top: 8px; }
 
 /* Filters */
 .filters {
@@ -198,17 +195,39 @@ function renderSummary(rows) {
 }
 
 function renderCurve(curve) {
+  const el = document.getElementById('pnl-curve');
   if (curve.length === 0) {
-    document.getElementById('pnl-curve').innerHTML = '<div style="color:var(--text-4);font-size:12px;padding:12px 0">Accumulates as picks settle.</div>';
+    el.innerHTML = '<div style="color:var(--text-4);font-size:12px;padding:20px 0">Accumulates as picks settle.</div>';
     return;
   }
-  const maxAbs = Math.max(...curve.map(v => Math.abs(v)), 0.01);
-  document.getElementById('pnl-curve').innerHTML = curve.map((v, i) => {
-    const prev = i === 0 ? 0 : curve[i - 1];
-    const delta = v - prev;
-    const h = Math.max(2, Math.round(Math.abs(delta) / (maxAbs / curve.length || 0.01) * 40));
-    return `<div class="pnl-seg ${delta >= 0 ? 'pos' : 'neg'}" style="height:${h}px" title="${v >= 0 ? '+' : ''}${v.toFixed(1)}u"></div>`;
-  }).join('');
+  // Prepend 0 so the line starts at baseline
+  const data = [0, ...curve];
+  const minV = Math.min(...data, 0);
+  const maxV = Math.max(...data, 0);
+  const range = maxV - minV || 1;
+  const W = 800, H = 90, padT = 10, padB = 10;
+  const innerH = H - padT - padB;
+  const yFor = v => padT + innerH * (1 - (v - minV) / range);
+  const xFor = i => (i / (data.length - 1)) * W;
+  const zeroY = yFor(0);
+  const pts = data.map((v, i) => [xFor(i).toFixed(1), yFor(v).toFixed(1)]);
+  const linePath = pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x},${y}`).join(' ');
+  const areaPath = `${linePath} L${pts[pts.length-1][0]},${zeroY.toFixed(1)} L${pts[0][0]},${zeroY.toFixed(1)} Z`;
+  const endVal = curve[curve.length - 1];
+  const col = endVal >= 0 ? 'var(--green)' : 'var(--red)';
+  const [lx, ly] = pts[pts.length - 1];
+  el.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:90px">
+      <path d="${areaPath}" style="fill:${col};fill-opacity:0.12"/>
+      <line x1="0" y1="${zeroY.toFixed(1)}" x2="${W}" y2="${zeroY.toFixed(1)}" style="stroke:rgba(255,255,255,0.15);stroke-width:1;stroke-dasharray:4 3"/>
+      <path d="${linePath}" style="fill:none;stroke:${col};stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round"/>
+      <circle cx="${lx}" cy="${ly}" r="3.5" style="fill:${col}"/>
+    </svg>
+    <div class="pnl-curve-meta">
+      <span>${curve.length} settled picks</span>
+      <span style="opacity:0.4">── 0u baseline ──</span>
+      <span style="color:${col}"><strong>${endVal >= 0 ? '+' : ''}${endVal.toFixed(2)}u</strong> total</span>
+    </div>`;
 }
 
 function getFilteredSorted(rows) {

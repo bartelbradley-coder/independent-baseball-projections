@@ -166,6 +166,12 @@
     <div id="marginal-container"></div>
   </div>
 
+  <!-- YESTERDAY'S RESULTS -->
+  <div class="section" id="yesterday-section" style="display:none">
+    <div class="sec-lbl">Yesterday's Results</div>
+    <div class="card" style="padding:0;overflow:hidden" id="yesterday-card"></div>
+  </div>
+
 </div>
 
 <footer>
@@ -252,10 +258,17 @@ function pickCardHTML(p) {
   const breakEvenPct = p.break_even ? (p.break_even * 100).toFixed(1) : '—';
   const kellyStr = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—';
 
-  // Posted timestamp — green dot + time if available
-  const postedHTML = p.posted_at
-    ? `<div class="pick-posted"><span class="posted-dot"></span>Posted ${p.posted_at} · pre-game</div>`
-    : '';
+  // Posted timestamp — format "2026-05-27T10:00" → "10:00 AM CT"
+  const postedHTML = p.posted_at ? (() => {
+    try {
+      const t = p.posted_at.includes('T') ? p.posted_at.split('T')[1] : p.posted_at;
+      const [hStr, mStr] = t.split(':');
+      const h = parseInt(hStr, 10);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const h12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+      return `<div class="pick-posted"><span class="posted-dot"></span>Posted ${h12}:${mStr} ${ampm} CT · pre-game</div>`;
+    } catch(e) { return ''; }
+  })() : '';
 
   // Pinnacle line at bet time
   const lmHTML = p.line_current ? `
@@ -344,6 +357,11 @@ function render(data) {
     document.getElementById('last-updated').textContent = 'Updated ' + data.generated_at;
   }
 
+  // Dynamic signal count in subtitle
+  if (data.signal_count != null) {
+    document.getElementById('signal-count').textContent = data.signal_count;
+  }
+
   // Record strip
   const strip = document.getElementById('record-strip');
   if (data.season) {
@@ -377,6 +395,33 @@ function render(data) {
     document.getElementById('marginal-section').style.display = 'block';
     document.getElementById('marginal-container').innerHTML =
       '<div class="pick-grid">' + marginal.map(pickCardHTML).join('') + '</div>';
+  }
+
+  // Yesterday's results (shown below today's picks when we have today's data)
+  const yest = data.yesterday_picks || [];
+  if (yest.length > 0) {
+    const yPnl = yest.reduce((s, p) => s + (p.pnl_u || 0), 0);
+    const yW = yest.filter(p => p.result === 'W').length;
+    const yL = yest.filter(p => p.result === 'L').length;
+    document.getElementById('yesterday-section').style.display = 'block';
+    document.getElementById('yesterday-card').innerHTML =
+      `<div style="padding:14px 16px 6px"><span style="font-size:11px;font-weight:700;color:var(--text-2)">${yW}W–${yL}L</span> <span style="font-size:10px;color:var(--text-4)">· ${yPnl>=0?'+':''}${yPnl.toFixed(1)}u yesterday</span></div>` +
+      yest.map(p => {
+        const pnlCls = (p.pnl_u || 0) >= 0 ? 'pos' : 'neg';
+        const pnlStr = p.pnl_u != null ? ((p.pnl_u >= 0 ? '+' : '') + p.pnl_u.toFixed(1) + 'u') : '—';
+        const clvStr = p.clv != null ? 'CLV ' + (p.clv >= 0 ? '+' : '') + (p.clv * 100).toFixed(1) + '%' : '';
+        return `<div class="yest-row">
+          <div>
+            <div class="yest-game">${p.game || '—'}</div>
+            <div class="yest-pick">${p.pick || ''}${p.odds ? ' · ' + formatOdds(p.odds) : ''}${p.edge ? ' · +' + (p.edge*100).toFixed(1)+'% edge' : ''}</div>
+          </div>
+          <div class="yest-right">
+            <div class="yest-clv">${clvStr}</div>
+            <div class="yest-pnl ${pnlCls}">${pnlStr}</div>
+            <div class="yest-result ${p.result}">${p.result || '—'}</div>
+          </div>
+        </div>`;
+      }).join('') + '<div style="height:8px"></div>';
   }
 }
 
