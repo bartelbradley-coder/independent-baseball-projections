@@ -1235,8 +1235,9 @@ function render(data, hist) {
     renderEmptyState(data, hist, marginal);
   } else {
     _mainPicksRef = main;
-    // Identify the top pick (highest edge) for spotlight treatment
+    // Identify the top pick only when there are 2+ picks AND the top edge is ≥ 8%
     const topIdx = main.reduce((best, p, i) => p.edge > main[best].edge ? i : best, 0);
+    const spotlightTop = main.length >= 2 && main[topIdx].edge >= 0.08;
     const gridClass = main.length === 1 ? 'pick-grid single-pick' : 'pick-grid';
     // Share-all button (only if 2+ picks)
     const shareAllHTML = main.length >= 2
@@ -1245,7 +1246,7 @@ function render(data, hist) {
     document.getElementById('picks-container').innerHTML =
       shareAllHTML +
       `<div class="${gridClass}">` +
-      main.map((p, i) => pickCardHTML(p, i === topIdx)).join('') +
+      main.map((p, i) => pickCardHTML(p, spotlightTop && i === topIdx)).join('') +
       '</div>';
     refreshKellyUSD();
     refreshBetButtons();
@@ -1255,7 +1256,7 @@ function render(data, hist) {
   if (marginal.length > 0) {
     document.getElementById('marginal-section').style.display = 'block';
     document.getElementById('marginal-container').innerHTML =
-      '<div class="pick-grid">' + marginal.map(pickCardHTML).join('') + '</div>';
+      '<div class="pick-grid">' + marginal.map(p => pickCardHTML(p, false)).join('') + '</div>';
     refreshKellyUSD();
   }
 
