@@ -1694,6 +1694,7 @@ function pickCardHTML(p, isTopPick = false) {
       </div>`;
   }
 
+  const fairOddsStr = p.fair_odds || '—';
   const mlProbContextHTML = (modelPct && mktPct) ? `
     <div class="ml-prob-context">
       Model <strong>${modelPct}%</strong> vs. Market <strong>${mktPct}%</strong>
@@ -1757,8 +1758,7 @@ function pickCardHTML(p, isTopPick = false) {
       ${flags.length > 0 ? `<div class="pick-flags">${flags.map(f => `<span class="pick-flag ${f.cls}">${f.text}</span>`).join('')}</div>` : ''}
     </div>` : '';
 
-  // Playable threshold + key info line
-  const fairOddsStr = p.fair_odds || '—';
+  // Playable threshold + key info line (fairOddsStr defined above)
   const modelProbStr = modelPct ? modelPct + '%' : '—';
   const mktProbStr   = mktPct   ? mktPct   + '%' : '—';
   const keyInfoHTML = `
