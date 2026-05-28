@@ -56,8 +56,8 @@
 .et-value  { background: rgba(20,184,166,0.1); color: var(--teal); }
 .et-all    { background: rgba(255,255,255,0.05); color: var(--text-3); }
 
-/* Monthly ROI — SVG chart (zero-centered); legacy flex classes removed */
-.monthly-chart { display: block; }
+/* Monthly ROI — SVG chart (zero-centered) */
+.monthly-chart { display: block; overflow: hidden; max-width: 100%; }
 
 /* Backtest */
 .roi-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
@@ -738,7 +738,7 @@ function renderEdgeTiers(p) {
 }
 
 function _monthlyChartSVG(monthly) {
-  const W = 400, padT = 26, padB = 40, padL = 12, padR = 12;
+  const W = 400, padT = 36, padB = 40, padL = 12, padR = 12;
   const innerW = W - padL - padR;
   const chartH = 88; const halfH = chartH / 2;
   const zeroY  = padT + halfH;
