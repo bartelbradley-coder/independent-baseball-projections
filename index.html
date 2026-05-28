@@ -133,6 +133,19 @@
 .sp-line { font-size: 10px; color: var(--text-4); margin-bottom: 5px; }
 .sp-line strong { color: var(--text-3); font-weight: 600; }
 
+/* ── Combined SP + flags row ── */
+.sp-flags-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.sp-flags-row .sp-line { margin-bottom: 0; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-flags-row .pick-flags { margin-bottom: 0; flex-shrink: 0; }
+
+/* ── Prob context sub-line inside markets table ── */
+.ml-prob-context { font-size: 9px; color: var(--text-4); padding: 3px 18px 5px; letter-spacing: 0.02em; border-bottom: 1px solid var(--border); }
+.ml-prob-context strong { color: var(--text-2); }
+.ml-prob-context .mpc-fair { color: var(--indigo-lt); }
+
+/* ── FINAL badge for completed games ── */
+.final-badge { font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
+
 /* ── NEW: Kelly dollar amount ── */
 .kelly-usd {
   font-size: 9px; color: var(--green); font-weight: 600;
@@ -329,10 +342,6 @@
   .book-odds-row { flex-wrap: wrap; gap: 5px; padding: 6px 10px; }
   .bor-books { gap: 8px; }
   .bor-shop { margin-left: 0; margin-top: 2px; }
-  .bc-team { font-size: 17px; }
-  .bc-odds { font-size: 17px; }
-  .bet-callout { padding: 9px 11px; }
-  .bet-callout-inner { gap: 6px; }
   .fac-chip { font-size: 9px; padding: 2px 6px; }
   .pick-header-row { flex-wrap: wrap; gap: 4px; }
   .share-btn { display: none; } /* show only on desktop */
@@ -398,18 +407,7 @@
 .mt-opp  { font-size: 12px; color: var(--text-4); }
 .mt-at   { font-size: 10px; color: var(--text-4); }
 
-/* BET callout box */
-.bet-callout {
-  margin: 8px 0 12px; padding: 11px 14px;
-  background: rgba(34,197,94,0.07);
-  border: 1.5px solid rgba(34,197,94,0.28); border-radius: 8px;
-}
-.bet-callout-inner { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.bc-check { color: var(--green); font-size: 13px; font-weight: 700; }
-.bc-label { font-size: 8px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--green); opacity: 0.75; flex-shrink: 0; }
-.bc-team  { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: #f1f5f9; flex: 1; min-width: 0; }
-.bc-odds  { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: var(--amber); flex-shrink: 0; }
-.bc-side  { font-size: 8px; color: var(--text-4); padding: 2px 7px; border-radius: 4px; background: rgba(255,255,255,0.05); flex-shrink: 0; }
+/* BET callout box styles removed — bet callout no longer shown in card body */
 
 /* Probability single-track: Market → Edge gap → Model, all on 0–100% axis */
 .prob-compare { margin: 12px 0 14px; }
@@ -1696,6 +1694,13 @@ function pickCardHTML(p, isTopPick = false) {
       </div>`;
   }
 
+  const fairOddsStr = p.fair_odds || '—';
+  const mlProbContextHTML = (modelPct && mktPct) ? `
+    <div class="ml-prob-context">
+      Model <strong>${modelPct}%</strong> vs. Market <strong>${mktPct}%</strong>
+      · Fair <span class="mpc-fair">${fairOddsStr}</span>
+    </div>` : '';
+
   const marketsTableHTML = `
     <div class="uc-markets-table">
       <div class="uc-market-row ml-primary">
@@ -1706,6 +1711,7 @@ function pickCardHTML(p, isTopPick = false) {
         <div class="uc-market-bar-wrap"><div class="uc-market-bar" style="width:${mlBarW}%"></div></div>
         <span class="uc-market-edge">+${edgePct}%</span>
       </div>
+      ${mlProbContextHTML}
       ${rlRowHTML}
       ${ouRowHTML}
     </div>`;
@@ -1745,8 +1751,14 @@ function pickCardHTML(p, isTopPick = false) {
     ? `<div class="pick-flags">${flags.map(f => `<span class="pick-flag ${f.cls}">${f.text}</span>`).join('')}</div>`
     : '';
 
-  // Playable threshold + key info line
-  const fairOddsStr = p.fair_odds || '—';
+  // Combined SP + flags on one line (replaces two separate rows)
+  const spFlagsRowHTML = (spHTML || flags.length > 0) ? `
+    <div class="sp-flags-row">
+      ${spHTML}
+      ${flags.length > 0 ? `<div class="pick-flags">${flags.map(f => `<span class="pick-flag ${f.cls}">${f.text}</span>`).join('')}</div>` : ''}
+    </div>` : '';
+
+  // Playable threshold + key info line (fairOddsStr defined above)
   const modelProbStr = modelPct ? modelPct + '%' : '—';
   const mktProbStr   = mktPct   ? mktPct   + '%' : '—';
   const keyInfoHTML = `
@@ -1769,12 +1781,16 @@ function pickCardHTML(p, isTopPick = false) {
     : `<span class="uc-matchup">${p.game || '—'}</span>`;
   const valueBadgeHTML = `<span class="pick-badge ${tierClass}">✓ ${tierClass === 'marginal' ? 'MARGINAL' : 'VALUE'}</span>`;
 
+  const finalBadgeHTML = isOver ? `<span class="final-badge">Final</span>` : '';
+
   const headerRowHTML = `
     <div class="uc-header-row">
       ${tierStarHTML}
       <span class="uc-tier-label ${tierLabelCls}">${tierText}</span>
       <span class="uc-tier-dot">·</span>
       ${headerMatchup}
+      ${matchLabelHTML}
+      ${finalBadgeHTML}
       ${headerTimeHTML ? `<span class="uc-tier-dot">·</span>${headerTimeHTML}` : ''}
       ${isLive ? `<span class="live-badge"><span class="live-dot"></span>LIVE</span>` : ''}
       <div class="uc-header-right">${valueBadgeHTML}</div>
@@ -1798,11 +1814,7 @@ function pickCardHTML(p, isTopPick = false) {
     <div class="pick-card ${tierClass}${isTopPick ? ' top-pick' : ''}${isOver ? ' card-stale' : ''}">
       ${topPickBannerHTML}
       ${headerRowHTML}
-      ${flagsHTML}
-      ${spHTML}
-      ${betHTML}
-      ${previewHTML}
-      ${keyInfoHTML}
+      ${spFlagsRowHTML}
       ${marketsTableHTML}
       ${actionRowHTML}
       ${detailsBodyHTML}
