@@ -60,10 +60,8 @@
 .clv-big { text-align: center; padding: 16px 0 8px; }
 .clv-big-num { font-family: 'Oswald', sans-serif; font-size: 48px; font-weight: 700; line-height: 1; }
 .clv-big-lbl { font-size: 10px; color: var(--text-4); margin-top: 6px; }
-.clv-chart { display: flex; align-items: flex-end; gap: 3px; height: 60px; overflow: hidden; }
-.clv-bar { flex: 1; border-radius: 2px 2px 0 0; min-height: 2px; }
-.clv-bar.pos { background: var(--green); }
-.clv-bar.neg { background: var(--red); border-radius: 0 0 2px 2px; }
+/* clv-chart — SVG (zero-centered); legacy flex classes removed */
+.clv-chart { display: block; }
 
 /* Monthly chart — SVG (zero-centered); legacy flex classes removed */
 
@@ -520,15 +518,38 @@ function renderCLV(p) {
     el.style.color = clv >= 0 ? 'var(--green)' : 'var(--red)';
   }
   const series = p.clv_series || [];
-  if (series.length > 0) {
-    const maxAbs = Math.max(...series.map(v => Math.abs(v)), 0.001);
-    document.getElementById('clv-chart').innerHTML = series.slice(-30).map(v => {
-      const h = Math.max(3, Math.round(Math.abs(v) / maxAbs * 55));
-      return `<div class="clv-bar ${v>=0?'pos':'neg'}" style="height:${h}px" title="${pct(v)}"></div>`;
-    }).join('');
-  } else {
-    document.getElementById('clv-chart').innerHTML = '<div style="color:var(--text-4);font-size:11px;padding:10px 0;line-height:1.6">CLV is captured at closing time daily.<br>Sustained positive CLV = real model edge.</div>';
+  const el = document.getElementById('clv-chart');
+  if (series.length === 0) {
+    el.innerHTML = '<div style="color:var(--text-4);font-size:11px;padding:10px 0;line-height:1.6">CLV is captured at closing time daily.<br>Sustained positive CLV = real model edge.</div>';
+    return;
   }
+  const vals   = series.slice(-60);
+  const W      = 800, H = 70, padL = 0, padR = 0, padT = 4, padB = 4;
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+  const maxAbs = Math.max(...vals.map(v => Math.abs(v)), 0.001);
+  const zeroY  = padT + innerH / 2;
+  const spacing = innerW / vals.length;
+  const barW    = Math.max(2, Math.min(10, spacing * 0.75));
+  let bars = '';
+  vals.forEach((v, i) => {
+    const cx  = padL + (i + 0.5) * spacing;
+    const barH = Math.max(2, Math.abs(v) / maxAbs * (innerH / 2) * 0.88);
+    const top  = v >= 0 ? zeroY - barH : zeroY;
+    const col  = v >= 0 ? 'var(--green)' : 'var(--red)';
+    bars += `<rect x="${(cx - barW/2).toFixed(1)}" y="${top.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${col}" fill-opacity="0.8" rx="1"><title>${pct(v)}</title></rect>`;
+  });
+  const posCount = vals.filter(v => v > 0).length;
+  const pctPos   = Math.round(posCount / vals.length * 100);
+  el.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:${H}px">
+      <line x1="${padL}" y1="${zeroY.toFixed(1)}" x2="${W-padR}" y2="${zeroY.toFixed(1)}" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4 3"/>
+      ${bars}
+    </svg>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-4);margin-top:5px">
+      <span>Last ${vals.length} picks with CLV data</span>
+      <span><span style="color:var(--green)">${posCount} positive</span> · <span style="color:var(--red)">${vals.length - posCount} negative</span> · ${pctPos}% beat closing line</span>
+    </div>`;
 }
 
 function _monthlyChartSVG(monthly) {

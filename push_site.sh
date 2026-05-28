@@ -15,9 +15,9 @@ echo "=== $(date) ===" >> "$LOG"
   --site-dir "$SITE_DIR" >> "$LOG" 2>&1
 echo "Export exit: $?" >> "$LOG"
 
-# 2. Push to GitHub
+# 2. Push to GitHub — stage all tracked changes (data, HTML, CSS, images)
 cd "$SITE_DIR" && \
-  git add data/ && \
+  git add -u && \
   git diff --cached --quiet || \
-  (git commit -m "data: $(date '+%Y-%m-%d %H:%M') PT" && git push origin main) >> "$LOG" 2>&1
+  (git commit -m "site: $(date '+%Y-%m-%d %H:%M') PT" && git push origin main) >> "$LOG" 2>&1
 echo "Push exit: $?" >> "$LOG"
