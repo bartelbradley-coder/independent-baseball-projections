@@ -1066,10 +1066,12 @@ function renderPerfCharts(perf) {
     const avgStr = (avgClv >= 0 ? '+' : '') + (avgClv * 100).toFixed(2) + '%';
     clvChart = `<div class="pchart-section">
       <div class="pchart-title">CLV Trend <span class="pchart-sub">(last ${clvArr.length} bets)</span></div>
-      <svg width="${W}" height="${H}" style="display:block;overflow:visible">
-        <line x1="${PAD}" y1="${zeroY.toFixed(1)}" x2="${W-PAD}" y2="${zeroY.toFixed(1)}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-        <polyline points="${pts}" fill="none" stroke="${avgCol}" stroke-width="1.5" stroke-linejoin="round"/>
-      </svg>
+      <div style="position:relative;width:100%;padding-top:${(H/W*100).toFixed(1)}%;overflow:hidden">
+        <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:100%;height:100%;display:block">
+          <line x1="${PAD}" y1="${zeroY.toFixed(1)}" x2="${W-PAD}" y2="${zeroY.toFixed(1)}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <polyline points="${pts}" fill="none" stroke="${avgCol}" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </div>
       <div class="pchart-clv-avg" style="color:${avgCol}">Avg CLV: ${avgStr}</div>
     </div>`;
   }
