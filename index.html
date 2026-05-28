@@ -676,22 +676,21 @@
   <div class="record-strip" id="record-strip"></div>
   <div class="freshness-row" id="freshness-row" style="display:none">
     <span class="freshness-item" id="fr-model-run"></span>
-    <span class="freshness-sep">·</span>
-    <span class="freshness-item" id="fr-odds"></span>
-    <span class="freshness-sep">·</span>
-    <span class="freshness-item" id="fr-starters"></span>
   </div>
   <div id="perf-charts"></div>
 
-  <!-- Market-informed model clarification -->
-  <section class="methodology-note">
-    <div class="mn-icon">ℹ️</div>
+  <!-- Market-informed model clarification (collapsible) -->
+  <details class="methodology-note">
+    <summary class="mn-summary">
+      <span class="mn-icon">ℹ️</span>
+      <span class="mn-title">FairLine is a market-informed model</span>
+      <span class="mn-chevron">›</span>
+    </summary>
     <div class="mn-body">
-      <div class="mn-title">FairLine is a market-informed model</div>
       <p class="mn-text">Raw team strength, pitching, lineup, park, weather, and situational signals generate the baseline projection. Market information is used as a stabilizing input to reduce extreme outputs and align with betting market run environments. After calibration, the final FairLine probability is compared against the no-vig market probability to identify remaining pricing gaps.</p>
       <p class="mn-note">Because the market is used as both a stabilizing input and a comparison benchmark, FairLine should be understood as a market-informed fair-line model rather than a fully market-independent projection.</p>
     </div>
-  </section>
+  </details>
 
   <!-- Model info strip (always-visible) -->
   <div class="model-info-strip">
@@ -823,9 +822,9 @@
 </div>
 
 <footer>
-  FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 18 Log-Odds Adjustments + Platt Calibration<br>
+  <div class="footer-brand">FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 18 Log-Odds Adjustments + Platt Calibration</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
-  <a href="model.html">Model Overview</a> · <a href="history.html">Results &amp; Track Record</a>
+  <div class="footer-links"><a href="model.html">Model Overview</a> · <a href="history.html">Results &amp; Track Record</a></div>
 </footer>
 
 <script>
@@ -1171,10 +1170,10 @@ function renderEmptyState(data, hist, marginal = []) {
       <div class="state-icon">📊</div>
       <div class="state-title">No picks clear the edge threshold today.</div>
       <div class="state-sub">Check back after the next model update. The model runs at 10:08 AM and 10:30 AM CT.</div>
-      ${nearMissHTML}
-      ${yestHTML}
-      ${stripHTML}
-    </div>`;
+    </div>
+    ${nearMissHTML}
+    ${yestHTML}
+    ${stripHTML}`;
 }
 
 function formatOdds(ml) {
@@ -1810,10 +1809,10 @@ function pickCardHTML(p, isTopPick = false) {
 
   // Confidence / warning flags
   const flags = [];
-  if (p.pitcher && p.pitcher.trim()) flags.push({ cls: 'flag-ok', text: '✓ Starter confirmed' });
-  if (p.meta && p.meta.includes('lineup_confirmed')) flags.push({ cls: 'flag-ok', text: '✓ Lineup confirmed' });
+  // Starter TBD warning — only flag when pitcher name is absent
+  if (!p.pitcher || !p.pitcher.trim()) flags.push({ cls: 'flag-warn', text: '⚠️ Starter TBD' });
   if ((p.wind_speed_mph || 0) >= 15 && !p.is_domed) flags.push({ cls: 'flag-warn', text: '⚡ Weather risk' });
-  if (p.raw_stats && (p.raw_stats.pick_bp_pitches || 0) >= 200) flags.push({ cls: 'flag-warn', text: '🔥 BP fatigue' });
+  if (p.raw_stats && (p.raw_stats.pick_bp_pitches || 0) >= 200) flags.push({ cls: 'flag-warn', text: '💧 BP fatigue' });
   if ((p.edge || 0) < 0.03) flags.push({ cls: 'flag-caution', text: '⚠️ Thin edge' });
   if ((p.edge || 0) >= 0.08) flags.push({ cls: 'flag-strong', text: '🔥 Strong edge' });
   const flagsHTML = flags.length > 0
@@ -1830,9 +1829,7 @@ function pickCardHTML(p, isTopPick = false) {
       <span class="pki-sep">·</span>
       <span class="pki-item"><span class="pki-lbl">Market</span>&nbsp;<span class="pki-val">${mktProbStr}</span></span>
       <span class="pki-sep">·</span>
-      <span class="pki-item"><span class="pki-lbl">Fair</span>&nbsp;<span class="pki-val">${formatOdds(parseInt(fairOddsStr) || null)}</span></span>
-      <span class="pki-sep">·</span>
-      <span class="pki-item"><span class="pki-lbl">Playable to</span>&nbsp;<span class="pki-val pki-threshold">${fairOddsStr}</span></span>
+      <span class="pki-item"><span class="pki-lbl">Fair odds</span>&nbsp;<span class="pki-val pki-threshold">${fairOddsStr}</span></span>
     </div>`;
 
   // ── Header row: tier · matchup · time + value badge ───────────────────────
@@ -1913,9 +1910,7 @@ function render(data, hist) {
   if (data.generated_at) {
     const fr = document.getElementById('freshness-row');
     if (fr) {
-      document.getElementById('fr-model-run').textContent  = 'Last model run: ' + data.generated_at + ' CT';
-      document.getElementById('fr-odds').textContent       = 'Odds snapshot: ' + data.generated_at + ' CT';
-      document.getElementById('fr-starters').textContent   = 'Starters/lineups as of: ' + data.generated_at + ' CT';
+      document.getElementById('fr-model-run').textContent = 'Last model run: ' + data.generated_at + ' CT';
       fr.style.display = 'flex';
     }
   }

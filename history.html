@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FairLine MLB — Results & Pick History</title>
 <meta name="description" content="Live 2026 results, CLV tracking, edge tier breakdown, and full pick history for FairLine MLB.">
-<meta property="og:title" content="FairLine MLB — Results & Track Record">
-<meta property="og:description" content="Live 2026 results. Every pick logged with result, CLV, and P&L. Full transparency — 166W-138L, +56.7u, +0.46% CLV, +18.6% ROI.">
+<meta property="og:title" content="FairLine MLB — Results & Pick History">
+<meta property="og:description" content="Every posted pick logged with result, CLV, units, and ROI. Live results separated from backtests. Full transparency.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://bartelbradley-coder.github.io/fairline-mlb/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -218,17 +218,17 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
   <div class="page-title">Results &amp; Pick History</div>
   <div class="page-subtitle">A complete log of every posted pick — team, odds, stake, result, CLV, and units.</div>
 
-  <!-- Live metrics note + cards -->
+  <!-- Live section header + compact metrics -->
+  <div class="results-section live-section">
+    <div class="section-badge live-badge-lg"><span class="badge-dot live-dot-lg"></span>LIVE POSTED PICKS</div>
+    <div class="section-sub">Tracked results from picks posted on the site before first pitch.</div>
+  </div>
   <div class="live-metrics-note">
     <span>📊 Live results reflect posted picks only. Backtested validation is shown separately below.</span>
   </div>
   <div class="live-metrics-row" id="live-metrics-row">
     <div class="lm-card"><div class="lm-lbl">Record</div><div class="lm-val" id="lm-record">—</div></div>
-    <div class="lm-card"><div class="lm-lbl">Units</div><div class="lm-val green" id="lm-units">—</div></div>
-    <div class="lm-card"><div class="lm-lbl">ROI</div><div class="lm-val green" id="lm-roi">—</div></div>
     <div class="lm-card"><div class="lm-lbl">Win Rate</div><div class="lm-val" id="lm-winrate">—</div></div>
-    <div class="lm-card"><div class="lm-lbl">Avg CLV</div><div class="lm-val green" id="lm-clv">—</div></div>
-    <div class="lm-card"><div class="lm-lbl">Picks Logged</div><div class="lm-val" id="lm-bets">—</div></div>
     <div class="lm-card"><div class="lm-lbl">Last Updated</div><div class="lm-val" id="lm-updated">—</div></div>
   </div>
 
@@ -480,9 +480,9 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 </div>
 
 <footer>
-  FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 18 Log-Odds Adjustments + Platt Calibration<br>
+  <div class="footer-brand">FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 18 Log-Odds Adjustments + Platt Calibration</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
-  <a href="model.html">Model Overview</a> · <a href="index.html">Today's Picks</a> · <a href="performance.html">Performance</a>
+  <div class="footer-links"><a href="model.html">Model Overview</a> · <a href="index.html">Today's Picks</a> · <a href="performance.html">Performance</a></div>
 </footer>
 
 <script>
@@ -585,14 +585,8 @@ async function loadAll() {
     if (p && p.season) {
       const s = p.season;
       document.getElementById('lm-record').textContent = s.wins + 'W–' + s.losses + 'L';
-      const u = s.units || 0;
-      document.getElementById('lm-units').textContent = (u >= 0 ? '+' : '') + u.toFixed(1) + 'u';
-      const roi = s.roi || 0;
-      document.getElementById('lm-roi').textContent = (roi >= 0 ? '+' : '') + (roi * 100).toFixed(1) + '%';
       const wr = (s.wins + s.losses) > 0 ? s.wins / (s.wins + s.losses) : 0;
       document.getElementById('lm-winrate').textContent = (wr * 100).toFixed(1) + '%';
-      if (p.avg_clv != null) document.getElementById('lm-clv').textContent = (p.avg_clv >= 0 ? '+' : '') + (p.avg_clv * 100).toFixed(2) + '%';
-      if (s.bets) document.getElementById('lm-bets').textContent = s.bets;
       if (p.updated_at) document.getElementById('lm-updated').textContent = p.updated_at;
     }
 
