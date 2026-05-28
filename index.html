@@ -557,6 +557,54 @@
 .pt-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 11px; border-top: 1px solid rgba(255,255,255,0.04); }
 .pt-row:first-of-type { border-top: none; }
 .pt-summary { font-size: 11px; color: var(--text-3); margin-bottom: 6px; }
+
+/* ── Other Markets expandable section ── */
+.other-markets-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; background: none; border: none; cursor: pointer;
+  padding: 8px 0 2px; margin-top: 6px;
+  border-top: 1px solid var(--border);
+  color: var(--text-4); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.other-markets-toggle:hover { color: var(--text-3); }
+.omt-chevron { font-size: 10px; transition: transform 0.2s; }
+.omt-chevron.open { transform: rotate(180deg); }
+.other-markets-body {
+  display: none; padding-top: 10px;
+}
+.other-markets-body.open { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.om-card {
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 12px;
+}
+.om-title {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-4); margin-bottom: 6px;
+}
+.om-main {
+  font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 600;
+  color: var(--text-2); margin-bottom: 4px;
+}
+.om-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 10px; color: var(--text-4); margin-bottom: 2px;
+}
+.om-row .om-val { font-weight: 600; color: var(--text-2); }
+.om-edge {
+  display: inline-block; margin-top: 5px;
+  font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+  letter-spacing: 0.06em;
+}
+.om-edge.positive { color: var(--green); background: rgba(34,197,94,0.10); border: 1px solid rgba(34,197,94,0.22); }
+.om-edge.negative { color: var(--text-4); background: rgba(255,255,255,0.04); border: 1px solid var(--border); }
+.om-edge.neutral  { color: var(--amber); background: rgba(245,158,11,0.10); border: 1px solid rgba(245,158,11,0.22); }
+.om-lean { font-size: 10px; font-weight: 700; }
+.om-lean.over  { color: #f97316; }
+.om-lean.under { color: #60a5fa; }
+@media (max-width: 520px) {
+  .other-markets-body.open { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -1360,6 +1408,71 @@ function pickCardHTML(p, isTopPick = false) {
 
   // (Pinnacle at post line removed — already shown in the Lines row above)
 
+  // ── Other Markets: Run Line + Total expandable section ───────────────────
+  function buildOtherMarketsHTML() {
+    const rl = p.run_line;
+    const tot = p.total;
+    if (!rl && !tot) return '';
+
+    const omId = cardId + '-om';
+
+    // Run line card
+    let rlCard = '';
+    if (rl && rl.model_prob) {
+      const rlPct    = (rl.model_prob * 100).toFixed(1);
+      const rlEdgePct = rl.edge != null ? (rl.edge * 100).toFixed(1) : null;
+      const rlEdgeCls = rl.edge >= 0.03 ? 'positive' : rl.edge > 0 ? 'neutral' : 'negative';
+      const rlEdgeStr = rlEdgePct != null
+        ? `<span class="om-edge ${rlEdgeCls}">${rl.edge >= 0 ? '+' : ''}${rlEdgePct}% edge</span>` : '';
+      rlCard = `
+        <div class="om-card">
+          <div class="om-title">Run Line</div>
+          <div class="om-main">${p.pick} ${rl.spread}</div>
+          <div class="om-row"><span>Model</span><span class="om-val">${rlPct}%</span></div>
+          <div class="om-row"><span>Fair odds</span><span class="om-val">${rl.fair_odds || '—'}</span></div>
+          <div class="om-row"><span>Book</span><span class="om-val">${rl.book_odds ? (rl.book_odds > 0 ? '+' : '') + rl.book_odds : '—'}</span></div>
+          ${rlEdgeStr}
+        </div>`;
+    }
+
+    // Total card
+    let totCard = '';
+    if (tot && tot.line != null) {
+      const leanCls  = tot.lean === 'OVER' ? 'over' : 'under';
+      const leanProb = tot.lean === 'OVER' ? tot.over_prob : tot.under_prob;
+      const leanPct  = leanProb ? (leanProb * 100).toFixed(1) : '—';
+      const leanEdgeCls = tot.lean_edge >= 0.03 ? 'positive' : tot.lean_edge > 0 ? 'neutral' : 'negative';
+      const leanEdgeStr = tot.lean_edge != null
+        ? `<span class="om-edge ${leanEdgeCls}">${tot.lean_edge >= 0 ? '+' : ''}${(tot.lean_edge * 100).toFixed(1)}% vs -110</span>` : '';
+      totCard = `
+        <div class="om-card">
+          <div class="om-title">Total</div>
+          <div class="om-main">
+            <span class="om-lean ${leanCls}">${tot.lean}</span> ${tot.line}
+          </div>
+          <div class="om-row"><span>Model total</span><span class="om-val">${tot.model_total != null ? tot.model_total.toFixed(1) + ' runs' : '—'}</span></div>
+          <div class="om-row"><span>P(Over)</span><span class="om-val">${tot.over_prob ? (tot.over_prob * 100).toFixed(1) + '%' : '—'}</span></div>
+          <div class="om-row"><span>P(Under)</span><span class="om-val">${tot.under_prob ? (tot.under_prob * 100).toFixed(1) + '%' : '—'}</span></div>
+          ${leanEdgeStr}
+        </div>`;
+    }
+
+    if (!rlCard && !totCard) return '';
+    return `
+      <button class="other-markets-toggle" onclick="
+        this.querySelector('.omt-chevron').classList.toggle('open');
+        document.getElementById('${omId}').classList.toggle('open');
+      ">
+        <span>Other Markets</span>
+        <span class="omt-chevron">▾</span>
+      </button>
+      <div class="other-markets-body" id="${omId}">
+        ${rlCard}
+        ${totCard}
+      </div>`;
+  }
+  const otherMarketsHTML = buildOtherMarketsHTML();
+
   // Mobile analysis toggle
   const analysisHTML = (factorsHTML || narrativeHTML) ? `
     <button class="analysis-toggle" onclick="this.classList.toggle('open');document.getElementById('${cardId}').classList.toggle('open')">Model Analysis</button>
@@ -1398,6 +1511,7 @@ function pickCardHTML(p, isTopPick = false) {
       ${probHTML}
       ${statsHTML}
       ${analysisHTML}
+      ${otherMarketsHTML}
     </div>`;
 }
 
