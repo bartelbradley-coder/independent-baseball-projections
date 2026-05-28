@@ -1152,6 +1152,26 @@ function parseSP(meta) {
   return null;
 }
 
+// ── Details panel toggle ─────────────────────────────────────────────────────
+function toggleDetails(id, btn) {
+  const body = document.getElementById(id);
+  const open = body.classList.toggle('open');
+  btn.textContent = open ? 'Details ▲' : 'Details ▾';
+  btn.classList.toggle('open', open);
+}
+
+// ── Narrative preview: first ~1 sentence for always-visible area ──────────────
+function narrativePreview(text) {
+  if (!text || !text.trim()) return '';
+  const s = text.trim();
+  // Break at first sentence end between 70–220 chars
+  const m = s.match(/^.{70,220}?\.\s/);
+  if (m) return m[0].trim();
+  if (s.length <= 200) return s;
+  const cut = s.lastIndexOf(' ', 200);
+  return s.slice(0, cut > 0 ? cut : 200) + '…';
+}
+
 // ── Pick card HTML ────────────────────────────────────────────────────────────
 function pickCardHTML(p, isTopPick = false) {
   const edgePct  = (p.edge * 100).toFixed(1);
@@ -1507,45 +1527,147 @@ function pickCardHTML(p, isTopPick = false) {
     _ouEdgeV != null ? `<span class="om-signal-badge ou-badge">${_ouLean}&thinsp;${(_ouEdgeV*100).toFixed(1)}%</span>` : '',
   ].join('');
 
-  // Mobile analysis toggle
-  const analysisHTML = (factorsHTML || narrativeHTML) ? `
-    <button class="analysis-toggle" onclick="this.classList.toggle('open');document.getElementById('${cardId}').classList.toggle('open')">Model Analysis</button>
-    <div class="pick-analysis" id="${cardId}">
+  // ── Narrative preview (always visible) ──────────────────────────────────────
+  // Source the text from narrative field, or build from model/market %
+  const fullNarrativeText = (p.narrative && p.narrative.trim())
+    ? p.narrative.trim()
+    : (modelPct && mktPct
+        ? `${p.pick} is the ${isDog ? 'underdog' : 'favorite'} at ${formatOdds(p.odds)}. Model: ${modelPct}% win probability vs. market's ${mktPct}% — +${edgePct}% pricing edge.`
+        : null);
+  const previewHTML = fullNarrativeText
+    ? `<div class="uc-narrative-preview">${narrativePreview(fullNarrativeText)}</div>`
+    : '';
+
+  // ── Markets table: ML (primary) + RL + O/U ───────────────────────────────
+  const mlBarW = Math.min(100, (p.edge / 0.12) * 100).toFixed(0);
+
+  let rlRowHTML = '';
+  if (p.run_line) {
+    const rl = p.run_line;
+    const rlHasEdge = rl.edge != null && rl.edge >= 0.03;
+    const rlOddsStr = rl.book_odds != null ? (rl.book_odds > 0 ? '+' : '') + rl.book_odds : '—';
+    const rlBarW = rlHasEdge ? Math.min(100, (rl.edge / 0.12) * 100).toFixed(0) : 0;
+    rlRowHTML = `
+      <div class="uc-market-row rl-row">
+        <span class="uc-mtype rl">RL</span>
+        <span class="uc-market-arrow">▶</span>
+        ${rlHasEdge
+          ? `<span class="uc-market-pick">${p.pick} ${rl.spread || '−1.5'}</span>
+             <span class="uc-market-odds">${rlOddsStr}</span>
+             <div class="uc-market-bar-wrap"><div class="uc-market-bar" style="width:${rlBarW}%"></div></div>
+             <span class="uc-market-edge">+${(rl.edge * 100).toFixed(1)}%</span>`
+          : `<span class="uc-market-noedge-pick">${p.pick} ${rl.spread || '−1.5'} · ${rlOddsStr}</span>
+             <span class="uc-market-noedge">No edge</span>`}
+      </div>`;
+  }
+
+  let ouRowHTML = '';
+  if (p.total && p.total.line != null) {
+    const tot = p.total;
+    const realEdge    = tot.lean === 'OVER' ? tot.over_edge  : tot.under_edge;
+    const displayEdge = realEdge != null ? realEdge : tot.lean_edge;
+    const ouHasEdge   = displayEdge != null && displayEdge >= 0.03;
+    const ouBarW      = ouHasEdge ? Math.min(100, (displayEdge / 0.12) * 100).toFixed(0) : 0;
+    const ouOdds      = tot.lean === 'OVER' ? tot.over_odds : tot.under_odds;
+    const ouOddsStr   = ouOdds != null ? (ouOdds > 0 ? '+' : '') + ouOdds : '—';
+    const ouLabel     = `${tot.lean} ${tot.line}`;
+    ouRowHTML = `
+      <div class="uc-market-row ou-row">
+        <span class="uc-mtype ou">O/U</span>
+        <span class="uc-market-arrow">▶</span>
+        ${ouHasEdge
+          ? `<span class="uc-market-pick">${ouLabel}</span>
+             <span class="uc-market-odds">${ouOddsStr}</span>
+             <div class="uc-market-bar-wrap"><div class="uc-market-bar" style="width:${ouBarW}%"></div></div>
+             <span class="uc-market-edge">+${(displayEdge * 100).toFixed(1)}%</span>`
+          : `<span class="uc-market-noedge-pick">${ouLabel} · ${ouOddsStr}</span>
+             <span class="uc-market-noedge">No edge</span>`}
+      </div>`;
+  }
+
+  const marketsTableHTML = `
+    <div class="uc-markets-table">
+      <div class="uc-market-row ml-primary">
+        <span class="uc-mtype ml">ML</span>
+        <span class="uc-market-arrow">▶</span>
+        <span class="uc-market-pick">${p.pick || '—'}</span>
+        <span class="uc-market-odds">${formatOdds(p.odds)}</span>
+        <div class="uc-market-bar-wrap"><div class="uc-market-bar" style="width:${mlBarW}%"></div></div>
+        <span class="uc-market-edge">+${edgePct}%</span>
+      </div>
+      ${rlRowHTML}
+      ${ouRowHTML}
+    </div>`;
+
+  // ── Details section (collapsed) ───────────────────────────────────────────
+  const detailsId = cardId + '-det';
+  const evStr = p.ev_per_100 != null
+    ? ` EV: <strong>${p.ev_per_100 >= 0 ? '+' : ''}$${p.ev_per_100.toFixed(2)}</strong>/100 wagered.`
+    : '';
+  const fullNarrativeHTML = fullNarrativeText
+    ? `<div class="edge-narrative">${fullNarrativeText}${evStr}</div>`
+    : '';
+
+  const detailsBodyHTML = `
+    <div class="details-body" id="${detailsId}">
+      ${fullNarrativeHTML}
+      ${probHTML}
+      ${statsHTML}
       ${factorsHTML}
-      ${narrativeHTML}
-    </div>` : (factorsHTML + narrativeHTML);
+      ${oddsRowHTML}
+      ${lineMoveBannerHTML()}
+      ${wxHTML}
+      ${histContextHTML}
+      ${metaHTML}
+      ${postedHTML}
+    </div>`;
+
+  // ── Header row: tier · matchup · time + value badge ───────────────────────
+  const tierLabelCls = tierClass === 'strong' ? '' : tierClass === 'value' ? 'value-label' : 'marginal-label';
+  const tierStarHTML = tierClass === 'marginal' ? '' : '<span class="uc-tier-star">⭐</span>';
+  const headerTimeHTML = chipText
+    ? `<span class="${chipCls}"${timeAttr}>⏱ ${chipText}</span>`
+    : '';
+  const headerMatchup = homeTeam
+    ? `<span class="uc-matchup">${awayTeam} @ ${homeTeam}</span>`
+    : `<span class="uc-matchup">${p.game || '—'}</span>`;
+  const valueBadgeHTML = `<span class="pick-badge ${tierClass}">✓ ${tierClass === 'marginal' ? 'MARGINAL' : 'VALUE'}</span>`;
+
+  const headerRowHTML = `
+    <div class="uc-header-row">
+      ${tierStarHTML}
+      <span class="uc-tier-label ${tierLabelCls}">${tierText}</span>
+      <span class="uc-tier-dot">·</span>
+      ${headerMatchup}
+      ${headerTimeHTML ? `<span class="uc-tier-dot">·</span>${headerTimeHTML}` : ''}
+      ${isLive ? `<span class="live-badge"><span class="live-dot"></span>LIVE</span>` : ''}
+      <div class="uc-header-right">${valueBadgeHTML}</div>
+    </div>`;
+
+  // ── Action row (bottom of always-visible area) ────────────────────────────
+  const actionRowHTML = `
+    <div class="uc-action-row">
+      <button class="details-toggle" onclick="toggleDetails('${detailsId}', this)">Details ▾</button>
+      <button class="bet-toggle" data-bet-id="${cardId}" onclick="toggleBet('${cardId}')">📌 Track</button>
+      <button class="share-btn" onclick="shareOnX('${cardId}')">𝕏</button>
+      <button class="copy-btn" data-copy-id="${cardId}" onclick="copyPick('${cardId}')">📋 Copy</button>
+    </div>`;
 
   const topPickBannerHTML = isTopPick
     ? `<div class="top-pick-banner">⭐ Best Bet Today · Highest Model Edge</div>`
     : '';
 
+  // ── Assemble card ─────────────────────────────────────────────────────────
   return `
     <div class="pick-card ${tierClass}${isTopPick ? ' top-pick' : ''}${isOver ? ' card-stale' : ''}">
       ${topPickBannerHTML}
-      <div class="pick-header-row">
-        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1;min-width:0">
-          ${postedHTML ? postedHTML.replace('<div class="pick-posted">', '<div class="pick-posted" style="margin-bottom:0">') : ''}
-        </div>
-        <button class="bet-toggle" data-bet-id="${cardId}" onclick="toggleBet('${cardId}')">📌 Track</button>
-        <button class="share-btn" onclick="shareOnX('${cardId}')">𝕏</button>
-        <button class="copy-btn" data-copy-id="${cardId}" onclick="copyPick('${cardId}')">📋 Copy</button>
-      </div>
-      <div class="pick-type-row" style="margin-top:6px">
-        <div class="pick-tier">⭐ ${tierText} · MONEYLINE${omBadgesHTML ? '&ensp;' + omBadgesHTML : ''}</div>
-        <div class="pick-badge ${tierClass}">✓ ${tierClass === 'marginal' ? 'MARGINAL' : 'VALUE'}</div>
-      </div>
+      ${headerRowHTML}
       ${spHTML}
-      ${histContextHTML}
-      ${matchupHTML}
       ${betHTML}
-      ${oddsRowHTML}
-      ${lineMoveBannerHTML()}
-      ${wxHTML}
-      ${metaHTML}
-      ${probHTML}
-      ${statsHTML}
-      ${analysisHTML}
-      ${otherMarketsHTML}
+      ${previewHTML}
+      ${marketsTableHTML}
+      ${actionRowHTML}
+      ${detailsBodyHTML}
     </div>`;
 }
 

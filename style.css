@@ -388,3 +388,104 @@ footer a:hover { color: var(--text-2); }
   /* Footer: smaller */
   footer { font-size: 10px; padding: 18px 14px; }
 }
+
+/* ══════════════════════════════════════════════════════════
+   Option C: Unified pick card (per-game, all markets inside)
+   ══════════════════════════════════════════════════════════ */
+
+/* Compact header row: tier · teams · time · value badge */
+.uc-header-row {
+  display: flex; align-items: center; gap: 5px;
+  flex-wrap: wrap; margin-bottom: 7px; font-size: 11px;
+}
+.uc-tier-star { font-size: 13px; line-height: 1; flex-shrink: 0; }
+.uc-tier-label { font-weight: 700; color: var(--amber); flex-shrink: 0; }
+.uc-tier-label.value-label { color: var(--green); }
+.uc-tier-label.marginal-label { color: var(--text-3); }
+.uc-tier-dot { color: var(--text-4); flex-shrink: 0; }
+.uc-matchup { font-weight: 600; color: var(--text-2); }
+.uc-header-right { margin-left: auto; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+/* Narrative preview — first sentence, always visible */
+.uc-narrative-preview {
+  font-size: 11.5px; color: var(--text-3); line-height: 1.6;
+  margin: 2px 0 12px;
+  border-left: 2px solid rgba(99,102,241,0.25);
+  padding-left: 10px;
+}
+.uc-narrative-preview strong { color: var(--text-2); }
+
+/* Markets table — bleeds to card edges */
+.uc-markets-table {
+  margin: 4px -18px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.uc-market-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; font-size: 12px;
+}
+.uc-market-row + .uc-market-row { border-top: 1px solid var(--border); }
+.uc-market-row.ml-primary { background: rgba(52,211,153,0.035); }
+
+/* Market type pills */
+.uc-mtype {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; padding: 2px 6px; border-radius: 3px;
+  flex-shrink: 0; width: 32px; text-align: center;
+}
+.uc-mtype.ml { background: rgba(52,211,153,0.10); color: var(--green); border: 1px solid rgba(52,211,153,0.22); }
+.uc-mtype.rl { background: rgba(99,102,241,0.10); color: var(--indigo-lt); border: 1px solid rgba(99,102,241,0.22); }
+.uc-mtype.ou { background: rgba(245,158,11,0.09); color: var(--amber); border: 1px solid rgba(245,158,11,0.22); }
+
+/* Arrow + pick text */
+.uc-market-arrow { font-size: 8px; flex-shrink: 0; }
+.uc-market-row.ml-primary .uc-market-arrow { color: var(--green); }
+.uc-market-row.rl-row .uc-market-arrow { color: var(--indigo-lt); }
+.uc-market-row.ou-row .uc-market-arrow { color: var(--amber); }
+.uc-market-pick { font-weight: 700; color: var(--text-2); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.uc-market-row.ml-primary .uc-market-pick { color: var(--text-1, #f1f5f9); }
+.uc-market-odds { font-weight: 600; flex-shrink: 0; }
+.uc-market-row.ml-primary .uc-market-odds { color: var(--green); }
+.uc-market-row.rl-row .uc-market-odds { color: var(--indigo-lt); }
+.uc-market-row.ou-row .uc-market-odds { color: var(--amber); }
+.uc-market-noedge-pick { color: var(--text-4); font-weight: 400; flex: 1; min-width: 0; font-size: 11px; }
+
+/* Edge bar */
+.uc-market-bar-wrap {
+  width: 52px; height: 4px;
+  background: rgba(255,255,255,0.07); border-radius: 2px;
+  flex-shrink: 0; overflow: hidden;
+}
+.uc-market-bar { height: 4px; border-radius: 2px; }
+.uc-market-row.ml-primary .uc-market-bar { background: var(--green); }
+.uc-market-row.rl-row .uc-market-bar { background: var(--indigo-lt); }
+.uc-market-row.ou-row .uc-market-bar { background: var(--amber); }
+
+/* Edge label / No edge */
+.uc-market-edge { font-size: 11px; font-weight: 700; flex-shrink: 0; min-width: 42px; text-align: right; }
+.uc-market-row.ml-primary .uc-market-edge { color: var(--green); }
+.uc-market-row.rl-row .uc-market-edge { color: var(--indigo-lt); }
+.uc-market-row.ou-row .uc-market-edge { color: var(--amber); }
+.uc-market-noedge { font-size: 10px; color: var(--text-4); font-style: italic; flex-shrink: 0; min-width: 42px; text-align: right; }
+
+/* Action row at card bottom */
+.uc-action-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 0 0; margin-top: 0;
+  border-top: 1px solid var(--border);
+}
+
+/* Details toggle */
+.details-toggle {
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  border-radius: 5px; font-size: 10px; color: var(--text-4);
+  padding: 3px 10px; cursor: pointer; transition: all 0.15s;
+  white-space: nowrap;
+}
+.details-toggle:hover { color: var(--text-2); background: rgba(255,255,255,0.06); }
+.details-toggle.open { color: var(--text-2); border-color: rgba(255,255,255,0.15); }
+
+/* Details expandable body */
+.details-body { display: none; padding-top: 14px; }
+.details-body.open { display: block; }
