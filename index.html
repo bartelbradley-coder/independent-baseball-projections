@@ -1440,10 +1440,27 @@ function pickCardHTML(p, isTopPick = false) {
     if (tot && tot.line != null) {
       const leanCls  = tot.lean === 'OVER' ? 'over' : 'under';
       const leanProb = tot.lean === 'OVER' ? tot.over_prob : tot.under_prob;
-      const leanPct  = leanProb ? (leanProb * 100).toFixed(1) : '—';
-      const leanEdgeCls = tot.lean_edge >= 0.03 ? 'positive' : tot.lean_edge > 0 ? 'neutral' : 'negative';
-      const leanEdgeStr = tot.lean_edge != null
-        ? `<span class="om-edge ${leanEdgeCls}">${tot.lean_edge >= 0 ? '+' : ''}${(tot.lean_edge * 100).toFixed(1)}% vs -110</span>` : '';
+
+      // Use real edge vs actual book price if available; fall back to synthetic -110 edge
+      const realEdge    = tot.lean === 'OVER' ? tot.over_edge : tot.under_edge;
+      const displayEdge = realEdge != null ? realEdge : tot.lean_edge;
+      const edgeLabel   = realEdge != null ? '% edge' : '% vs -110';
+      const leanEdgeCls = displayEdge >= 0.03 ? 'positive' : displayEdge > 0 ? 'neutral' : 'negative';
+      const leanEdgeStr = displayEdge != null
+        ? `<span class="om-edge ${leanEdgeCls}">${displayEdge >= 0 ? '+' : ''}${(displayEdge * 100).toFixed(1)}${edgeLabel}</span>` : '';
+
+      // Best execution odds
+      const overOddsStr  = tot.over_odds  != null ? (tot.over_odds  > 0 ? '+' : '') + tot.over_odds  : '—';
+      const underOddsStr = tot.under_odds != null ? (tot.under_odds > 0 ? '+' : '') + tot.under_odds : '—';
+      const overBookTxt  = tot.over_book  ? ` (${tot.over_book})`  : '';
+      const underBookTxt = tot.under_book ? ` (${tot.under_book})` : '';
+      const overOddsRow  = `<div class="om-row"><span>Best OVER${overBookTxt}</span><span class="om-val">${overOddsStr}</span></div>`;
+      const underOddsRow = `<div class="om-row"><span>Best UNDER${underBookTxt}</span><span class="om-val">${underOddsStr}</span></div>`;
+
+      // Pinnacle benchmark probability (no-vig market consensus)
+      const pinnRow = tot.pinnacle_over_prob != null
+        ? `<div class="om-row"><span>Pinnacle P(Over)</span><span class="om-val">${(tot.pinnacle_over_prob * 100).toFixed(1)}%</span></div>` : '';
+
       totCard = `
         <div class="om-card">
           <div class="om-title">Total</div>
@@ -1451,8 +1468,11 @@ function pickCardHTML(p, isTopPick = false) {
             <span class="om-lean ${leanCls}">${tot.lean}</span> ${tot.line}
           </div>
           <div class="om-row"><span>Model total</span><span class="om-val">${tot.model_total != null ? tot.model_total.toFixed(1) + ' runs' : '—'}</span></div>
-          <div class="om-row"><span>P(Over)</span><span class="om-val">${tot.over_prob ? (tot.over_prob * 100).toFixed(1) + '%' : '—'}</span></div>
-          <div class="om-row"><span>P(Under)</span><span class="om-val">${tot.under_prob ? (tot.under_prob * 100).toFixed(1) + '%' : '—'}</span></div>
+          <div class="om-row"><span>Model P(Over)</span><span class="om-val">${tot.over_prob ? (tot.over_prob * 100).toFixed(1) + '%' : '—'}</span></div>
+          <div class="om-row"><span>Model P(Under)</span><span class="om-val">${tot.under_prob ? (tot.under_prob * 100).toFixed(1) + '%' : '—'}</span></div>
+          ${pinnRow}
+          ${overOddsRow}
+          ${underOddsRow}
           ${leanEdgeStr}
         </div>`;
     }

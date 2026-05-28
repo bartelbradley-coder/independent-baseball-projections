@@ -94,6 +94,19 @@
 
 .backtest-note { font-size: 10px; color: var(--text-4); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); line-height: 1.5; }
 
+/* Run Line section */
+.rl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+@media (max-width: 700px) { .rl-grid { grid-template-columns: repeat(2, 1fr); } }
+.rl-stat { background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.2); border-radius: 10px; padding: 14px 12px; text-align: center; }
+.rl-val { font-family: 'Oswald', sans-serif; font-size: 26px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.rl-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-4); }
+.rl-sub { font-size: 10px; color: var(--text-4); margin-top: 3px; }
+.rl-side-row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.rl-side-card { flex: 1; min-width: 120px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.rl-side-title { font-size: 10px; font-weight: 700; color: var(--text-3); margin-bottom: 6px; letter-spacing: 0.06em; }
+.rl-side-row-inner { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 3px; }
+.rl-side-row-inner span:last-child { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+
 /* Key insight callout */
 .insight-box {
   margin-bottom: 20px; padding: 14px 18px;
@@ -229,6 +242,53 @@
     </div>
   </div>
 
+  <!-- Run Line Performance -->
+  <div class="section">
+    <div class="sec-lbl">Run Line Performance — Model vs. Spread · Live 2026 + Backtested 2022–2024</div>
+    <div class="card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+        <div>
+          <div class="card-title" style="margin-bottom:4px">Run Line Edge Tracking</div>
+          <div class="card-sub" style="margin-bottom:0">Model picks home −1.5 / away +1.5 when RL edge ≥ 2% · backtested 7,237 games across 2022–2024</div>
+        </div>
+      </div>
+      <!-- Headline stats -->
+      <div class="rl-grid" id="rl-headline">
+        <div class="rl-stat">
+          <div class="rl-val white" id="rl-record">—</div>
+          <div class="rl-lbl">2026 Record</div>
+          <div class="rl-sub" id="rl-bets">0 picks settled</div>
+        </div>
+        <div class="rl-stat">
+          <div class="rl-val" id="rl-roi" style="color:var(--text-2)">—</div>
+          <div class="rl-lbl">ROI / bet</div>
+          <div class="rl-sub" id="rl-units">—</div>
+        </div>
+        <div class="rl-stat">
+          <div class="rl-val" id="rl-clv" style="color:var(--text-2)">—</div>
+          <div class="rl-lbl">Avg RL CLV</div>
+          <div class="rl-sub" id="rl-clv-n">n=0 picks</div>
+        </div>
+      </div>
+      <!-- Home / Away split -->
+      <div id="rl-side-section"></div>
+      <!-- Edge tier table -->
+      <div id="rl-edge-section">
+        <table class="compare-table" id="rl-edge-table" style="margin-top:8px">
+          <thead><tr><th>RL Edge Tier</th><th>Bets</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+          <tbody id="rl-edge-tbody"><tr><td colspan="6" style="color:var(--text-4);padding:14px 10px">Accumulates as RL picks settle.</td></tr></tbody>
+        </table>
+      </div>
+      <!-- Backtest callout -->
+      <div class="backtest-note" style="margin-top:14px">
+        <strong style="color:var(--text-2)">Backtested 2022–2024 (7,237 games, out-of-sample):</strong>
+        Away +1.5 at ≥5% model edge → <strong style="color:var(--green)">+22.3% ROI</strong> at −130 juice (vs. +13.8% blind baseline).
+        Model win rate rises from 65.5% (≥0% edge) to 69.6% (≥10% edge), confirming genuine discriminatory power beyond base rate.
+        Home −1.5 volume is low (&lt;40 bets at ≥8% edge over 3 seasons) — a narrow specialty bet when the model is very confident.
+      </div>
+    </div>
+  </div>
+
   <!-- Backtest -->
   <div class="section">
     <div class="sec-lbl">Backtested Model Validation — Out-of-Sample 2022–2024 · Not Live Results</div>
@@ -273,12 +333,14 @@ function fmtU(v) {
 
 async function loadAll() {
   try {
-    const [pRes, hRes] = await Promise.all([
-      fetch('data/performance.json?v=' + Date.now()),
-      fetch('data/history.json?v='     + Date.now()),
+    const [pRes, hRes, rlRes] = await Promise.all([
+      fetch('data/performance.json?v='    + Date.now()),
+      fetch('data/history.json?v='        + Date.now()),
+      fetch('data/rl_performance.json?v=' + Date.now()),
     ]);
-    const p = pRes.ok ? await pRes.json() : null;
-    const h = hRes.ok ? await hRes.json() : null;
+    const p  = pRes.ok  ? await pRes.json()  : null;
+    const h  = hRes.ok  ? await hRes.json()  : null;
+    const rl = rlRes.ok ? await rlRes.json() : null;
 
     if (p && p.updated_at) {
       document.getElementById('last-updated').textContent = 'Updated ' + p.updated_at;
@@ -291,6 +353,7 @@ async function loadAll() {
     renderCLV(p);
     renderMonthly(p);
     renderEdgeTiers(p);
+    renderRLPerformance(rl);
     renderBacktest();
   } catch(e) {
     renderBacktest();
@@ -541,6 +604,62 @@ function renderBacktest() {
       <div class="roi-pct ${y.roi>=0?'pos':'neg'}">${pct(y.roi)}</div>
       <div class="roi-meta">${y.bets ? y.bets.toLocaleString()+' bets · +'+y.units+'u' : 'all games · vig drain'}</div>
     </div>`).join('');
+}
+
+function renderRLPerformance(rl) {
+  const s  = (rl && rl.season)  || {};
+  const hasBets = (s.bets || 0) > 0;
+
+  // Headline stat chips
+  const rlRec = document.getElementById('rl-record');
+  const rlRoi = document.getElementById('rl-roi');
+  const rlUni = document.getElementById('rl-units');
+  const rlBts = document.getElementById('rl-bets');
+  const rlClv = document.getElementById('rl-clv');
+  const rlCln = document.getElementById('rl-clv-n');
+
+  if (hasBets) {
+    rlRec.textContent = `${s.wins}W–${s.losses}L`;
+    rlRoi.textContent = pct(s.roi);
+    rlRoi.style.color = (s.roi || 0) >= 0 ? 'var(--green)' : 'var(--red)';
+    rlUni.textContent = fmtU(s.units);
+    rlBts.textContent = `${s.bets} picks settled`;
+  }
+  if (rl && rl.avg_clv != null) {
+    rlClv.textContent = pct(rl.avg_clv);
+    rlClv.style.color = rl.avg_clv >= 0 ? 'var(--green)' : 'var(--red)';
+    rlCln.textContent = `n=${rl.clv_count} picks`;
+  }
+
+  // Home / Away split
+  const sides = (rl && rl.side_split) || [];
+  const sideEl = document.getElementById('rl-side-section');
+  if (sides.length > 0) {
+    sideEl.innerHTML = `<div class="rl-side-row">` + sides.map(sd => {
+      const roiCol = (sd.roi || 0) >= 0 ? 'var(--green)' : 'var(--red)';
+      return `<div class="rl-side-card">
+        <div class="rl-side-title">${sd.side === 'HOME' ? '🏠' : '✈️'} ${sd.side} ${sd.spread}</div>
+        <div class="rl-side-row-inner"><span>Record</span><span>${sd.wins}W–${sd.losses}L</span></div>
+        <div class="rl-side-row-inner"><span>Win%</span><span>${(sd.win_rate*100).toFixed(1)}%</span></div>
+        <div class="rl-side-row-inner"><span>ROI</span><span style="color:${roiCol}">${pct(sd.roi)}</span></div>
+        <div class="rl-side-row-inner"><span>Units</span><span style="color:${roiCol}">${fmtU(sd.units)}</span></div>
+      </div>`;
+    }).join('') + `</div>`;
+  }
+
+  // Edge tier table
+  const tiers = (rl && rl.edge_tiers) || [];
+  if (tiers.length > 0) {
+    document.getElementById('rl-edge-tbody').innerHTML = tiers.map(t => `
+      <tr>
+        <td style="font-weight:600;color:var(--text-2)">${t.label}</td>
+        <td>${t.bets}</td>
+        <td>${t.wins}–${t.losses}</td>
+        <td>${(t.win_rate*100).toFixed(1)}%</td>
+        <td style="color:${(t.roi||0)>=0?'var(--green)':'var(--red)'}">${pct(t.roi)}</td>
+        <td style="color:${(t.units||0)>=0?'var(--green)':'var(--red)'}">${fmtU(t.units)}</td>
+      </tr>`).join('');
+  }
 }
 
 loadAll();
