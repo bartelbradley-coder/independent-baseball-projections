@@ -150,8 +150,8 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 /* Calibration chart */
 .calib-wrap { display:flex; align-items:flex-end; gap:10px; height:110px; margin-top:8px; }
 .calib-col { display:flex; flex-direction:column; align-items:center; gap:3px; flex:1; }
-.calib-bar-wrap { width:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:80px; gap:2px; }
-.calib-bar { width:70%; border-radius:3px 3px 0 0; transition:height 0.3s; }
+.calib-bar-wrap { width:100%; display:flex; flex-direction:row; align-items:flex-end; justify-content:center; height:80px; gap:3px; }
+.calib-bar { width:45%; border-radius:3px 3px 0 0; transition:height 0.3s; }
 .calib-actual { background:var(--green); }
 .calib-ideal  { background:rgba(255,255,255,0.12); border-radius:3px; }
 .calib-lbl    { font-size:9px; color:var(--text-4); text-align:center; }
@@ -760,10 +760,12 @@ function _monthlyChartSVG(monthly) {
     s += `<text x="${cx.toFixed(1)}" y="${(zeroY+halfH+14).toFixed(1)}" text-anchor="middle" font-size="9" fill="rgba(148,163,184,0.65)">${m.month}</text>`;
     if (m.bets != null) s += `<text x="${cx.toFixed(1)}" y="${(zeroY+halfH+26).toFixed(1)}" text-anchor="middle" font-size="8" fill="rgba(148,163,184,0.38)">${m.bets}b</text>`;
   });
-  return `<svg viewBox="0 0 ${W} ${totalH}" preserveAspectRatio="xMidYMid meet" style="display:block;width:100%;height:auto">
-    <line x1="${padL}" y1="${zeroY.toFixed(1)}" x2="${W-padR}" y2="${zeroY.toFixed(1)}" stroke="rgba(255,255,255,0.13)" stroke-width="1" stroke-dasharray="3 3"/>
-    ${s}
-  </svg>`;
+  return `<div style="position:relative;width:100%;padding-top:${(totalH/W*100).toFixed(1)}%;overflow:hidden">
+    <svg viewBox="0 0 ${W} ${totalH}" preserveAspectRatio="xMidYMid meet" style="position:absolute;top:0;left:0;width:100%;height:100%;display:block">
+      <line x1="${padL}" y1="${zeroY.toFixed(1)}" x2="${W-padR}" y2="${zeroY.toFixed(1)}" stroke="rgba(255,255,255,0.13)" stroke-width="1" stroke-dasharray="3 3"/>
+      ${s}
+    </svg>
+  </div>`;
 }
 
 function renderMonthly(p) {
