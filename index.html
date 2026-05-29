@@ -1437,9 +1437,22 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   }
 
   // Book odds comparison row (Pinnacle reference + best available + shop link)
+  // BOOK_DISPLAY_NAMES normalises raw API keys (e.g. "draftkings") → "DraftKings".
+  // The pipeline now sets display names server-side; this is a client-side safety net
+  // for picks generated before the rename and for any future key/name mismatches.
+  const BOOK_DISPLAY_NAMES = {
+    novig:'Novig', prophetx:'ProphetX', pinnacle:'Pinnacle', lowvig:'LowVig',
+    betonlineag:'BetOnline', draftkings:'DraftKings', fanduel:'FanDuel',
+    betmgm:'BetMGM', betrivers:'BetRivers', espnbet:'ESPN Bet',
+    hardrockbet:'Hard Rock', betway:'Betway', bovada:'Bovada',
+    mybookieag:'MyBookie', betus:'BetUS',
+  };
   const pinnacleOdds = p.line_open ? formatOdds(p.line_open) : null;
   const bestOdds     = formatOdds(p.odds);
-  const bestBookName = p.best_book && p.best_book !== 'Best Book' ? p.best_book : null;
+  const _rawBook     = p.best_book || '';
+  const bestBookName = (_rawBook && _rawBook !== 'Best Book')
+    ? (BOOK_DISPLAY_NAMES[_rawBook.toLowerCase()] || _rawBook)
+    : null;
   const oddsRowHTML  = `
     <div class="book-odds-row">
       <span class="bor-label">Lines</span>
@@ -1449,6 +1462,8 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
         ${lineMovementHTML()}
       </div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0">
+        <a class="bor-shop" href="https://novig.com" target="_blank" rel="noopener">Novig</a>
+        <span style="color:var(--border);font-size:8px">·</span>
         <a class="bor-shop" href="https://www.pinnacle.com/en/baseball/mlb/matchups/" target="_blank" rel="noopener">Pinnacle</a>
         <span style="color:var(--border);font-size:8px">·</span>
         <a class="bor-shop" href="https://sportsbook.draftkings.com/leagues/baseball/mlb" target="_blank" rel="noopener">DraftKings</a>
