@@ -804,7 +804,9 @@
   <div class="footer-links"><a href="model.html">Model Overview</a> · <a href="history.html">Results &amp; Track Record</a></div>
 </footer>
 
+<script src="fairline-utils.js"></script>
 <script>
+// formatOdds, fetchESPNScores, ESPN_ABBR_MAP, _showDebugBanner → fairline-utils.js
 // ── Global state ─────────────────────────────────────────────────────────────
 const picksMap = {};
 let _unitSize = parseFloat(localStorage.getItem('fairline_unit_size') || '0');
@@ -1157,10 +1159,7 @@ function renderEmptyState(data, hist, marginal = []) {
     ${stripHTML}`;
 }
 
-function formatOdds(ml) {
-  if (!ml && ml !== 0) return '—';
-  return ml > 0 ? '+' + ml : String(ml);
-}
+// formatOdds → fairline-utils.js
 
 function formatGameTime(utcStr) {
   if (!utcStr) return null;
@@ -2153,45 +2152,7 @@ function updateRefreshUI() {
   setTimeout(updateRefreshUI, 5000);
 }
 
-// ── ESPN scores fetcher ───────────────────────────────────────────────────────
-// Maps ESPN team abbreviations → model abbreviations where they differ
-const ESPN_ABBR_MAP = {
-  'CWS': 'CHW',  // White Sox (ESPN=CWS, model=CHW)
-};
-
-let _espnScores = {}; // cached: { "AWAY @ HOME": { status, awayScore, homeScore } }
-
-async function fetchESPNScores() {
-  try {
-    const r = await fetch(
-      'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard',
-      { cache: 'no-store' }
-    );
-    const json = await r.json();
-    const result = {};
-    for (const ev of (json.events || [])) {
-      const comp = (ev.competitions || [])[0];
-      if (!comp) continue;
-      let away, home, awayScore = 0, homeScore = 0;
-      for (const c of (comp.competitors || [])) {
-        const abbr  = ESPN_ABBR_MAP[c.team.abbreviation] || c.team.abbreviation;
-        const score = parseInt(c.score || '0', 10) || 0;
-        if (c.homeAway === 'away') { away = abbr; awayScore = score; }
-        else                       { home = abbr; homeScore = score; }
-      }
-      if (!away || !home) continue;
-      const sn = ev.status?.type?.name || '';
-      const status = sn === 'STATUS_FINAL'       ? 'final'
-                   : sn.includes('IN_PROGRESS')  ? 'live'
-                   : 'scheduled';
-      result[`${away} @ ${home}`] = { status, awayScore, homeScore };
-    }
-    _espnScores = result;
-    return result;
-  } catch(e) {
-    return _espnScores; // return last known on failure
-  }
-}
+// ESPN_ABBR_MAP, _espnScoresCache, fetchESPNScores → fairline-utils.js
 
 // Returns { status, result:'W'|'L', score:'5–3' } or null
 function getPickResult(p, scores) {
@@ -2296,23 +2257,7 @@ function buildYesterdayHTML(yest) {
     }).join('') + '<div style="height:8px"></div>';
 }
 
-// ── Dev-only debug banner (localhost only) ────────────────────────────────────
-(function() {
-  if (!location.hostname.match(/^(localhost|127\.0\.0\.1)$/)) return;
-  function _showDebugBanner(msg) {
-    let d = document.getElementById('fl-debug-banner');
-    if (!d) {
-      d = document.createElement('div');
-      d.id = 'fl-debug-banner';
-      d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#ef4444;color:#fff;font-size:11px;font-family:monospace;padding:5px 12px;cursor:pointer;line-height:1.5;white-space:pre-wrap';
-      d.onclick = () => d.remove();
-      document.body.prepend(d);
-    }
-    d.textContent = '[FairLine Error] ' + String(msg) + '  (click to dismiss)';
-  }
-  window.addEventListener('unhandledrejection', e => _showDebugBanner(e.reason));
-  window.addEventListener('error', e => _showDebugBanner(e.message + ' — ' + e.filename + ':' + e.lineno));
-})();
+// _showDebugBanner, event listeners → fairline-utils.js
 
 loadPicks();
 startAutoRefresh();

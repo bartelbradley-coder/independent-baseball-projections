@@ -504,6 +504,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
   <div class="footer-links"><a href="model.html">Model Overview</a> · <a href="index.html">Today's Picks</a> · <a href="performance.html">Performance</a></div>
 </footer>
 
+<script src="fairline-utils.js"></script>
 <script>
 let allRows = [];
 let sortCol = 'date';
@@ -512,14 +513,7 @@ let activeFilter = 'all';
 let activeMonth = 'all';
 let activeSearch = '';
 
-function formatOdds(ml) {
-  if (!ml && ml !== 0) return '—';
-  return ml > 0 ? '+' + ml : String(ml);
-}
-function pct(v, d=1) {
-  if (v == null) return '—';
-  return (v >= 0 ? '+' : '') + (v * 100).toFixed(d) + '%';
-}
+// formatOdds, pct → fairline-utils.js
 
 function toggleRL() {
   const btn  = document.getElementById('rl-toggle-btn');
@@ -583,31 +577,7 @@ function renderRLPicks(rl) {
     </table>`;
 }
 
-// ── ESPN scores (reused from index.html pattern) ─────────────────────────────
-const ESPN_ABBR_MAP_H = { 'CWS': 'CHW' };
-async function fetchESPNScoresH() {
-  try {
-    const r = await fetch('https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard', { cache: 'no-store' });
-    const json = await r.json();
-    const result = {};
-    for (const ev of (json.events || [])) {
-      const comp = (ev.competitions || [])[0];
-      if (!comp) continue;
-      let away, home, awayScore = 0, homeScore = 0;
-      for (const c of (comp.competitors || [])) {
-        const abbr  = ESPN_ABBR_MAP_H[c.team.abbreviation] || c.team.abbreviation;
-        const score = parseInt(c.score || '0', 10) || 0;
-        if (c.homeAway === 'away') { away = abbr; awayScore = score; }
-        else                       { home = abbr; homeScore = score; }
-      }
-      if (!away || !home) continue;
-      const sn = ev.status?.type?.name || '';
-      const status = sn === 'STATUS_FINAL' ? 'final' : sn.includes('IN_PROGRESS') ? 'live' : 'scheduled';
-      result[`${away} @ ${home}`] = { status, awayScore, homeScore };
-    }
-    return result;
-  } catch(e) { return {}; }
-}
+// fetchESPNScores, ESPN_ABBR_MAP → fairline-utils.js
 
 function renderTodayTracking(picks, scores) {
   const section = document.getElementById('today-tracking-section');
@@ -660,79 +630,7 @@ function renderTodayTracking(picks, scores) {
   card.innerHTML = tallyHTML + rows + '<div style="height:4px"></div>';
 }
 
-// ── Today's settled picks — client-side merge ──────────────────────────────
-function computeTodaySettled(picks, scores, todayDateStr) {
-  // todayDateStr comes from today.json's top-level "date" field (set by the
-  // Python pipeline in local CT time). Never use toISOString() here — that
-  // returns UTC and rolls to the next calendar day after ~6 PM CT in summer.
-  // today.json picks have no per-pick "date" field, hence the explicit param.
-  // Per-pick try/catch: one bad pick won't wipe the whole merge.
-  return picks.map(p => {
-    try {
-      const g = scores[p.game];
-      if (!g || g.status !== 'final') return null;
-      const side = (p.side || '').toUpperCase();
-      const pickWon = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
-      const odds  = p.odds;
-      const pnl_u = pickWon
-        ? (odds > 0 ? odds / 100 : 100 / Math.abs(odds))
-        : -1.0;
-      return {
-        date: todayDateStr, game: p.game, pick: p.pick, side: p.side,
-        odds, edge: p.edge, model_prob: p.model_prob,
-        result: pickWon ? 'W' : 'L',
-        pnl_u: Math.round(pnl_u * 1000) / 1000,
-        kelly_units: p.kelly_units || null,
-      };
-    } catch(e) {
-      console.error('[FairLine] computeTodaySettled pick error:', e, p);
-      return null;
-    }
-  }).filter(Boolean);
-}
-
-function extendPnlCurve(curve, newSettled) {
-  if (!newSettled.length) return curve;
-  const extended = [...curve];
-  let running = extended.length > 0 ? extended[extended.length - 1] : 0;
-  for (const r of newSettled) {
-    running = Math.round((running + r.pnl_u) * 1000) / 1000;
-    extended.push(running);
-  }
-  return extended;
-}
-
-function applyTodayToPerf(p, newSettled) {
-  if (!newSettled.length || !p) return p;
-  const updated = JSON.parse(JSON.stringify(p));
-  const wins   = newSettled.filter(r => r.result === 'W').length;
-  const losses = newSettled.filter(r => r.result === 'L').length;
-  const units  = newSettled.reduce((s, r) => s + r.pnl_u, 0);
-  if (updated.season) {
-    updated.season.wins   = (updated.season.wins   || 0) + wins;
-    updated.season.losses = (updated.season.losses || 0) + losses;
-    updated.season.units  = Math.round(((updated.season.units || 0) + units) * 1000) / 1000;
-    updated.season.bets   = (updated.season.bets   || 0) + newSettled.length;
-    updated.season.roi    = updated.season.bets > 0
-      ? updated.season.units / updated.season.bets : 0;
-  }
-  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const currentMonth = monthNames[new Date().getMonth()];
-  if (updated.season_roi_by_month) {
-    const mo = updated.season_roi_by_month.find(m => m.month === currentMonth);
-    if (mo) {
-      mo.units = Math.round(((mo.units || 0) + units) * 1000) / 1000;
-      mo.bets  = (mo.bets  || 0) + newSettled.length;
-      mo.roi   = mo.bets > 0 ? mo.units / mo.bets : 0;
-    } else {
-      updated.season_roi_by_month.push({
-        month: currentMonth, units, bets: newSettled.length,
-        roi: newSettled.length > 0 ? units / newSettled.length : 0,
-      });
-    }
-  }
-  return updated;
-}
+// computeTodaySettled, extendPnlCurve, applyTodayToPerf → fairline-utils.js
 
 async function loadAll() {
   try {
@@ -742,7 +640,7 @@ async function loadAll() {
       fetch('data/performance.json?v='    + v),
       fetch('data/rl_performance.json?v=' + v),
       fetch('data/today.json?v='          + v),
-      fetchESPNScoresH(),
+      fetchESPNScores(),
     ]);
     const h     = hRes.ok     ? await hRes.json()     : null;
     const p     = pRes.ok     ? await pRes.json()     : null;
@@ -1506,21 +1404,7 @@ document.getElementById('search-input').addEventListener('input', e => {
   renderTable(allRows);
 });
 
-// ── Dev-only debug banner (localhost only) ────────────────────────────────────
-function _showDebugBanner(msg) {
-  if (!location.hostname.match(/^(localhost|127\.0\.0\.1)$/)) return;
-  let d = document.getElementById('fl-debug-banner');
-  if (!d) {
-    d = document.createElement('div');
-    d.id = 'fl-debug-banner';
-    d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#ef4444;color:#fff;font-size:11px;font-family:monospace;padding:5px 12px;cursor:pointer;line-height:1.5;white-space:pre-wrap';
-    d.onclick = () => d.remove();
-    document.body.prepend(d);
-  }
-  d.textContent = '[FairLine Error] ' + String(msg) + '  (click to dismiss)';
-}
-window.addEventListener('unhandledrejection', e => _showDebugBanner(e.reason));
-window.addEventListener('error', e => _showDebugBanner(e.message + ' — ' + e.filename + ':' + e.lineno));
+// _showDebugBanner, event listeners → fairline-utils.js
 
 // ── Auto-refresh every 5 minutes — picks settle every 30 min via cron ─────────
 let _lastRefreshAt = Date.now();
