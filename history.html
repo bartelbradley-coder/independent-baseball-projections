@@ -734,8 +734,9 @@ async function loadAll() {
     allRows = (h && h.rows) ? h.rows : [];
 
     // Merge today's settled picks that aren't yet in history.json
-    const todayPicksFilt = today && today.picks
-      ? today.picks.filter(pk => (pk.edge || 0) >= 0.02) : [];
+    // No edge filter here — all picks in today.json are tracked in picks_log.csv
+    // and will appear in history.json after the settle runs, so mirror that.
+    const todayPicksFilt = today && today.picks ? today.picks : [];
     const todaySettled  = computeTodaySettled(todayPicksFilt, scores);
     const todayDate     = new Date().toISOString().slice(0, 10);
     const alreadyInRows = new Set(
