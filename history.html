@@ -648,10 +648,11 @@ function renderTodayTracking(picks, scores) {
 }
 
 // ── Today's settled picks — client-side merge ──────────────────────────────
-function computeTodaySettled(picks, scores) {
-  // Use p.date (set by the Python pipeline in local CT time) — never derive the
-  // date from JS new Date().toISOString() which returns UTC and rolls to the
-  // next calendar day after ~6 PM CT in summer.
+function computeTodaySettled(picks, scores, todayDateStr) {
+  // todayDateStr comes from today.json's top-level "date" field (set by the
+  // Python pipeline in local CT time). Never use toISOString() here — that
+  // returns UTC and rolls to the next calendar day after ~6 PM CT in summer.
+  // today.json picks have no per-pick "date" field, hence the explicit param.
   return picks.map(p => {
     const g = scores[p.game];
     if (!g || g.status !== 'final') return null;
@@ -662,7 +663,7 @@ function computeTodaySettled(picks, scores) {
       ? (odds > 0 ? odds / 100 : 100 / Math.abs(odds))
       : -1.0;
     return {
-      date: p.date, game: p.game, pick: p.pick, side: p.side,
+      date: todayDateStr, game: p.game, pick: p.pick, side: p.side,
       odds, edge: p.edge, model_prob: p.model_prob,
       result: pickWon ? 'W' : 'L',
       pnl_u: Math.round(pnl_u * 1000) / 1000,
@@ -739,11 +740,9 @@ async function loadAll() {
     // No edge filter here — all picks in today.json are tracked in picks_log.csv
     // and will appear in history.json after the settle runs, so mirror that.
     const todayPicksFilt = today && today.picks ? today.picks : [];
-    const todaySettled  = computeTodaySettled(todayPicksFilt, scores);
-    // Derive today's date from the picks themselves (pipeline sets this in local CT time).
-    const todayDate     = todayPicksFilt.length > 0
-      ? String(todayPicksFilt[0].date)
-      : todaySettled.length > 0 ? String(todaySettled[0].date) : '';
+    // today.date is the top-level date field set by the pipeline in local CT time.
+    const todayDate     = (today && today.date) ? String(today.date) : '';
+    const todaySettled  = computeTodaySettled(todayPicksFilt, scores, todayDate);
     const alreadyInRows = new Set(
       allRows.filter(r => String(r.date) === todayDate)
              .map(r => `${r.game}|${(r.side||'').toUpperCase()}`)
