@@ -647,6 +647,71 @@ function renderTodayTracking(picks, scores) {
   card.innerHTML = tallyHTML + rows + '<div style="height:4px"></div>';
 }
 
+// ── Today's settled picks — client-side merge ──────────────────────────────
+function computeTodaySettled(picks, scores) {
+  const today = new Date().toISOString().slice(0, 10);
+  return picks.map(p => {
+    const g = scores[p.game];
+    if (!g || g.status !== 'final') return null;
+    const side = (p.side || '').toUpperCase();
+    const pickWon = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
+    const odds  = p.odds;
+    const pnl_u = pickWon
+      ? (odds > 0 ? odds / 100 : 100 / Math.abs(odds))
+      : -1.0;
+    return {
+      date: today, game: p.game, pick: p.pick, side: p.side,
+      odds, edge: p.edge, model_prob: p.model_prob,
+      result: pickWon ? 'W' : 'L',
+      pnl_u: Math.round(pnl_u * 1000) / 1000,
+      kelly_units: p.kelly_units || null,
+    };
+  }).filter(Boolean);
+}
+
+function extendPnlCurve(curve, newSettled) {
+  if (!newSettled.length) return curve;
+  const extended = [...curve];
+  let running = extended.length > 0 ? extended[extended.length - 1] : 0;
+  for (const r of newSettled) {
+    running = Math.round((running + r.pnl_u) * 1000) / 1000;
+    extended.push(running);
+  }
+  return extended;
+}
+
+function applyTodayToPerf(p, newSettled) {
+  if (!newSettled.length || !p) return p;
+  const updated = JSON.parse(JSON.stringify(p));
+  const wins   = newSettled.filter(r => r.result === 'W').length;
+  const losses = newSettled.filter(r => r.result === 'L').length;
+  const units  = newSettled.reduce((s, r) => s + r.pnl_u, 0);
+  if (updated.season) {
+    updated.season.wins   = (updated.season.wins   || 0) + wins;
+    updated.season.losses = (updated.season.losses || 0) + losses;
+    updated.season.units  = Math.round(((updated.season.units || 0) + units) * 1000) / 1000;
+    updated.season.bets   = (updated.season.bets   || 0) + newSettled.length;
+    updated.season.roi    = updated.season.bets > 0
+      ? updated.season.units / updated.season.bets : 0;
+  }
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const currentMonth = monthNames[new Date().getMonth()];
+  if (updated.season_roi_by_month) {
+    const mo = updated.season_roi_by_month.find(m => m.month === currentMonth);
+    if (mo) {
+      mo.units = Math.round(((mo.units || 0) + units) * 1000) / 1000;
+      mo.bets  = (mo.bets  || 0) + newSettled.length;
+      mo.roi   = mo.bets > 0 ? mo.units / mo.bets : 0;
+    } else {
+      updated.season_roi_by_month.push({
+        month: currentMonth, units, bets: newSettled.length,
+        roi: newSettled.length > 0 ? units / newSettled.length : 0,
+      });
+    }
+  }
+  return updated;
+}
+
 async function loadAll() {
   try {
     const v = Date.now();
@@ -668,30 +733,48 @@ async function loadAll() {
 
     allRows = (h && h.rows) ? h.rows : [];
 
-    // Populate live metrics row from performance.json
-    if (p && p.season) {
-      const s = p.season;
-      document.getElementById('lm-record').textContent = s.wins + 'W–' + s.losses + 'L';
-      const wr = (s.wins + s.losses) > 0 ? s.wins / (s.wins + s.losses) : 0;
+    // Merge today's settled picks that aren't yet in history.json
+    const todayPicksFilt = today && today.picks
+      ? today.picks.filter(pk => (pk.edge || 0) >= 0.02) : [];
+    const todaySettled  = computeTodaySettled(todayPicksFilt, scores);
+    const todayDate     = new Date().toISOString().slice(0, 10);
+    const alreadyInRows = new Set(
+      allRows.filter(r => String(r.date) === todayDate)
+             .map(r => `${r.game}|${(r.side||'').toUpperCase()}`)
+    );
+    const newSettled = todaySettled.filter(r =>
+      !alreadyInRows.has(`${r.game}|${(r.side||'').toUpperCase()}`)
+    );
+    if (newSettled.length > 0) {
+      allRows = [...allRows, ...newSettled];
+    }
+    const pnlCurve   = extendPnlCurve((h && h.pnl_curve) ? h.pnl_curve : [], newSettled);
+    const pAugmented = applyTodayToPerf(p, newSettled);
+
+    // Populate live metrics row (augmented with today's settled picks)
+    const sAug = pAugmented && pAugmented.season;
+    if (sAug) {
+      document.getElementById('lm-record').textContent = sAug.wins + 'W–' + sAug.losses + 'L';
+      const wr = (sAug.wins + sAug.losses) > 0 ? sAug.wins / (sAug.wins + sAug.losses) : 0;
       document.getElementById('lm-winrate').textContent = (wr * 100).toFixed(1) + '%';
-      if (p.updated_at) document.getElementById('lm-updated').textContent = p.updated_at;
+      if (pAugmented.updated_at) document.getElementById('lm-updated').textContent = pAugmented.updated_at;
     }
 
     // Today's picks live tracking
     if (today && today.picks && today.picks.length > 0) {
-      renderTodayTracking(today.picks.filter(p => (p.edge || 0) >= 0.02), scores);
+      renderTodayTracking(today.picks.filter(pk => (pk.edge || 0) >= 0.02), scores);
     }
 
     renderSummary(allRows);
-    renderCurve((h && h.pnl_curve) ? h.pnl_curve : []);
+    renderCurve(pnlCurve);
     renderRollingWinRate(allRows);
     renderBreakdowns(allRows);
     renderCalibration(allRows);
     renderCalendar(allRows);
-    renderClv(p);
-    renderEdgeTiers(p);
-    renderKellyROI(p);
-    renderMonthly(p);
+    renderClv(pAugmented);
+    renderEdgeTiers(pAugmented);
+    renderKellyROI(pAugmented);
+    renderMonthly(pAugmented);
     renderTeamStats(allRows);
     renderPitcherStats(allRows);
     renderBacktest();
