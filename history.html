@@ -182,6 +182,17 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 /* Daily P&L bar chart */
 .calendar-wrap { display:block; }
 
+/* Auto-refresh live indicator */
+.auto-refresh-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 9px; color: var(--green); font-family: 'JetBrains Mono', monospace;
+  padding: 3px 9px; background: rgba(34,197,94,0.06);
+  border: 1px solid rgba(34,197,94,0.2); border-radius: 6px; margin-left: 6px;
+}
+.arp-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.arp-dot.pulse { animation: arp-pulse 2s infinite; }
+@keyframes arp-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
 /* RL picks section */
 .rl-toggle-btn { width:100%; text-align:left; padding:12px 16px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; color:var(--text-2); font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:space-between; margin-bottom:0; transition:background 0.15s; }
 .rl-toggle-btn:hover { background:rgba(255,255,255,0.04); }
@@ -210,6 +221,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
   </div>
   <div class="nav-right">
     <span class="nav-updated" id="last-updated">—</span>
+    <span id="auto-refresh-pill" class="auto-refresh-pill" style="display:none"><span class="arp-dot pulse"></span>&nbsp;Live</span>
   </div>
 </nav>
 
@@ -453,6 +465,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
       <div class="filter-sep"></div>
       <button class="filter-btn" data-filter="strong">8%+ Edge</button>
       <button class="filter-btn" data-filter="value">5–8% Edge</button>
+      <button class="filter-btn" data-filter="marginal-edge">2–5% Edge</button>
       <div class="filter-sep"></div>
       <button class="filter-btn" data-filter="dog">🐶 Dogs</button>
       <button class="filter-btn" data-filter="fav">Favs</button>
@@ -653,22 +666,28 @@ function computeTodaySettled(picks, scores, todayDateStr) {
   // Python pipeline in local CT time). Never use toISOString() here — that
   // returns UTC and rolls to the next calendar day after ~6 PM CT in summer.
   // today.json picks have no per-pick "date" field, hence the explicit param.
+  // Per-pick try/catch: one bad pick won't wipe the whole merge.
   return picks.map(p => {
-    const g = scores[p.game];
-    if (!g || g.status !== 'final') return null;
-    const side = (p.side || '').toUpperCase();
-    const pickWon = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
-    const odds  = p.odds;
-    const pnl_u = pickWon
-      ? (odds > 0 ? odds / 100 : 100 / Math.abs(odds))
-      : -1.0;
-    return {
-      date: todayDateStr, game: p.game, pick: p.pick, side: p.side,
-      odds, edge: p.edge, model_prob: p.model_prob,
-      result: pickWon ? 'W' : 'L',
-      pnl_u: Math.round(pnl_u * 1000) / 1000,
-      kelly_units: p.kelly_units || null,
-    };
+    try {
+      const g = scores[p.game];
+      if (!g || g.status !== 'final') return null;
+      const side = (p.side || '').toUpperCase();
+      const pickWon = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
+      const odds  = p.odds;
+      const pnl_u = pickWon
+        ? (odds > 0 ? odds / 100 : 100 / Math.abs(odds))
+        : -1.0;
+      return {
+        date: todayDateStr, game: p.game, pick: p.pick, side: p.side,
+        odds, edge: p.edge, model_prob: p.model_prob,
+        result: pickWon ? 'W' : 'L',
+        pnl_u: Math.round(pnl_u * 1000) / 1000,
+        kelly_units: p.kelly_units || null,
+      };
+    } catch(e) {
+      console.error('[FairLine] computeTodaySettled pick error:', e, p);
+      return null;
+    }
   }).filter(Boolean);
 }
 
@@ -787,6 +806,8 @@ async function loadAll() {
     renderTable(allRows);
     renderRLPicks(rl);
   } catch (e) {
+    console.error('[FairLine] loadAll error:', e);
+    _showDebugBanner(e.message || String(e));
     renderEmpty();
   }
 }
@@ -979,8 +1000,9 @@ function getFilteredSorted(rows) {
   let r = [...rows];
   if (activeFilter === 'W') r = r.filter(x => x.result === 'W');
   else if (activeFilter === 'L') r = r.filter(x => x.result === 'L');
-  else if (activeFilter === 'strong') r = r.filter(x => x.edge != null && x.edge >= 0.08);
-  else if (activeFilter === 'value')  r = r.filter(x => x.edge != null && x.edge >= 0.05 && x.edge < 0.08);
+  else if (activeFilter === 'strong')       r = r.filter(x => x.edge != null && x.edge >= 0.08);
+  else if (activeFilter === 'value')        r = r.filter(x => x.edge != null && x.edge >= 0.05 && x.edge < 0.08);
+  else if (activeFilter === 'marginal-edge') r = r.filter(x => x.edge != null && x.edge >= 0.02 && x.edge < 0.05);
   else if (activeFilter === 'dog')    r = r.filter(x => x.odds != null && x.odds > 0);
   else if (activeFilter === 'fav')    r = r.filter(x => x.odds != null && x.odds <= 0);
   else if (activeFilter === 'home')   r = r.filter(x => x.side && x.side.toUpperCase() === 'HOME');
@@ -1043,7 +1065,8 @@ function renderTable(rows) {
     const edgeStr = r.edge != null ? '+' + (r.edge * 100).toFixed(1) + '%' : '—';
     const probStr = r.model_prob != null ? (r.model_prob * 100).toFixed(1) + '%' : '—';
     const pnlStr  = r.pnl_u != null ? (r.pnl_u >= 0 ? '+' : '') + r.pnl_u.toFixed(1) + 'u' : '—';
-    const clvStr  = r.clv != null ? pct(r.clv) : '—';
+    const clvStr  = r.clv != null ? pct(r.clv)
+      : '<abbr title="CLV not captured — game may have been a day game settled before the 3:30 PM CT closing line snapshot" style="text-decoration:none;cursor:help">—</abbr>';
     const dateStr = r.date ? (() => { try { return new Date(r.date + 'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}); } catch(e){ return r.date; } })() : '—';
     const rowClass = r.edge >= 0.08 ? 'row-strong' : r.edge >= 0.05 ? 'row-value' : '';
     return `<tr class="${rowClass}">
@@ -1483,7 +1506,45 @@ document.getElementById('search-input').addEventListener('input', e => {
   renderTable(allRows);
 });
 
-loadAll();
+// ── Dev-only debug banner (localhost only) ────────────────────────────────────
+function _showDebugBanner(msg) {
+  if (!location.hostname.match(/^(localhost|127\.0\.0\.1)$/)) return;
+  let d = document.getElementById('fl-debug-banner');
+  if (!d) {
+    d = document.createElement('div');
+    d.id = 'fl-debug-banner';
+    d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#ef4444;color:#fff;font-size:11px;font-family:monospace;padding:5px 12px;cursor:pointer;line-height:1.5;white-space:pre-wrap';
+    d.onclick = () => d.remove();
+    document.body.prepend(d);
+  }
+  d.textContent = '[FairLine Error] ' + String(msg) + '  (click to dismiss)';
+}
+window.addEventListener('unhandledrejection', e => _showDebugBanner(e.reason));
+window.addEventListener('error', e => _showDebugBanner(e.message + ' — ' + e.filename + ':' + e.lineno));
+
+// ── Auto-refresh every 5 minutes — picks settle every 30 min via cron ─────────
+let _lastRefreshAt = Date.now();
+
+function _updateRefreshPill() {
+  const el = document.getElementById('auto-refresh-pill');
+  if (!el) return;
+  el.style.display = 'inline-flex';
+  const mins = Math.floor((Date.now() - _lastRefreshAt) / 60000);
+  el.innerHTML = `<span class="arp-dot pulse"></span>&nbsp;${mins > 0 ? 'Updated ' + mins + 'm ago' : 'Live'}`;
+}
+
+async function _doAutoRefresh() {
+  try {
+    await loadAll();
+    _lastRefreshAt = Date.now();
+  } catch(e) { /* silent — loadAll already logs internally */ }
+  _updateRefreshPill();
+}
+
+setInterval(_doAutoRefresh, 5 * 60 * 1000);   // full reload every 5 min
+setInterval(_updateRefreshPill, 60 * 1000);    // tick the "X min ago" label every minute
+
+loadAll().then(() => { _lastRefreshAt = Date.now(); _updateRefreshPill(); });
 </script>
 </body>
 </html>

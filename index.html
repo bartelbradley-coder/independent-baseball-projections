@@ -1041,6 +1041,7 @@ async function loadPicks() {
     else renderEmptyState(null, hist);
     if (perf) renderPerfCharts(perf);
   } catch (e) {
+    console.error('[FairLine] loadPicks error:', e);
     document.getElementById('picks-container').innerHTML = `
       <div class="state-card error-state">
         <div class="state-icon">⚠️</div>
@@ -2294,6 +2295,24 @@ function buildYesterdayHTML(yest) {
       </div>`;
     }).join('') + '<div style="height:8px"></div>';
 }
+
+// ── Dev-only debug banner (localhost only) ────────────────────────────────────
+(function() {
+  if (!location.hostname.match(/^(localhost|127\.0\.0\.1)$/)) return;
+  function _showDebugBanner(msg) {
+    let d = document.getElementById('fl-debug-banner');
+    if (!d) {
+      d = document.createElement('div');
+      d.id = 'fl-debug-banner';
+      d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#ef4444;color:#fff;font-size:11px;font-family:monospace;padding:5px 12px;cursor:pointer;line-height:1.5;white-space:pre-wrap';
+      d.onclick = () => d.remove();
+      document.body.prepend(d);
+    }
+    d.textContent = '[FairLine Error] ' + String(msg) + '  (click to dismiss)';
+  }
+  window.addEventListener('unhandledrejection', e => _showDebugBanner(e.reason));
+  window.addEventListener('error', e => _showDebugBanner(e.message + ' — ' + e.filename + ':' + e.lineno));
+})();
 
 loadPicks();
 startAutoRefresh();
