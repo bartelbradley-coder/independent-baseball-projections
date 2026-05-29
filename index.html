@@ -515,7 +515,51 @@
   margin-bottom: 8px; gap: 8px;
 }
 
-/* ── Book odds comparison row ── */
+/* ── Book odds comparison table ── */
+.book-odds-table {
+  margin: -2px 0 10px; padding: 8px 12px;
+  background: rgba(255,255,255,0.015); border-radius: 6px;
+}
+.bot-label {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-4); margin-bottom: 7px;
+}
+.bot-note { font-weight: 400; letter-spacing: 0; text-transform: none; opacity: 0.65; margin-left: 4px; }
+.bot-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* Individual book chip */
+.boc-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 5px; text-decoration: none;
+  border: 1px solid var(--border); background: rgba(255,255,255,0.03);
+  transition: border-color 0.15s, background 0.15s; cursor: pointer;
+}
+.boc-chip:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); }
+/* Best odds — green highlight */
+.boc-best {
+  background: rgba(34,197,94,0.08);
+  border-color: rgba(34,197,94,0.3);
+}
+.boc-best:hover { background: rgba(34,197,94,0.14); }
+/* Pinnacle — subtle reference style */
+.boc-pinn {
+  border-color: rgba(99,102,241,0.2);
+  background: rgba(99,102,241,0.04);
+}
+.boc-name { font-size: 9px; color: var(--text-4); }
+.boc-odds { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--text-2); }
+.boc-best .boc-name { color: rgba(34,197,94,0.75); }
+.boc-best .boc-odds { color: var(--green); }
+.boc-pinn .boc-name { color: rgba(99,102,241,0.65); }
+.boc-pinn .boc-odds { color: var(--indigo-lt); }
+/* Exchange badge */
+.boc-ex {
+  font-size: 7px; font-weight: 700; letter-spacing: 0.08em;
+  color: var(--amber); background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.2); border-radius: 3px;
+  padding: 1px 3px; flex-shrink: 0;
+}
+/* Legacy fallback styles (kept for any pre-book_odds picks) */
 .book-odds-row {
   display: flex; align-items: center; gap: 8px;
   padding: 7px 12px; margin: -2px 0 10px;
@@ -528,8 +572,6 @@
 .bor-bval { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--text-2); }
 .bor-bval.best { color: var(--green); }
 .bor-pinn .bor-bval { color: var(--text-3); }
-.bor-shop { font-size: 9px; color: var(--indigo-lt); text-decoration: none; margin-left: auto; opacity: 0.75; }
-.bor-shop:hover { opacity: 1; text-decoration: underline; }
 
 /* ── Track bet button ── */
 .bet-toggle {
@@ -1436,10 +1478,9 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     </div>`;
   }
 
-  // Book odds comparison row (Pinnacle reference + best available + shop link)
-  // BOOK_DISPLAY_NAMES normalises raw API keys (e.g. "draftkings") → "DraftKings".
-  // The pipeline now sets display names server-side; this is a client-side safety net
-  // for picks generated before the rename and for any future key/name mismatches.
+  // ── Book odds comparison table ───────────────────────────────────────────────
+  // BOOK_DISPLAY_NAMES: normalises raw API keys → display names (safety net for
+  // picks generated before server-side rename was deployed).
   const BOOK_DISPLAY_NAMES = {
     novig:'Novig', prophetx:'ProphetX', pinnacle:'Pinnacle', lowvig:'LowVig',
     betonlineag:'BetOnline', draftkings:'DraftKings', fanduel:'FanDuel',
@@ -1447,30 +1488,92 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     hardrockbet:'Hard Rock', betway:'Betway', bovada:'Bovada',
     mybookieag:'MyBookie', betus:'BetUS',
   };
+  // Deep-links for each book — opens directly to MLB markets
+  const BOOK_URLS = {
+    'Novig':      'https://novig.com',
+    'ProphetX':   'https://www.prophetx.com',
+    'Pinnacle':   'https://www.pinnacle.com/en/baseball/mlb/matchups/',
+    'LowVig':     'https://www.lowvig.ag',
+    'BetOnline':  'https://www.betonline.ag',
+    'DraftKings': 'https://sportsbook.draftkings.com/leagues/baseball/mlb',
+    'FanDuel':    'https://sportsbook.fanduel.com/baseball',
+    'BetMGM':     'https://sports.betmgm.com/en/sports/baseball-23',
+    'BetRivers':  'https://pa.betrivers.com/?page=sportsbook&sport=baseball',
+    'ESPN Bet':   'https://espnbet.com/sport/baseball',
+    'Hard Rock':  'https://hardrocksportsbook.com',
+    'Betway':     'https://betway.com/en/sports/cat/baseball',
+    'Bovada':     'https://www.bovada.lv/sports/baseball',
+    'MyBookie':   'https://mybookie.ag/sportsbook/baseball/',
+    'BetUS':      'https://www.betus.com.pa/sportsbook/',
+  };
+  // Exchange books get a subtle badge so users know they're a different model
+  const EXCHANGE_BOOKS = new Set(['Novig', 'ProphetX']);
+
   const pinnacleOdds = p.line_open ? formatOdds(p.line_open) : null;
-  const bestOdds     = formatOdds(p.odds);
-  const _rawBook     = p.best_book || '';
-  const bestBookName = (_rawBook && _rawBook !== 'Best Book')
-    ? (BOOK_DISPLAY_NAMES[_rawBook.toLowerCase()] || _rawBook)
-    : null;
-  const oddsRowHTML  = `
-    <div class="book-odds-row">
-      <span class="bor-label">Lines</span>
-      <div class="bor-books" title="Odds captured at model run time — check your book for the current line before betting">
-        ${pinnacleOdds ? `<div class="bor-book bor-pinn"><span class="bor-bname">Pinnacle</span> <span class="bor-bval">${pinnacleOdds}</span></div>` : ''}
-        <div class="bor-book"><span class="bor-bname">${bestBookName || 'Best avail.'}</span> <span class="bor-bval best">${bestOdds} ✓</span></div>
-        ${lineMovementHTML()}
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0">
-        <a class="bor-shop" href="https://novig.com" target="_blank" rel="noopener">Novig</a>
-        <span style="color:var(--border);font-size:8px">·</span>
-        <a class="bor-shop" href="https://www.pinnacle.com/en/baseball/mlb/matchups/" target="_blank" rel="noopener">Pinnacle</a>
-        <span style="color:var(--border);font-size:8px">·</span>
-        <a class="bor-shop" href="https://sportsbook.draftkings.com/leagues/baseball/mlb" target="_blank" rel="noopener">DraftKings</a>
-        <span style="color:var(--border);font-size:8px">·</span>
-        <a class="bor-shop" href="https://sportsbook.fanduel.com/baseball" target="_blank" rel="noopener">FanDuel</a>
-      </div>
-    </div>`;
+
+  function buildBookOddsHTML() {
+    const rawBookOdds = p.book_odds || {};
+    // Normalise any legacy raw API keys
+    const bookOdds = {};
+    for (const [k, v] of Object.entries(rawBookOdds)) {
+      const displayKey = BOOK_DISPLAY_NAMES[k.toLowerCase()] || k;
+      bookOdds[displayKey] = v;
+    }
+
+    // Also add Pinnacle from line_open if not already present
+    if (p.line_open && !bookOdds['Pinnacle']) {
+      bookOdds['Pinnacle'] = p.line_open;
+    }
+
+    const entries = Object.entries(bookOdds);
+    if (entries.length === 0) {
+      // Fallback for picks before book_odds was added
+      const _rawBook = p.best_book || '';
+      const bestBookName = (_rawBook && _rawBook !== 'Best Book')
+        ? (BOOK_DISPLAY_NAMES[_rawBook.toLowerCase()] || _rawBook) : null;
+      return `
+        <div class="book-odds-row">
+          <span class="bor-label">Lines</span>
+          <div class="bor-books">
+            ${pinnacleOdds ? `<div class="bor-book bor-pinn"><span class="bor-bname">Pinnacle</span><span class="bor-bval">${pinnacleOdds}</span></div>` : ''}
+            <div class="bor-book"><span class="bor-bname">${bestBookName || 'Best avail.'}</span><span class="bor-bval best">${formatOdds(p.odds)} ✓</span></div>
+          </div>
+        </div>`;
+    }
+
+    // Sort: exchanges first (best price), then by descending odds (best = highest)
+    entries.sort(([aName, aOdds], [bName, bOdds]) => {
+      const aEx = EXCHANGE_BOOKS.has(aName) ? 1 : 0;
+      const bEx = EXCHANGE_BOOKS.has(bName) ? 1 : 0;
+      if (aEx !== bEx) return bEx - aEx;   // exchanges first
+      return bOdds - aOdds;                // then best odds
+    });
+
+    const bestOddsVal = Math.max(...entries.map(([,v]) => v));
+
+    const chips = entries.map(([book, ml]) => {
+      const isBest     = ml === bestOddsVal;
+      const isPinnacle = book === 'Pinnacle';
+      const isExchange = EXCHANGE_BOOKS.has(book);
+      const url        = BOOK_URLS[book];
+      const oddsStr    = formatOdds(ml);
+      const tag        = isBest ? ' ✓' : '';
+      const chipCls    = isBest ? 'boc-chip boc-best' : isPinnacle ? 'boc-chip boc-pinn' : 'boc-chip';
+      const exBadge    = isExchange ? '<span class="boc-ex">EX</span>' : '';
+      const inner = `${exBadge}<span class="boc-name">${book}</span><span class="boc-odds">${oddsStr}${tag}</span>`;
+      return url
+        ? `<a class="${chipCls}" href="${url}" target="_blank" rel="noopener">${inner}</a>`
+        : `<span class="${chipCls}">${inner}</span>`;
+    }).join('');
+
+    return `
+      <div class="book-odds-table">
+        <div class="bot-label">Best Odds by Book <span class="bot-note">at model run time · verify before betting</span></div>
+        <div class="bot-chips">${chips}</div>
+      </div>`;
+  }
+
+  const oddsRowHTML = buildBookOddsHTML();
 
   // Probability single-track: Market → edge gap → Model, all on 0–100% win-probability axis
   // Edge = Model − Market, shown as the highlighted gap between the two fills
