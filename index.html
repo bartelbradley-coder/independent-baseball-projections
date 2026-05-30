@@ -482,6 +482,73 @@
   display: flex; align-items: center; gap: 4px;
 }
 
+/* ── v2 Pick card redesign ── */
+
+/* Left-edge tier accent bar (replaces the redundant VALUE badge) */
+.pick-card.strong  { border-left: 3px solid rgba(245,158,11,0.7)  !important; }
+.pick-card.value   { border-left: 3px solid rgba(34,197,94,0.65)  !important; }
+.pick-card.marginal { border-left: 3px solid rgba(255,255,255,0.12) !important; }
+
+/* Win/loss override is still highest priority */
+.pick-card.card-win  { border-left: 3px solid rgba(34,197,94,0.6)  !important; }
+.pick-card.card-loss { border-left: 3px solid rgba(239,68,68,0.5)  !important; opacity: 0.78; }
+
+/* Pick headline — the dominant section: large team name + odds */
+.uc-pick-headline {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 6px 0 4px; gap: 8px;
+}
+.uph-team {
+  font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700;
+  color: var(--text-1, #f1f5f9); line-height: 1; flex: 1; min-width: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.uph-odds {
+  font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700;
+  line-height: 1; flex-shrink: 0;
+}
+.uph-odds.dog { color: var(--green); }
+.uph-odds.fav { color: var(--amber); }
+
+/* Edge + prob row — prominent badge with inline context */
+.uph-edge-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.uph-edge-badge {
+  display: inline-flex; align-items: center;
+  background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3);
+  border-radius: 5px; padding: 2px 9px;
+  font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+.uph-prob-context {
+  font-size: 10px; color: var(--text-4); letter-spacing: 0.02em;
+}
+.uph-prob-context strong { color: var(--text-2); font-weight: 600; }
+.uph-fair { color: var(--indigo-lt); }
+
+/* SP line — slightly larger and better contrast than before */
+.sp-line { font-size: 11px !important; color: var(--text-3) !important; margin-bottom: 4px; }
+
+/* Action row v2 — text links instead of box buttons */
+.uc-action-row-v2 {
+  display: flex; align-items: center; gap: 0;
+  padding: 8px 0 2px; border-top: 1px solid var(--border); margin-top: 6px;
+  flex-wrap: wrap;
+}
+.uav-btn {
+  background: none; border: none; cursor: pointer; padding: 2px 10px;
+  font-size: 11px; font-weight: 500; transition: color 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.uav-btn.primary { color: var(--indigo-lt); }
+.uav-btn.primary:hover { color: #a5b4fc; }
+.uav-btn.secondary { color: var(--text-3); }
+.uav-btn.secondary:hover { color: var(--text-2); }
+.uav-btn.tracking { color: var(--green) !important; }
+.uav-sep { color: var(--border); font-size: 12px; user-select: none; }
+
 /* ── Pick card redesign ── */
 .matchup-teams { display: flex; align-items: baseline; gap: 7px; margin-bottom: 3px; flex-wrap: wrap; }
 .mt-pick { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; color: var(--text-2); }
@@ -1907,25 +1974,40 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     resultBadgeHTML = `<span data-result-badge style="display:none"></span>`;
   }
 
+  // v2: simplified header — no VALUE badge (redundant with tier label + accent bar)
+  // no ⭐ star — tier communicated by left border color
   const headerRowHTML = `
     <div class="uc-header-row">
-      ${tierStarHTML}
       <span class="uc-tier-label ${tierLabelCls}">${tierText}</span>
       <span class="uc-tier-dot">·</span>
       ${headerMatchup}
       ${matchLabelHTML}
       ${resultBadgeHTML}
       ${headerTimeHTML ? `<span class="uc-tier-dot">·</span>${headerTimeHTML}` : ''}
-      <div class="uc-header-right">${valueBadgeHTML}</div>
     </div>`;
 
-  // ── Action row (bottom of always-visible area) ────────────────────────────
+  // ── Pick headline — dominant: large team name + large odds + edge badge ────
+  const fairOddsInline = p.fair_odds ? ` · Fair <span class="uph-fair">${p.fair_odds}</span>` : '';
+  const pickHeadlineHTML = `
+    <div class="uc-pick-headline">
+      <span class="uph-team">${isHomePick ? homeTeam || p.pick : awayTeam || p.pick}</span>
+      <span class="uph-odds ${isDog ? 'dog' : 'fav'}">${formatOdds(p.odds)}</span>
+    </div>
+    <div class="uph-edge-row">
+      <span class="uph-edge-badge">+${edgePct}% edge</span>
+      ${modelPct && mktPct ? `<span class="uph-prob-context">Model <strong>${modelPct}%</strong> · Market <strong>${mktPct}%</strong>${fairOddsInline}</span>` : ''}
+    </div>`;
+
+  // ── Action row v2 — text links, no box buttons ────────────────────────────
   const actionRowHTML = `
-    <div class="uc-action-row">
-      <button class="details-toggle" onclick="toggleDetails('${detailsId}', this)">Details ▾</button>
-      <button class="bet-toggle" data-bet-id="${cardId}" onclick="toggleBet('${cardId}')">📌 Track</button>
-      <button class="share-btn" onclick="shareOnX('${cardId}')">𝕏</button>
-      <button class="copy-btn" data-copy-id="${cardId}" onclick="copyPick('${cardId}')">📋 Copy</button>
+    <div class="uc-action-row-v2">
+      <button class="uav-btn primary details-toggle" onclick="toggleDetails('${detailsId}', this)">Details ▾</button>
+      <span class="uav-sep">·</span>
+      <button class="uav-btn secondary bet-toggle" data-bet-id="${cardId}" onclick="toggleBet('${cardId}')">Track</button>
+      <span class="uav-sep">·</span>
+      <button class="uav-btn secondary share-btn" onclick="shareOnX('${cardId}')">Share</button>
+      <span class="uav-sep">·</span>
+      <button class="uav-btn secondary copy-btn" data-copy-id="${cardId}" onclick="copyPick('${cardId}')">Copy pick</button>
     </div>`;
 
   const topPickBannerHTML = isTopPick
@@ -1939,8 +2021,8 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     <div id="${cardId}" class="pick-card ${tierClass}${isTopPick ? ' top-pick' : ''}${isOver ? ' card-stale' : ''}${resultStateClass}">
       ${topPickBannerHTML}
       ${headerRowHTML}
+      ${pickHeadlineHTML}
       ${spFlagsRowHTML}
-      ${marketsTableHTML}
       ${actionRowHTML}
       ${detailsBodyHTML}
     </div>`;
