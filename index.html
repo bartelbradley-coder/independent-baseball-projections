@@ -366,7 +366,17 @@
 
 
 /* ── Stale / completed card ── */
-.pick-card.card-stale { opacity: 0.62; }
+.pick-card.card-stale { opacity: 0.60; }
+/* Completed (final result known): subtle background tint + score line */
+.pick-card.card-win  { background: rgba(34,197,94,0.025) !important; }
+.pick-card.card-loss { background: rgba(239,68,68,0.02)  !important; }
+/* Result score line displayed below team name on completed cards */
+.uph-final-score {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: var(--text-4); letter-spacing: 0.04em; margin-top: 2px;
+}
+.uph-final-score.won { color: rgba(34,197,94,0.75); }
+.uph-final-score.lost { color: rgba(239,68,68,0.6); }
 
 /* ── Live score section headers ── */
 .picks-section-header {
@@ -548,6 +558,46 @@
 .uav-btn.secondary:hover { color: var(--text-2); }
 .uav-btn.tracking { color: var(--green) !important; }
 .uav-sep { color: var(--border); font-size: 12px; user-select: none; }
+
+/* ── Record strip: match new card aesthetic ── */
+.record-strip .stat-pill {
+  border-radius: 10px;
+  background: rgba(255,255,255,0.025);
+  transition: border-color 0.15s;
+}
+.record-strip .stat-pill:hover { border-color: rgba(255,255,255,0.15); }
+
+/* ── Narrative preview (always-visible, one line) ── */
+.uc-narrative-preview-line {
+  font-size: 10.5px; color: var(--text-3); line-height: 1.5;
+  margin: 4px 0 6px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Card spacing: more breathing room between picks ── */
+.pick-grid { gap: 14px !important; }
+
+/* ── Marginal picks: visually secondary ── */
+.pick-card.marginal { opacity: 0.70; }
+
+/* ── Skeleton loading cards ── */
+.skeleton-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 16px; border-left: 3px solid rgba(255,255,255,0.08);
+}
+.sk-line {
+  height: 8px; border-radius: 4px; background: rgba(255,255,255,0.06);
+  margin-bottom: 10px; animation: sk-pulse 1.6s ease-in-out infinite;
+}
+@keyframes sk-pulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
+.sk-line.wide  { width: 70%; }
+.sk-line.tall  { height: 20px; width: 55%; margin-bottom: 6px; }
+.sk-line.short { width: 40%; }
+.sk-line.xs    { height: 6px; width: 80%; }
+
+/* ── Details button — slightly bolder to be most prominent action ── */
+.uav-btn.primary { font-weight: 600 !important; }
 
 /* ── Pick card redesign ── */
 .matchup-teams { display: flex; align-items: baseline; gap: 7px; margin-bottom: 3px; flex-wrap: wrap; }
@@ -880,10 +930,24 @@
   <div class="section">
     <div class="sec-lbl">Value Bets</div>
     <div id="picks-container">
-      <div class="state-card loading-state" id="loading-placeholder">
-        <div class="state-icon">⏳</div>
-        <div class="state-title">Loading today's model picks…</div>
-        <div class="state-sub">Fetching picks and odds data.</div>
+      <div id="loading-placeholder" style="display:flex;flex-direction:column;gap:14px">
+        <div class="skeleton-card">
+          <div class="sk-line short"></div>
+          <div class="sk-line tall"></div>
+          <div class="sk-line wide"></div>
+          <div class="sk-line xs"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="sk-line short"></div>
+          <div class="sk-line tall"></div>
+          <div class="sk-line wide"></div>
+          <div class="sk-line xs"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="sk-line short"></div>
+          <div class="sk-line tall"></div>
+          <div class="sk-line xs"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1711,7 +1775,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
         <span class="prob-track-edge-lbl">+${edgePct}% edge</span>
         <span class="prob-track-lbl model" title="Model win probability (Dual-Poisson + 29 log-odds adjustments + Platt calibration)">Model <strong>${modelPct}%</strong></span>
       </div>
-      <div class="prob-track-subline">Win probability · market vs. model · same scale</div>
+      <div class="prob-track-subline" style="opacity:0.5">Probability bar · market vs. model · same 0–100% scale</div>
     </div>` : '';
 
   // Model factors
@@ -1924,7 +1988,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   if ((p.wind_speed_mph || 0) >= 15 && !p.is_domed) flags.push({ cls: 'flag-warn', text: '⚡ Weather risk' });
   if (p.raw_stats && (p.raw_stats.pick_bp_pitches || 0) >= 200) flags.push({ cls: 'flag-warn', text: '💧 BP fatigue' });
   if ((p.edge || 0) < 0.03) flags.push({ cls: 'flag-caution', text: '⚠️ Thin edge' });
-  if ((p.edge || 0) >= 0.08) flags.push({ cls: 'flag-strong', text: '🔥 Strong edge' });
+  // 🔥 Strong edge flag removed — amber accent bar already communicates high conviction
   const flagsHTML = flags.length > 0
     ? `<div class="pick-flags">${flags.map(f => `<span class="pick-flag ${f.cls}">${f.text}</span>`).join('')}</div>`
     : '';
@@ -1988,15 +2052,33 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
 
   // ── Pick headline — dominant: large team name + large odds + edge badge ────
   const fairOddsInline = p.fair_odds ? ` · Fair <span class="uph-fair">${p.fair_odds}</span>` : '';
+
+  // Final score line (shown on completed picks below team name)
+  let finalScoreHTML = '';
+  if (gameResult && gameResult.status === 'final') {
+    const won = gameResult.result === 'W';
+    finalScoreHTML = `<div class="uph-final-score ${won ? 'won' : 'lost'}">${won ? 'W' : 'L'} ${gameResult.score} — Final</div>`;
+  }
+
+  // One-line narrative preview (first sentence, max 2 lines)
+  const _firstSentence = (fullNarrativeText || '').split('. ')[0];
+  const narrativePreviewLineHTML = _firstSentence && _firstSentence.length > 20
+    ? `<div class="uc-narrative-preview-line">${_firstSentence}.</div>`
+    : '';
+
   const pickHeadlineHTML = `
     <div class="uc-pick-headline">
-      <span class="uph-team">${isHomePick ? homeTeam || p.pick : awayTeam || p.pick}</span>
+      <div>
+        <span class="uph-team">${isHomePick ? homeTeam || p.pick : awayTeam || p.pick}</span>
+        ${finalScoreHTML}
+      </div>
       <span class="uph-odds ${isDog ? 'dog' : 'fav'}">${formatOdds(p.odds)}</span>
     </div>
     <div class="uph-edge-row">
       <span class="uph-edge-badge">+${edgePct}% edge</span>
       ${modelPct && mktPct ? `<span class="uph-prob-context">Model <strong>${modelPct}%</strong> · Market <strong>${mktPct}%</strong>${fairOddsInline}</span>` : ''}
-    </div>`;
+    </div>
+    ${narrativePreviewLineHTML}`;
 
   // ── Action row v2 — text links, no box buttons ────────────────────────────
   const actionRowHTML = `
