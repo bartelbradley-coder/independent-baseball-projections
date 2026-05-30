@@ -1128,7 +1128,7 @@ function refreshBetButtons() {
     const id  = btn.dataset.betId;
     const key = `${_TODAY_KEY}::${id}`;
     const on  = !!_myBets[key];
-    btn.textContent = on ? '✓ Tracking' : '📌 Track';
+    btn.textContent = on ? '✓ Tracking' : 'Track';
     btn.classList.toggle('tracking', on);
   });
 }
