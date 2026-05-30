@@ -13,10 +13,23 @@ let _espnScoresCache = {};
 
 // Fetch today's MLB scoreboard from ESPN. Returns a map of
 // "AWAY @ HOME" → { status: 'final'|'live'|'scheduled', awayScore, homeScore }.
+//
+// The ?dates=YYYYMMDD param is critical: without it, ESPN returns the most
+// recently completed games (yesterday's when called before today's games start).
+// That would attach yesterday's final scores to today's same-series matchups.
+function _espnTodayDate() {
+  // Build YYYYMMDD in local time (not UTC — avoids rolling to next day after ~7 PM ET)
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}${m}${day}`;
+}
+
 async function fetchESPNScores() {
   try {
     const r = await fetch(
-      'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard',
+      `https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=${_espnTodayDate()}`,
       { cache: 'no-store' }
     );
     const json = await r.json();
