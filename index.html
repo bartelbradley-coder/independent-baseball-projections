@@ -1741,103 +1741,8 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   // (Pinnacle at post line removed — already shown in the Lines row above)
 
   // ── Other Markets: Run Line + Total expandable section ───────────────────
-  function buildOtherMarketsHTML() {
-    const rl = p.run_line;
-    const tot = p.total;
-    if (!rl && !tot) return '';
-
-    const omId = cardId + '-om';
-
-    // Run line card
-    let rlCard = '';
-    if (rl && rl.model_prob) {
-      const rlPct    = (rl.model_prob * 100).toFixed(1);
-      const rlEdgePct = rl.edge != null ? (rl.edge * 100).toFixed(1) : null;
-      const rlEdgeCls = rl.edge >= 0.03 ? 'positive' : rl.edge > 0 ? 'neutral' : 'negative';
-      const rlEdgeStr = rlEdgePct != null
-        ? `<span class="om-edge ${rlEdgeCls}">${rl.edge >= 0 ? '+' : ''}${rlEdgePct}% edge</span>` : '';
-      rlCard = `
-        <div class="om-card">
-          <div class="om-title">Run Line</div>
-          <div class="om-main">${p.pick} ${rl.spread}</div>
-          <div class="om-row"><span>Model</span><span class="om-val">${rlPct}%</span></div>
-          <div class="om-row"><span>Fair odds</span><span class="om-val">${rl.fair_odds || '—'}</span></div>
-          <div class="om-row"><span>Book</span><span class="om-val">${rl.book_odds ? (rl.book_odds > 0 ? '+' : '') + rl.book_odds : '—'}</span></div>
-          ${rlEdgeStr}
-        </div>`;
-    }
-
-    // Total card
-    let totCard = '';
-    if (tot && tot.line != null) {
-      const leanCls  = tot.lean === 'OVER' ? 'over' : 'under';
-      const leanProb = tot.lean === 'OVER' ? tot.over_prob : tot.under_prob;
-
-      // Use real edge vs actual book price if available; fall back to synthetic -110 edge
-      const realEdge    = tot.lean === 'OVER' ? tot.over_edge : tot.under_edge;
-      const displayEdge = realEdge != null ? realEdge : tot.lean_edge;
-      const edgeLabel   = realEdge != null ? '% edge' : '% vs -110';
-      const leanEdgeCls = displayEdge >= 0.03 ? 'positive' : displayEdge > 0 ? 'neutral' : 'negative';
-      const leanEdgeStr = displayEdge != null
-        ? `<span class="om-edge ${leanEdgeCls}">${displayEdge >= 0 ? '+' : ''}${(displayEdge * 100).toFixed(1)}${edgeLabel}</span>` : '';
-
-      // Best execution odds
-      const overOddsStr  = tot.over_odds  != null ? (tot.over_odds  > 0 ? '+' : '') + tot.over_odds  : '—';
-      const underOddsStr = tot.under_odds != null ? (tot.under_odds > 0 ? '+' : '') + tot.under_odds : '—';
-      const overBookTxt  = tot.over_book  ? ` (${tot.over_book})`  : '';
-      const underBookTxt = tot.under_book ? ` (${tot.under_book})` : '';
-      const overOddsRow  = `<div class="om-row"><span>Best OVER${overBookTxt}</span><span class="om-val">${overOddsStr}</span></div>`;
-      const underOddsRow = `<div class="om-row"><span>Best UNDER${underBookTxt}</span><span class="om-val">${underOddsStr}</span></div>`;
-
-      // Pinnacle benchmark probability (no-vig market consensus)
-      const pinnRow = tot.pinnacle_over_prob != null
-        ? `<div class="om-row"><span>Pinnacle P(Over)</span><span class="om-val">${(tot.pinnacle_over_prob * 100).toFixed(1)}%</span></div>` : '';
-
-      totCard = `
-        <div class="om-card">
-          <div class="om-title">Total</div>
-          <div class="om-main">
-            <span class="om-lean ${leanCls}">${tot.lean}</span> ${tot.line}
-          </div>
-          <div class="om-row"><span>Model total</span><span class="om-val">${tot.model_total != null ? tot.model_total.toFixed(1) + ' runs' : '—'}</span></div>
-          <div class="om-row"><span>Model P(Over)</span><span class="om-val">${tot.over_prob ? (tot.over_prob * 100).toFixed(1) + '%' : '—'}</span></div>
-          <div class="om-row"><span>Model P(Under)</span><span class="om-val">${tot.under_prob ? (tot.under_prob * 100).toFixed(1) + '%' : '—'}</span></div>
-          ${pinnRow}
-          ${overOddsRow}
-          ${underOddsRow}
-          ${leanEdgeStr}
-        </div>`;
-    }
-
-    if (!rlCard && !totCard) return '';
-    return `
-      <button class="other-markets-toggle" onclick="
-        this.querySelector('.omt-chevron').classList.toggle('open');
-        document.getElementById('${omId}').classList.toggle('open');
-      ">
-        <span>Other Markets</span>
-        <span class="omt-chevron">▾</span>
-      </button>
-      <div class="other-markets-body" id="${omId}">
-        ${rlCard}
-        ${totCard}
-      </div>`;
-  }
-  const otherMarketsHTML = buildOtherMarketsHTML();
-
-  // ── RL / O/U signal badges (shown in card header when expandable has value) ──
-  const _rl   = p.run_line || {};
-  const _tot  = p.total    || {};
-  const _rlEdge  = (_rl.edge  != null && _rl.edge  >= 0.03) ? _rl.edge  : null;
-  const _ouLean  = _tot.lean || null;
-  const _ouEdge  = _ouLean === 'OVER'
-    ? (_tot.over_edge  ?? _tot.lean_edge)
-    : (_tot.under_edge ?? _tot.lean_edge);
-  const _ouEdgeV = (_ouEdge != null && _ouEdge >= 0.03) ? _ouEdge : null;
-  const omBadgesHTML = [
-    _rlEdge  != null ? `<span class="om-signal-badge rl-badge">RL&thinsp;${(_rlEdge*100).toFixed(1)}%</span>`              : '',
-    _ouEdgeV != null ? `<span class="om-signal-badge ou-badge">${_ouLean}&thinsp;${(_ouEdgeV*100).toFixed(1)}%</span>` : '',
-  ].join('');
+  // RL/O/U removed from display — still tracked in backend (picks_log.csv, rl_picks_log.csv)
+  const omBadgesHTML = '';  // RL + O/U badges removed
 
   // ── Narrative preview (always visible) ──────────────────────────────────────
   // Source the text from narrative field, or build from model/market %
@@ -1850,52 +1755,8 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     ? `<div class="uc-narrative-preview">${narrativePreview(fullNarrativeText)}</div>`
     : '';
 
-  // ── Markets table: ML (primary) + RL + O/U ───────────────────────────────
+  // ── Markets table: ML only (RL + O/U removed from display, still tracked) ──
   const mlBarW = Math.min(100, (p.edge / 0.12) * 100).toFixed(0);
-
-  let rlRowHTML = '';
-  if (p.run_line) {
-    const rl = p.run_line;
-    const rlHasEdge = rl.edge != null && rl.edge >= 0.03;
-    const rlOddsStr = rl.book_odds != null ? (rl.book_odds > 0 ? '+' : '') + rl.book_odds : '—';
-    const rlBarW = rlHasEdge ? Math.min(100, (rl.edge / 0.12) * 100).toFixed(0) : 0;
-    rlRowHTML = `
-      <div class="uc-market-row rl-row">
-        <span class="uc-mtype rl">RL</span>
-        <span class="uc-market-arrow">▶</span>
-        ${rlHasEdge
-          ? `<span class="uc-market-pick">${p.pick} ${rl.spread || '−1.5'}</span>
-             <span class="uc-market-odds">${rlOddsStr}</span>
-             <div class="uc-market-bar-wrap"><div class="uc-market-bar" style="width:${rlBarW}%"></div></div>
-             <span class="uc-market-edge">+${(rl.edge * 100).toFixed(1)}%</span>`
-          : `<span class="uc-market-noedge-pick">${p.pick} ${rl.spread || '−1.5'} · ${rlOddsStr}</span>
-             <span class="uc-market-noedge">No edge</span>`}
-      </div>`;
-  }
-
-  let ouRowHTML = '';
-  if (p.total && p.total.line != null) {
-    const tot = p.total;
-    const realEdge    = tot.lean === 'OVER' ? tot.over_edge  : tot.under_edge;
-    const displayEdge = realEdge != null ? realEdge : tot.lean_edge;
-    const ouHasEdge   = displayEdge != null && displayEdge >= 0.03;
-    const ouBarW      = ouHasEdge ? Math.min(100, (displayEdge / 0.12) * 100).toFixed(0) : 0;
-    const ouOdds      = tot.lean === 'OVER' ? tot.over_odds : tot.under_odds;
-    const ouOddsStr   = ouOdds != null ? (ouOdds > 0 ? '+' : '') + ouOdds : '—';
-    const ouLabel     = `${tot.lean} ${tot.line}`;
-    ouRowHTML = `
-      <div class="uc-market-row ou-row">
-        <span class="uc-mtype ou">O/U</span>
-        <span class="uc-market-arrow">▶</span>
-        ${ouHasEdge
-          ? `<span class="uc-market-pick">${ouLabel}</span>
-             <span class="uc-market-odds">${ouOddsStr}</span>
-             <div class="uc-market-bar-wrap"><div class="uc-market-bar" style="width:${ouBarW}%"></div></div>
-             <span class="uc-market-edge">+${(displayEdge * 100).toFixed(1)}%</span>`
-          : `<span class="uc-market-noedge-pick">${ouLabel} · ${ouOddsStr}</span>
-             <span class="uc-market-noedge">No edge</span>`}
-      </div>`;
-  }
 
   const fairOddsStr = p.fair_odds || '—';
   const mlProbContextHTML = (modelPct && mktPct) ? `
@@ -1915,8 +1776,6 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
         <span class="uc-market-edge">+${edgePct}%</span>
       </div>
       ${mlProbContextHTML}
-      ${rlRowHTML}
-      ${ouRowHTML}
     </div>`;
 
   // ── Details section (collapsed) ───────────────────────────────────────────
