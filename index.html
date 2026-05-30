@@ -429,6 +429,59 @@
 .countdown-chip.starting-soon { color: var(--amber) !important; }
 .countdown-chip.game-over { color: var(--text-4) !important; opacity: 0.6; }
 
+/* ── Signal breakdown table (Option B) ── */
+.adj-breakdown {
+  margin: 10px 0 12px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.015);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+.adj-breakdown-title {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--text-4); margin-bottom: 8px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.adj-approx-note {
+  font-weight: 400; font-size: 8px; letter-spacing: 0; text-transform: none;
+  opacity: 0.6; font-family: 'JetBrains Mono', monospace;
+}
+.adj-row {
+  display: flex; align-items: center; gap: 7px; margin-bottom: 4px;
+}
+.adj-row:last-child { margin-bottom: 0; }
+.adj-label {
+  font-size: 10px; color: var(--text-3); flex: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.adj-bar-wrap {
+  width: 80px; height: 5px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 100px; overflow: hidden; flex-shrink: 0;
+}
+.adj-bar-fill {
+  height: 100%; border-radius: 100px; transition: width 0.3s;
+}
+.adj-bar-fill.pos { background: rgba(34,197,94,0.7); }
+.adj-bar-fill.neg { background: rgba(239,68,68,0.6); }
+.adj-pp {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 600; width: 42px;
+  text-align: right; flex-shrink: 0;
+}
+.adj-pp.pos { color: var(--green); }
+.adj-pp.neg { color: var(--red); }
+.adj-divider { height: 1px; background: var(--border); margin: 6px 0; }
+.adj-summary {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 9px; color: var(--text-4); flex-wrap: wrap; gap: 4px;
+}
+.adj-summary strong { color: var(--text-2); font-size: 10px; }
+.adj-shrink-note {
+  font-size: 8.5px; color: var(--amber); margin-top: 5px;
+  display: flex; align-items: center; gap: 4px;
+}
+
 /* ── Pick card redesign ── */
 .matchup-teams { display: flex; align-items: baseline; gap: 7px; margin-bottom: 3px; flex-wrap: wrap; }
 .mt-pick { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; color: var(--text-2); }
@@ -1875,12 +1928,61 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     ? `<div class="edge-narrative">${fullNarrativeText}${evStr}</div>`
     : '';
 
+  // ── Signal breakdown table (Option B) ──────────────────────────────────
+  function buildAdjBreakdown(pick) {
+    const ab = pick.adj_breakdown;
+    if (!ab || !ab.adjustments || ab.adjustments.length === 0) return '';
+
+    const adjs = ab.adjustments;
+    const maxAbs = Math.max(...adjs.map(a => Math.abs(a.pp)), 0.01);
+
+    const rows = adjs.map(a => {
+      const barW = Math.min(100, (Math.abs(a.pp) / maxAbs) * 100).toFixed(0);
+      const posCls = a.positive ? 'pos' : 'neg';
+      const ppStr  = (a.positive ? '+' : '') + a.pp.toFixed(1) + 'pp';
+      return `<div class="adj-row">
+        <span class="adj-label">${a.label}</span>
+        <div class="adj-bar-wrap">
+          <div class="adj-bar-fill ${posCls}" style="width:${barW}%"></div>
+        </div>
+        <span class="adj-pp ${posCls}">${ppStr}</span>
+      </div>`;
+    }).join('');
+
+    const totalStr = (ab.total_adj_pp >= 0 ? '+' : '') + (ab.total_adj_pp || 0).toFixed(1) + 'pp';
+    const totalCol = (ab.total_adj_pp || 0) >= 0 ? 'var(--green)' : 'var(--red)';
+    const mp   = pick.model_prob   ? (pick.model_prob   * 100).toFixed(1) + '%' : '—';
+    const mkt  = pick.market_prob  ? (pick.market_prob  * 100).toFixed(1) + '%' : '—';
+    const edge = pick.edge         ? '+' + (pick.edge   * 100).toFixed(1) + 'pp' : '—';
+
+    const shrinkNote = ab.shrink_note
+      ? `<div class="adj-shrink-note">⚠ ${ab.shrink_note}</div>`
+      : '';
+
+    return `
+      <div class="adj-breakdown">
+        <div class="adj-breakdown-title">
+          Signal Breakdown
+          <span class="adj-approx-note">≈ approximate, logit-space</span>
+        </div>
+        ${rows}
+        <div class="adj-divider"></div>
+        <div class="adj-summary">
+          <span>Log-odds adjustments: <strong style="color:${totalCol}">${totalStr}</strong></span>
+          <span>Model <strong>${mp}</strong> · Market <strong>${mkt}</strong> · Edge <strong style="color:var(--green)">${edge}</strong></span>
+        </div>
+        ${shrinkNote}
+      </div>`;
+  }
+  const adjBreakdownHTML = buildAdjBreakdown(p);
+
   const detailsBodyHTML = `
     <div class="details-body" id="${detailsId}">
       ${fullNarrativeHTML}
       ${probHTML}
       ${statsHTML}
       ${factorsHTML}
+      ${adjBreakdownHTML}
       ${oddsRowHTML}
       ${lineMoveBannerHTML()}
       ${wxHTML}

@@ -1,6 +1,6 @@
 {
   "date": "2026-05-30",
-  "generated_at": "5:35 PM CT \u00b7 May 30",
+  "generated_at": "6:12 PM CT \u00b7 May 30",
   "picks": [
     {
       "game": "SD @ WSH",
@@ -10,9 +10,9 @@
       "meta": "SP: Foster Griffin",
       "posted_at": "9:21 AM CT",
       "game_time": "2026-05-30T20:05:00Z",
-      "temp_f": 67.6,
-      "wind_speed_mph": 8.8,
-      "wind_dir_degrees": 7.0,
+      "temp_f": 67.7,
+      "wind_speed_mph": 9.0,
+      "wind_dir_degrees": 6.0,
       "is_domed": false,
       "model_prob": 0.5427,
       "market_prob": 0.4649,
@@ -79,9 +79,48 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": 111.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "This is a multi-factor convergence pick: Foster Griffin (4.08 xFIP) vs. Michael King (3.67), with defense (oaa), home field adding to the baseline signal. No single input dominates \u2014 the edge comes from several independent factors each contributing modestly. Model prices WSH at 54.3% to win; Pinnacle implies 46.5% (+114) \u2014 a 7.8-point gap. Scheduling angle adds to the edge: today is a day game and the opponent played last night \u2014 a day-game-after-night-game setup that creates measurable fatigue for their roster and bullpen. Key risk: Michael King (3.67 xFIP) is the sharper starter \u2014 a 0.41-point gap that has to be overcome by WSH's other model signals. This pick requires those signals to hold.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.43,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Day/night",
+            "pp": -0.37,
+            "positive": false,
+            "group": "schedule"
+          },
+          {
+            "label": "Home field",
+            "pp": 0.27,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": -0.53,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "A multi-factor convergence edge: Foster Griffin (4.08 xFIP) vs. Michael King (3.67), with defense (oaa), home field adding to the baseline. No single signal dominates \u2014 the probability gap of 7.8pp reflects several independent inputs each pushing in the same direction. The model's fair price is -119 vs. the +114 available. This is the highest-edge pick on today's slate (1 of 8). Note: WSH's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Key risk: Michael King (3.67 xFIP) is the sharper starter \u2014 a 0.41-point gap that has to be overcome by WSH's other model signals. This pick requires those signals to hold.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.3919,
@@ -114,8 +153,8 @@
       "meta": "SP: Anthony Kay",
       "posted_at": "9:21 AM CT",
       "game_time": "2026-05-30T18:10:00Z",
-      "temp_f": 68.4,
-      "wind_speed_mph": 15.5,
+      "temp_f": 67.6,
+      "wind_speed_mph": 15.2,
       "wind_dir_degrees": 45.0,
       "is_domed": false,
       "model_prob": 0.553,
@@ -174,9 +213,48 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": 105.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "This is a multi-factor convergence pick: Anthony Kay (5.01 xFIP) vs. Framber Valdez (4.36), with defense (oaa), home field adding to the baseline signal. No single input dominates \u2014 the edge comes from several independent factors each contributing modestly. Model prices CHW at 55.3% to win; Pinnacle implies 47.8% (+107) \u2014 a 7.5-point gap. Scheduling angle adds to the edge: today is a day game and the opponent played last night \u2014 a day-game-after-night-game setup that creates measurable fatigue for their roster and bullpen. Key risk: Framber Valdez (4.36 xFIP) is the sharper starter \u2014 a 0.65-point gap that has to be overcome by CHW's other model signals. This pick requires those signals to hold.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.4,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Day/night",
+            "pp": -0.37,
+            "positive": false,
+            "group": "schedule"
+          },
+          {
+            "label": "Home field",
+            "pp": 0.2,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 0.23,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "A multi-factor convergence edge: Anthony Kay (5.01 xFIP) vs. Framber Valdez (4.36), with defense (oaa), home field adding to the baseline. No single signal dominates \u2014 the probability gap of 7.5pp reflects several independent inputs each pushing in the same direction. The model's fair price is -124 vs. the +107 available. This is the second-highest-edge pick on today's slate (2 of 8). Note: CHW's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Key risk: Framber Valdez (4.36 xFIP) is the sharper starter \u2014 a 0.65-point gap that has to be overcome by CHW's other model signals. This pick requires those signals to hold.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.409,
@@ -209,9 +287,9 @@
       "meta": "SP: Roki Sasaki",
       "posted_at": "9:21 AM CT",
       "game_time": "2026-05-31T02:10:00Z",
-      "temp_f": 59.5,
-      "wind_speed_mph": 3.0,
-      "wind_dir_degrees": 107.0,
+      "temp_f": 58.9,
+      "wind_speed_mph": 0.9,
+      "wind_dir_degrees": 90.0,
       "is_domed": false,
       "model_prob": 0.604,
       "market_prob": 0.5402,
@@ -285,9 +363,48 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": -123.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for LAD. Model prices LAD at 60.4% to win; Pinnacle implies 54.0% (-118) \u2014 a 6.4-point gap. Rest advantage: LAD is the fresher team \u2014 the opponent played yesterday and carries back-to-back fatigue into a game the moneyline doesn't fully price. Key risk: Jes\u00fas Luzardo (3.60 xFIP) is the sharper starter \u2014 a 0.93-point gap that has to be overcome by LAD's other model signals. This pick requires those signals to hold.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": 1.08,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.53,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Rest advantage",
+            "pp": 0.29,
+            "positive": true,
+            "group": "schedule"
+          }
+        ],
+        "total_adj_pp": 1.9,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for LAD. Model prices LAD at 60.4% to win; Pinnacle implies 54.0% (-118) \u2014 a 6.4-point gap. Note: LAD's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Key risk: Jes\u00fas Luzardo (3.60 xFIP) is the sharper starter \u2014 a 0.93-point gap that has to be overcome by LAD's other model signals. This pick requires those signals to hold.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.4735,
@@ -321,8 +438,8 @@
       "posted_at": "9:21 AM CT",
       "game_time": "2026-05-30T23:15:00Z",
       "temp_f": 64.2,
-      "wind_speed_mph": 7.6,
-      "wind_dir_degrees": 62.0,
+      "wind_speed_mph": 7.9,
+      "wind_dir_degrees": 58.0,
       "is_domed": false,
       "model_prob": 0.6224,
       "market_prob": 0.5646,
@@ -392,9 +509,42 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": -136.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "Playing on the road, ATL carries a significant pitching edge (Mart\u00edn P\u00e9rez at 3.98 xFIP vs. Brady Singer at 5.98) that outweighs the home-field headwind the market prices in. Model prices ATL at 62.2% to win; Pinnacle implies 56.5% (-128) \u2014 a 5.8-point gap. Rest advantage: ATL is the fresher team \u2014 the opponent played yesterday and carries back-to-back fatigue into a game the moneyline doesn't fully price. Lineup risk: ATL's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": -0.47,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Rest advantage",
+            "pp": 0.35,
+            "positive": true,
+            "group": "schedule"
+          }
+        ],
+        "total_adj_pp": -0.12,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Playing on the road, ATL carries a significant pitching edge (Mart\u00edn P\u00e9rez at 3.98 xFIP vs. Brady Singer at 5.98) that outweighs the home-field headwind the market prices in. Model prices ATL at 62.2% to win; Pinnacle implies 56.5% (-128) \u2014 a 5.8-point gap. Note: ATL's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Confidence note: unconfirmed lineup, unconfirmed opponent lineup \u2014 the model applies a modest shrinkage toward 50% under these conditions. Edge persists after adjustment. Historically, picks in this edge tier have gone 52\u201332 (+39.4% ROI) this season.",
       "run_line": {
         "spread": "1.5",
         "model_prob": 0.8372,
@@ -427,8 +577,8 @@
       "meta": "SP: Tyler Phillips",
       "posted_at": "9:21 AM CT",
       "game_time": "2026-05-30T20:10:00Z",
-      "temp_f": 54.8,
-      "wind_speed_mph": 7.8,
+      "temp_f": 56.3,
+      "wind_speed_mph": 8.3,
       "wind_dir_degrees": 59.0,
       "is_domed": false,
       "model_prob": 0.5135,
@@ -500,7 +650,46 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": 117.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": -0.65,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Day/night",
+            "pp": 0.37,
+            "positive": true,
+            "group": "schedule"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.19,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": -0.09,
+        "shrink_note": null,
+        "note": "~"
       },
       "narrative": "Playing on the road, MIA's model quality signals outweigh the home-field headwind \u2014 the market over-adjusts for the travel disadvantage. Model prices MIA at 51.3% to win; Pinnacle implies 45.2% (+119) \u2014 a 6.2-point gap. Pitcher stuff quality is an underrated factor here: Tyler Phillips's 13.3% SwStr% ranks in the top tier for generating swings-and-misses \u2014 a durability signal beyond what the odds reflect. Lineup risk: MIA's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
       "run_line": {
@@ -600,9 +789,42 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": 139.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "Playing on the road, LAA carries a modest pitching edge (Reid Detmers at 3.02 xFIP vs. Drew Rasmussen at 3.09) that outweighs the home-field headwind the market prices in. Model prices LAA at 44.5% to win; Pinnacle implies 41.0% (+145) \u2014 a 3.5-point gap. Scheduling angle adds to the edge: today is a day game and the opponent played last night \u2014 a day-game-after-night-game setup that creates measurable fatigue for their roster and bullpen. Lineup risk: LAA's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": -1.11,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Day/night",
+            "pp": 0.37,
+            "positive": true,
+            "group": "schedule"
+          }
+        ],
+        "total_adj_pp": -0.74,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Playing on the road, LAA carries a modest pitching edge (Reid Detmers at 3.02 xFIP vs. Drew Rasmussen at 3.09) that outweighs the home-field headwind the market prices in. Model prices LAA at 44.5% to win; Pinnacle implies 41.0% (+145) \u2014 a 3.5-point gap. Note: LAA's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Confidence note: unconfirmed lineup, unconfirmed opponent lineup \u2014 the model applies a modest shrinkage toward 50% under these conditions. Edge persists after adjustment. Historically, picks in this edge tier have gone 56\u201356 (+2.7% ROI) this season.",
       "run_line": {
         "spread": "1.5",
         "model_prob": 0.653,
@@ -635,9 +857,9 @@
       "meta": "SP: Ryan Feltner",
       "posted_at": "9:21 AM CT",
       "game_time": "2026-05-31T01:10:00Z",
-      "temp_f": 59.6,
-      "wind_speed_mph": 3.9,
-      "wind_dir_degrees": 114.0,
+      "temp_f": 58.7,
+      "wind_speed_mph": 5.5,
+      "wind_dir_degrees": 35.0,
       "is_domed": false,
       "model_prob": 0.5246,
       "market_prob": 0.4882,
@@ -711,9 +933,36 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": 101.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for COL. Model prices COL at 52.5% to win; Pinnacle implies 48.8% (+105) \u2014 a 3.6-point gap. Rest advantage: COL is the fresher team \u2014 the opponent played yesterday and carries back-to-back fatigue into a game the moneyline doesn't fully price. Lineup risk: COL's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": 1.12,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 1.12,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for COL. Model prices COL at 52.5% to win; Pinnacle implies 48.8% (+105) \u2014 a 3.6-point gap. Note: COL's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Confidence note: unconfirmed lineup, unconfirmed opponent lineup \u2014 the model applies a modest shrinkage toward 50% under these conditions. Edge persists after adjustment. Historically, picks in this edge tier have gone 56\u201356 (+2.7% ROI) this season.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.3589,
@@ -815,9 +1064,42 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": -116.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for TEX. Model prices TEX at 56.4% to win; Pinnacle implies 52.6% (-112) \u2014 a 3.7-point gap. Scheduling angle adds to the edge: today is a day game and the opponent played last night \u2014 a day-game-after-night-game setup that creates measurable fatigue for their roster and bullpen. Lineup risk: TEX's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": 1.08,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Day/night",
+            "pp": -0.37,
+            "positive": false,
+            "group": "schedule"
+          }
+        ],
+        "total_adj_pp": 0.71,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for TEX. Model prices TEX at 56.4% to win; Pinnacle implies 52.6% (-112) \u2014 a 3.7-point gap. Note: TEX's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Confidence note: unconfirmed lineup, unconfirmed opponent lineup \u2014 the model applies a modest shrinkage toward 50% under these conditions. Edge persists after adjustment. Historically, picks in this edge tier have gone 56\u201356 (+2.7% ROI) this season.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.3917,
@@ -850,9 +1132,9 @@
       "meta": "SP: J.T. Ginn",
       "posted_at": "9:21 AM CT",
       "game_time": "2026-05-31T02:05:00Z",
-      "temp_f": 54.7,
-      "wind_speed_mph": 4.4,
-      "wind_dir_degrees": 131.0,
+      "temp_f": 54.0,
+      "wind_speed_mph": 4.3,
+      "wind_dir_degrees": 133.0,
       "is_domed": false,
       "model_prob": 0.4463,
       "market_prob": 0.4152,
@@ -926,9 +1208,42 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": 136.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for OAK. Model prices OAK at 44.6% to win; Pinnacle implies 41.5% (+140) \u2014 a 3.1-point gap. Rest advantage: OAK is the fresher team \u2014 the opponent played yesterday and carries back-to-back fatigue into a game the moneyline doesn't fully price. Key risk: Ryan Weathers (3.41 xFIP) is the sharper starter \u2014 a 0.44-point gap that has to be overcome by OAK's other model signals. This pick requires those signals to hold.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": 0.72,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.17,
+            "positive": false,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 0.55,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for OAK. Model prices OAK at 44.6% to win; Pinnacle implies 41.5% (+140) \u2014 a 3.1-point gap. Note: OAK's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Key risk: Ryan Weathers (3.41 xFIP) is the sharper starter \u2014 a 0.44-point gap that has to be overcome by OAK's other model signals. This pick requires those signals to hold.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.2468,
@@ -1034,9 +1349,54 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": 100.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for HOU. Model prices HOU at 51.7% to win; Pinnacle implies 48.9% (+105) \u2014 a 2.7-point gap. Scheduling angle adds to the edge: today is a day game and the opponent played last night \u2014 a day-game-after-night-game setup that creates measurable fatigue for their roster and bullpen. Lineup risk: HOU's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": 0.75,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Day/night",
+            "pp": -0.37,
+            "positive": false,
+            "group": "schedule"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.22,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Rest advantage",
+            "pp": -0.17,
+            "positive": false,
+            "group": "schedule"
+          }
+        ],
+        "total_adj_pp": 0.43,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for HOU. Model prices HOU at 51.7% to win; Pinnacle implies 48.9% (+105) \u2014 a 2.7-point gap. Note: HOU's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Confidence note: unconfirmed lineup, unconfirmed opponent lineup \u2014 the model applies a modest shrinkage toward 50% under these conditions. Edge persists after adjustment. Historically, picks in this edge tier have gone 56\u201356 (+2.7% ROI) this season.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.338,
@@ -1069,7 +1429,7 @@
       "meta": "SP: Trey Yesavage",
       "posted_at": "9:21 AM CT",
       "game_time": "2026-05-30T20:05:00Z",
-      "temp_f": 66.5,
+      "temp_f": 66.7,
       "wind_speed_mph": 6.0,
       "wind_dir_degrees": 22.0,
       "is_domed": false,
@@ -1138,7 +1498,46 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": -117.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": -0.37,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Day/night",
+            "pp": 0.37,
+            "positive": true,
+            "group": "schedule"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.28,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 0.28,
+        "shrink_note": null,
+        "note": "~"
       },
       "narrative": "Playing on the road, TOR carries a significant pitching edge (Trey Yesavage at 2.98 xFIP vs. Brandon Young at 5.03) that outweighs the home-field headwind the market prices in. Model prices TOR at 55.3% to win; Pinnacle implies 52.9% (-116) \u2014 a 2.4-point gap. Pitcher stuff quality is an underrated factor here: Trey Yesavage's 15.1% SwStr% ranks in the top tier for generating swings-and-misses \u2014 a durability signal beyond what the odds reflect. Lineup risk: TOR's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
       "run_line": {
@@ -1173,9 +1572,9 @@
       "meta": "SP: Bailey Ober",
       "posted_at": "9:21 AM CT",
       "game_time": "2026-05-30T20:05:00Z",
-      "temp_f": 68.1,
-      "wind_speed_mph": 10.0,
-      "wind_dir_degrees": 24.0,
+      "temp_f": 68.8,
+      "wind_speed_mph": 10.1,
+      "wind_dir_degrees": 22.0,
       "is_domed": false,
       "model_prob": 0.4529,
       "market_prob": 0.44,
@@ -1237,9 +1636,48 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": 123.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "Playing on the road, MIN's model quality signals outweigh the home-field headwind \u2014 the market over-adjusts for the travel disadvantage. Model prices MIN at 45.3% to win; Pinnacle implies 44.0% (+128) \u2014 a 1.3-point gap. Scheduling angle adds to the edge: today is a day game and the opponent played last night \u2014 a day-game-after-night-game setup that creates measurable fatigue for their roster and bullpen. Key risk: Mitch Keller (4.05 xFIP) is the sharper starter \u2014 a 0.53-point gap that has to be overcome by MIN's other model signals. This pick requires those signals to hold.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Day/night",
+            "pp": 0.37,
+            "positive": true,
+            "group": "schedule"
+          },
+          {
+            "label": "Home field",
+            "pp": -0.32,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Rest advantage",
+            "pp": 0.17,
+            "positive": true,
+            "group": "schedule"
+          }
+        ],
+        "total_adj_pp": 0.22,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Playing on the road, MIN's model quality signals outweigh the home-field headwind \u2014 the market over-adjusts for the travel disadvantage. Model prices MIN at 45.3% to win; Pinnacle implies 44.0% (+128) \u2014 a 1.3-point gap. Note: MIN's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Key risk: Mitch Keller (4.05 xFIP) is the sharper starter \u2014 a 0.53-point gap that has to be overcome by MIN's other model signals. This pick requires those signals to hold.",
       "run_line": {
         "spread": "1.5",
         "model_prob": 0.6344,
@@ -1272,9 +1710,9 @@
       "meta": "SP: Kyle Leahy",
       "posted_at": "4:31 PM CT",
       "game_time": "2026-05-30T23:15:00Z",
-      "temp_f": 72.7,
-      "wind_speed_mph": 2.8,
-      "wind_dir_degrees": 315.0,
+      "temp_f": 73.1,
+      "wind_speed_mph": 3.3,
+      "wind_dir_degrees": 332.0,
       "is_domed": false,
       "model_prob": 0.4609,
       "market_prob": 0.4577,
@@ -1348,9 +1786,48 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": 114.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for STL. Model prices STL at 46.1% to win; Pinnacle implies 45.8% (+120) \u2014 a 0.3-point gap. Rest advantage: STL is the fresher team \u2014 the opponent played yesterday and carries back-to-back fatigue into a game the moneyline doesn't fully price. Key risk: Ben Brown (3.37 xFIP) is the sharper starter \u2014 a 1.37-point gap that has to be overcome by STL's other model signals. This pick requires those signals to hold.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Lineup quality",
+            "pp": 0.54,
+            "positive": true,
+            "group": "lineup"
+          },
+          {
+            "label": "Home field",
+            "pp": 0.5,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.35,
+            "positive": false,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 0.69,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for STL. Model prices STL at 46.1% to win; Pinnacle implies 45.8% (+120) \u2014 a 0.3-point gap. Lineup quality adds to the case: today's roster runs 0.017 OPS above STL's season average \u2014 a full-strength lineup the model incorporates beyond the season-long RS/RA baseline. Key risk: Ben Brown (3.37 xFIP) is the sharper starter \u2014 a 1.37-point gap that has to be overcome by STL's other model signals. This pick requires those signals to hold.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.2534,
@@ -1459,9 +1936,48 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": -137.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for SEA. Model prices SEA at 57.9% to win; Pinnacle implies 56.6% (-134) \u2014 a 1.2-point gap. Rest advantage: SEA is the fresher team \u2014 the opponent played yesterday and carries back-to-back fatigue into a game the moneyline doesn't fully price. Lineup risk: SEA's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": 1.1,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.61,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Rest advantage",
+            "pp": 0.17,
+            "positive": true,
+            "group": "schedule"
+          }
+        ],
+        "total_adj_pp": 0.66,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for SEA. Model prices SEA at 57.9% to win; Pinnacle implies 56.6% (-134) \u2014 a 1.2-point gap. Note: SEA's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Confidence note: unconfirmed lineup, unconfirmed opponent lineup \u2014 the model applies a modest shrinkage toward 50% under these conditions. Edge persists after adjustment. Historically, picks in this edge tier have gone 56\u201356 (+2.7% ROI) this season.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.4059,
@@ -1494,9 +2010,9 @@
       "meta": "SP: Parker Messick",
       "posted_at": "12:31 PM CT",
       "game_time": "2026-05-30T20:10:00Z",
-      "temp_f": 61.2,
-      "wind_speed_mph": 11.1,
-      "wind_dir_degrees": 42.0,
+      "temp_f": 61.0,
+      "wind_speed_mph": 9.7,
+      "wind_dir_degrees": 38.0,
       "is_domed": false,
       "model_prob": 0.5431,
       "market_prob": 0.5372,
@@ -1566,9 +2082,48 @@
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": null,
-        "opp_proj_ip": null
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": -121.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
       },
-      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for CLE. Model prices CLE at 54.3% to win; Pinnacle implies 53.7% (-116) \u2014 a 0.6-point gap. Scheduling angle adds to the edge: today is a day game and the opponent played last night \u2014 a day-game-after-night-game setup that creates measurable fatigue for their roster and bullpen. Lineup risk: CLE's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": 1.12,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Day/night",
+            "pp": -0.37,
+            "positive": false,
+            "group": "schedule"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.29,
+            "positive": false,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 0.46,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Home field is a primary edge factor: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for CLE. Model prices CLE at 54.3% to win; Pinnacle implies 53.7% (-116) \u2014 a 0.6-point gap. Lineup quality adds to the case: today's roster runs 0.019 OPS above CLE's season average \u2014 a full-strength lineup the model incorporates beyond the season-long RS/RA baseline. Lineup risk: CLE's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.3438,
@@ -1750,16 +2305,16 @@
   ],
   "correlated_warning": null,
   "season": {
-    "wins": 183,
-    "losses": 155,
-    "units": 57.28,
-    "bets": 338,
-    "roi": 0.1695
+    "wins": 184,
+    "losses": 157,
+    "units": 56.42,
+    "bets": 341,
+    "roi": 0.1655
   },
   "last30": {
     "wins": 20,
     "losses": 10,
-    "units": 10.63
+    "units": 11.03
   },
   "avg_clv": 0.0045
 }
