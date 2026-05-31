@@ -1631,11 +1631,28 @@ function _kellyStatsFromHist(histRows) {
     .sort((a, b) => a.date.localeCompare(b.date));   // oldest → newest
   const season  = settled.filter(r => r.date && r.date.startsWith('2026'));
 
+  // Derive Kelly units from stored kelly_pct when kelly_units is absent.
+  // Formula mirrors export_site_data.py: kelly_units = 0.5 × kelly_pct × 10
+  // (half-Kelly on a 10-unit bankroll). kelly_pct is the full-Kelly fraction
+  // of bankroll returned by kelly_fraction() and stored in picks_log.csv.
+  // Fallback: null (exclude from Kelly calc rather than pretend flat=Kelly).
+  function getKu(r) {
+    if (r.kelly_units != null) return r.kelly_units;
+    if (r.kelly_pct  != null) return Math.round(r.kelly_pct * 0.5 * 10 * 1000) / 1000;
+    return null;
+  }
+
   function kellySum(rows) {
-    return rows.reduce((s, r) => s + (r.kelly_units || 1) * (r.pnl_u || 0), 0);
+    return rows.reduce((s, r) => {
+      const ku = getKu(r);
+      return ku != null ? s + ku * (r.pnl_u || 0) : s;
+    }, 0);
   }
   function staked(rows) {
-    return rows.reduce((s, r) => s + (r.kelly_units || 1), 0);
+    return rows.reduce((s, r) => {
+      const ku = getKu(r);
+      return ku != null ? s + ku : s;
+    }, 0);
   }
 
   const sPnl    = kellySum(season);
@@ -1662,8 +1679,11 @@ function _kellyStatsFromHist(histRows) {
   // Build a date+pick lookup for week chip Kelly pnl
   const pickLookup = {};
   for (const r of last7) {
-    const key = `${r.date}|${r.pick}|${r.game}`;
-    pickLookup[key] = (r.kelly_units || 1) * (r.pnl_u || 0);
+    const ku = getKu(r);
+    if (ku != null) {
+      const key = `${r.date}|${r.pick}|${r.game}`;
+      pickLookup[key] = ku * (r.pnl_u || 0);
+    }
   }
 
   return {
