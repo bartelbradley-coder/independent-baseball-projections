@@ -623,6 +623,59 @@
 /* ── Details button — slightly bolder to be most prominent action ── */
 .uav-btn.primary { font-weight: 600 !important; }
 
+/* ── Week-at-a-Glance strip ─────────────────────────────────────────────── */
+.week-strip {
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+.week-strip-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 14px; cursor: pointer; user-select: none;
+  border-bottom: 1px solid transparent;
+  transition: background 0.15s;
+}
+.week-strip-header:hover { background: rgba(255,255,255,0.02); }
+.week-strip.open .week-strip-header { border-bottom-color: var(--border); }
+.wsh-left  { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.wsh-label { font-size: 9px; font-weight: 700; letter-spacing: 0.14em;
+             text-transform: uppercase; color: var(--text-4); flex-shrink: 0; }
+.wsh-record { font-family: 'Oswald', sans-serif; font-size: 15px;
+              font-weight: 700; line-height: 1; }
+.wsh-units  { font-size: 11px; font-weight: 600; }
+.wsh-roi    { font-size: 10px; color: var(--text-4); padding: 1px 7px;
+              border-radius: 4px; background: rgba(255,255,255,0.04);
+              border: 1px solid var(--border); }
+.wsh-chevron { font-size: 10px; color: var(--text-4); transition: transform 0.2s; flex-shrink: 0; }
+.week-strip.open .wsh-chevron { transform: rotate(180deg); }
+.week-strip-body  { display: none; padding: 12px 14px; }
+.week-strip.open .week-strip-body { display: block; }
+.week-picks-grid  { display: flex; flex-wrap: wrap; gap: 6px; }
+.wpc {
+  display: inline-flex; flex-direction: column; align-items: center;
+  padding: 5px 10px; border-radius: 7px; min-width: 52px;
+  border: 1px solid var(--border); background: rgba(255,255,255,0.02);
+  cursor: default; text-decoration: none;
+}
+.wpc.wpc-win  { border-color: rgba(34,197,94,0.3);  background: rgba(34,197,94,0.05); }
+.wpc.wpc-loss { border-color: rgba(239,68,68,0.25); background: rgba(239,68,68,0.04); opacity: 0.8; }
+.wpc-pick   { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 700;
+              color: var(--text-1); line-height: 1.1; }
+.wpc-date   { font-size: 8.5px; color: var(--text-4); margin-top: 1px; }
+.wpc-pnl    { font-size: 9.5px; font-weight: 700; margin-top: 2px; }
+.wpc-pnl.pos { color: var(--green); }
+.wpc-pnl.neg { color: var(--red); }
+.wpc-result { font-size: 8px; font-weight: 700; letter-spacing: 0.08em;
+              padding: 1px 5px; border-radius: 3px; margin-top: 3px; }
+.wpc-result.W { color: var(--green); background: rgba(34,197,94,0.12); }
+.wpc-result.L { color: var(--red);   background: rgba(239,68,68,0.10); }
+@media (max-width: 520px) {
+  .wpc { min-width: 44px; padding: 4px 7px; }
+  .wpc-pick { font-size: 12px; }
+}
+
 /* ── CLV validation banner ────────────────────────────────────────────────── */
 /* Sits between the record strip and the picks. Only rendered when CLV > 0.   */
 .clv-banner {
@@ -1029,6 +1082,8 @@
   <div class="record-strip" id="record-strip"></div>
   <!-- CLV validation banner — rendered by JS when avg_clv data is available -->
   <div id="clv-banner-container"></div>
+  <!-- Week-at-a-Glance strip — rendered by JS from last7 + week_picks data -->
+  <div id="week-strip-container"></div>
   <div class="freshness-row" id="freshness-row" style="display:none">
     <span class="freshness-item" id="fr-model-run"></span>
   </div>
@@ -2459,6 +2514,15 @@ function render(data, hist, scores = {}, perf = null) {
       </div>`;
     }
 
+    if (data.last7 && data.last7.bets > 0) {
+      const u7  = data.last7.units || 0;
+      const roi7 = data.last7.roi  || 0;
+      stripHTML += `<div class="stat-pill" style="cursor:pointer" onclick="toggleWeekStrip()" title="Click to see this week's picks">
+        <div class="stat-lbl">Last 7 Days ▾</div>
+        <div class="stat-val ${u7 >= 0 ? 'green' : 'red'}">${data.last7.wins}W–${data.last7.losses}L</div>
+        <div class="stat-sub">${u7 >= 0 ? '+' : ''}${u7.toFixed(1)}u · ${roi7 >= 0 ? '+' : ''}${(roi7 * 100).toFixed(0)}% ROI</div>
+      </div>`;
+    }
     if (data.last30) {
       const u30 = data.last30.units || 0;
       stripHTML += `<div class="stat-pill">
@@ -2581,6 +2645,7 @@ function render(data, hist, scores = {}, perf = null) {
 
   strip.innerHTML = stripHTML;
   renderCLVBanner(data, perf);
+  renderWeekStrip(data);
 
   // Correlated warning
   if (data.correlated_warning) {
