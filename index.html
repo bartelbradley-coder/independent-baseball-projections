@@ -567,6 +567,30 @@
 }
 .record-strip .stat-pill:hover { border-color: rgba(255,255,255,0.15); }
 
+/* ── Kelly badge in edge row ── */
+.uph-kelly-badge {
+  display: inline-flex; align-items: center;
+  background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 4px; padding: 1px 7px;
+  font-size: 9.5px; font-weight: 600; color: var(--indigo-lt);
+  letter-spacing: 0.03em; flex-shrink: 0;
+}
+
+/* ── Today's action strip ── */
+.today-action-strip {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 14px; border-radius: 8px; margin-bottom: 16px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  font-size: 10px; color: var(--text-4);
+}
+.tas-label { font-size: 8px; font-weight: 700; letter-spacing: 0.14em;
+             text-transform: uppercase; color: var(--text-4); flex-shrink: 0; }
+.tas-stat { display: flex; flex-direction: column; align-items: center; }
+.tas-val { font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 700;
+           color: var(--text-2); line-height: 1; }
+.tas-sub { font-size: 8px; color: var(--text-4); margin-top: 2px; }
+.tas-div { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; }
+
 /* ── Narrative preview (always-visible, one line) ── */
 .uc-narrative-preview-line {
   font-size: 10.5px; color: var(--text-3); line-height: 1.5;
@@ -2076,6 +2100,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     </div>
     <div class="uph-edge-row">
       <span class="uph-edge-badge">+${edgePct}% edge</span>
+      ${p.kelly_units ? `<span class="uph-kelly-badge">${p.kelly_units.toFixed(1)}u Half-Kelly</span>` : ''}
       ${modelPct && mktPct ? `<span class="uph-prob-context">Model <strong>${modelPct}%</strong> · Market <strong>${mktPct}%</strong>${fairOddsInline}</span>` : ''}
     </div>
     ${narrativePreviewLineHTML}`;
@@ -2238,6 +2263,26 @@ function render(data, hist, scores = {}) {
       ? `<div class="share-all-row"><button class="share-all-btn" onclick="shareAllPicks()">𝕏 Share All ${main.length} Picks</button></div>`
       : '';
 
+    // ── Today's action strip ─────────────────────────────────────────────
+    const _totalKU  = main.reduce((s, p) => s + (p.kelly_units || 0), 0);
+    const _avgKU    = main.length ? _totalKU / main.length : 0;
+    const _bPct     = (_totalKU / 10 * 100).toFixed(1);
+    const _dollarPart = _unitSize > 0
+      ? `<div class="tas-div"></div><div class="tas-stat"><div class="tas-val" style="color:var(--green)">$${Math.round(_totalKU * _unitSize).toLocaleString()}</div><div class="tas-sub">total stake</div></div>`
+      : '';
+    const actionStripHTML = _totalKU > 0 ? `
+      <div class="today-action-strip">
+        <span class="tas-label">Today's Kelly Exposure</span>
+        <div class="tas-stat"><div class="tas-val">${main.length}</div><div class="tas-sub">picks</div></div>
+        <div class="tas-div"></div>
+        <div class="tas-stat"><div class="tas-val">${_totalKU.toFixed(1)}u</div><div class="tas-sub">total Kelly</div></div>
+        <div class="tas-div"></div>
+        <div class="tas-stat"><div class="tas-val">${_avgKU.toFixed(1)}u</div><div class="tas-sub">avg/pick</div></div>
+        <div class="tas-div"></div>
+        <div class="tas-stat"><div class="tas-val">${_bPct}%</div><div class="tas-sub">of bankroll</div></div>
+        ${_dollarPart}
+      </div>` : '';
+
     // ── Group picks by live score status ─────────────────────────────────────
     const liveGroup      = main.filter(p => getPickResult(p, scores)?.status === 'live');
     const completedGroup = main.filter(p => getPickResult(p, scores)?.status === 'final');
@@ -2297,6 +2342,7 @@ function render(data, hist, scores = {}) {
     }
 
     document.getElementById('picks-container').innerHTML =
+      actionStripHTML +
       shareAllHTML +
       (useGrouping ? picksHTML : `<div class="${gridClass}">` + picksHTML + '</div>');
     refreshKellyUSD();

@@ -459,8 +459,8 @@ function renderHeadline(p, h) {
     </div>
     <div class="hl-stat">
       <div class="hl-val amber">$${Math.round(currentBank).toLocaleString()}</div>
-      <div class="hl-lbl">$1,000 Bankroll</div>
-      <div class="hl-sub">${bankGrowth >= 0 ? '+' : ''}${bankGrowth}% growth · $100/bet flat</div>
+      <div class="hl-lbl">$1,000 Bankroll (flat)</div>
+      <div class="hl-sub">${bankGrowth >= 0 ? '+' : ''}${bankGrowth}% · see chart for Kelly comparison</div>
     </div>`;
 }
 
@@ -491,44 +491,70 @@ function renderBankrollChart(h) {
     return;
   }
 
-  // Build dollar curve: $1000 start, flat $100/bet
+  // Build dollar curves: $1000 start
+  // Flat: $100/bet regardless of Kelly sizing
+  // Kelly: stake = START × kelly_pct (static Kelly on initial bankroll)
   const START = 1000;
-  let running = START;
-  const curve = [START];
+  let running = START, kellyRunning = START;
+  const curve = [START], kellyCurve = [START];
   for (const r of settled) {
     running += (r.pnl_u || 0) * 100;
     curve.push(running);
+    const kp = parseFloat(r.kelly_pct) || 0;
+    kellyRunning += (r.pnl_u || 0) * (START * kp);
+    kellyCurve.push(kellyRunning);
   }
 
-  const minV = Math.min(...curve);
-  const maxV = Math.max(...curve);
+  const allVals = [...curve, ...kellyCurve];
+  const minV = Math.min(...allVals);
+  const maxV = Math.max(...allVals);
   const range = maxV - minV || 1;
   const W = 800, H = 100, padT = 10, padB = 10;
   const innerH = H - padT - padB;
   const xFor = i => (i / (curve.length - 1)) * W;
   const yFor = v => padT + innerH * (1 - (v - minV) / range);
   const pts   = curve.map((v, i) => [xFor(i).toFixed(1), yFor(v).toFixed(1)]);
+  const kPts  = kellyCurve.map((v, i) => [xFor(i).toFixed(1), yFor(v).toFixed(1)]);
   const linePath = pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x},${y}`).join(' ');
+  const kellyPath = kPts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x},${y}`).join(' ');
   const zeroY    = yFor(START).toFixed(1);
   const areaPath = `${linePath} L${pts[pts.length-1][0]},${zeroY} L${pts[0][0]},${zeroY} Z`;
   const endVal   = curve[curve.length - 1];
+  const kellyEnd = kellyCurve[kellyCurve.length - 1];
   const col      = endVal >= START ? 'var(--green)' : 'var(--red)';
   const [lx, ly] = pts[pts.length - 1];
+  const [klx, kly] = kPts[kPts.length - 1];
 
   const pnlDollars = endVal - START;
   const roiPct     = ((pnlDollars / START) * 100).toFixed(1);
 
+  const kellyPnl  = Math.round(kellyEnd - START);
+  const kellyRoi  = ((kellyEnd - START) / START * 100).toFixed(1);
+  const kellyCol  = kellyEnd >= START ? '#818cf8' : 'var(--red)';  // indigo for Kelly line
+
   el.innerHTML = `
     <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:100px">
       <line x1="0" y1="${zeroY}" x2="${W}" y2="${zeroY}" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="4 3"/>
-      <path d="${areaPath}" fill="${col}" fill-opacity="0.1"/>
-      <path d="${linePath}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-      <circle cx="${lx}" cy="${ly}" r="4" fill="${col}"/>
+      <path d="${areaPath}" fill="${col}" fill-opacity="0.07"/>
+      <path d="${linePath}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"/>
+      <path d="${kellyPath}" fill="none" stroke="${kellyCol}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="5 3"/>
+      <circle cx="${lx}" cy="${ly}" r="3.5" fill="${col}"/>
+      <circle cx="${klx}" cy="${kly}" r="3.5" fill="${kellyCol}"/>
     </svg>
-    <div class="bankroll-meta">
-      <span>Started: <strong style="color:var(--text-2)">$1,000</strong> · flat $100/bet · ${settled.length} bets</span>
-      <span>Now: <strong style="color:${col}">$${Math.round(endVal).toLocaleString()}</strong>
+    <div class="bankroll-meta" style="margin-top:10px">
+      <span style="display:flex;align-items:center;gap:6px">
+        <span style="width:18px;height:2px;background:${col};display:inline-block;border-radius:2px"></span>
+        <span>Flat $100/bet: <strong style="color:${col}">$${Math.round(endVal).toLocaleString()}</strong>
         (${pnlDollars >= 0 ? '+' : ''}$${Math.round(pnlDollars)} · ${roiPct >= 0 ? '+' : ''}${roiPct}%)</span>
+      </span>
+      <span style="display:flex;align-items:center;gap:6px">
+        <span style="width:18px;height:2px;background:${kellyCol};display:inline-block;border-radius:2px;opacity:0.7;border-top:1px dashed ${kellyCol}"></span>
+        <span>Half-Kelly: <strong style="color:${kellyCol}">$${Math.round(kellyEnd).toLocaleString()}</strong>
+        (${kellyPnl >= 0 ? '+' : ''}$${kellyPnl} · ${kellyRoi >= 0 ? '+' : ''}${kellyRoi}%)</span>
+      </span>
+    </div>
+    <div style="font-size:9px;color:var(--text-4);margin-top:6px">
+      Started: $1,000 · ${settled.length} bets · Kelly line uses static half-Kelly sizing on initial bankroll
     </div>`;
 }
 

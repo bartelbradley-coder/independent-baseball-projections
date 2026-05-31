@@ -435,6 +435,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
         <input class="threshold-input" id="threshold-input" type="number" min="0" max="20" step="0.5" value="0" autocomplete="off">
         <span class="threshold-pct">%</span>
       </div>
+      <button class="filter-btn" id="pnl-toggle-btn" onclick="togglePnlMode()" title="Toggle P&L between units and dollars">P&L: Units</button>
       <button class="filter-btn" id="csv-export-btn" style="margin-left:auto" onclick="exportCSV()">📥 Export CSV</button>
     </div>
 
@@ -463,6 +464,8 @@ let activeFilter = 'all';
 let activeMonth = 'all';
 let activeSearch = '';
 let activeThreshold = 0;   // minimum edge (0 = no filter)
+let pnlMode = 'units';     // 'units' or 'dollars'
+const _unitSize = parseFloat(localStorage.getItem('fairline_unit_size') || '0');
 
 // formatOdds, pct → fairline-utils.js
 
@@ -623,7 +626,7 @@ function renderSummary(rows) {
 
   document.getElementById('summary-row').innerHTML = `
     <div class="stat-pill"><div class="stat-lbl">2026 Record</div><div class="stat-val white">${wins}W–${losses}L</div><div class="stat-sub">${settled.length} bets</div></div>
-    <div class="stat-pill"><div class="stat-lbl">Total P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${totalPnl >= 0 ? '+' : ''}${totalPnl.toFixed(1)}u</div><div class="stat-sub">flat $100/bet</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Total P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${_fmtPnl(totalPnl)}</div><div class="stat-sub">${pnlMode==='dollars'&&_unitSize>0?`1u=$${_unitSize}`:'flat $100/bet'}</div></div>
     <div class="stat-pill"><div class="stat-lbl">ROI / Bet</div><div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${pct(roi)}</div><div class="stat-sub">per settled bet</div></div>
     <div class="stat-pill"><div class="stat-lbl">Win Rate</div><div class="stat-val white">${winRate != null ? (winRate*100).toFixed(1)+'%' : '—'}</div><div class="stat-sub">~52% break-even</div></div>
     ${avgClv != null ? `<div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${avgClv >= 0 ? 'green' : 'red'}">${pct(avgClv)}</div><div class="stat-sub">n=${clvRows.length}</div></div>` : ''}
@@ -891,7 +894,7 @@ function renderTable(rows) {
     const clvCls = r.clv == null ? 'clv-neu' : r.clv >= 0 ? 'clv-pos' : 'clv-neg';
     const edgeStr = r.edge != null ? '+' + (r.edge * 100).toFixed(1) + '%' : '—';
     const probStr = r.model_prob != null ? (r.model_prob * 100).toFixed(1) + '%' : '—';
-    const pnlStr  = r.pnl_u != null ? (r.pnl_u >= 0 ? '+' : '') + r.pnl_u.toFixed(1) + 'u' : '—';
+    const pnlStr  = r.pnl_u != null ? _fmtPnl(r.pnl_u) : '—';
     const clvStr  = r.clv != null ? pct(r.clv)
       : '<abbr title="CLV not captured — game may have been a day game settled before the 3:30 PM CT closing line snapshot" style="text-decoration:none;cursor:help">—</abbr>';
     const dateStr = r.date ? (() => { try { return new Date(r.date + 'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}); } catch(e){ return r.date; } })() : '—';
@@ -1332,6 +1335,32 @@ document.getElementById('search-input').addEventListener('input', e => {
   activeSearch = e.target.value.trim();
   renderTable(allRows);
 });
+
+// ── P&L mode toggle (units ↔ dollars) ────────────────────────────────────────
+function togglePnlMode() {
+  pnlMode = pnlMode === 'units' ? 'dollars' : 'units';
+  const btn = document.getElementById('pnl-toggle-btn');
+  if (btn) {
+    if (pnlMode === 'dollars') {
+      btn.textContent = _unitSize > 0 ? `P&L: $ (1u=$${_unitSize})` : 'P&L: $ (set unit size on Picks)';
+      btn.classList.add('active');
+    } else {
+      btn.textContent = 'P&L: Units';
+      btn.classList.remove('active');
+    }
+  }
+  renderTable(allRows);
+  renderSummary(allRows);
+}
+
+function _fmtPnl(pnl_u) {
+  if (pnl_u == null) return '—';
+  if (pnlMode === 'dollars' && _unitSize > 0) {
+    const dollars = Math.round(pnl_u * _unitSize);
+    return (dollars >= 0 ? '+$' : '-$') + Math.abs(dollars).toLocaleString();
+  }
+  return (pnl_u >= 0 ? '+' : '') + pnl_u.toFixed(1) + 'u';
+}
 
 // ── Minimum edge threshold input ──────────────────────────────────────────────
 document.getElementById('threshold-input').addEventListener('input', e => {
