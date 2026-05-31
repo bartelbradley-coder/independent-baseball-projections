@@ -1484,6 +1484,7 @@ let _todayDataRef = null;    // saved so toggle can re-render without re-fetchin
 let _histDataRef  = null;
 
 // Compute Kelly-sized season/last30/last7 stats from history.json rows.
+// Uses all settled rows — same population as flat mode, just different sizing.
 function _kellyStatsFromHist(histRows) {
   const settled = (histRows || []).filter(r => r.result === 'W' || r.result === 'L');
   const season  = settled.filter(r => r.date && r.date.startsWith('2026'));
@@ -2622,10 +2623,14 @@ function render(data, hist, scores = {}, perf = null) {
       }
       if (season.roi != null) {
         const roi = season.roi;
+        // Always use data.season.bets for the count — both modes track the same
+        // picks, just sized differently. Kelly mode's ks.season.bets differs
+        // because history.json excludes AVOID picks that today.json includes.
+        const betCount = (data.season && data.season.bets) || season.bets || '';
         stripHTML += `<div class="stat-pill roi-pill">
           <div class="stat-lbl">Season ROI</div>
           <div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${roi >= 0 ? '+' : ''}${(roi * 100).toFixed(1)}%</div>
-          <div class="stat-sub">${season.bets || ''} bets · ${modeSub}</div>
+          <div class="stat-sub">${betCount} bets · ${modeSub}</div>
         </div>`;
       }
 
