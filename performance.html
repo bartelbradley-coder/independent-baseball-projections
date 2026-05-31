@@ -161,7 +161,7 @@
 
   <!-- Bankroll growth chart -->
   <div class="section">
-    <div class="sec-lbl">$1,000 Bankroll Growth — Flat $100/bet · 2026 Season</div>
+    <div class="sec-lbl">$5,000 Bankroll Growth — Flat $100/bet (2%) vs. Half-Kelly · 2026 Season</div>
     <div class="card" style="padding:16px 20px">
       <div class="bankroll-chart-wrap" id="bankroll-chart">
         <div class="loading">Loading…</div>
@@ -437,9 +437,12 @@ function renderHeadline(p, h) {
   const clv  = p && p.avg_clv;
   const rows = h && h.rows ? h.rows.filter(r => r.result === 'W' || r.result === 'L') : [];
   const totalPnlDollars = rows.reduce((s, r) => s + (r.pnl_u || 0) * 100, 0);
-  const startBank = 1000;
+  const startBank = 5000;   // $100/bet = 2% of $5,000 — realistic flat-bet sizing
   const currentBank = startBank + totalPnlDollars;
   const bankGrowth = ((currentBank - startBank) / startBank * 100).toFixed(1);
+  // Aliases used in template below
+  const currentBank5k = currentBank;
+  const bankGrowth5k  = parseFloat(bankGrowth);
 
   document.getElementById('headline-stats').innerHTML = `
     <div class="hl-stat">
@@ -458,9 +461,9 @@ function renderHeadline(p, h) {
       <div class="hl-sub">n=${p && p.clv_count || 0} picks</div>
     </div>
     <div class="hl-stat">
-      <div class="hl-val amber">$${Math.round(currentBank).toLocaleString()}</div>
-      <div class="hl-lbl">$1,000 Bankroll (flat)</div>
-      <div class="hl-sub">${bankGrowth >= 0 ? '+' : ''}${bankGrowth}% · see chart for Kelly comparison</div>
+      <div class="hl-val amber">$${Math.round(currentBank5k).toLocaleString()}</div>
+      <div class="hl-lbl">$5,000 Bankroll (flat)</div>
+      <div class="hl-sub">${bankGrowth5k >= 0 ? '+' : ''}${bankGrowth5k}% · $100/bet = 2% of bankroll</div>
     </div>`;
 }
 
@@ -491,10 +494,10 @@ function renderBankrollChart(h) {
     return;
   }
 
-  // Build dollar curves: $1000 start
-  // Flat: $100/bet regardless of Kelly sizing
-  // Kelly: stake = START × kelly_pct (static Kelly on initial bankroll)
-  const START = 1000;
+  // Build dollar curves: $5,000 start (matches the bankroll Kelly sizing was calibrated to)
+  // Flat: $100/bet = 2% of $5,000 — conventional flat-bet sizing
+  // Kelly: stake = START × kelly_pct ≈ $274/bet avg = same as the posted kelly_dollar values
+  const START = 5000;
   let running = START, kellyRunning = START;
   const curve = [START], kellyCurve = [START];
   for (const r of settled) {
@@ -554,7 +557,7 @@ function renderBankrollChart(h) {
       </span>
     </div>
     <div style="font-size:9px;color:var(--text-4);margin-top:6px">
-      Started: $1,000 · ${settled.length} bets · Kelly line uses static half-Kelly sizing on initial bankroll
+      Both start at $5,000 · ${settled.length} bets · Flat = $100/bet (2% of bankroll) · Kelly ≈ $274/bet avg (5.5% of bankroll) · static sizing on initial bankroll
     </div>`;
 }
 
