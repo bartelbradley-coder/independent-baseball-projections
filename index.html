@@ -1174,9 +1174,18 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function refreshKellyUSD() {
+  // Update dollar amounts inside the Details collapse
   document.querySelectorAll('.kelly-usd').forEach(el => {
     const units = parseFloat(el.dataset.units || 0);
     el.textContent = (_bankroll > 0 && units > 0) ? `$${Math.round(units * _bankroll / 10)}` : '';
+  });
+  // Update the always-visible Kelly badge on every pick card
+  document.querySelectorAll('.uph-kelly-badge[data-kelly-units]').forEach(el => {
+    const units = parseFloat(el.dataset.kellyUnits || 0);
+    if (!units) return;
+    el.textContent = (_bankroll > 0)
+      ? `${units.toFixed(1)}u · $${Math.round(units * _bankroll / 10)}`
+      : `${units.toFixed(1)}u Half-Kelly`;
   });
 }
 
@@ -2284,7 +2293,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     </div>
     <div class="uph-edge-row">
       <span class="uph-edge-badge">+${edgePct}% edge${p.current_edge != null ? '<span style="font-size:8.5px;opacity:0.55;font-weight:500;margin-left:4px">· Posted</span>' : ''}</span>
-      ${p.kelly_units ? `<span class="uph-kelly-badge">${p.kelly_units.toFixed(1)}u Half-Kelly</span>` : ''}
+      ${p.kelly_units ? `<span class="uph-kelly-badge" data-kelly-units="${p.kelly_units.toFixed(2)}">${_bankroll > 0 ? `${p.kelly_units.toFixed(1)}u · $${Math.round(p.kelly_units * _bankroll / 10)}` : `${p.kelly_units.toFixed(1)}u Half-Kelly`}</span>` : ''}
       ${modelPct && mktPct ? `<span class="uph-prob-context">Model <strong>${modelPct}%</strong> · Market <strong>${mktPct}%</strong>${fairOddsInline}</span>` : ''}
     </div>
     ${narrativePreviewLineHTML}`;
