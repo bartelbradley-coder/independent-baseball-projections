@@ -1478,6 +1478,72 @@ function toggleWeekStrip() {
   if (el) el.classList.toggle('open');
 }
 
+// ── Picks page P&L mode toggle (Flat ↔ Kelly) ────────────────────────────────
+let _indexPnlMode = 'flat';  // 'flat' | 'kelly'
+let _todayDataRef = null;    // saved so toggle can re-render without re-fetching
+let _histDataRef  = null;
+
+// Compute Kelly-sized season/last30/last7 stats from history.json rows.
+function _kellyStatsFromHist(histRows) {
+  const settled = (histRows || []).filter(r => r.result === 'W' || r.result === 'L');
+  const season  = settled.filter(r => r.date && r.date.startsWith('2026'));
+
+  function kellySum(rows) {
+    return rows.reduce((s, r) => s + (r.kelly_units || 1) * (r.pnl_u || 0), 0);
+  }
+  function staked(rows) {
+    return rows.reduce((s, r) => s + (r.kelly_units || 1), 0);
+  }
+
+  const sPnl    = kellySum(season);
+  const sStaked = staked(season);
+  const sRoi    = sStaked > 0 ? sPnl / sStaked : 0;
+  const sW      = season.filter(r => r.result === 'W').length;
+  const sL      = season.filter(r => r.result === 'L').length;
+
+  const last30  = settled.slice(-30);
+  const l30Pnl  = kellySum(last30);
+  const l30W    = last30.filter(r => r.result === 'W').length;
+  const l30L    = last30.filter(r => r.result === 'L').length;
+
+  const sevenAgo = new Date(); sevenAgo.setDate(sevenAgo.getDate() - 7);
+  const cutoff   = sevenAgo.toISOString().slice(0, 10);
+  const last7    = season.filter(r => r.date >= cutoff);
+  const l7Pnl    = kellySum(last7);
+  const l7Staked = staked(last7);
+  const l7Roi    = l7Staked > 0 ? l7Pnl / l7Staked : 0;
+  const l7W      = last7.filter(r => r.result === 'W').length;
+  const l7L      = last7.filter(r => r.result === 'L').length;
+
+  // Build a date+pick lookup for week chip Kelly pnl
+  const pickLookup = {};
+  for (const r of last7) {
+    const key = `${r.date}|${r.pick}|${r.game}`;
+    pickLookup[key] = (r.kelly_units || 1) * (r.pnl_u || 0);
+  }
+
+  return {
+    season:     { wins: sW, losses: sL, units: sPnl, roi: sRoi, bets: season.length },
+    last30:     { wins: l30W, losses: l30L, units: l30Pnl },
+    last7:      { wins: l7W, losses: l7L, units: l7Pnl, roi: l7Roi, bets: l7W + l7L },
+    pickLookup,
+  };
+}
+
+function toggleIndexPnlMode() {
+  _indexPnlMode = _indexPnlMode === 'flat' ? 'kelly' : 'flat';
+  const btn = document.getElementById('idx-pnl-toggle');
+  if (btn) {
+    btn.textContent = _indexPnlMode === 'kelly' ? 'Kelly' : 'Flat';
+    btn.classList.toggle('active', _indexPnlMode === 'kelly');
+  }
+  if (_todayDataRef && _histDataRef) {
+    renderRecordStrip(_todayDataRef, _histDataRef);
+    // Also rerender week strip chips with Kelly pnl
+    renderWeekStrip(_todayDataRef, _histDataRef);
+  }
+}
+
 // ── Main data loader ──────────────────────────────────────────────────────────
 async function loadPicks() {
   try {
@@ -2497,55 +2563,113 @@ function render(data, hist, scores = {}, perf = null) {
     }
   }
 
+  // Save refs for the P&L mode toggle
+  _todayDataRef = data;
+  _histDataRef  = hist;
+
   // Record strip: season stats + streak + mini sparkline
-  const strip = document.getElementById('record-strip');
-  let stripHTML = '';
-  if (data.season) {
-    const u = data.season.units || 0;
-    stripHTML += `<div class="stat-pill">
-      <div class="stat-lbl">2026 Season</div>
-      <div class="stat-val white">${data.season.wins}W–${data.season.losses}L</div>
-      <div class="stat-sub">${u >= 0 ? '+' : ''}${u.toFixed(1)}u</div>
+  // Extracted into renderRecordStrip() so the Flat/Kelly toggle can re-render it.
+  function renderRecordStrip(data, hist) {
+    const strip = document.getElementById('record-strip');
+    if (!strip) return;
+
+    // Choose stat source based on P&L mode
+    const isKelly = _indexPnlMode === 'kelly';
+    const ks = isKelly && hist && hist.rows
+      ? _kellyStatsFromHist(hist.rows) : null;
+    const season = isKelly && ks ? ks.season : data.season;
+    const last30 = isKelly && ks ? ks.last30  : data.last30;
+    const last7  = isKelly && ks ? ks.last7   : data.last7;
+
+    let stripHTML = '';
+    if (season) {
+      const u = season.units || 0;
+      const modeSub = isKelly ? 'half-Kelly sized' : 'flat $100/bet';
+      stripHTML += `<div class="stat-pill">
+        <div class="stat-lbl">2026 Season</div>
+        <div class="stat-val white">${season.wins}W–${season.losses}L</div>
+        <div class="stat-sub">${u >= 0 ? '+' : ''}${u.toFixed(1)}u <span style="opacity:0.6">${isKelly ? '· Kelly' : ''}</span></div>
+      </div>`;
+
+      // CLV — always flat, independent of P&L mode
+      if (data.avg_clv != null) {
+        const clvCls = data.avg_clv >= 0 ? 'green' : 'red';
+        const clvStr = (data.avg_clv >= 0 ? '+' : '') + (data.avg_clv * 100).toFixed(2) + '%';
+        const clvSub = data.clv_count ? `${data.clv_count} picks` : 'vs. close';
+        stripHTML += `<div class="stat-pill clv-pill">
+          <div class="stat-lbl">Avg CLV<span class="tip" data-tip="Closing Line Value: how much better our posted price is vs. the final Pinnacle no-vig line. Positive CLV is the strongest signal the model finds real edge — it means the market consistently agrees with our direction after posting.">?</span></div>
+          <div class="stat-val ${clvCls}">${clvStr}</div>
+          <div class="stat-sub">${clvSub}</div>
+        </div>`;
+      }
+
+      if (last7 && last7.bets > 0) {
+        const u7   = last7.units || 0;
+        const roi7 = last7.roi   || 0;
+        stripHTML += `<div class="stat-pill" style="cursor:pointer" onclick="toggleWeekStrip()" title="Click to see this week's picks">
+          <div class="stat-lbl">Last 7 Days ▾</div>
+          <div class="stat-val ${u7 >= 0 ? 'green' : 'red'}">${last7.wins}W–${last7.losses}L</div>
+          <div class="stat-sub">${u7 >= 0 ? '+' : ''}${u7.toFixed(1)}u · ${roi7 >= 0 ? '+' : ''}${(roi7 * 100).toFixed(0)}% ROI</div>
+        </div>`;
+      }
+      if (last30) {
+        const u30 = last30.units || 0;
+        stripHTML += `<div class="stat-pill">
+          <div class="stat-lbl">Last 30</div>
+          <div class="stat-val ${u30 >= 0 ? 'green' : 'red'}">${last30.wins}–${last30.losses}</div>
+          <div class="stat-sub">${u30 >= 0 ? '+' : ''}${u30.toFixed(1)}u</div>
+        </div>`;
+      }
+      if (season.roi != null) {
+        const roi = season.roi;
+        stripHTML += `<div class="stat-pill roi-pill">
+          <div class="stat-lbl">Season ROI</div>
+          <div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${roi >= 0 ? '+' : ''}${(roi * 100).toFixed(1)}%</div>
+          <div class="stat-sub">${season.bets || ''} bets · ${modeSub}</div>
+        </div>`;
+      }
+
+      // P&L mode toggle button — sits at the end of the stat pill row
+      stripHTML += `<button id="idx-pnl-toggle"
+        onclick="toggleIndexPnlMode()"
+        title="Toggle between flat $100/bet and Kelly-sized P&L"
+        class="filter-btn${isKelly ? ' active' : ''}"
+        style="font-size:10px;padding:4px 10px;align-self:center;flex-shrink:0">
+        ${isKelly ? 'Kelly' : 'Flat'}
+      </button>`;
+    }
+
+    // Today's in-play results chip
+    stripHTML += `<div class="today-chip" id="today-score-tally" style="display:none">
+      <div class="tc-val">—</div>
+      <div class="tc-lbl">Today</div>
     </div>`;
 
-    // CLV — moved to second position, visually upgraded, shown before ROI
-    if (data.avg_clv != null) {
-      const clvCls   = data.avg_clv >= 0 ? 'green' : 'red';
-      const clvStr   = (data.avg_clv >= 0 ? '+' : '') + (data.avg_clv * 100).toFixed(2) + '%';
-      const clvSub   = data.clv_count ? `${data.clv_count} picks` : 'vs. close';
-      stripHTML += `<div class="stat-pill clv-pill">
-        <div class="stat-lbl">Avg CLV<span class="tip" data-tip="Closing Line Value: how much better our posted price is vs. the final Pinnacle no-vig line. Positive CLV is the strongest signal the model finds real edge — it means the market consistently agrees with our direction after posting.">?</span></div>
-        <div class="stat-val ${clvCls}">${clvStr}</div>
-        <div class="stat-sub">${clvSub}</div>
+    // Streak chip
+    const streak = computeStreak(hist);
+    if (streak) {
+      stripHTML += `<div class="streak-chip">
+        <div class="sc-lbl">Current streak</div>
+        <div class="sc-val ${streak.dir}">${streak.dir}${streak.count}</div>
       </div>`;
     }
 
-    if (data.last7 && data.last7.bets > 0) {
-      const u7  = data.last7.units || 0;
-      const roi7 = data.last7.roi  || 0;
-      stripHTML += `<div class="stat-pill" style="cursor:pointer" onclick="toggleWeekStrip()" title="Click to see this week's picks">
-        <div class="stat-lbl">Last 7 Days ▾</div>
-        <div class="stat-val ${u7 >= 0 ? 'green' : 'red'}">${data.last7.wins}W–${data.last7.losses}L</div>
-        <div class="stat-sub">${u7 >= 0 ? '+' : ''}${u7.toFixed(1)}u · ${roi7 >= 0 ? '+' : ''}${(roi7 * 100).toFixed(0)}% ROI</div>
+    // Mini sparkline
+    if (hist && hist.pnl_curve && hist.pnl_curve.length >= 3) {
+      const svg = miniSparkline(hist.pnl_curve);
+      const lastVal = hist.pnl_curve[hist.pnl_curve.length - 1];
+      const col = lastVal >= 0 ? 'var(--green)' : 'var(--red)';
+      stripHTML += `<div class="sparkline-pill">
+        <div class="sp-lbl">Season P&amp;L</div>
+        ${svg}
+        <div style="font-size:9px;font-weight:600;color:${col}">${lastVal >= 0 ? '+' : ''}${lastVal.toFixed(1)}u</div>
       </div>`;
     }
-    if (data.last30) {
-      const u30 = data.last30.units || 0;
-      stripHTML += `<div class="stat-pill">
-        <div class="stat-lbl">Last 30</div>
-        <div class="stat-val ${u30 >= 0 ? 'green' : 'red'}">${data.last30.wins}–${data.last30.losses}</div>
-        <div class="stat-sub">${u30 >= 0 ? '+' : ''}${u30.toFixed(1)}u</div>
-      </div>`;
-    }
-    if (data.season && data.season.roi != null) {
-      const roi = data.season.roi;
-      stripHTML += `<div class="stat-pill roi-pill">
-        <div class="stat-lbl">Season ROI</div>
-        <div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${roi >= 0 ? '+' : ''}${(roi * 100).toFixed(1)}%</div>
-        <div class="stat-sub">${data.season.bets || ''} bets</div>
-      </div>`;
-    }
+
+    strip.innerHTML = stripHTML;
   }
+
+  renderRecordStrip(data, hist);
 
   // ── CLV validation banner ────────────────────────────────────────────────
   // Rendered below the record strip. Only shown when avg_clv data is present.
@@ -2622,42 +2746,25 @@ function render(data, hist, scores = {}, perf = null) {
       </div>`;
   }
 
-  // Today's in-play results chip — updated live by refreshScoreBadges()
-  stripHTML += `<div class="today-chip" id="today-score-tally" style="display:none">
-    <div class="tc-val">—</div>
-    <div class="tc-lbl">Today</div>
-  </div>`;
-
-  // Streak chip
-  const streak = computeStreak(hist);
-  if (streak) {
-    stripHTML += `<div class="streak-chip">
-      <div class="sc-lbl">Current streak</div>
-      <div class="sc-val ${streak.dir}">${streak.dir}${streak.count}</div>
-    </div>`;
-  }
-
-  // Mini sparkline from history
-  if (hist && hist.pnl_curve && hist.pnl_curve.length >= 3) {
-    const svg = miniSparkline(hist.pnl_curve);
-    const lastVal = hist.pnl_curve[hist.pnl_curve.length - 1];
-    const col = lastVal >= 0 ? 'var(--green)' : 'var(--red)';
-    stripHTML += `<div class="sparkline-pill">
-      <div class="sp-lbl">Season P&amp;L</div>
-      ${svg}
-      <div style="font-size:9px;font-weight:600;color:${col}">${lastVal >= 0 ? '+' : ''}${lastVal.toFixed(1)}u</div>
-    </div>`;
-  }
-
-  strip.innerHTML = stripHTML;
   renderCLVBanner(data, perf);
 
   // ── Week-at-a-Glance strip ──────────────────────────────────────────────
-  function renderWeekStrip(data) {
+  function renderWeekStrip(data, hist) {
     const container = document.getElementById('week-strip-container');
     if (!container) return;
     const picks = data.week_picks || [];
-    const l7    = data.last7 || {};
+    const isKelly = _indexPnlMode === 'kelly';
+
+    // Choose week stats source
+    let l7;
+    let kellyPickLookup = {};
+    if (isKelly && hist && hist.rows) {
+      const ks = _kellyStatsFromHist(hist.rows);
+      l7 = ks.last7;
+      kellyPickLookup = ks.pickLookup;
+    } else {
+      l7 = data.last7 || {};
+    }
     if (!picks.length || !l7.bets) { container.innerHTML = ''; return; }
 
     const u7     = l7.units || 0;
@@ -2676,10 +2783,15 @@ function render(data, hist, scores = {}, perf = null) {
     }
 
     const chips = picks.map(p => {
-      const isWin    = p.result === 'W';
-      const pnlStr   = p.pnl_u != null
-        ? (p.pnl_u >= 0 ? '+' : '') + p.pnl_u.toFixed(2) + 'u' : '';
-      const pnlCls   = p.pnl_u != null ? (p.pnl_u >= 0 ? 'pos' : 'neg') : '';
+      const isWin  = p.result === 'W';
+      // Use Kelly pnl from hist lookup when in Kelly mode
+      const lookupKey = `${p.date}|${p.pick}|${p.game}`;
+      const dispPnl   = isKelly && kellyPickLookup[lookupKey] != null
+        ? kellyPickLookup[lookupKey]
+        : p.pnl_u;
+      const pnlStr = dispPnl != null
+        ? (dispPnl >= 0 ? '+' : '') + dispPnl.toFixed(2) + 'u' : '';
+      const pnlCls = dispPnl != null ? (dispPnl >= 0 ? 'pos' : 'neg') : '';
       return `<div class="wpc ${isWin ? 'wpc-win' : 'wpc-loss'}" title="${p.game}">
         <span class="wpc-pick">${p.pick || '—'}</span>
         <span class="wpc-date">${fmtDate(p.date)}</span>
@@ -2707,7 +2819,7 @@ function render(data, hist, scores = {}, perf = null) {
       </div>`;
   }
 
-  renderWeekStrip(data);
+  renderWeekStrip(data, hist);
 
   // Correlated warning
   if (data.correlated_warning) {
