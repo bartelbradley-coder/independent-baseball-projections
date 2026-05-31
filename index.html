@@ -1235,6 +1235,12 @@
     <div id="pt-rows"></div>
   </div>
 
+  <!-- TODAY'S PICKS — LIVE TRACKING (compact at-a-glance table) -->
+  <div class="section" id="idx-tracking-section" style="display:none">
+    <div class="sec-lbl">Today's Picks — Live Tracking</div>
+    <div class="card" style="padding:0;overflow:hidden" id="idx-tracking-card"></div>
+  </div>
+
   <!-- TODAY'S PICKS -->
   <div class="section">
     <div class="sec-lbl">Value Bets</div>
@@ -1612,6 +1618,76 @@ function refreshPersonalTracker() {
       ${resultHTML}
     </div>`;
   }).join('');
+}
+
+// ── Today's Picks — Live Tracking table ──────────────────────────────────────
+// Compact at-a-glance table above the pick cards: all today's VALUE picks with
+// their live status (pending / live score / final W-L). Mirrors the version on
+// the Pick History page but uses index-specific DOM IDs.
+function renderTodayTrackingIndex(picks, scores) {
+  const section = document.getElementById('idx-tracking-section');
+  const card    = document.getElementById('idx-tracking-card');
+  if (!section || !card || !picks || picks.length === 0) return;
+  section.style.display = 'block';
+
+  const rows = picks.map(p => {
+    const g    = scores[p.game];
+    const side = (p.side || '').toUpperCase();
+    let statusHTML, borderCls = '';
+
+    if (!g || g.status === 'scheduled') {
+      const cd = countdownText(p.game_time);
+      statusHTML = `<span style="color:var(--text-4);font-size:10px">${cd ? '⏱ ' + cd : '⏳ Upcoming'}</span>`;
+    } else if (g.status === 'live') {
+      statusHTML = `<span style="color:var(--green);font-size:10px;font-weight:700">● LIVE&nbsp;${g.awayScore}–${g.homeScore}</span>`;
+    } else {
+      const won = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
+      const ps  = side === 'AWAY' ? g.awayScore : g.homeScore;
+      const os  = side === 'AWAY' ? g.homeScore : g.awayScore;
+      const col = won ? 'var(--green)' : 'var(--red)';
+      borderCls = won
+        ? 'border-left:3px solid rgba(34,197,94,0.5);'
+        : 'border-left:3px solid rgba(239,68,68,0.4);';
+      statusHTML = `<span style="color:${col};font-family:'Oswald',sans-serif;font-size:14px;font-weight:700">${won?'W':'L'}&nbsp;${ps}–${os}</span>`;
+    }
+
+    const oddsStr  = p.odds > 0 ? `+${p.odds}` : String(p.odds);
+    const edgeStr  = p.edge ? `+${(p.edge * 100).toFixed(1)}%` : '';
+    const kellyStr = p.kelly_units ? `${p.kelly_units.toFixed(1)}u` : '';
+    const kellyDol = (_bankroll > 0 && p.kelly_units)
+      ? ` · $${Math.round(p.kelly_units * _bankroll / 100)}`
+      : '';
+
+    return `<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.04);${borderCls}">
+      <div style="flex:1;min-width:0;overflow:hidden">
+        <div style="font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+          ${p.pick} <span style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px">${oddsStr}</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-4);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+          ${p.game}${edgeStr ? ' · ' + edgeStr + ' edge' : ''}${kellyStr ? ' · ' + kellyStr + kellyDol : ''}
+        </div>
+      </div>
+      <div style="flex-shrink:0">${statusHTML}</div>
+    </div>`;
+  }).join('');
+
+  // Tally header
+  const done    = picks.filter(p => { const g = scores[p.game]; return g && g.status === 'final'; });
+  const wins    = done.filter(p => {
+    const g = scores[p.game]; const s = (p.side||'').toUpperCase();
+    return s === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
+  }).length;
+  const losses  = done.length - wins;
+  const pending = picks.length - done.length;
+  const live    = picks.filter(p => { const g = scores[p.game]; return g && g.status === 'live'; }).length;
+
+  const tallyHTML = `<div style="padding:9px 14px 6px;font-size:11px;color:var(--text-4);border-bottom:1px solid rgba(255,255,255,0.04)">
+    ${done.length > 0 ? `<strong style="color:var(--text-2)">${wins}W–${losses}L</strong> settled · ` : ''}
+    ${live > 0 ? `<span style="color:var(--green)">${live} live</span> · ` : ''}
+    ${pending} pick${pending !== 1 ? 's' : ''} pending
+  </div>`;
+
+  card.innerHTML = tallyHTML + rows;
 }
 
 // ── Week strip toggle ─────────────────────────────────────────────────────────
@@ -3028,6 +3104,10 @@ function render(data, hist, scores = {}, perf = null) {
 
   renderWeekStrip(data, hist);
 
+  // Today's Picks — Live Tracking table (compact at-a-glance above pick cards)
+  const _mainForTracking = (data.picks || []).filter(p => (p.edge || 0) >= 0.02);
+  renderTodayTrackingIndex(_mainForTracking, scores);
+
   // Correlated warning
   if (data.correlated_warning) {
     document.getElementById('corr-warning').style.display = 'flex';
@@ -3272,6 +3352,12 @@ function refreshScoreBadges(scores) {
 
   // Refresh the today tally chip
   _updateTodayTally(scores);
+
+  // Refresh the live tracking table above the picks
+  if (_todayDataRef) {
+    const _tp = (_todayDataRef.picks || []).filter(p => (p.edge || 0) >= 0.02);
+    renderTodayTrackingIndex(_tp, scores);
+  }
 }
 
 function _updateTodayTally(scores) {
