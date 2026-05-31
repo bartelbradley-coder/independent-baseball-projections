@@ -623,6 +623,67 @@
 /* ── Details button — slightly bolder to be most prominent action ── */
 .uav-btn.primary { font-weight: 600 !important; }
 
+/* ── Live edge panel ─────────────────────────────────────────────────────── */
+/* Shows posted (locked) edge vs. current model assessment side-by-side.      */
+/* Displayed on pick cards when lineup-confirmed refresh data is available.   */
+.live-edge-panel {
+  margin: 6px 0 10px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.018);
+}
+.lep-row {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11.5px; line-height: 1.6;
+}
+.lep-label {
+  color: var(--text-4); font-size: 10.5px; font-weight: 500;
+  min-width: 52px; flex-shrink: 0;
+}
+.lep-value { font-weight: 700; font-size: 12px; flex-shrink: 0; }
+.lep-value.lep-green  { color: var(--green); }
+.lep-value.lep-amber  { color: var(--amber); }
+.lep-value.lep-muted  { color: var(--text-3); }
+.lep-value.lep-red    { color: var(--red); }
+.lep-meta {
+  color: var(--text-4); font-size: 10px; font-style: italic;
+  flex: 1; text-align: right; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.lep-divider {
+  border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 5px 0;
+}
+.lep-delta-bar {
+  margin-top: 6px; height: 3px; border-radius: 2px;
+  background: rgba(255,255,255,0.06); overflow: hidden;
+}
+.lep-delta-fill { height: 100%; border-radius: 2px; transition: width .3s; }
+.lep-delta-label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 9.5px; color: var(--text-4); margin-top: 3px;
+}
+.lep-delta-status { font-weight: 600; }
+/* Warning / flip banners */
+.lep-warn-banner {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 12px; border-radius: 7px; margin: 0 0 10px;
+  font-size: 11px; line-height: 1.5; border: 1px solid;
+}
+.lep-warn-banner.lep-orange {
+  background: rgba(249,115,22,0.07); border-color: rgba(249,115,22,0.28);
+  color: #fdba74;
+}
+.lep-warn-banner.lep-red {
+  background: rgba(239,68,68,0.07); border-color: rgba(239,68,68,0.28);
+  color: #fca5a5;
+}
+.lep-warn-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.lep-warn-text strong {
+  display: block; margin-bottom: 2px;
+  font-weight: 600; color: inherit;
+}
+
 /* ── Pick card redesign ── */
 .matchup-teams { display: flex; align-items: baseline; gap: 7px; margin-bottom: 3px; flex-wrap: wrap; }
 .mt-pick { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; color: var(--text-2); }
@@ -1664,6 +1725,120 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
          </div>
        </div>`;
 
+  // ── Live edge panel: posted (locked) vs. current model assessment ───────────
+  // Only rendered when today.json contains current_edge from current_model.json.
+  // posted edge → frozen at first logging time, used for CLV/ROI tracking.
+  // current edge → re-computed on each 30-min refresh with confirmed lineups.
+  function buildLiveEdgePanel() {
+    const currEdge = p.current_edge;
+    // Don't render when no live data exists (current_model.json not yet written)
+    if (currEdge == null || !p.current_refresh_time) return { panelHTML: '', warnHTML: '' };
+
+    const postedPct = (p.edge * 100).toFixed(1);
+    const currPct   = (Math.abs(currEdge) * 100).toFixed(1);
+    const delta     = Math.abs(currEdge - p.edge);
+    const rec       = p.current_recommendation;  // "same"|"reduced"|"flipped"|null
+
+    // Colour for the posted (locked) value
+    const postedCls = p.edge >= 0.05 ? 'lep-amber' : 'lep-green';
+
+    // Colour + text for the current value
+    let currCls  = 'lep-green';
+    let currText = `+${currPct}%`;
+    if (rec === 'flipped') {
+      currCls  = 'lep-red';
+      const ft = p.current_flipped_team || 'OPP';
+      const fp = ((p.current_flipped_edge || 0) * 100).toFixed(1);
+      currText = `${ft} +${fp}%`;
+    } else if (currEdge < 0.02) {
+      currCls = currEdge < 0 ? 'lep-red' : 'lep-muted';
+      currText = currEdge < 0 ? `${(currEdge * 100).toFixed(1)}%` : `+${currPct}%`;
+    }
+
+    // Delta bar: width = fraction of posted edge that was lost (capped at 100%)
+    const deltaRatio = p.edge > 0 ? Math.min(1.0, delta / p.edge) : 0;
+    const barWidth   = (deltaRatio * 100).toFixed(0);
+    let barColor = '#22c55e';
+    let statusText  = 'Stable';
+    let statusColor = '#22c55e';
+    if (rec === 'flipped') {
+      barColor = '#ef4444'; statusColor = '#ef4444'; statusText = 'Recommendation flipped';
+    } else if (rec === 'reduced' && currEdge < 0.02) {
+      barColor = '#f97316'; statusColor = '#f97316'; statusText = 'Below threshold';
+    } else if (delta >= 0.02) {
+      barColor = '#f59e0b'; statusColor = '#f59e0b';
+      statusText = `−${(delta * 100).toFixed(1)}pp`;
+    } else if (delta >= 0.005) {
+      statusText = `−${(delta * 100).toFixed(1)}pp`;
+    }
+
+    const postedLabel  = p.posted_at    || 'Morning run';
+    const refreshLabel = p.current_refresh_time || 'Last refresh';
+    const lineupLabel  = rec === 'same' ? '✓ confirmed lineup' : 'confirmed lineup';
+
+    const panelHTML = `
+      <div class="live-edge-panel">
+        <div class="lep-row">
+          <span class="lep-label">Posted</span>
+          <span class="lep-value ${postedCls}">+${postedPct}%</span>
+          <span class="lep-meta">${postedLabel} · projected lineup</span>
+        </div>
+        <hr class="lep-divider">
+        <div class="lep-row">
+          <span class="lep-label">Current</span>
+          <span class="lep-value ${currCls}">${currText}</span>
+          <span class="lep-meta">${refreshLabel} · ${lineupLabel}</span>
+        </div>
+        <div class="lep-delta-bar">
+          <div class="lep-delta-fill" style="width:${barWidth}%;background:${barColor}"></div>
+        </div>
+        <div class="lep-delta-label">
+          <span>Model confidence shift: ${delta < 0.005 ? 'None' : '−' + (delta * 100).toFixed(1) + 'pp'}</span>
+          <span class="lep-delta-status" style="color:${statusColor}">${statusText}</span>
+        </div>
+      </div>`;
+
+    // Warning banners for significant changes
+    let warnHTML = '';
+    if (rec === 'flipped') {
+      const ft = p.current_flipped_team || 'opponent';
+      const fp = ((p.current_flipped_edge || 0) * 100).toFixed(1);
+      warnHTML = `
+        <div class="lep-warn-banner lep-red">
+          <span class="lep-warn-icon">🔄</span>
+          <span class="lep-warn-text">
+            <strong>Model now favors the opposite side — ${ft} +${fp}%</strong>
+            A lineup or starter change has reversed the model's recommendation.
+            The original ${p.pick} pick is retained in history for tracking. The opposing side
+            is not posted — no opposite sides are logged for the same game.
+          </span>
+        </div>`;
+    } else if (rec === 'reduced' && currEdge < 0.02) {
+      warnHTML = `
+        <div class="lep-warn-banner lep-orange">
+          <span class="lep-warn-icon">⚠️</span>
+          <span class="lep-warn-text">
+            <strong>Current edge below 2% posting threshold</strong>
+            With confirmed lineup, model shows +${currPct}% — below the minimum for a new
+            recommendation. Posted pick retained for tracking. Verify lineup before betting.
+          </span>
+        </div>`;
+    } else if (delta >= 0.025) {
+      warnHTML = `
+        <div class="lep-warn-banner lep-orange">
+          <span class="lep-warn-icon">⚠️</span>
+          <span class="lep-warn-text">
+            <strong>Lineup change reduced model confidence</strong>
+            Edge updated from +${postedPct}% to +${currPct}% with confirmed lineups.
+            Pick remains above threshold. Posted edge used for tracking.
+          </span>
+        </div>`;
+    }
+
+    return { panelHTML, warnHTML };
+  }
+  const { panelHTML: _liveEdgePanelHTML, warnHTML: _liveEdgeWarnHTML } = buildLiveEdgePanel();
+
   // Line movement indicator: compare opening Pinnacle (line_open) to current best odds
   function lineMovementHTML() {
     if (!p.line_open || !p.odds) return '';
@@ -2099,7 +2274,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       <span class="uph-odds ${isDog ? 'dog' : 'fav'}">${formatOdds(p.odds)}</span>
     </div>
     <div class="uph-edge-row">
-      <span class="uph-edge-badge">+${edgePct}% edge</span>
+      <span class="uph-edge-badge">+${edgePct}% edge${p.current_edge != null ? '<span style="font-size:8.5px;opacity:0.55;font-weight:500;margin-left:4px">· Posted</span>' : ''}</span>
       ${p.kelly_units ? `<span class="uph-kelly-badge">${p.kelly_units.toFixed(1)}u Half-Kelly</span>` : ''}
       ${modelPct && mktPct ? `<span class="uph-prob-context">Model <strong>${modelPct}%</strong> · Market <strong>${mktPct}%</strong>${fairOddsInline}</span>` : ''}
     </div>
@@ -2129,6 +2304,8 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       ${topPickBannerHTML}
       ${headerRowHTML}
       ${pickHeadlineHTML}
+      ${_liveEdgePanelHTML}
+      ${_liveEdgeWarnHTML}
       ${spFlagsRowHTML}
       ${actionRowHTML}
       ${detailsBodyHTML}
