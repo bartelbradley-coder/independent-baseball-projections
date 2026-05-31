@@ -182,6 +182,40 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 /* Daily P&L bar chart */
 .calendar-wrap { display:block; }
 
+/* ── Threshold input in filter bar ── */
+.threshold-wrap {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 6px;
+  font-size: 11px; color: var(--text-3);
+}
+.threshold-wrap:focus-within { border-color: rgba(99,102,241,0.4); }
+.threshold-lbl { font-weight: 600; font-size: 10px; color: var(--text-4); white-space: nowrap; }
+.threshold-input {
+  width: 38px; background: none; border: none; outline: none;
+  color: var(--text-2); font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 600; text-align: right; padding: 0;
+}
+.threshold-pct { font-size: 10px; color: var(--text-4); }
+
+/* ── Threshold active summary bar ── */
+.threshold-summary-bar {
+  padding: 10px 14px; border-radius: 8px; margin-bottom: 12px;
+  background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.2);
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  font-size: 11px; color: var(--text-3);
+}
+.tsb-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+             text-transform: uppercase; color: var(--indigo-lt); flex-shrink: 0; }
+.tsb-stat { display: inline-flex; flex-direction: column; align-items: center; }
+.tsb-val  { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700; line-height: 1; }
+.tsb-sub  { font-size: 8px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--text-4); margin-top: 2px; }
+.tsb-divider { width: 1px; height: 24px; background: rgba(99,102,241,0.2); flex-shrink: 0; }
+.tsb-reset { margin-left: auto; font-size: 9px; color: var(--text-4); cursor: pointer;
+             text-decoration: underline; white-space: nowrap; }
+.tsb-reset:hover { color: var(--text-2); }
+
 /* Auto-refresh live indicator */
 .auto-refresh-pill {
   display: inline-flex; align-items: center; gap: 5px;
@@ -395,9 +429,16 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
       <button class="filter-btn" data-filter="away">Away</button>
       <div class="filter-sep"></div>
       <input class="search-input" id="search-input" type="text" placeholder="🔍 Team or pitcher…" autocomplete="off">
+      <div class="filter-sep"></div>
+      <div class="threshold-wrap" title="Show only picks where model edge ≥ this value">
+        <span class="threshold-lbl">Min edge</span>
+        <input class="threshold-input" id="threshold-input" type="number" min="0" max="20" step="0.5" value="0" autocomplete="off">
+        <span class="threshold-pct">%</span>
+      </div>
       <button class="filter-btn" id="csv-export-btn" style="margin-left:auto" onclick="exportCSV()">📥 Export CSV</button>
     </div>
 
+    <div id="threshold-summary-bar" class="threshold-summary-bar" style="display:none"></div>
     <div class="card" style="padding:0;overflow:hidden" id="table-wrap">
       <div class="loading">Loading…</div>
     </div>
@@ -421,6 +462,7 @@ let sortDir = 'desc';
 let activeFilter = 'all';
 let activeMonth = 'all';
 let activeSearch = '';
+let activeThreshold = 0;   // minimum edge (0 = no filter)
 
 // formatOdds, pct → fairline-utils.js
 
@@ -740,8 +782,49 @@ function renderBacktest() {
     </div>`).join('');
 }
 
+function renderThresholdSummary(rows) {
+  const bar = document.getElementById('threshold-summary-bar');
+  if (!bar) return;
+  if (activeThreshold <= 0) { bar.style.display = 'none'; return; }
+
+  const settled = rows.filter(x => x.result === 'W' || x.result === 'L');
+  const all     = settled.length;
+  const shown   = settled.filter(x => (parseFloat(x.edge) || 0) >= activeThreshold).length;
+  const dropped = all - shown;
+
+  // Stats for the threshold subset
+  const sub  = getFilteredSorted(rows).filter(x => x.result === 'W' || x.result === 'L');
+  const wins = sub.filter(x => x.result === 'W').length;
+  const pnl  = sub.reduce((s, x) => s + (parseFloat(x.pnl_u || x.pnl) || 0), 0);
+  const roi  = sub.length > 0 ? pnl / sub.length : 0;
+  const wr   = sub.length > 0 ? wins / sub.length : 0;
+  const clvs = sub.filter(x => x.clv != null).map(x => parseFloat(x.clv));
+  const avgClv = clvs.length > 0 ? clvs.reduce((a,b)=>a+b,0)/clvs.length : null;
+
+  const pct = t => (t >= 0 ? '+' : '') + (t * 100).toFixed(1) + '%';
+  const roiCol  = roi  >= 0 ? 'var(--green)' : 'var(--red)';
+  const clvCol  = avgClv != null && avgClv >= 0 ? 'var(--green)' : 'var(--red)';
+
+  bar.style.display = 'flex';
+  bar.innerHTML = `
+    <span class="tsb-label">≥ ${(activeThreshold*100).toFixed(activeThreshold % 0.01 < 0.001 ? 0 : 1)}% edge</span>
+    <div class="tsb-stat"><div class="tsb-val white">${wins}–${sub.length-wins}</div><div class="tsb-sub">Record</div></div>
+    <div class="tsb-divider"></div>
+    <div class="tsb-stat"><div class="tsb-val white">${(wr*100).toFixed(1)}%</div><div class="tsb-sub">Win rate</div></div>
+    <div class="tsb-divider"></div>
+    <div class="tsb-stat"><div class="tsb-val" style="color:${roiCol}">${pct(roi)}</div><div class="tsb-sub">ROI / bet</div></div>
+    <div class="tsb-divider"></div>
+    <div class="tsb-stat"><div class="tsb-val" style="color:${roiCol}">${pnl>=0?'+':''}${pnl.toFixed(1)}u</div><div class="tsb-sub">Total P&L</div></div>
+    ${avgClv != null ? `<div class="tsb-divider"></div>
+    <div class="tsb-stat"><div class="tsb-val" style="color:${clvCol}">${pct(avgClv)}</div><div class="tsb-sub">Avg CLV</div></div>` : ''}
+    <span style="font-size:10px;color:var(--text-4);margin-left:4px">${shown} picks shown · ${dropped} below threshold hidden</span>
+    <span class="tsb-reset" onclick="document.getElementById('threshold-input').value=0;activeThreshold=0;renderThresholdSummary(allRows);renderTable(allRows);">Reset</span>`;
+}
+
 function getFilteredSorted(rows) {
   let r = [...rows];
+  // Minimum edge threshold (set by threshold input in filter bar)
+  if (activeThreshold > 0) r = r.filter(x => (parseFloat(x.edge) || 0) >= activeThreshold);
   if (activeFilter === 'W') r = r.filter(x => x.result === 'W');
   else if (activeFilter === 'L') r = r.filter(x => x.result === 'L');
   else if (activeFilter === 'strong')       r = r.filter(x => x.edge != null && x.edge >= 0.08);
@@ -1248,6 +1331,24 @@ document.getElementById('filters').addEventListener('click', e => {
 document.getElementById('search-input').addEventListener('input', e => {
   activeSearch = e.target.value.trim();
   renderTable(allRows);
+});
+
+// ── Minimum edge threshold input ──────────────────────────────────────────────
+document.getElementById('threshold-input').addEventListener('input', e => {
+  const v = parseFloat(e.target.value);
+  activeThreshold = (!isNaN(v) && v > 0) ? v / 100 : 0;
+  renderTable(allRows);
+  renderThresholdSummary(allRows);
+});
+document.getElementById('threshold-input').addEventListener('change', e => {
+  // Clamp to valid range on blur/change
+  const v = parseFloat(e.target.value);
+  if (!isNaN(v)) {
+    e.target.value = Math.max(0, Math.min(20, v));
+    activeThreshold = e.target.value > 0 ? parseFloat(e.target.value) / 100 : 0;
+    renderTable(allRows);
+    renderThresholdSummary(allRows);
+  }
 });
 
 // _showDebugBanner, event listeners → fairline-utils.js

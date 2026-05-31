@@ -249,7 +249,34 @@
     </div>
   </div>
 
-  <!-- Run Line Performance removed from display; still tracked in rl_picks_log.csv -->
+  <!-- Threshold Analysis -->
+  <div class="section" id="threshold-section" style="display:none">
+    <div class="sec-lbl">Performance by Minimum Edge Threshold — 2026 Season</div>
+    <div class="card" style="padding:16px 20px">
+      <div class="card-sub" style="margin-bottom:14px">
+        ROI per bet rises as the threshold increases — but fewer picks qualify.
+        Use this to find the selectivity level that fits your bankroll strategy.
+      </div>
+      <table class="compare-table" id="threshold-table">
+        <thead>
+          <tr>
+            <th>Min Edge</th><th>Bets</th><th>W–L</th><th>Win%</th>
+            <th>ROI / Bet</th><th>Total Units</th><th style="width:100px">ROI</th>
+          </tr>
+        </thead>
+        <tbody id="threshold-tbody">
+          <tr><td colspan="7" style="color:var(--text-4);padding:14px 10px">Accumulates as picks settle.</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10px;color:var(--text-4);margin-top:12px;line-height:1.6;border-top:1px solid var(--border);padding-top:10px">
+        <strong style="color:var(--text-3)">How to read this:</strong>
+        Each row shows cumulative performance for picks <em>at or above</em> that edge.
+        The ≥ 2% row is your full pick set. As threshold rises, ROI/bet improves
+        but volume drops — fewer picks means more variance. The optimal threshold
+        balances ROI/bet against the number of bets needed to realise the edge.
+      </div>
+    </div>
+  </div>
 
   <!-- Backtest -->
   <div class="results-section backtest-section">
@@ -390,6 +417,7 @@ async function loadAll() {
     renderMonthly(pAugmented);
     renderEdgeTiers(pAugmented);
     // renderRLPerformance removed — RL not displayed
+    renderThresholdAnalysis(hAugmented ? (hAugmented.rows || []) : []);
     renderBacktest();
   } catch(e) {
     console.error('[FairLine] loadAll error:', e);
@@ -698,6 +726,54 @@ function renderBacktest() {
 }
 
 // renderRLPerformance removed — RL tracked in rl_picks_log.csv but not displayed
+
+function renderThresholdAnalysis(rows) {
+  const settled = rows.filter(r => (r.result === 'W' || r.result === 'L'));
+  if (settled.length < 5) return;
+
+  const THRESHOLDS = [0.02, 0.03, 0.04, 0.05, 0.06, 0.08, 0.10];
+
+  const data = THRESHOLDS.map(t => {
+    const sub  = settled.filter(r => (parseFloat(r.edge) || 0) >= t);
+    if (sub.length === 0) return null;
+    const wins = sub.filter(r => r.result === 'W').length;
+    const pnl  = sub.reduce((s, r) => s + (parseFloat(r.pnl_u || r.pnl) || 0), 0);
+    const roi  = pnl / sub.length;
+    return { t, n: sub.length, wins, losses: sub.length - wins, roi, pnl };
+  }).filter(Boolean);
+
+  if (data.length === 0) return;
+
+  document.getElementById('threshold-section').style.display = 'block';
+
+  const maxAbsRoi = Math.max(...data.map(d => Math.abs(d.roi)), 0.01);
+  // Highlight the row with the highest ROI/bet
+  const bestRoiIdx = data.reduce((bi, d, i) => d.roi > data[bi].roi ? i : bi, 0);
+
+  document.getElementById('threshold-tbody').innerHTML = data.map((d, i) => {
+    const pct   = `≥ ${(d.t * 100).toFixed(0)}%`;
+    const wl    = `${d.wins}–${d.losses}`;
+    const wr    = (d.wins / d.n * 100).toFixed(1) + '%';
+    const roi   = (d.roi >= 0 ? '+' : '') + (d.roi * 100).toFixed(1) + '%';
+    const units = (d.pnl >= 0 ? '+' : '') + d.pnl.toFixed(1) + 'u';
+    const barW  = Math.round(Math.abs(d.roi) / maxAbsRoi * 90);
+    const barCol = d.roi >= 0 ? 'var(--green)' : 'var(--red)';
+    const isBest = i === bestRoiIdx;
+    return `<tr style="${isBest ? 'background:rgba(34,197,94,0.04)' : ''}">
+      <td style="font-weight:${isBest?'700':'600'};color:var(--text-2)">${pct}${isBest ? ' <span style="font-size:9px;color:var(--green)">★ best ROI/bet</span>' : ''}</td>
+      <td>${d.n}</td>
+      <td>${wl}</td>
+      <td>${wr}</td>
+      <td style="font-weight:700;color:${barCol}">${roi}</td>
+      <td style="color:${d.pnl>=0?'var(--green)':'var(--red)'}">${units}</td>
+      <td>
+        <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:100px;overflow:hidden">
+          <div style="height:100%;width:${barW}%;background:${barCol};border-radius:100px;transition:width 0.4s"></div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
 
 // _showDebugBanner, event listeners → fairline-utils.js
 
