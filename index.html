@@ -1486,7 +1486,11 @@ let _histDataRef  = null;
 // Compute Kelly-sized season/last30/last7 stats from history.json rows.
 // Uses all settled rows — same population as flat mode, just different sizing.
 function _kellyStatsFromHist(histRows) {
-  const settled = (histRows || []).filter(r => r.result === 'W' || r.result === 'L');
+  // history.json rows are sorted newest-first (descending by date).
+  // Sort ascending before any slice() so "last N" means "most recent N".
+  const settled = (histRows || [])
+    .filter(r => r.result === 'W' || r.result === 'L')
+    .sort((a, b) => a.date.localeCompare(b.date));   // oldest → newest
   const season  = settled.filter(r => r.date && r.date.startsWith('2026'));
 
   function kellySum(rows) {
@@ -1502,6 +1506,7 @@ function _kellyStatsFromHist(histRows) {
   const sW      = season.filter(r => r.result === 'W').length;
   const sL      = season.filter(r => r.result === 'L').length;
 
+  // settled is now ascending — slice(-30) correctly gives the most recent 30
   const last30  = settled.slice(-30);
   const l30Pnl  = kellySum(last30);
   const l30W    = last30.filter(r => r.result === 'W').length;
@@ -2766,20 +2771,22 @@ function render(data, hist, scores = {}, perf = null) {
     const picks = data.week_picks || [];
     const isKelly = _indexPnlMode === 'kelly';
 
-    // Choose week stats source
-    let l7;
+    // W-L counts and bets always from data.last7 (stable, same in both modes).
+    // Only units/ROI switch to Kelly values when Kelly mode is active.
+    const flatL7 = data.last7 || {};
     let kellyPickLookup = {};
+    let kellyL7Units = flatL7.units || 0;
+    let kellyL7Roi   = flatL7.roi   || 0;
     if (isKelly && hist && hist.rows) {
       const ks = _kellyStatsFromHist(hist.rows);
-      l7 = ks.last7;
+      kellyL7Units = ks.last7.units;
+      kellyL7Roi   = ks.last7.roi;
       kellyPickLookup = ks.pickLookup;
-    } else {
-      l7 = data.last7 || {};
     }
-    if (!picks.length || !l7.bets) { container.innerHTML = ''; return; }
+    if (!picks.length || !flatL7.bets) { container.innerHTML = ''; return; }
 
-    const u7     = l7.units || 0;
-    const roi7   = l7.roi   || 0;
+    const u7     = isKelly ? kellyL7Units : (flatL7.units || 0);
+    const roi7   = isKelly ? kellyL7Roi   : (flatL7.roi   || 0);
     const uCol   = u7 >= 0 ? 'var(--green)' : 'var(--red)';
     const uStr   = (u7 >= 0 ? '+' : '') + u7.toFixed(1) + 'u';
     const roiStr = (roi7 >= 0 ? '+' : '') + (roi7 * 100).toFixed(0) + '%';
@@ -2816,7 +2823,7 @@ function render(data, hist, scores = {}, perf = null) {
         <div class="week-strip-header" onclick="toggleWeekStrip()">
           <div class="wsh-left">
             <span class="wsh-label">Last 7 Days</span>
-            <span class="wsh-record" style="color:${uCol}">${l7.wins}W–${l7.losses}L</span>
+            <span class="wsh-record" style="color:${uCol}">${flatL7.wins}W–${flatL7.losses}L</span>
             <span class="wsh-units" style="color:${uCol}">${uStr}</span>
             <span class="wsh-roi">${roiStr} ROI</span>
           </div>
