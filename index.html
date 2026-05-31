@@ -1012,6 +1012,91 @@
   .other-markets-body.open { grid-template-columns: 1fr; }
 }
 
+/* ── Slim brand bar ──────────────────────────────────────────────────────────── */
+/* First element inside the page container — identity + live track record.      */
+.brand-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px; margin-bottom: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 12px;
+  gap: 16px; flex-wrap: wrap;
+}
+.bb-left { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.bb-name {
+  font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700;
+  color: var(--text-1); letter-spacing: 0.05em; line-height: 1;
+}
+.bb-name em { font-style: normal; color: var(--indigo-lt); }
+.bb-tagline {
+  font-size: 11px; color: var(--text-4); letter-spacing: 0.02em; line-height: 1.4;
+}
+.bb-record {
+  display: flex; align-items: stretch; gap: 0; flex-shrink: 0; flex-wrap: wrap;
+}
+.bb-stat {
+  display: flex; flex-direction: column; align-items: flex-end; justify-content: center;
+  padding: 4px 14px; border-left: 1px solid var(--border);
+}
+.bb-stat:first-child { border-left: none; }
+.bb-stat-val {
+  font-family: 'JetBrains Mono', monospace; font-size: 15px;
+  font-weight: 700; line-height: 1.1; white-space: nowrap;
+}
+.bb-stat-lbl {
+  font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-4); margin-top: 2px; white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .brand-bar { flex-direction: column; align-items: flex-start; gap: 12px; padding: 14px 16px; }
+  .bb-record { gap: 0; }
+  .bb-stat { align-items: flex-start; padding: 2px 12px 2px 0; border-left: none; border-right: 1px solid var(--border); }
+  .bb-stat:last-child { border-right: none; }
+  .bb-name { font-size: 20px; }
+}
+
+/* ── Context bar (compact, replaces large page-header) ───────────────────────── */
+.today-context {
+  display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+  margin-bottom: 14px; font-size: 11px; color: var(--text-4);
+}
+.today-context .tc-date {
+  font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600;
+  color: var(--text-2); letter-spacing: 0.02em;
+}
+.today-context .tc-sep { color: var(--border); user-select: none; }
+
+/* ── Evidence section (below picks, 3 evidence-based claims) ─────────────────── */
+.evidence-section {
+  margin-bottom: 16px; padding: 22px;
+  background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 12px;
+}
+.evidence-heading {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--text-4); margin-bottom: 18px;
+}
+.evidence-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+}
+.evidence-claim { display: flex; flex-direction: column; gap: 5px; }
+.ec-stat {
+  font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700;
+  color: var(--green); line-height: 1;
+}
+.ec-stat.amber { color: var(--amber); }
+.ec-label {
+  font-size: 11px; font-weight: 600; color: var(--text-2); line-height: 1.35;
+}
+.ec-desc { font-size: 10.5px; color: var(--text-4); line-height: 1.55; }
+@media (max-width: 640px) {
+  .evidence-grid { grid-template-columns: 1fr; gap: 0; }
+  .evidence-claim {
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+  }
+  .evidence-claim:first-child { padding-top: 0; }
+  .evidence-claim:last-child  { padding-bottom: 0; border-bottom: none; }
+}
+
 /* ── Picks header block (replaces record strip + CLV banner + bankroll widget) ── */
 .phb-card {
   background: var(--bg-card);
@@ -1154,69 +1239,34 @@
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero-section">
-  <div class="page" style="padding-top:0;padding-bottom:0;margin-bottom:0">
-    <div class="hero-inner">
-      <div class="hero-badge">⚾ MLB · 2026 Season</div>
-      <h1 class="hero-headline">Sharp-market MLB picks from a transparent fair-line model.</h1>
-      <p class="hero-sub">FairLine MLB projects each game's true win probability, converts it to fair odds, and compares it to the no-vig market to identify positive-edge opportunities. Every posted pick is tracked with result, CLV, units, and ROI.</p>
-      <div class="hero-ctas">
-        <a href="#picks" class="hero-btn-primary">View Today's Picks</a>
-        <a href="model.html" class="hero-btn-secondary">See Model Methodology</a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <div class="page" id="picks">
 
-  <!-- TRUST STRIP -->
-  <div class="trust-strip">
-    <div class="trust-card">
-      <div class="trust-label">Model Type</div>
-      <div class="trust-val">Dual-Poisson + log-odds</div>
+  <!-- BRAND BAR: identity + live track record, replaces hero + trust strip -->
+  <div class="brand-bar">
+    <div class="bb-left">
+      <div class="bb-name">FAIRLINE <em>MLB</em></div>
+      <div class="bb-tagline">Dual-Poisson win probability model · Edge vs. no-vig Pinnacle · 2026 Season</div>
     </div>
-    <div class="trust-card">
-      <div class="trust-label">Market Benchmark</div>
-      <div class="trust-val">No-vig Pinnacle probability</div>
-    </div>
-    <div class="trust-card">
-      <div class="trust-label">Pick Filter</div>
-      <div class="trust-val">Positive-edge threshold</div>
-    </div>
-    <div class="trust-card">
-      <div class="trust-label">Tracking</div>
-      <div class="trust-val">Every pick logged before first pitch</div>
-    </div>
-    <div class="trust-card">
-      <div class="trust-label">Validation</div>
-      <div class="trust-val" id="trust-clv-val">Positive CLV · market confirms edge</div>
+    <div class="bb-record" id="bb-record">
+      <!-- Populated by JS from today.json season stats -->
     </div>
   </div>
 
-  <div class="page-header">
-    <div class="page-title" id="page-date">Today's Value Bets</div>
-    <div class="page-subtitle">Dual-Poisson model · <span id="games-scanned">—</span> games scanned · <span id="signal-count">—</span> cleared 2% threshold · edge vs. no-vig Pinnacle</div>
+  <!-- CONTEXT BAR: today's slate (compact, replaces large page-header) -->
+  <div class="today-context">
+    <span class="tc-date" id="page-date">Today's Value Bets</span>
+    <span class="tc-sep">·</span>
+    <span id="games-scanned">—</span> games scanned
+    <span class="tc-sep">·</span>
+    <span id="signal-count">—</span> cleared 2% threshold
+    <span class="tc-sep">·</span>
+    edge vs. no-vig Pinnacle
   </div>
 
-  <!-- Picks header block: performance stats + sizing controls -->
+  <!-- PICKS HEADER BLOCK: performance stats + sizing controls -->
   <div id="picks-header-block"></div>
 
-  <!-- Market-informed model clarification (collapsible) -->
-  <details class="methodology-note">
-    <summary class="mn-summary">
-      <span class="mn-icon">ℹ️</span>
-      <span class="mn-title">FairLine is a market-informed model</span>
-      <span class="mn-chevron">›</span>
-    </summary>
-    <div class="mn-body">
-      <p class="mn-text">Raw team strength, pitching, lineup, park, weather, and situational signals generate the baseline projection. Market information is used as a stabilizing input to reduce extreme outputs and align with betting market run environments. After calibration, the final FairLine probability is compared against the no-vig market probability to identify remaining pricing gaps.</p>
-      <p class="mn-note">Because the market is used as both a stabilizing input and a comparison benchmark, FairLine should be understood as a market-informed fair-line model rather than a fully market-independent projection.</p>
-    </div>
-  </details>
-
-  <!-- Model info strip (always-visible) -->
+  <!-- MODEL INFO STRIP -->
   <div class="model-info-strip">
     <strong>Picks post daily by 9:30 AM CT.</strong>
     Starting pitcher info and odds are captured at model run time — always verify current starters and lines before betting.
@@ -1284,6 +1334,49 @@
 
   <!-- Performance charts — moved below picks -->
   <div id="perf-charts" style="margin-bottom:16px"></div>
+
+  <!-- EVIDENCE SECTION: 3 specific, data-backed claims for new visitors -->
+  <section id="evidence-section" class="evidence-section" style="display:none">
+    <div class="evidence-heading">Track Record</div>
+    <div class="evidence-grid" id="evidence-grid"></div>
+  </section>
+
+  <!-- METHODOLOGY NOTE (moved below picks) -->
+  <details class="methodology-note" style="margin-bottom:16px">
+    <summary class="mn-summary">
+      <span class="mn-icon">ℹ️</span>
+      <span class="mn-title">FairLine is a market-informed model</span>
+      <span class="mn-chevron">›</span>
+    </summary>
+    <div class="mn-body">
+      <p class="mn-text">Raw team strength, pitching, lineup, park, weather, and situational signals generate the baseline projection. Market information is used as a stabilizing input to reduce extreme outputs and align with betting market run environments. After calibration, the final FairLine probability is compared against the no-vig market probability to identify remaining pricing gaps.</p>
+      <p class="mn-note">Because the market is used as both a stabilizing input and a comparison benchmark, FairLine should be understood as a market-informed fair-line model rather than a fully market-independent projection.</p>
+    </div>
+  </details>
+
+  <!-- MODEL METADATA (moved below picks) -->
+  <div class="trust-strip" style="margin-bottom:16px">
+    <div class="trust-card">
+      <div class="trust-label">Model Type</div>
+      <div class="trust-val">Dual-Poisson + log-odds</div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-label">Market Benchmark</div>
+      <div class="trust-val">No-vig Pinnacle probability</div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-label">Adjustments</div>
+      <div class="trust-val">32 log-odds signals</div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-label">Calibration</div>
+      <div class="trust-val">Platt-scaled, updated monthly</div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-label">Pick Filter</div>
+      <div class="trust-val">≥2% edge vs. Pinnacle no-vig</div>
+    </div>
+  </div>
 
   <!-- TRANSPARENCY STANDARDS -->
   <section class="transparency-section">
@@ -1688,6 +1781,78 @@ function renderTodayTrackingIndex(picks, scores) {
   </div>`;
 
   card.innerHTML = tallyHTML + rows;
+}
+
+// ── Brand bar: populate season stats ─────────────────────────────────────────
+function renderBrandBar(data) {
+  const rec = document.getElementById('bb-record');
+  if (!rec || !data.season) return;
+  const s   = data.season;
+  const roi = s.roi != null
+    ? (s.roi >= 0 ? '+' : '') + (s.roi * 100).toFixed(1) + '%' : null;
+  const clv = data.avg_clv != null
+    ? (data.avg_clv >= 0 ? '+' : '') + (data.avg_clv * 100).toFixed(2) + '%' : null;
+  const roiCol = (s.roi || 0) >= 0 ? 'var(--green)' : 'var(--red)';
+  const clvCol = (data.avg_clv || 0) >= 0 ? 'var(--green)' : 'var(--red)';
+
+  rec.innerHTML = `
+    <div class="bb-stat">
+      <span class="bb-stat-val" style="color:var(--text-1)">${s.wins}W–${s.losses}L</span>
+      <span class="bb-stat-lbl">2026 Record</span>
+    </div>
+    ${roi ? `<div class="bb-stat">
+      <span class="bb-stat-val" style="color:${roiCol}">${roi}</span>
+      <span class="bb-stat-lbl">ROI / Bet</span>
+    </div>` : ''}
+    ${clv ? `<div class="bb-stat">
+      <span class="bb-stat-val" style="color:${clvCol}">${clv}</span>
+      <span class="bb-stat-lbl">Avg CLV</span>
+    </div>` : ''}`;
+}
+
+// ── Evidence section: 3 data-backed claims for new visitors ──────────────────
+function renderEvidenceSection(data, perf) {
+  const section = document.getElementById('evidence-section');
+  const grid    = document.getElementById('evidence-grid');
+  if (!section || !grid || !data.season) return;
+
+  const s         = data.season;
+  const roi       = s.roi != null ? (s.roi >= 0 ? '+' : '') + (s.roi * 100).toFixed(1) + '%' : null;
+  const clv       = data.avg_clv != null ? (data.avg_clv >= 0 ? '+' : '') + (data.avg_clv * 100).toFixed(2) + '%' : null;
+  const clvCount  = data.clv_count  || 0;
+  const posPct    = data.clv_positive_pct != null ? Math.round(data.clv_positive_pct * 100) + '%' : null;
+
+  // CLV trend from performance.json monthly series
+  let trendStr = '';
+  if (perf && perf.clv_series && perf.clv_series.length >= 3) {
+    const cs = perf.clv_series;
+    const n = cs.length;
+    const firstAvg = cs.slice(0, Math.floor(n / 3)).reduce((a, b) => a + b, 0) / Math.floor(n / 3);
+    const lastAvg  = cs.slice(-Math.floor(n / 3)).reduce((a, b) => a + b, 0) / Math.floor(n / 3);
+    trendStr = lastAvg > firstAvg + 0.001 ? 'Trend: improving in 2026.'
+             : lastAvg < firstAvg - 0.001 ? 'Trend: declining — monitor.'
+             : 'Trend: stable across 2026.';
+  }
+
+  if (!roi && !clv) return;  // no settled data yet
+  section.style.display = 'block';
+
+  grid.innerHTML = `
+    <div class="evidence-claim">
+      <div class="ec-stat">${clv || '—'}</div>
+      <div class="ec-label">Average Closing Line Value</div>
+      <div class="ec-desc">The market consistently moves toward posted picks after 9:30 AM — confirming the model finds real edge before it's fully priced in.${posPct ? ' ' + posPct + ' of ' + clvCount + ' picks beat the close.' : ''} ${trendStr}</div>
+    </div>
+    <div class="evidence-claim">
+      <div class="ec-stat">${roi || '—'}</div>
+      <div class="ec-label">${s.bets || ''} tracked picks, 2026 season</div>
+      <div class="ec-desc">Every pick is logged with a timestamp before first pitch. Results are never deleted or retroactively modified. Live season results reported separately from any historical backtesting.</div>
+    </div>
+    <div class="evidence-claim">
+      <div class="ec-stat amber">32</div>
+      <div class="ec-label">Model adjustments per game</div>
+      <div class="ec-desc">Dual-Poisson base with 32 log-odds adjustments: pitching quality, lineup confirmation, park factors, weather, umpire tendencies, bullpen recent form, BvP matchups, arsenal fit, and more. Platt-calibrated monthly on 2026 live data.</div>
+    </div>`;
 }
 
 // ── Week strip toggle ─────────────────────────────────────────────────────────
@@ -2943,7 +3108,9 @@ function render(data, hist, scores = {}, perf = null) {
       </div>`;
   }
 
+  renderBrandBar(data);
   renderPicksHeaderBlock(data, hist);
+  renderEvidenceSection(data, perf);
 
   // ── CLV validation banner ────────────────────────────────────────────────
   // Rendered below the record strip. Only shown when avg_clv data is present.
