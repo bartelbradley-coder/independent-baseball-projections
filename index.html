@@ -2569,7 +2569,7 @@ function render(data, hist, scores = {}, perf = null) {
 
   // Record strip: season stats + streak + mini sparkline
   // Extracted into renderRecordStrip() so the Flat/Kelly toggle can re-render it.
-  function renderRecordStrip(data, hist) {
+  window.renderRecordStrip = function(data, hist) {
     const strip = document.getElementById('record-strip');
     if (!strip) return;
 
@@ -2749,7 +2749,7 @@ function render(data, hist, scores = {}, perf = null) {
   renderCLVBanner(data, perf);
 
   // ── Week-at-a-Glance strip ──────────────────────────────────────────────
-  function renderWeekStrip(data, hist) {
+  window.renderWeekStrip = function(data, hist) {
     const container = document.getElementById('week-strip-container');
     if (!container) return;
     const picks = data.week_picks || [];
