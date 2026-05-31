@@ -474,7 +474,7 @@ const _bankroll = (() => {
   const u = parseFloat(localStorage.getItem('fairline_unit_size') || '0');
   return u > 0 ? u * 10 : 0;
 })();
-const _unitSize = _bankroll / 10;  // kept for any legacy references
+const _unitSize = _bankroll / 100;  // 1 unit = 1% of bankroll (100-unit convention)
 
 // formatOdds, pct → fairline-utils.js
 
@@ -1406,7 +1406,7 @@ function _fmtPnl(pnl_u, row = null) {
     return (kPnl >= 0 ? '+' : '') + kPnl.toFixed(2) + 'u';
   }
   if (pnlMode === 'dollars' && _bankroll > 0) {
-    const dollars = Math.round(pnl_u * _bankroll / 10);
+    const dollars = Math.round(pnl_u * _bankroll / 100);
     return (dollars >= 0 ? '+$' : '-$') + Math.abs(dollars).toLocaleString();
   }
   return (pnl_u >= 0 ? '+' : '') + pnl_u.toFixed(1) + 'u';

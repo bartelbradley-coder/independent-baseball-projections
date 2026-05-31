@@ -1350,14 +1350,14 @@
 // ── Global state ─────────────────────────────────────────────────────────────
 const picksMap = {};
 // _bankroll: user's total betting bankroll in dollars. Kelly dollar amounts are
-// calculated as kelly_units × bankroll / 10  (since 1 unit = bankroll / 10).
+// calculated as kelly_units × bankroll / 100  (since 1 unit = bankroll / 100 = 1% of bankroll).
 let _bankroll = parseFloat(localStorage.getItem('fairline_bankroll') || '0');
 // Legacy migration: if old unit-size key exists, convert it to bankroll (×10)
 if (!_bankroll && localStorage.getItem('fairline_unit_size')) {
   _bankroll = parseFloat(localStorage.getItem('fairline_unit_size') || '0') * 10;
   if (_bankroll > 0) localStorage.setItem('fairline_bankroll', String(_bankroll));
 }
-let _unitSize = _bankroll / 10;  // kept for any legacy references; derived from bankroll
+let _unitSize = _bankroll / 100;  // kept for any legacy references; derived from bankroll
 let _histRef  = null; // history data reference for tracker result lookup
 let _mainPicksRef = []; // today's main picks for share-all
 let _histContextFn = null;      // set in render() — returns hist-context HTML for a pick
@@ -1391,7 +1391,7 @@ function shareAllPicks() {
 // Syncs _bankroll, updates Kelly badge amounts on pick cards, and re-renders helper text.
 function _onBankrollChange(val) {
   _bankroll = parseFloat(val) || 0;
-  _unitSize = _bankroll / 10;
+  _unitSize = _bankroll / 100;
   localStorage.setItem('fairline_bankroll', String(_bankroll));
   refreshKellyUSD();
   refreshPersonalTracker();
@@ -1412,7 +1412,7 @@ function _updatePhbHelper() {
     // Find a representative kelly_units from today's picks to show the conversion
     const samplePick = Object.values(picksMap).find(p => p.kelly_units);
     const exUnits = samplePick ? samplePick.kelly_units.toFixed(1) : '1.3';
-    const exDollar = samplePick ? Math.round(samplePick.kelly_units * _bankroll / 10) : Math.round(1.3 * _bankroll / 10);
+    const exDollar = samplePick ? Math.round(samplePick.kelly_units * _bankroll / 100) : Math.round(1.3 * _bankroll / 100);
     el.innerHTML = `<strong>${exUnits}u Half-Kelly = $${exDollar}</strong> at $${_bankroll.toLocaleString()} bankroll`;
     if (bkWrap) bkWrap.classList.remove('flat-mode');
   } else {
@@ -1436,14 +1436,14 @@ function refreshKellyUSD() {
   // Update dollar amounts inside the Details collapse
   document.querySelectorAll('.kelly-usd').forEach(el => {
     const units = parseFloat(el.dataset.units || 0);
-    el.textContent = (_bankroll > 0 && units > 0) ? `$${Math.round(units * _bankroll / 10)}` : '';
+    el.textContent = (_bankroll > 0 && units > 0) ? `$${Math.round(units * _bankroll / 100)}` : '';
   });
   // Update the always-visible Kelly badge on every pick card
   document.querySelectorAll('.uph-kelly-badge[data-kelly-units]').forEach(el => {
     const units = parseFloat(el.dataset.kellyUnits || 0);
     if (!units) return;
     el.textContent = (_bankroll > 0)
-      ? `${units.toFixed(1)}u · $${Math.round(units * _bankroll / 10)}`
+      ? `${units.toFixed(1)}u · $${Math.round(units * _bankroll / 100)}`
       : `${units.toFixed(1)}u Half-Kelly`;
   });
 }
@@ -1456,7 +1456,7 @@ function copyPick(id) {
   const model   = p.model_prob  ? (p.model_prob  * 100).toFixed(1) : null;
   const mkt     = p.market_prob ? (p.market_prob * 100).toFixed(1) : null;
   const kelly   = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '';
-  const usdPart = (_bankroll > 0 && p.kelly_units) ? ` ($${Math.round(p.kelly_units * _bankroll / 10)})` : '';
+  const usdPart = (_bankroll > 0 && p.kelly_units) ? ` ($${Math.round(p.kelly_units * _bankroll / 100)})` : '';
   const parts   = [`🎯 BET: ${p.pick} ${formatOdds(p.odds)}`];
   if (model && mkt) parts.push(`FairLine ${model}% vs. Pinnacle ${mkt}%`);
   parts.push(`+${edge}% edge`);
@@ -1590,7 +1590,7 @@ function refreshPersonalTracker() {
   const totalKelly  = todayBets.reduce((s, b) => s + (b.kelly || 0), 0);
   const settledPnl  = settledBets.reduce((s, b) => s + (b.pnl_u || 0), 0);
   const usdStr      = (_bankroll > 0 && totalKelly > 0)
-    ? ` · <strong style="color:var(--green)">$${Math.round(totalKelly * _bankroll / 10)} risked</strong>` : '';
+    ? ` · <strong style="color:var(--green)">$${Math.round(totalKelly * _bankroll / 100)} risked</strong>` : '';
   const pnlStr      = settledBets.length > 0
     ? ` · settled: <strong style="color:${settledPnl>=0?'var(--green)':'var(--red)'}">${settledPnl>=0?'+':''}${settledPnl.toFixed(1)}u</strong>`
     : '';
@@ -1641,7 +1641,7 @@ function _kellyStatsFromHist(histRows) {
   // Fallback: null (exclude from Kelly calc rather than pretend flat=Kelly).
   function getKu(r) {
     if (r.kelly_units != null) return r.kelly_units;
-    if (r.kelly_pct  != null) return Math.round(r.kelly_pct * 0.5 * 10 * 1000) / 1000;
+    if (r.kelly_pct  != null) return Math.round(r.kelly_pct * 0.5 * 100 * 1000) / 1000;
     return null;
   }
 
@@ -2422,7 +2422,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
 
   // 4-box stats (Kelly box includes $ amount)
   const kellyUSD = (_bankroll > 0 && p.kelly_units)
-    ? `<span class="kelly-usd" data-units="${p.kelly_units.toFixed(2)}">$${Math.round(p.kelly_units * _bankroll / 10)}</span>`
+    ? `<span class="kelly-usd" data-units="${p.kelly_units.toFixed(2)}">$${Math.round(p.kelly_units * _bankroll / 100)}</span>`
     : `<span class="kelly-usd" data-units="${p.kelly_units ? p.kelly_units.toFixed(2) : '0'}"></span>`;
 
   const statsHTML = `
@@ -2654,7 +2654,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     </div>
     <div class="uph-edge-row">
       <span class="uph-edge-badge">+${edgePct}% edge${p.current_edge != null ? '<span style="font-size:8.5px;opacity:0.55;font-weight:500;margin-left:4px">· Posted</span>' : ''}</span>
-      ${p.kelly_units ? `<span class="uph-kelly-badge" data-kelly-units="${p.kelly_units.toFixed(2)}">${_bankroll > 0 ? `${p.kelly_units.toFixed(1)}u · $${Math.round(p.kelly_units * _bankroll / 10)}` : `${p.kelly_units.toFixed(1)}u Half-Kelly`}</span>` : ''}
+      ${p.kelly_units ? `<span class="uph-kelly-badge" data-kelly-units="${p.kelly_units.toFixed(2)}">${_bankroll > 0 ? `${p.kelly_units.toFixed(1)}u · $${Math.round(p.kelly_units * _bankroll / 100)}` : `${p.kelly_units.toFixed(1)}u Half-Kelly`}</span>` : ''}
       ${modelPct && mktPct ? `<span class="uph-prob-context">Model <strong>${modelPct}%</strong> · Market <strong>${mktPct}%</strong>${fairOddsInline}</span>` : ''}
     </div>
     ${narrativePreviewLineHTML}`;
@@ -2759,7 +2759,7 @@ function render(data, hist, scores = {}, perf = null) {
 
     // Kelly P&L: show in dollars when bankroll is set, units otherwise
     const showKellyDollar = isKelly && _bankroll > 0;
-    const kellyDollar = Math.round(uPnl * _bankroll / 10);
+    const kellyDollar = Math.round(uPnl * _bankroll / 100);
     const pnlDisplay = showKellyDollar
       ? (kellyDollar >= 0 ? '+$' : '-$') + Math.abs(kellyDollar).toLocaleString()
       : (uPnl >= 0 ? '+' : '') + uPnl.toFixed(1) + 'u';
@@ -3029,7 +3029,7 @@ function render(data, hist, scores = {}, perf = null) {
     const _avgKU    = main.length ? _totalKU / main.length : 0;
     const _bPct     = (_totalKU / 10 * 100).toFixed(1);
     const _dollarPart = _bankroll > 0
-      ? `<div class="tas-div"></div><div class="tas-stat"><div class="tas-val" style="color:var(--green)">$${Math.round(_totalKU * _bankroll / 10).toLocaleString()}</div><div class="tas-sub">total stake</div></div>`
+      ? `<div class="tas-div"></div><div class="tas-stat"><div class="tas-val" style="color:var(--green)">$${Math.round(_totalKU * _bankroll / 100).toLocaleString()}</div><div class="tas-sub">total stake</div></div>`
       : '';
     const actionStripHTML = _totalKU > 0 ? `
       <div class="today-action-strip">
