@@ -1395,7 +1395,10 @@ function _onBankrollChange(val) {
   localStorage.setItem('fairline_bankroll', String(_bankroll));
   refreshKellyUSD();
   refreshPersonalTracker();
-  _updatePhbHelper();
+  // Re-render header so Kelly P&L dollar amount updates live
+  if (_todayDataRef && _histDataRef) {
+    renderPicksHeaderBlock(_todayDataRef, _histDataRef);
+  }
 }
 
 function _updatePhbHelper() {
@@ -2754,6 +2757,16 @@ function render(data, hist, scores = {}, perf = null) {
     const uCol  = uPnl  >= 0 ? 'green' : 'red';
     const roiCol = (seasonRoi || 0) >= 0 ? 'green' : 'red';
 
+    // Kelly P&L: show in dollars when bankroll is set, units otherwise
+    const showKellyDollar = isKelly && _bankroll > 0;
+    const kellyDollar = Math.round(uPnl * _bankroll / 10);
+    const pnlDisplay = showKellyDollar
+      ? (kellyDollar >= 0 ? '+$' : '-$') + Math.abs(kellyDollar).toLocaleString()
+      : (uPnl >= 0 ? '+' : '') + uPnl.toFixed(1) + 'u';
+    const pnlSublabel = showKellyDollar
+      ? `at $${_bankroll.toLocaleString()} bankroll`
+      : isKelly ? 'half-Kelly units' : 'flat $100/bet';
+
     // CLV — always flat
     const clvStr  = data.avg_clv != null
       ? (data.avg_clv >= 0 ? '+' : '') + (data.avg_clv * 100).toFixed(2) + '%' : null;
@@ -2791,13 +2804,14 @@ function render(data, hist, scores = {}, perf = null) {
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
             <span class="phb-stat-label">${isKelly ? 'Kelly P&L' : 'P&L (flat)'}</span>
-            <span class="phb-stat-val ${uCol}">${uPnl >= 0 ? '+' : ''}${uPnl.toFixed(1)}u</span>
+            <span class="phb-stat-val ${uCol}">${pnlDisplay}</span>
+            <span class="phb-stat-sub">${pnlSublabel}</span>
           </div>
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
             <span class="phb-stat-label">ROI / Bet</span>
             <span class="phb-stat-val ${roiCol}">${seasonRoi != null ? (seasonRoi >= 0 ? '+' : '') + (seasonRoi * 100).toFixed(1) + '%' : '—'}</span>
-            <span class="phb-stat-sub">${flatSeason.bets || ''} bets</span>
+            <span class="phb-stat-sub">${flatSeason.bets || ''} bets · ${isKelly ? 'Kelly-sized' : 'flat'}</span>
           </div>
           ${clvStr ? `
           <div class="phb-vdivider"></div>
