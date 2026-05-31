@@ -435,7 +435,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
         <input class="threshold-input" id="threshold-input" type="number" min="0" max="20" step="0.5" value="0" autocomplete="off">
         <span class="threshold-pct">%</span>
       </div>
-      <button class="filter-btn" id="pnl-toggle-btn" onclick="togglePnlMode()" title="Toggle P&L between units and dollars">P&L: Units</button>
+      <button class="filter-btn" id="pnl-toggle-btn" onclick="togglePnlMode()" title="Cycle: Flat Units → Kelly Units → Dollar amounts">P&L: Flat</button>
       <button class="filter-btn" id="csv-export-btn" style="margin-left:auto" onclick="exportCSV()">📥 Export CSV</button>
     </div>
 
@@ -464,8 +464,17 @@ let activeFilter = 'all';
 let activeMonth = 'all';
 let activeSearch = '';
 let activeThreshold = 0;   // minimum edge (0 = no filter)
-let pnlMode = 'units';     // 'units' or 'dollars'
-const _unitSize = parseFloat(localStorage.getItem('fairline_unit_size') || '0');
+let pnlMode = 'units';     // 'units' | 'kelly' | 'dollars'
+let _flatPnlCurve = [];   // preserved so we can rerender without re-fetching
+// Use fairline_bankroll (set on the Picks page). Legacy migration: if the old
+// fairline_unit_size key exists, convert it (unit_size × 10 = bankroll).
+const _bankroll = (() => {
+  const b = parseFloat(localStorage.getItem('fairline_bankroll') || '0');
+  if (b > 0) return b;
+  const u = parseFloat(localStorage.getItem('fairline_unit_size') || '0');
+  return u > 0 ? u * 10 : 0;
+})();
+const _unitSize = _bankroll / 10;  // kept for any legacy references
 
 // formatOdds, pct → fairline-utils.js
 
@@ -580,8 +589,9 @@ async function loadAll() {
       renderTodayTracking(today.picks.filter(pk => (pk.edge || 0) >= 0.02), scores);
     }
 
+    _flatPnlCurve = pnlCurve;   // store flat curve for mode switching
     renderSummary(allRows);
-    renderCurve(pnlCurve);
+    renderCurve(_activeCurve(allRows));
     renderRollingWinRate(allRows);
     renderBreakdowns(allRows);
     renderCalibration(allRows);
@@ -618,15 +628,22 @@ function renderSummary(rows) {
   const settled  = rows.filter(r => r.result === 'W' || r.result === 'L');
   const wins     = settled.filter(r => r.result === 'W').length;
   const losses   = settled.filter(r => r.result === 'L').length;
-  const totalPnl = settled.reduce((s, r) => s + (r.pnl_u || 0), 0);
-  const roi      = settled.length > 0 ? totalPnl / settled.length : 0;
+  // Flat P&L: each bet = 1 flat unit ($100)
+  // Kelly P&L: each bet = kelly_units (varies by edge); ROI = total / staked
+  const flatPnl   = settled.reduce((s, r) => s + (r.pnl_u || 0), 0);
+  const kellyPnl  = settled.reduce((s, r) => s + (r.kelly_units || 1) * (r.pnl_u || 0), 0);
+  const kellyStaked = settled.reduce((s, r) => s + (r.kelly_units || 1), 0);
+  const totalPnl  = pnlMode === 'kelly' ? kellyPnl : flatPnl;
+  const roi       = pnlMode === 'kelly'
+    ? (kellyStaked > 0 ? kellyPnl / kellyStaked : 0)
+    : (settled.length > 0 ? flatPnl / settled.length : 0);
   const clvRows  = rows.filter(r => r.clv != null);
   const avgClv   = clvRows.length > 0 ? clvRows.reduce((s, r) => s + r.clv, 0) / clvRows.length : null;
   const winRate  = settled.length > 0 ? wins / settled.length : null;
 
   document.getElementById('summary-row').innerHTML = `
     <div class="stat-pill"><div class="stat-lbl">2026 Record</div><div class="stat-val white">${wins}W–${losses}L</div><div class="stat-sub">${settled.length} bets</div></div>
-    <div class="stat-pill"><div class="stat-lbl">Total P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${_fmtPnl(totalPnl)}</div><div class="stat-sub">${pnlMode==='dollars'&&_unitSize>0?`1u=$${_unitSize}`:'flat $100/bet'}</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Total P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${_fmtPnl(totalPnl)}</div><div class="stat-sub">${pnlMode==='kelly'?'half-Kelly sized':pnlMode==='dollars'&&_bankroll>0?`$${_bankroll} bankroll`:'flat $100/bet'}</div></div>
     <div class="stat-pill"><div class="stat-lbl">ROI / Bet</div><div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${pct(roi)}</div><div class="stat-sub">per settled bet</div></div>
     <div class="stat-pill"><div class="stat-lbl">Win Rate</div><div class="stat-val white">${winRate != null ? (winRate*100).toFixed(1)+'%' : '—'}</div><div class="stat-sub">~52% break-even</div></div>
     ${avgClv != null ? `<div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${avgClv >= 0 ? 'green' : 'red'}">${pct(avgClv)}</div><div class="stat-sub">n=${clvRows.length}</div></div>` : ''}
@@ -894,7 +911,7 @@ function renderTable(rows) {
     const clvCls = r.clv == null ? 'clv-neu' : r.clv >= 0 ? 'clv-pos' : 'clv-neg';
     const edgeStr = r.edge != null ? '+' + (r.edge * 100).toFixed(1) + '%' : '—';
     const probStr = r.model_prob != null ? (r.model_prob * 100).toFixed(1) + '%' : '—';
-    const pnlStr  = r.pnl_u != null ? _fmtPnl(r.pnl_u) : '—';
+    const pnlStr  = r.pnl_u != null ? _fmtPnl(r.pnl_u, r) : '—';
     const clvStr  = r.clv != null ? pct(r.clv)
       : '<abbr title="CLV not captured — game may have been a day game settled before the 3:30 PM CT closing line snapshot" style="text-decoration:none;cursor:help">—</abbr>';
     const dateStr = r.date ? (() => { try { return new Date(r.date + 'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}); } catch(e){ return r.date; } })() : '—';
@@ -1336,27 +1353,60 @@ document.getElementById('search-input').addEventListener('input', e => {
   renderTable(allRows);
 });
 
-// ── P&L mode toggle (units ↔ dollars) ────────────────────────────────────────
+// ── Kelly P&L curve helper ────────────────────────────────────────────────────
+// Computes a cumulative Kelly-sized P&L curve from the rows array.
+// Each pick's contribution = kelly_units × pnl_u (pnl_u already encodes the
+// odds: +1.5 for a +150 win, -1.0 for any loss, etc.).
+function _computeKellyCurve(rows) {
+  const settled = rows
+    .filter(r => (r.result === 'W' || r.result === 'L') && r.pnl_u != null)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  let cum = 0;
+  return settled.map(r => {
+    const stake = r.kelly_units != null ? r.kelly_units : 1;
+    cum = Math.round((cum + stake * r.pnl_u) * 1000) / 1000;
+    return cum;
+  });
+}
+
+function _activeCurve(rows) {
+  return pnlMode === 'kelly' ? _computeKellyCurve(rows) : _flatPnlCurve;
+}
+
+// ── P&L mode toggle: Flat Units → Kelly Units → Dollar amounts ────────────────
 function togglePnlMode() {
-  pnlMode = pnlMode === 'units' ? 'dollars' : 'units';
+  const cycle = ['units', 'kelly', 'dollars'];
+  pnlMode = cycle[(cycle.indexOf(pnlMode) + 1) % cycle.length];
   const btn = document.getElementById('pnl-toggle-btn');
   if (btn) {
-    if (pnlMode === 'dollars') {
-      btn.textContent = _unitSize > 0 ? `P&L: $ (1u=$${_unitSize})` : 'P&L: $ (set unit size on Picks)';
+    if (pnlMode === 'kelly') {
+      btn.textContent = 'P&L: Kelly';
+      btn.classList.add('active');
+    } else if (pnlMode === 'dollars') {
+      btn.textContent = _bankroll > 0 ? `P&L: $ ($${_bankroll.toLocaleString()})` : 'P&L: $ (set bankroll)';
       btn.classList.add('active');
     } else {
-      btn.textContent = 'P&L: Units';
+      btn.textContent = 'P&L: Flat';
       btn.classList.remove('active');
     }
   }
   renderTable(allRows);
   renderSummary(allRows);
+  renderCurve(_activeCurve(allRows));
 }
 
-function _fmtPnl(pnl_u) {
+// ── Format a P&L value based on current mode ─────────────────────────────────
+// row (optional): the pick row — needed in 'kelly' mode to get kelly_units.
+function _fmtPnl(pnl_u, row = null) {
   if (pnl_u == null) return '—';
-  if (pnlMode === 'dollars' && _unitSize > 0) {
-    const dollars = Math.round(pnl_u * _unitSize);
+
+  if (pnlMode === 'kelly') {
+    const stake = (row && row.kelly_units != null) ? row.kelly_units : 1;
+    const kPnl  = stake * pnl_u;
+    return (kPnl >= 0 ? '+' : '') + kPnl.toFixed(2) + 'u';
+  }
+  if (pnlMode === 'dollars' && _bankroll > 0) {
+    const dollars = Math.round(pnl_u * _bankroll / 10);
     return (dollars >= 0 ? '+$' : '-$') + Math.abs(dollars).toLocaleString();
   }
   return (pnl_u >= 0 ? '+' : '') + pnl_u.toFixed(1) + 'u';
