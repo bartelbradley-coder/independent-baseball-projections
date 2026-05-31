@@ -2867,13 +2867,7 @@ function render(data, hist, scores = {}, perf = null) {
       ? (data.avg_clv >= 0 ? '+' : '') + (data.avg_clv * 100).toFixed(2) + '%' : null;
     const clvCol  = (data.avg_clv || 0) >= 0 ? 'green' : 'red';
 
-    // Streak
-    const streak = computeStreak(hist);
-    const streakHTML = streak
-      ? `<div class="phb-streak">
-           <span class="phb-streak-lbl">Streak</span>
-           <span class="phb-streak-val ${streak.dir}">${streak.dir}${streak.count}</span>
-         </div>` : '';
+    // Streak removed from Row 1 per user request
 
     // Today's in-play results chip (preserved, hidden until picks settle)
     const todayChip = `<div class="today-chip" id="today-score-tally" style="display:none">
@@ -2923,7 +2917,6 @@ function render(data, hist, scores = {}, perf = null) {
           </div>` : ''}
           <div class="phb-right-group">
             ${todayChip}
-            ${streakHTML}
           </div>
         </div>
 
