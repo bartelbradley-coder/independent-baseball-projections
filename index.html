@@ -1045,6 +1045,7 @@
 }
 .phb-stat-val.green { color: var(--green); }
 .phb-stat-val.red   { color: var(--red);   }
+.phb-stat-val.muted { color: var(--text-4); font-size: 16px; }
 .phb-stat-sub {
   font-size: 9px; color: var(--text-4); margin-top: 2px;
 }
@@ -2757,15 +2758,33 @@ function render(data, hist, scores = {}, perf = null) {
     const uCol  = uPnl  >= 0 ? 'green' : 'red';
     const roiCol = (seasonRoi || 0) >= 0 ? 'green' : 'red';
 
-    // Kelly P&L: show in dollars when bankroll is set, units otherwise
-    const showKellyDollar = isKelly && _bankroll > 0;
-    const kellyDollar = Math.round(uPnl * _bankroll / 100);
-    const pnlDisplay = showKellyDollar
-      ? (kellyDollar >= 0 ? '+$' : '-$') + Math.abs(kellyDollar).toLocaleString()
-      : (uPnl >= 0 ? '+' : '') + uPnl.toFixed(1) + 'u';
-    const pnlSublabel = showKellyDollar
-      ? `at $${_bankroll.toLocaleString()} bankroll`
-      : isKelly ? 'half-Kelly units' : 'flat $100/bet';
+    // P&L — always in units for consistency
+    const pnlDisplay  = (uPnl >= 0 ? '+' : '') + uPnl.toFixed(1) + 'u';
+    const pnlLabel    = isKelly ? 'Kelly P&L' : 'P&L (flat)';
+    const pnlSublabel = isKelly ? 'half-Kelly sized' : 'flat $100/bet';
+
+    // Total $ — separate metric, mode-aware
+    // Flat:  pnl_units × $100 (each flat bet is always $100)
+    // Kelly: kelly_pnl_units × bankroll ÷ 100 (1 Kelly unit = 1% of bankroll)
+    let totalDollarStr, totalDollarSub, totalDollarCol;
+    if (isKelly) {
+      if (_bankroll > 0) {
+        const d = Math.round(uPnl * _bankroll / 100);
+        totalDollarStr = (d >= 0 ? '+$' : '-$') + Math.abs(d).toLocaleString();
+        totalDollarSub = `at $${_bankroll.toLocaleString()} bankroll`;
+        totalDollarCol = d >= 0 ? 'green' : 'red';
+      } else {
+        totalDollarStr = '—';
+        totalDollarSub = 'enter bankroll above';
+        totalDollarCol = 'muted';
+      }
+    } else {
+      // Flat: pnl_u × $100 (the flat bet size)
+      const d = Math.round(uPnl * 100);
+      totalDollarStr = (d >= 0 ? '+$' : '-$') + Math.abs(d).toLocaleString();
+      totalDollarSub = 'at $100/bet';
+      totalDollarCol = d >= 0 ? 'green' : 'red';
+    }
 
     // CLV — always flat
     const clvStr  = data.avg_clv != null
@@ -2785,11 +2804,11 @@ function render(data, hist, scores = {}, perf = null) {
       <div class="tc-val">—</div><div class="tc-lbl">Today</div>
     </div>`;
 
-    // Helper text
+    // Row 2 helper text
     const helperText = _indexPnlMode === 'flat'
-      ? 'Each pick sized at <strong>$100 flat</strong> regardless of edge size.'
+      ? 'Each pick sized at <strong>$100 flat</strong> · set bankroll to see Kelly sizing'
       : _bankroll > 0
-        ? `Half-Kelly stakes · dollar amounts shown on each pick card`
+        ? `Kelly amounts shown on each pick card · 1u = $${(_bankroll / 100).toLocaleString()}`
         : 'Enter your bankroll to see <strong>Kelly dollar amounts</strong> on each pick.';
 
     container.innerHTML = `
@@ -2803,9 +2822,15 @@ function render(data, hist, scores = {}, perf = null) {
           </div>
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
-            <span class="phb-stat-label">${isKelly ? 'Kelly P&L' : 'P&L (flat)'}</span>
+            <span class="phb-stat-label">${pnlLabel}</span>
             <span class="phb-stat-val ${uCol}">${pnlDisplay}</span>
             <span class="phb-stat-sub">${pnlSublabel}</span>
+          </div>
+          <div class="phb-vdivider"></div>
+          <div class="phb-stat-group">
+            <span class="phb-stat-label">Total $</span>
+            <span class="phb-stat-val ${totalDollarCol}">${totalDollarStr}</span>
+            <span class="phb-stat-sub">${totalDollarSub}</span>
           </div>
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
