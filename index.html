@@ -2574,21 +2574,31 @@ function render(data, hist, scores = {}, perf = null) {
     const strip = document.getElementById('record-strip');
     if (!strip) return;
 
-    // Choose stat source based on P&L mode
-    const isKelly = _indexPnlMode === 'kelly';
+    // W-L counts and bet totals NEVER change between modes — same picks, different sizing.
+    // Only units and ROI swap when Kelly mode is active.
+    const isKelly  = _indexPnlMode === 'kelly';
     const ks = isKelly && hist && hist.rows
       ? _kellyStatsFromHist(hist.rows) : null;
-    const season = isKelly && ks ? ks.season : data.season;
-    const last30 = isKelly && ks ? ks.last30  : data.last30;
-    const last7  = isKelly && ks ? ks.last7   : data.last7;
+
+    // Always pull W-L and bet counts from today.json (data) — the authoritative source.
+    // Kelly mode only replaces units and ROI.
+    const flatSeason = data.season || {};
+    const flatLast30 = data.last30  || {};
+    const flatLast7  = data.last7   || {};
+
+    const seasonUnits = isKelly && ks ? ks.season.units : (flatSeason.units || 0);
+    const seasonRoi   = isKelly && ks ? ks.season.roi   : flatSeason.roi;
+    const last30Units = isKelly && ks ? ks.last30.units  : (flatLast30.units || 0);
+    const last7Units  = isKelly && ks ? ks.last7.units   : (flatLast7.units  || 0);
+    const last7Roi    = isKelly && ks ? ks.last7.roi     : (flatLast7.roi    || 0);
 
     let stripHTML = '';
-    if (season) {
-      const u = season.units || 0;
+    if (data.season) {
+      const u = seasonUnits;
       const modeSub = isKelly ? 'half-Kelly sized' : 'flat $100/bet';
       stripHTML += `<div class="stat-pill">
         <div class="stat-lbl">2026 Season</div>
-        <div class="stat-val white">${season.wins}W–${season.losses}L</div>
+        <div class="stat-val white">${flatSeason.wins}W–${flatSeason.losses}L</div>
         <div class="stat-sub">${u >= 0 ? '+' : ''}${u.toFixed(1)}u <span style="opacity:0.6">${isKelly ? '· Kelly' : ''}</span></div>
       </div>`;
 
@@ -2604,33 +2614,29 @@ function render(data, hist, scores = {}, perf = null) {
         </div>`;
       }
 
-      if (last7 && last7.bets > 0) {
-        const u7   = last7.units || 0;
-        const roi7 = last7.roi   || 0;
+      if (flatLast7.bets > 0) {
+        const u7   = last7Units;
+        const roi7 = last7Roi;
         stripHTML += `<div class="stat-pill" style="cursor:pointer" onclick="toggleWeekStrip()" title="Click to see this week's picks">
           <div class="stat-lbl">Last 7 Days ▾</div>
-          <div class="stat-val ${u7 >= 0 ? 'green' : 'red'}">${last7.wins}W–${last7.losses}L</div>
+          <div class="stat-val ${u7 >= 0 ? 'green' : 'red'}">${flatLast7.wins}W–${flatLast7.losses}L</div>
           <div class="stat-sub">${u7 >= 0 ? '+' : ''}${u7.toFixed(1)}u · ${roi7 >= 0 ? '+' : ''}${(roi7 * 100).toFixed(0)}% ROI</div>
         </div>`;
       }
-      if (last30) {
-        const u30 = last30.units || 0;
+      if (data.last30) {
+        const u30 = last30Units;
         stripHTML += `<div class="stat-pill">
           <div class="stat-lbl">Last 30</div>
-          <div class="stat-val ${u30 >= 0 ? 'green' : 'red'}">${last30.wins}–${last30.losses}</div>
+          <div class="stat-val ${u30 >= 0 ? 'green' : 'red'}">${flatLast30.wins}–${flatLast30.losses}</div>
           <div class="stat-sub">${u30 >= 0 ? '+' : ''}${u30.toFixed(1)}u</div>
         </div>`;
       }
-      if (season.roi != null) {
-        const roi = season.roi;
-        // Always use data.season.bets for the count — both modes track the same
-        // picks, just sized differently. Kelly mode's ks.season.bets differs
-        // because history.json excludes AVOID picks that today.json includes.
-        const betCount = (data.season && data.season.bets) || season.bets || '';
+      if (seasonRoi != null) {
+        const roi = seasonRoi;
         stripHTML += `<div class="stat-pill roi-pill">
           <div class="stat-lbl">Season ROI</div>
           <div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${roi >= 0 ? '+' : ''}${(roi * 100).toFixed(1)}%</div>
-          <div class="stat-sub">${betCount} bets · ${modeSub}</div>
+          <div class="stat-sub">${flatSeason.bets || ''} bets · ${modeSub}</div>
         </div>`;
       }
 
