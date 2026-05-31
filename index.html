@@ -1011,6 +1011,127 @@
 @media (max-width: 520px) {
   .other-markets-body.open { grid-template-columns: 1fr; }
 }
+
+/* ── Picks header block (replaces record strip + CLV banner + bankroll widget) ── */
+.phb-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+/* Row 1 — performance stats */
+.phb-stats-row {
+  display: flex; align-items: center; gap: 0;
+  padding: 14px 18px; flex-wrap: wrap; row-gap: 10px;
+}
+.phb-stat-group {
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 0 18px 0 0; min-width: 0;
+}
+.phb-stat-group:first-child { padding-left: 0; }
+.phb-stat-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-4); margin-bottom: 3px;
+  display: flex; align-items: center; gap: 3px;
+}
+.phb-stat-record {
+  font-family: 'Oswald', sans-serif; font-size: 18px;
+  font-weight: 700; color: var(--text-1); line-height: 1;
+}
+.phb-stat-val {
+  font-family: 'Oswald', sans-serif; font-size: 18px;
+  font-weight: 700; line-height: 1;
+}
+.phb-stat-val.green { color: var(--green); }
+.phb-stat-val.red   { color: var(--red);   }
+.phb-stat-sub {
+  font-size: 9px; color: var(--text-4); margin-top: 2px;
+}
+.phb-vdivider {
+  width: 1px; height: 32px; background: var(--border);
+  margin: 0 18px 0 0; flex-shrink: 0; align-self: center;
+}
+.phb-right-group {
+  display: flex; align-items: center; gap: 10px;
+  margin-left: auto; flex-shrink: 0;
+}
+/* Row 2 — sizing controls */
+.phb-sizing-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 18px; border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+/* Segmented toggle */
+.phb-toggle {
+  display: flex; align-items: center;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border); border-radius: 7px;
+  padding: 2px; gap: 2px; flex-shrink: 0;
+}
+.phb-tog {
+  padding: 5px 14px; border-radius: 5px; border: none;
+  font-size: 11px; font-weight: 600; cursor: pointer;
+  background: transparent; color: var(--text-4);
+  transition: all 0.15s; white-space: nowrap; font-family: inherit;
+}
+.phb-tog:hover { color: var(--text-2); }
+.phb-tog.active {
+  background: var(--bg-card);
+  color: var(--text-1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  border: 1px solid var(--border);
+}
+/* Bankroll input */
+.phb-bankroll {
+  display: flex; align-items: center; gap: 7px; flex-shrink: 0;
+}
+.phb-bk-label {
+  font-size: 10px; font-weight: 600; color: var(--text-3);
+  white-space: nowrap;
+}
+.phb-bk-input-wrap {
+  display: flex; align-items: center; gap: 2px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 3px 8px;
+}
+.phb-bk-input-wrap:focus-within {
+  border-color: rgba(99,102,241,0.4);
+}
+.phb-bk-dollar { font-size: 11px; color: var(--text-4); }
+.phb-bk-input {
+  background: transparent; border: none; outline: none;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: var(--text-2); width: 72px; text-align: right;
+}
+.phb-bk-input::placeholder { color: var(--text-4); }
+/* Helper text */
+.phb-helper {
+  font-size: 10px; color: var(--text-4); font-style: italic;
+  flex: 1; min-width: 0;
+}
+.phb-helper strong { color: var(--indigo-lt); font-style: normal; font-weight: 600; }
+/* Streak mini-chip inside phb */
+.phb-streak {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 4px 10px; background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border); border-radius: 6px;
+}
+.phb-streak-lbl { font-size: 7.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); }
+.phb-streak-val { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700; line-height: 1.1; }
+.phb-streak-val.W { color: var(--green); }
+.phb-streak-val.L { color: var(--red); }
+/* Kelly mode: bankroll grays out in flat mode */
+.phb-bankroll.flat-mode .phb-bk-label,
+.phb-bankroll.flat-mode .phb-bk-dollar { opacity: 0.45; }
+@media (max-width: 600px) {
+  .phb-stats-row { padding: 12px 14px; }
+  .phb-stat-group { padding-right: 12px; }
+  .phb-vdivider { margin-right: 12px; }
+  .phb-sizing-row { padding: 8px 14px; gap: 10px; }
+  .phb-helper { display: none; }
+}
 </style>
 </head>
 <body>
@@ -1078,16 +1199,8 @@
     <div class="page-subtitle">Dual-Poisson model · <span id="games-scanned">—</span> games scanned · <span id="signal-count">—</span> cleared 2% threshold · edge vs. no-vig Pinnacle</div>
   </div>
 
-  <!-- Record strip (includes season stats, streak, sparkline) -->
-  <div class="record-strip" id="record-strip"></div>
-  <!-- CLV validation banner — rendered by JS when avg_clv data is available -->
-  <div id="clv-banner-container"></div>
-  <!-- Week-at-a-Glance strip — rendered by JS from last7 + week_picks data -->
-  <div id="week-strip-container"></div>
-  <div class="freshness-row" id="freshness-row" style="display:none">
-    <span class="freshness-item" id="fr-model-run"></span>
-  </div>
-  <div id="perf-charts"></div>
+  <!-- Picks header block: performance stats + sizing controls -->
+  <div id="picks-header-block"></div>
 
   <!-- Market-informed model clarification (collapsible) -->
   <details class="methodology-note">
@@ -1107,14 +1220,6 @@
     <strong>Picks post daily by 9:30 AM CT.</strong>
     Starting pitcher info and odds are captured at model run time — always verify current starters and lines before betting.
     <span id="games-scanned-strip"></span>
-  </div>
-
-  <!-- Bankroll calculator widget -->
-  <div class="bankroll-widget" id="bankroll-widget">
-    <span class="bw-label">💰 Bankroll:</span>
-    <span style="color:var(--text-3)">$</span>
-    <input class="bw-input" id="unit-size-input" type="number" min="0" step="100" placeholder="5000">
-    <span class="bw-hint">→ Kelly dollar stakes auto-calculate on each pick card (half-Kelly % of bankroll)</span>
   </div>
 
   <!-- Correlated picks warning -->
@@ -1166,6 +1271,12 @@
     <div class="sec-lbl">Yesterday's Results</div>
     <div class="card" style="padding:0;overflow:hidden" id="yesterday-card"></div>
   </div>
+
+  <!-- Week-at-a-Glance — moved below picks -->
+  <div id="week-strip-container"></div>
+
+  <!-- Performance charts — moved below picks -->
+  <div id="perf-charts" style="margin-bottom:16px"></div>
 
   <!-- TRANSPARENCY STANDARDS -->
   <section class="transparency-section">
@@ -1276,19 +1387,46 @@ function shareAllPicks() {
 }
 
 // Bankroll widget init
-window.addEventListener('DOMContentLoaded', () => {
-  const inp = document.getElementById('unit-size-input');
-  if (inp) {
-    if (_bankroll > 0) inp.value = _bankroll;
-    inp.addEventListener('input', () => {
-      _bankroll  = parseFloat(inp.value) || 0;
-      _unitSize  = _bankroll / 10;   // keep derived value in sync
-      localStorage.setItem('fairline_bankroll', String(_bankroll));
-      refreshKellyUSD();
-      refreshPersonalTracker();
-    });
+// _onBankrollChange: called whenever the bankroll input in the header block changes.
+// Syncs _bankroll, updates Kelly badge amounts on pick cards, and re-renders helper text.
+function _onBankrollChange(val) {
+  _bankroll = parseFloat(val) || 0;
+  _unitSize = _bankroll / 10;
+  localStorage.setItem('fairline_bankroll', String(_bankroll));
+  refreshKellyUSD();
+  refreshPersonalTracker();
+  _updatePhbHelper();
+}
+
+function _updatePhbHelper() {
+  const el = document.getElementById('phb-helper-text');
+  const bkWrap = document.getElementById('phb-bankroll-wrap');
+  if (!el) return;
+  if (_indexPnlMode === 'flat') {
+    el.innerHTML = 'Each pick sized at <strong>$100 flat</strong> regardless of edge size.';
+    if (bkWrap) bkWrap.classList.add('flat-mode');
+  } else if (_bankroll > 0) {
+    // Find a representative kelly_units from today's picks to show the conversion
+    const samplePick = Object.values(picksMap).find(p => p.kelly_units);
+    const exUnits = samplePick ? samplePick.kelly_units.toFixed(1) : '1.3';
+    const exDollar = samplePick ? Math.round(samplePick.kelly_units * _bankroll / 10) : Math.round(1.3 * _bankroll / 10);
+    el.innerHTML = `<strong>${exUnits}u Half-Kelly = $${exDollar}</strong> at $${_bankroll.toLocaleString()} bankroll`;
+    if (bkWrap) bkWrap.classList.remove('flat-mode');
+  } else {
+    el.innerHTML = 'Enter your bankroll to see <strong>Kelly dollar amounts</strong> on each pick.';
+    if (bkWrap) bkWrap.classList.remove('flat-mode');
   }
-  refreshPersonalTracker(); // show any saved bets from earlier in the day
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  // Bankroll input is now in the picks-header-block (rendered by JS after data loads).
+  // Use event delegation on the page container instead of direct getElementById.
+  document.getElementById('picks')?.addEventListener('input', e => {
+    if (e.target.id === 'phb-bankroll-input') {
+      _onBankrollChange(e.target.value);
+    }
+  });
+  refreshPersonalTracker();
 });
 
 function refreshKellyUSD() {
@@ -1536,19 +1674,23 @@ function _kellyStatsFromHist(histRows) {
   };
 }
 
-function toggleIndexPnlMode() {
-  _indexPnlMode = _indexPnlMode === 'flat' ? 'kelly' : 'flat';
-  const btn = document.getElementById('idx-pnl-toggle');
-  if (btn) {
-    btn.textContent = _indexPnlMode === 'kelly' ? 'Kelly' : 'Flat';
-    btn.classList.toggle('active', _indexPnlMode === 'kelly');
-  }
+// setPicksPnlMode: called by the header block toggle buttons.
+function setPicksPnlMode(mode) {
+  _indexPnlMode = mode;
+  // Update segmented toggle button states
+  const flatBtn  = document.getElementById('phb-flat-btn');
+  const kellyBtn = document.getElementById('phb-kelly-btn');
+  if (flatBtn)  flatBtn.classList.toggle('active',  mode === 'flat');
+  if (kellyBtn) kellyBtn.classList.toggle('active', mode === 'kelly');
+  _updatePhbHelper();
   if (_todayDataRef && _histDataRef) {
-    renderRecordStrip(_todayDataRef, _histDataRef);
-    // Also rerender week strip chips with Kelly pnl
+    renderPicksHeaderBlock(_todayDataRef, _histDataRef);
     renderWeekStrip(_todayDataRef, _histDataRef);
   }
 }
+
+// Keep old name as alias so any stray references still work
+function toggleIndexPnlMode() { setPicksPnlMode(_indexPnlMode === 'flat' ? 'kelly' : 'flat'); }
 
 // ── Main data loader ──────────────────────────────────────────────────────────
 async function loadPicks() {
@@ -2575,117 +2717,105 @@ function render(data, hist, scores = {}, perf = null) {
 
   // Record strip: season stats + streak + mini sparkline
   // Extracted into renderRecordStrip() so the Flat/Kelly toggle can re-render it.
-  window.renderRecordStrip = function(data, hist) {
-    const strip = document.getElementById('record-strip');
-    if (!strip) return;
+  window.renderRecordStrip = window.renderPicksHeaderBlock = function(data, hist) {
+    const container = document.getElementById('picks-header-block');
+    if (!container) return;
 
-    // W-L counts and bet totals NEVER change between modes — same picks, different sizing.
-    // Only units and ROI swap when Kelly mode is active.
+    // W-L counts always from data (today.json). Only units/ROI swap on Kelly toggle.
     const isKelly  = _indexPnlMode === 'kelly';
-    const ks = isKelly && hist && hist.rows
-      ? _kellyStatsFromHist(hist.rows) : null;
+    const ks = isKelly && hist && hist.rows ? _kellyStatsFromHist(hist.rows) : null;
 
-    // Always pull W-L and bet counts from today.json (data) — the authoritative source.
-    // Kelly mode only replaces units and ROI.
     const flatSeason = data.season || {};
-    const flatLast30 = data.last30  || {};
-    const flatLast7  = data.last7   || {};
+    const flatLast7  = data.last7  || {};
 
     const seasonUnits = isKelly && ks ? ks.season.units : (flatSeason.units || 0);
     const seasonRoi   = isKelly && ks ? ks.season.roi   : flatSeason.roi;
-    const last30Units = isKelly && ks ? ks.last30.units  : (flatLast30.units || 0);
-    const last7Units  = isKelly && ks ? ks.last7.units   : (flatLast7.units  || 0);
-    const last7Roi    = isKelly && ks ? ks.last7.roi     : (flatLast7.roi    || 0);
+    const uPnl  = seasonUnits;
+    const uCol  = uPnl  >= 0 ? 'green' : 'red';
+    const roiCol = (seasonRoi || 0) >= 0 ? 'green' : 'red';
 
-    let stripHTML = '';
-    if (data.season) {
-      const u = seasonUnits;
-      const modeSub = isKelly ? 'half-Kelly sized' : 'flat $100/bet';
-      stripHTML += `<div class="stat-pill">
-        <div class="stat-lbl">2026 Season</div>
-        <div class="stat-val white">${flatSeason.wins}W–${flatSeason.losses}L</div>
-        <div class="stat-sub">${u >= 0 ? '+' : ''}${u.toFixed(1)}u <span style="opacity:0.6">${isKelly ? '· Kelly' : ''}</span></div>
-      </div>`;
+    // CLV — always flat
+    const clvStr  = data.avg_clv != null
+      ? (data.avg_clv >= 0 ? '+' : '') + (data.avg_clv * 100).toFixed(2) + '%' : null;
+    const clvCol  = (data.avg_clv || 0) >= 0 ? 'green' : 'red';
 
-      // CLV — always flat, independent of P&L mode
-      if (data.avg_clv != null) {
-        const clvCls = data.avg_clv >= 0 ? 'green' : 'red';
-        const clvStr = (data.avg_clv >= 0 ? '+' : '') + (data.avg_clv * 100).toFixed(2) + '%';
-        const clvSub = data.clv_count ? `${data.clv_count} picks` : 'vs. close';
-        stripHTML += `<div class="stat-pill clv-pill">
-          <div class="stat-lbl">Avg CLV<span class="tip" data-tip="Closing Line Value: how much better our posted price is vs. the final Pinnacle no-vig line. Positive CLV is the strongest signal the model finds real edge — it means the market consistently agrees with our direction after posting.">?</span></div>
-          <div class="stat-val ${clvCls}">${clvStr}</div>
-          <div class="stat-sub">${clvSub}</div>
-        </div>`;
-      }
+    // Streak
+    const streak = computeStreak(hist);
+    const streakHTML = streak
+      ? `<div class="phb-streak">
+           <span class="phb-streak-lbl">Streak</span>
+           <span class="phb-streak-val ${streak.dir}">${streak.dir}${streak.count}</span>
+         </div>` : '';
 
-      if (flatLast7.bets > 0) {
-        const u7   = last7Units;
-        const roi7 = last7Roi;
-        stripHTML += `<div class="stat-pill" style="cursor:pointer" onclick="toggleWeekStrip()" title="Click to see this week's picks">
-          <div class="stat-lbl">Last 7 Days ▾</div>
-          <div class="stat-val ${u7 >= 0 ? 'green' : 'red'}">${flatLast7.wins}W–${flatLast7.losses}L</div>
-          <div class="stat-sub">${u7 >= 0 ? '+' : ''}${u7.toFixed(1)}u · ${roi7 >= 0 ? '+' : ''}${(roi7 * 100).toFixed(0)}% ROI</div>
-        </div>`;
-      }
-      if (data.last30) {
-        const u30 = last30Units;
-        stripHTML += `<div class="stat-pill">
-          <div class="stat-lbl">Last 30</div>
-          <div class="stat-val ${u30 >= 0 ? 'green' : 'red'}">${flatLast30.wins}–${flatLast30.losses}</div>
-          <div class="stat-sub">${u30 >= 0 ? '+' : ''}${u30.toFixed(1)}u</div>
-        </div>`;
-      }
-      if (seasonRoi != null) {
-        const roi = seasonRoi;
-        stripHTML += `<div class="stat-pill roi-pill">
-          <div class="stat-lbl">Season ROI</div>
-          <div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${roi >= 0 ? '+' : ''}${(roi * 100).toFixed(1)}%</div>
-          <div class="stat-sub">${flatSeason.bets || ''} bets · ${modeSub}</div>
-        </div>`;
-      }
-
-      // P&L mode toggle button — sits at the end of the stat pill row
-      stripHTML += `<button id="idx-pnl-toggle"
-        onclick="toggleIndexPnlMode()"
-        title="Toggle between flat $100/bet and Kelly-sized P&L"
-        class="filter-btn${isKelly ? ' active' : ''}"
-        style="font-size:10px;padding:4px 10px;align-self:center;flex-shrink:0">
-        ${isKelly ? 'Kelly' : 'Flat'}
-      </button>`;
-    }
-
-    // Today's in-play results chip
-    stripHTML += `<div class="today-chip" id="today-score-tally" style="display:none">
-      <div class="tc-val">—</div>
-      <div class="tc-lbl">Today</div>
+    // Today's in-play results chip (preserved, hidden until picks settle)
+    const todayChip = `<div class="today-chip" id="today-score-tally" style="display:none">
+      <div class="tc-val">—</div><div class="tc-lbl">Today</div>
     </div>`;
 
-    // Streak chip
-    const streak = computeStreak(hist);
-    if (streak) {
-      stripHTML += `<div class="streak-chip">
-        <div class="sc-lbl">Current streak</div>
-        <div class="sc-val ${streak.dir}">${streak.dir}${streak.count}</div>
-      </div>`;
-    }
+    // Helper text
+    const helperText = _indexPnlMode === 'flat'
+      ? 'Each pick sized at <strong>$100 flat</strong> regardless of edge size.'
+      : _bankroll > 0
+        ? `Half-Kelly stakes · dollar amounts shown on each pick card`
+        : 'Enter your bankroll to see <strong>Kelly dollar amounts</strong> on each pick.';
 
-    // Mini sparkline
-    if (hist && hist.pnl_curve && hist.pnl_curve.length >= 3) {
-      const svg = miniSparkline(hist.pnl_curve);
-      const lastVal = hist.pnl_curve[hist.pnl_curve.length - 1];
-      const col = lastVal >= 0 ? 'var(--green)' : 'var(--red)';
-      stripHTML += `<div class="sparkline-pill">
-        <div class="sp-lbl">Season P&amp;L</div>
-        ${svg}
-        <div style="font-size:9px;font-weight:600;color:${col}">${lastVal >= 0 ? '+' : ''}${lastVal.toFixed(1)}u</div>
-      </div>`;
-    }
+    container.innerHTML = `
+      <div class="phb-card">
 
-    strip.innerHTML = stripHTML;
+        <!-- Row 1: Performance stats -->
+        <div class="phb-stats-row">
+          <div class="phb-stat-group">
+            <span class="phb-stat-label">2026 Season</span>
+            <span class="phb-stat-record">${flatSeason.wins ?? '—'}W–${flatSeason.losses ?? '—'}L</span>
+          </div>
+          <div class="phb-vdivider"></div>
+          <div class="phb-stat-group">
+            <span class="phb-stat-label">${isKelly ? 'Kelly P&L' : 'P&L (flat)'}</span>
+            <span class="phb-stat-val ${uCol}">${uPnl >= 0 ? '+' : ''}${uPnl.toFixed(1)}u</span>
+          </div>
+          <div class="phb-vdivider"></div>
+          <div class="phb-stat-group">
+            <span class="phb-stat-label">ROI / Bet</span>
+            <span class="phb-stat-val ${roiCol}">${seasonRoi != null ? (seasonRoi >= 0 ? '+' : '') + (seasonRoi * 100).toFixed(1) + '%' : '—'}</span>
+            <span class="phb-stat-sub">${flatSeason.bets || ''} bets</span>
+          </div>
+          ${clvStr ? `
+          <div class="phb-vdivider"></div>
+          <div class="phb-stat-group">
+            <span class="phb-stat-label">Avg CLV<span class="tip" data-tip="Closing Line Value: how much better our posted price is vs. the final Pinnacle no-vig line. Positive CLV is the strongest signal the model finds real edge.">?</span></span>
+            <span class="phb-stat-val ${clvCol}">${clvStr}</span>
+            <span class="phb-stat-sub">${data.clv_count || ''} picks</span>
+          </div>` : ''}
+          <div class="phb-right-group">
+            ${todayChip}
+            ${streakHTML}
+          </div>
+        </div>
+
+        <!-- Row 2: Sizing controls -->
+        <div class="phb-sizing-row">
+          <div class="phb-toggle">
+            <button class="phb-tog${!isKelly ? ' active' : ''}" id="phb-flat-btn"
+              onclick="setPicksPnlMode('flat')">Flat $100</button>
+            <button class="phb-tog${isKelly ? ' active' : ''}" id="phb-kelly-btn"
+              onclick="setPicksPnlMode('kelly')">Kelly</button>
+          </div>
+          <div class="phb-bankroll${isKelly ? '' : ' flat-mode'}" id="phb-bankroll-wrap">
+            <span class="phb-bk-label">Bankroll</span>
+            <div class="phb-bk-input-wrap">
+              <span class="phb-bk-dollar">$</span>
+              <input class="phb-bk-input" id="phb-bankroll-input" type="number"
+                min="0" step="100" placeholder="5,000"
+                value="${_bankroll > 0 ? _bankroll : ''}">
+            </div>
+          </div>
+          <span class="phb-helper" id="phb-helper-text">${helperText}</span>
+        </div>
+
+      </div>`;
   }
 
-  renderRecordStrip(data, hist);
+  renderPicksHeaderBlock(data, hist);
 
   // ── CLV validation banner ────────────────────────────────────────────────
   // Rendered below the record strip. Only shown when avg_clv data is present.
@@ -2762,7 +2892,7 @@ function render(data, hist, scores = {}, perf = null) {
       </div>`;
   }
 
-  renderCLVBanner(data, perf);
+  // renderCLVBanner removed — CLV is now in the picks header block (Row 1)
 
   // ── Week-at-a-Glance strip ──────────────────────────────────────────────
   window.renderWeekStrip = function(data, hist) {
