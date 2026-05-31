@@ -4,8 +4,12 @@
 // Place that tag just before each page's own inline <script> block.
 
 // ── ESPN abbreviation map ─────────────────────────────────────────────────────
-// Model uses CHW; ESPN uses CWS. Extend here for any future mismatches.
-const ESPN_ABBR_MAP = { 'CWS': 'CHW' };
+// Maps ESPN team abbreviations → model abbreviations where they differ.
+const ESPN_ABBR_MAP = {
+  'CWS': 'CHW',   // White Sox: ESPN=CWS, model=CHW
+  'NYM': 'MET',   // Mets: ESPN=NYM, model=MET
+  'ATH': 'OAK',   // Athletics: ESPN=ATH (rebranded), model=OAK
+};
 
 // Survives transient network errors: updated on every successful fetch,
 // returned as fallback when the request fails.
