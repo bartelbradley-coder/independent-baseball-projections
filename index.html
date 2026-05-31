@@ -1472,6 +1472,12 @@ function refreshPersonalTracker() {
   }).join('');
 }
 
+// ── Week strip toggle ─────────────────────────────────────────────────────────
+function toggleWeekStrip() {
+  const el = document.getElementById('week-strip');
+  if (el) el.classList.toggle('open');
+}
+
 // ── Main data loader ──────────────────────────────────────────────────────────
 async function loadPicks() {
   try {
@@ -2645,6 +2651,62 @@ function render(data, hist, scores = {}, perf = null) {
 
   strip.innerHTML = stripHTML;
   renderCLVBanner(data, perf);
+
+  // ── Week-at-a-Glance strip ──────────────────────────────────────────────
+  function renderWeekStrip(data) {
+    const container = document.getElementById('week-strip-container');
+    if (!container) return;
+    const picks = data.week_picks || [];
+    const l7    = data.last7 || {};
+    if (!picks.length || !l7.bets) { container.innerHTML = ''; return; }
+
+    const u7     = l7.units || 0;
+    const roi7   = l7.roi   || 0;
+    const uCol   = u7 >= 0 ? 'var(--green)' : 'var(--red)';
+    const uStr   = (u7 >= 0 ? '+' : '') + u7.toFixed(1) + 'u';
+    const roiStr = (roi7 >= 0 ? '+' : '') + (roi7 * 100).toFixed(0) + '%';
+
+    // Month/day formatter
+    function fmtDate(s) {
+      if (!s) return '';
+      try {
+        const d = new Date(s + 'T12:00:00');
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      } catch(e) { return s.slice(5); }
+    }
+
+    const chips = picks.map(p => {
+      const isWin    = p.result === 'W';
+      const pnlStr   = p.pnl_u != null
+        ? (p.pnl_u >= 0 ? '+' : '') + p.pnl_u.toFixed(2) + 'u' : '';
+      const pnlCls   = p.pnl_u != null ? (p.pnl_u >= 0 ? 'pos' : 'neg') : '';
+      return `<div class="wpc ${isWin ? 'wpc-win' : 'wpc-loss'}" title="${p.game}">
+        <span class="wpc-pick">${p.pick || '—'}</span>
+        <span class="wpc-date">${fmtDate(p.date)}</span>
+        ${pnlStr ? `<span class="wpc-pnl ${pnlCls}">${pnlStr}</span>` : ''}
+        <span class="wpc-result ${p.result}">${p.result}</span>
+      </div>`;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="week-strip" id="week-strip">
+        <div class="week-strip-header" onclick="toggleWeekStrip()">
+          <div class="wsh-left">
+            <span class="wsh-label">Last 7 Days</span>
+            <span class="wsh-record" style="color:${uCol}">${l7.wins}W–${l7.losses}L</span>
+            <span class="wsh-units" style="color:${uCol}">${uStr}</span>
+            <span class="wsh-roi">${roiStr} ROI</span>
+          </div>
+          <span class="wsh-chevron">▼</span>
+        </div>
+        <div class="week-strip-body">
+          ${picks.length
+            ? `<div class="week-picks-grid">${chips}</div>`
+            : '<div class="week-strip-empty">No settled picks in the last 7 days.</div>'}
+        </div>
+      </div>`;
+  }
+
   renderWeekStrip(data);
 
   // Correlated warning
