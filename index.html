@@ -2410,7 +2410,7 @@ function isLiveHour() {
   const h = parseInt(new Date().toLocaleString('en-US', {
     hour: 'numeric', hour12: false, timeZone: 'America/New_York'
   }));
-  return h >= 9 && h < 23;
+  return h >= 9 && h <= 23;  // extended to midnight to catch late games
 }
 
 function startAutoRefresh() {
