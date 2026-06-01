@@ -1073,6 +1073,52 @@
 }
 .today-context .tc-sep { color: var(--border); user-select: none; }
 
+/* ── Evening preview section ─────────────────────────────────────────────────── */
+/* Tomorrow's opening-line picks — projected lineup, amber accent.               */
+.preview-section {
+  margin-bottom: 16px; padding: 0;
+  background: var(--bg-card);
+  border: 1px solid rgba(245,158,11,0.3);
+  border-left: 3px solid rgba(245,158,11,0.6);
+  border-radius: 10px; overflow: hidden;
+}
+.preview-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; cursor: pointer;
+  border-bottom: 1px solid transparent; transition: background 0.15s;
+}
+.preview-section.open .preview-header { border-bottom-color: rgba(245,158,11,0.2); }
+.preview-header:hover { background: rgba(245,158,11,0.03); }
+.preview-header-left { display: flex; flex-direction: column; gap: 2px; }
+.preview-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--amber);
+}
+.preview-subtitle { font-size: 10px; color: var(--text-4); font-style: italic; }
+.preview-chevron { font-size: 10px; color: var(--text-4); transition: transform 0.2s; }
+.preview-section.open .preview-chevron { transform: rotate(180deg); }
+.preview-body { display: none; }
+.preview-section.open .preview-body { display: block; }
+.preview-disclaimer {
+  font-size: 10px; color: var(--amber); padding: 8px 16px;
+  border-bottom: 1px solid rgba(245,158,11,0.15);
+  background: rgba(245,158,11,0.04);
+}
+.preview-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 12px;
+}
+.preview-row:last-child { border-bottom: none; }
+.preview-pick-name {
+  font-family: 'Oswald', sans-serif; font-size: 14px;
+  font-weight: 600; color: var(--text-2);
+}
+.preview-odds { font-family: 'JetBrains Mono', monospace; color: var(--amber); font-size: 12px; }
+.preview-meta { flex: 1; font-size: 10px; color: var(--text-4); min-width: 0;
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.preview-edge { font-size: 11px; font-weight: 700; color: var(--amber); flex-shrink: 0; }
+
 /* ── Evidence section (below picks, 3 evidence-based claims) ─────────────────── */
 .evidence-section {
   margin-bottom: 16px; padding: 22px;
@@ -1339,6 +1385,9 @@
     <div class="sec-lbl">Today's Picks — Live Tracking</div>
     <div class="card" style="padding:0;overflow:hidden" id="idx-tracking-card"></div>
   </div>
+
+  <!-- EVENING PREVIEW: tomorrow's opening-line picks -->
+  <div id="preview-container"></div>
 
   <!-- Yesterday's Results, Week Strip, and Performance Charts removed -->
 
@@ -1872,6 +1921,67 @@ function renderEvidenceSection(data, perf) {
     </div>`;
 }
 
+// ── Evening preview section ───────────────────────────────────────────────────
+function togglePreview() {
+  const el = document.getElementById('preview-section');
+  if (el) el.classList.toggle('open');
+}
+
+function renderPreview(preview) {
+  const container = document.getElementById('preview-container');
+  if (!container) return;
+
+  // Only show if preview.json is for tomorrow
+  if (!preview || !preview.picks || preview.picks.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().slice(0, 10);
+  if (preview.date !== tomorrowStr) {
+    container.innerHTML = '';  // stale preview — hide it
+    return;
+  }
+
+  const rows = preview.picks.map(p => {
+    const oddsStr  = p.odds ? formatOdds(p.odds) : '—';
+    const edgeStr  = p.edge ? `+${(p.edge * 100).toFixed(1)}%` : '';
+    const pitchers = [p.pitcher, p.opp_pitcher].filter(Boolean).join(' vs. ');
+    return `<div class="preview-row">
+      <div>
+        <span class="preview-pick-name">${p.pick || '—'}</span>
+        <span class="preview-odds" style="margin-left:6px">${oddsStr}</span>
+      </div>
+      <div class="preview-meta" title="${p.game}">${p.game}${pitchers ? ' · ' + pitchers : ''}</div>
+      ${edgeStr ? `<span class="preview-edge">${edgeStr}</span>` : ''}
+    </div>`;
+  }).join('');
+
+  const count = preview.picks.length;
+  const genAt = preview.generated_at || '';
+
+  container.innerHTML = `
+    <div class="section">
+      <div class="preview-section" id="preview-section">
+        <div class="preview-header" onclick="togglePreview()">
+          <div class="preview-header-left">
+            <span class="preview-title">🔭 Tomorrow's Preview · ${count} pick${count !== 1 ? 's' : ''}</span>
+            <span class="preview-subtitle">Opening line · Projected lineup · Posted ${genAt}</span>
+          </div>
+          <span class="preview-chevron">▼</span>
+        </div>
+        <div class="preview-body">
+          <div class="preview-disclaimer">
+            ⚠️ Lineups not yet confirmed. Model uses projected rosters with lineup certainty shrinkage applied.
+            Always verify starting pitchers and lineups before betting.
+          </div>
+          ${rows}
+        </div>
+      </div>
+    </div>`;
+}
+
 // ── Week strip toggle ─────────────────────────────────────────────────────────
 // ── Picks page P&L mode toggle (Flat ↔ Kelly) ────────────────────────────────
 let _indexPnlMode = 'flat';  // 'flat' | 'kelly'
@@ -1972,18 +2082,21 @@ function toggleIndexPnlMode() { setPicksPnlMode(_indexPnlMode === 'flat' ? 'kell
 async function loadPicks() {
   try {
     const v = Date.now();
-    const [todayRes, histRes, perfRes, scores] = await Promise.all([
-      fetch('data/today.json?v=' + v),
+    const [todayRes, histRes, perfRes, scores, previewRes] = await Promise.all([
+      fetch('data/today.json?v='   + v),
       fetch('data/history.json?v=' + v),
       fetch('data/performance.json?v=' + v),
       fetchESPNScores(),
+      fetch('data/preview.json?v=' + v).catch(() => null),
     ]);
-    const data = todayRes.ok ? await todayRes.json() : null;
-    const hist = histRes.ok ? await histRes.json() : null;
-    const perf = perfRes.ok ? await perfRes.json() : null;
+    const data    = todayRes.ok    ? await todayRes.json()    : null;
+    const hist    = histRes.ok     ? await histRes.json()     : null;
+    const perf    = perfRes.ok     ? await perfRes.json()     : null;
+    const preview = (previewRes && previewRes.ok) ? await previewRes.json() : null;
     _histRef = hist;
     if (data) render(data, hist, scores, perf);
     else renderEmptyState(null, hist);
+    renderPreview(preview);
   } catch (e) {
     console.error('[FairLine] loadPicks error:', e);
     document.getElementById('picks-container').innerHTML = `
