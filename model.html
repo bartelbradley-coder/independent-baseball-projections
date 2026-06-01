@@ -166,7 +166,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   </div>
   <div class="hdr-pills">
     <div class="hdr-pill p-ind">23 Live Signals</div>
-    <div class="hdr-pill p-ind">29 Log-Odds Adj.</div>
+    <div class="hdr-pill p-ind">32 Log-Odds Adj.</div>
     <div class="hdr-pill p-vio">Dual-Poisson</div>
     <div class="hdr-pill p-tea">Platt Calibrated</div>
     <div class="hdr-pill p-sla">CLV Tracked</div>
@@ -193,12 +193,12 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   </div>
   <div class="msig-cell">
     <div class="msig-lbl">Feature Layers</div>
-    <div class="msig-val">4 · 30 signals</div>
+    <div class="msig-val">4 · 33 signals</div>
     <div class="msig-sub">pitcher / sit. / market</div>
   </div>
   <div class="msig-cell">
     <div class="msig-lbl">Adjustments</div>
-    <div class="msig-val">29 log-odds</div>
+    <div class="msig-val">32 log-odds</div>
     <div class="msig-sub">logit(p) += Σ αᵢ</div>
   </div>
   <div class="msig-cell">
@@ -298,7 +298,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
         <div class="pipe-name">Log-Odds Adj.</div>
       </div>
       <div class="pipe-io">
-        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">p_base + 29 αᵢ float signals</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">p_base + 32 αᵢ float signals</div></div>
         <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">p_adj — logit(p_base)+Σαᵢ → sigmoid</div></div>
       </div>
     </div>
@@ -353,11 +353,11 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="fbox"><span class="v">λ_base</span> <span class="op">=</span> (<span class="n">0.65</span> × <span class="v">RS₃ᵧᵣ</span> <span class="op">+</span> <span class="n">0.35</span> × <span class="v">RS_L15</span>) <span class="op">/</span> <span class="v">G</span>
          × <span class="v">park_factor</span>
 <span class="cm">// RS₃ᵧᵣ: 3yr rolling RS/G · RS_L15: last 15G avg</span></div>
-      <div class="f-lbl">Log-odds stacking — 29 factors, logit space</div>
+      <div class="f-lbl">Log-odds stacking — 32 factors, logit space</div>
       <div class="fbox"><span class="fn">logit</span>(<span class="v">p</span>) <span class="op">=</span> <span class="fn">log</span>(<span class="v">p</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">−</span> <span class="v">p</span>))
 
 <span class="fn">logit</span>(<span class="v">p_adj</span>) <span class="op">=</span> <span class="fn">logit</span>(<span class="v">p_base</span>) <span class="op">+</span> <span class="fn">Σᵢ</span> <span class="v">αᵢ</span>
-<span class="cm">// 29 αᵢ ∈ ℝ · logit prevents p ∉ (0,1)</span>
+<span class="cm">// 32 αᵢ ∈ ℝ · logit prevents p ∉ (0,1)</span>
 
 <span class="v">p_adj</span> <span class="op">=</span> <span class="fn">sigmoid</span>(<span class="fn">logit</span>(<span class="v">p_adj</span>))</div>
       <div class="math-note">65/35 blend weights recent L15 performance to capture hot/cold streaks without overreacting to small samples. Park adjustment applied symmetrically to both offensive and defensive λ.</div>
@@ -374,7 +374,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="fbox"><span class="fn">P</span>(home wins) <span class="op">=</span>
   <span class="fn">Σ</span>_{k=1}^∞ <span class="fn">P</span>(<span class="v">R_home</span><span class="op">=</span><span class="v">k</span>) <span class="op">·</span> <span class="fn">CDF</span><sub>Pois</sub>(<span class="v">λ_away</span><span class="op">,</span> <span class="v">k</span><span class="op">−</span><span class="n">1</span>)
 <span class="cm">// Tie → extra innings as 50/50</span></div>
-      <div class="math-note">No Monte Carlo needed — win prob is computed exactly from Poisson CDFs. Teams are modeled as independent (no run correlation). Pitcher, park, and lineup signals enter via λ; 29 log-odds factors adjust the derived win probability directly.</div>
+      <div class="math-note">No Monte Carlo needed — win prob is computed exactly from Poisson CDFs. Teams are modeled as independent (no run correlation). Pitcher, park, and lineup signals enter via λ; 32 log-odds factors adjust the derived win probability directly.</div>
     </div>
 
     <div class="math-block ct">
@@ -485,7 +485,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
     <div class="imp-group" style="border-color:rgba(99,102,241,0.3);background:rgba(99,102,241,0.04)">
       <div class="imp-ghdr">
         <div class="imp-gtitle" style="color:var(--indigo-lt)">⚡ v2 Enhancements (2026)</div>
-        <div class="imp-gcount">11 factors · α₁₉–α₂₉</div>
+        <div class="imp-gcount">14 factors · α₁₉–α₃₂</div>
       </div>
       <div class="sig-row"><div class="sig-idx">α₂₂</div><div class="sig-name">Statcast xERA blend</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:50%;background:rgba(99,102,241,0.6)"></div></div><div class="sig-val">0.09</div></div>
       <div class="sig-row"><div class="sig-idx">α₂₇</div><div class="sig-name">Bullpen 14-day rolling xFIP</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:39%;background:rgba(99,102,241,0.6)"></div></div><div class="sig-val">0.07</div></div>
@@ -494,6 +494,9 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="sig-row"><div class="sig-idx">α₂₃</div><div class="sig-name">Times-through-order penalty</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:22%;background:rgba(99,102,241,0.6)"></div></div><div class="sig-val">0.04</div></div>
       <div class="sig-row"><div class="sig-idx">α₂₉</div><div class="sig-name">Arsenal fit score</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:17%;background:rgba(99,102,241,0.6)"></div></div><div class="sig-val">0.03</div></div>
       <div class="sig-row"><div class="sig-idx">α₂₅/₂₆</div><div class="sig-name">Opener / lineup certainty shrinkage</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:11%;background:rgba(99,102,241,0.6)"></div></div><div class="sig-val">0.02</div></div>
+      <div class="sig-row"><div class="sig-idx">α₃₀</div><div class="sig-name">Stuff+ composite (FanGraphs sp_pitching)</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:14%;background:rgba(99,102,241,0.6)"></div></div><div class="sig-val">0.02</div></div>
+      <div class="sig-row"><div class="sig-idx">α₃₂</div><div class="sig-name">Recent pitcher form — ERA last 3 starts</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:14%;background:rgba(99,102,241,0.6)"></div></div><div class="sig-val">0.02</div></div>
+      <div class="sig-row"><div class="sig-idx">α₃₁</div><div class="sig-name">Precipitation probability shrinkage</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:8%;background:rgba(99,102,241,0.6)"></div></div><div class="sig-val">0.01</div></div>
     </div>
 
   </div>
@@ -501,7 +504,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- FEATURE ENGINEERING -->
 <div class="section">
-  <div class="sec-lbl">Feature Engineering — 30 Live Signals Across 4 Layers (v2: 7 new signals added 2026)</div>
+  <div class="sec-lbl">Feature Engineering — 33 Live Signals Across 4 Layers (v2/v3: 10 new signals added 2026)</div>
   <div class="feature-grid">
 
     <div class="feat-col">
@@ -522,6 +525,8 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="feat-item"><div class="feat-name">bullpen_recent_xfip <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v2</span></div><div class="feat-desc">14-day rolling bullpen xFIP blended 30/70 with season average. Captures in-season bullpen volatility that season-long averages smooth over.</div></div>
       <div class="feat-item"><div class="feat-name">arsenal_fit <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v2</span></div><div class="feat-desc">Statcast pitch-mix matchup score (−1 to +1): how well the starter's pitch category usage (power FB, breaking, offspeed) suppresses the opposing lineup's handedness profile.</div></div>
       <div class="feat-item"><div class="feat-name">pitcher_form_slope</div><div class="feat-desc">OLS slope of xFIP over last 5 starts. Captures momentum and injury-suppressed velocity not yet in season stats.</div></div>
+      <div class="feat-item"><div class="feat-name">stuff_plus <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v3</span></div><div class="feat-desc">FanGraphs sp_pitching composite (100 = avg). Measures raw pitch quality — velocity, movement, release point — independently of outcomes. Captures elite stuff before it shows in SwStr% or xFIP.</div></div>
+      <div class="feat-item"><div class="feat-name">recent_pitcher_era <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v3</span></div><div class="feat-desc">Actual ERA over last 3 starts vs. season xFIP baseline. Captures hot/cold streaks and mechanical changes that peripheral stats deliberately strip out.</div></div>
     </div>
 
     <div class="feat-col">
@@ -537,6 +542,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="feat-item"><div class="feat-name">umpire_run_factor</div><div class="feat-desc">Historical run-impact mean per ump (142 tracked). Tight-zone umps suppress scoring; wide-zone umps inflate λ.</div></div>
       <div class="feat-item"><div class="feat-name">def_oaa_delta</div><div class="feat-desc">Savant OAA (outs above average) → runs above average vs. league mean → win probability delta.</div></div>
       <div class="feat-item"><div class="feat-name">catcher_framing_runs</div><div class="feat-desc">Savant pitch-level framing runs (called-strike prob over replacement) → run delta per game.</div></div>
+      <div class="feat-item"><div class="feat-name">precip_probability <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v3</span></div><div class="feat-desc">Open-Meteo forecast precipitation probability (0–1) at game time. Above 30%: shrinks adjustment stack up to 12%, reflecting higher environmental variance. Domed stadiums unaffected.</div></div>
     </div>
 
     <div class="feat-col">
@@ -686,7 +692,7 @@ Bias by total line:
 <!-- FOOTER -->
 <div class="footer">
   <div class="footer-l">
-    FAIRLINE MLB · Dual-Poisson Win Probability Engine · 30 Live Signals · 29 Log-Odds Adjustments · Platt Calibration · Half-Kelly Sizing · CLV Tracked<br>
+    FAIRLINE MLB · Dual-Poisson Win Probability Engine · 33 Live Signals · 32 Log-Odds Adjustments · Platt Calibration · Half-Kelly Sizing · CLV Tracked<br>
     Sources: MLB Stats API · FanGraphs · Baseball Savant · Open-Meteo · UmpScoreCards · Pinnacle (Odds API)<br>
     <span style="font-size:9px;color:#1e293b">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Never bet more than you can afford to lose. 18+ only. Bet responsibly.</span>
   </div>
