@@ -99,6 +99,17 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 
 .backtest-note { font-size: 10px; color: var(--text-4); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); line-height: 1.5; }
 
+/* Collapsible section header */
+.collapsible-header {
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none; padding: 2px 0 10px;
+}
+.collapsible-header:hover .sec-lbl { color: var(--text-2); }
+.collapsible-arrow { font-size: 11px; color: var(--text-4); transition: transform 0.2s; margin-left: 6px; flex-shrink: 0; }
+.collapsible-header.open .collapsible-arrow { transform: rotate(180deg); }
+.collapsible-body { display: none; }
+.collapsible-body.open { display: block; }
+
 /* Search input */
 .search-input {
   padding: 5px 10px;
@@ -125,14 +136,6 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 .sc-chip { width: 18px; height: 18px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; flex-shrink: 0; }
 .sc-chip.W { background: rgba(34,197,94,0.25); color: var(--green); }
 .sc-chip.L { background: rgba(239,68,68,0.2); color: var(--red); }
-
-/* Per-team table */
-.team-table { width: 100%; border-collapse: collapse; }
-.team-table th { font-size: 8.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
-.team-table th:hover { color: var(--text-3); }
-.team-table td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 12px; color: var(--text-3); }
-.team-table tr:last-child td { border-bottom: none; }
-.team-table tr:hover td { background: rgba(255,255,255,0.02); }
 
 /* ── Threshold input in filter bar ── */
 .threshold-wrap {
@@ -246,60 +249,23 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
     </ul>
   </section>
 
-  <!-- Summary pills -->
+  <!-- Summary pills + P&L mode toggle -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px">
+    <div></div>
+    <button class="filter-btn" id="pnl-toggle-btn" onclick="togglePnlMode()" title="Cycle: Flat Units → Kelly Units → Dollar amounts" style="font-size:10px">P&L: Flat</button>
+  </div>
   <div class="summary-row" id="summary-row">
     <div class="loading">Loading…</div>
   </div>
 
-  <!-- Streak + Breakdown stats (#4) -->
+  <!-- Streak + Breakdown stats (#4) — collapsible, collapsed by default -->
   <div class="section" id="breakdown-section" style="display:none">
-    <div class="sec-lbl">Streak &amp; Splits</div>
-    <div id="streak-breakdown"></div>
-  </div>
-
-  <!-- Pitcher Performance -->
-  <div class="section" id="pitcher-section" style="display:none">
-    <div class="sec-lbl">Pitcher Performance — 2026 Season (min. 3 picks)</div>
-    <div class="analytics-row">
-      <div class="card">
-        <div class="card-title">📈 Top Pitchers by ROI</div>
-        <div class="card-sub">Best-performing starters when model picks them</div>
-        <table class="edge-table" id="top-pitchers-table">
-          <thead><tr><th>Pitcher</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
-          <tbody id="top-pitchers-tbody"><tr><td colspan="5" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
-        </table>
-      </div>
-      <div class="card">
-        <div class="card-title">📉 Underperforming Pitchers</div>
-        <div class="card-sub">Starters the model over-rated this season</div>
-        <table class="edge-table" id="bot-pitchers-table">
-          <thead><tr><th>Pitcher</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
-          <tbody id="bot-pitchers-tbody"><tr><td colspan="5" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
-        </table>
-      </div>
+    <div class="collapsible-header" id="streak-toggle" onclick="toggleStreakSplits()">
+      <div class="sec-lbl" style="margin-bottom:0">Streak &amp; Splits</div>
+      <span class="collapsible-arrow" id="streak-arrow">▾</span>
     </div>
-  </div>
-
-  <!-- Per-Team Record -->
-  <div class="section" id="team-section" style="display:none">
-    <div class="sec-lbl">Performance by Team — 2026 Season (min. 3 picks)</div>
-    <div class="analytics-row">
-      <div class="card">
-        <div class="card-title">🏆 Best Teams by ROI</div>
-        <div class="card-sub">Teams the model has found the most value on</div>
-        <table class="team-table" id="top-teams-table">
-          <thead><tr><th>Team</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
-          <tbody id="top-teams-tbody"></tbody>
-        </table>
-      </div>
-      <div class="card">
-        <div class="card-title">📉 Underperforming Teams</div>
-        <div class="card-sub">Teams where model picks have underdelivered</div>
-        <table class="team-table" id="bot-teams-table">
-          <thead><tr><th>Team</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
-          <tbody id="bot-teams-tbody"></tbody>
-        </table>
-      </div>
+    <div class="collapsible-body" id="streak-body">
+      <div id="streak-breakdown"></div>
     </div>
   </div>
 
@@ -316,11 +282,13 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
       <button class="filter-btn" data-filter="value">5–8% Edge</button>
       <button class="filter-btn" data-filter="marginal-edge">2–5% Edge</button>
       <div class="filter-sep"></div>
-      <button class="filter-btn" data-filter="dog">🐶 Dogs</button>
-      <button class="filter-btn" data-filter="fav">Favs</button>
-      <div class="filter-sep"></div>
-      <button class="filter-btn" data-filter="home">Home</button>
-      <button class="filter-btn" data-filter="away">Away</button>
+      <select class="month-select" id="side-select" onchange="activeSideFilter=this.value;renderTable(allRows)" title="Filter by side">
+        <option value="all">All sides</option>
+        <option value="dog">🐶 Dogs</option>
+        <option value="fav">Favs</option>
+        <option value="home">Home</option>
+        <option value="away">Away</option>
+      </select>
       <div class="filter-sep"></div>
       <input class="search-input" id="search-input" type="text" placeholder="🔍 Team or pitcher…" autocomplete="off">
       <div class="filter-sep"></div>
@@ -329,8 +297,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
         <input class="threshold-input" id="threshold-input" type="number" min="0" max="20" step="0.5" value="0" autocomplete="off">
         <span class="threshold-pct">%</span>
       </div>
-      <button class="filter-btn" id="pnl-toggle-btn" onclick="togglePnlMode()" title="Cycle: Flat Units → Kelly Units → Dollar amounts">P&L: Flat</button>
-      <button class="filter-btn" id="csv-export-btn" style="margin-left:auto" onclick="exportCSV()">📥 Export CSV</button>
+      <button class="filter-btn" id="csv-export-btn" style="margin-left:auto" onclick="exportCSV()">⬇ CSV</button>
     </div>
 
     <div id="threshold-summary-bar" class="threshold-summary-bar" style="display:none"></div>
@@ -358,6 +325,7 @@ let activeFilter = 'all';
 let activeMonth = 'all';
 let activeSearch = '';
 let activeThreshold = 0;   // minimum edge (0 = no filter)
+let activeSideFilter = 'all';  // 'all' | 'dog' | 'fav' | 'home' | 'away'
 let pnlMode = 'units';     // 'units' | 'kelly' | 'dollars'
 // Use fairline_bankroll (set on the Picks page). Legacy migration: if the old
 // fairline_unit_size key exists, convert it (unit_size × 10 = bankroll).
@@ -427,9 +395,7 @@ async function loadAll() {
 
     renderSummary(allRows);
     renderBreakdowns(allRows);
-    // Edge tiers, Kelly ROI, Monthly ROI, CLV, P&L curve, calibration → Model Dashboard (performance.html)
-    renderTeamStats(allRows);
-    renderPitcherStats(allRows);
+    // Edge tiers, Kelly ROI, Monthly ROI, CLV, P&L curve, calibration, team/pitcher stats → Model Dashboard (performance.html)
     injectMonthFilter(allRows);
     renderTable(allRows);
     // renderRLPicks removed — RL not displayed
@@ -523,13 +489,14 @@ function getFilteredSorted(rows) {
   if (activeThreshold > 0) r = r.filter(x => (parseFloat(x.edge) || 0) >= activeThreshold);
   if (activeFilter === 'W') r = r.filter(x => x.result === 'W');
   else if (activeFilter === 'L') r = r.filter(x => x.result === 'L');
-  else if (activeFilter === 'strong')       r = r.filter(x => x.edge != null && x.edge >= 0.08);
-  else if (activeFilter === 'value')        r = r.filter(x => x.edge != null && x.edge >= 0.05 && x.edge < 0.08);
+  else if (activeFilter === 'strong')        r = r.filter(x => x.edge != null && x.edge >= 0.08);
+  else if (activeFilter === 'value')         r = r.filter(x => x.edge != null && x.edge >= 0.05 && x.edge < 0.08);
   else if (activeFilter === 'marginal-edge') r = r.filter(x => x.edge != null && x.edge >= 0.02 && x.edge < 0.05);
-  else if (activeFilter === 'dog')    r = r.filter(x => x.odds != null && x.odds > 0);
-  else if (activeFilter === 'fav')    r = r.filter(x => x.odds != null && x.odds <= 0);
-  else if (activeFilter === 'home')   r = r.filter(x => x.side && x.side.toUpperCase() === 'HOME');
-  else if (activeFilter === 'away')   r = r.filter(x => x.side && x.side.toUpperCase() === 'AWAY');
+  // Side filter (from dropdown)
+  if (activeSideFilter === 'dog')  r = r.filter(x => x.odds != null && x.odds > 0);
+  else if (activeSideFilter === 'fav')  r = r.filter(x => x.odds != null && x.odds <= 0);
+  else if (activeSideFilter === 'home') r = r.filter(x => x.side && x.side.toUpperCase() === 'HOME');
+  else if (activeSideFilter === 'away') r = r.filter(x => x.side && x.side.toUpperCase() === 'AWAY');
   if (activeMonth !== 'all') r = r.filter(x => x.date && x.date.slice(0,7) === activeMonth);
   if (activeSearch) {
     const q = activeSearch.toLowerCase();
@@ -565,9 +532,9 @@ function renderTable(rows) {
 
   const cols = [
     { key: 'date',       label: 'Date',    cls: '' },
-    { key: 'game',       label: 'Game',    cls: '' },
+    { key: 'game',       label: 'Game',    cls: 'hide-sm' },
     { key: 'pick',       label: 'Pick',    cls: '' },
-    { key: 'odds',       label: 'Odds',    cls: 'hide-sm' },
+    { key: 'odds',       label: 'Odds',    cls: '' },
     { key: 'edge',       label: 'Edge',    cls: 'hide-sm' },
     { key: 'model_prob', label: 'Model%',  cls: 'hide-sm' },
     { key: 'result',     label: 'Result',  cls: '' },
@@ -594,9 +561,9 @@ function renderTable(rows) {
     const rowClass = r.edge >= 0.08 ? 'row-strong' : r.edge >= 0.05 ? 'row-value' : '';
     return `<tr class="${rowClass}">
       <td style="color:var(--text-4);font-family:'JetBrains Mono',monospace;font-size:11px">${dateStr}</td>
-      <td style="color:var(--text-2);font-weight:500">${r.game || '—'}</td>
+      <td class="hide-sm" style="color:var(--text-2);font-weight:500">${r.game || '—'}</td>
       <td>${r.pick || '—'}</td>
-      <td class="hide-sm" style="font-family:'JetBrains Mono',monospace;font-size:11px">${formatOdds(r.odds)}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${formatOdds(r.odds)}</td>
       <td class="hide-sm" style="color:var(--amber)">${edgeStr}</td>
       <td class="hide-sm">${probStr}</td>
       <td><span class="${resultCls}">${r.result || '—'}</span></td>
@@ -702,46 +669,14 @@ function renderBreakdowns(rows) {
     </div>`;
 }
 
-// ── Per-team record ───────────────────────────────────────────────────────────
-function renderTeamStats(rows) {
-  const settled = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.pick);
-  if (settled.length === 0) return;
-
-  const map = {};
-  for (const r of settled) {
-    const t = r.pick;
-    if (!map[t]) map[t] = { w: 0, l: 0, pnl: 0 };
-    map[t].pnl += r.pnl_u || 0;
-    if (r.result === 'W') map[t].w++; else map[t].l++;
-  }
-
-  const entries = Object.entries(map)
-    .map(([name, s]) => ({ name, ...s, n: s.w + s.l, roi: s.pnl / (s.w + s.l) }))
-    .filter(e => e.n >= 3);
-
-  if (entries.length === 0) return;
-  document.getElementById('team-section').style.display = 'block';
-
-  function teamRow(e) {
-    const winPct = (e.w / e.n * 100).toFixed(0) + '%';
-    const roiCol = e.roi >= 0 ? 'pnl-pos' : 'pnl-neg';
-    const pnlCol = e.pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
-    return `<tr>
-      <td style="font-weight:600;color:var(--text-2)">${e.name}</td>
-      <td>${e.w}–${e.l}</td>
-      <td>${winPct}</td>
-      <td class="${roiCol}">${e.roi >= 0 ? '+' : ''}${(e.roi*100).toFixed(1)}%</td>
-      <td class="${pnlCol}">${e.pnl >= 0 ? '+' : ''}${e.pnl.toFixed(1)}u</td>
-    </tr>`;
-  }
-
-  const sorted = [...entries].sort((a, b) => b.roi - a.roi);
-  document.getElementById('top-teams-tbody').innerHTML =
-    sorted.slice(0, 8).map(teamRow).join('') ||
-    '<tr><td colspan="5" style="color:var(--text-4);padding:10px">Not enough data yet (min 3 picks/team).</td></tr>';
-  document.getElementById('bot-teams-tbody').innerHTML =
-    sorted.slice(-8).reverse().map(teamRow).join('') ||
-    '<tr><td colspan="5" style="color:var(--text-4);padding:10px">Not enough data yet (min 3 picks/team).</td></tr>';
+// ── Streak & Splits collapsible toggle ───────────────────────────────────────
+function toggleStreakSplits() {
+  const header = document.getElementById('streak-toggle');
+  const body   = document.getElementById('streak-body');
+  if (!header || !body) return;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
 }
 
 // ── CSV export ────────────────────────────────────────────────────────────────
@@ -795,49 +730,6 @@ function injectMonthFilter(rows) {
   const filtersEl = document.getElementById('filters');
   filtersEl.appendChild(document.createElement('div')).className = 'filter-sep';
   filtersEl.appendChild(sel);
-}
-
-// ── Pitcher performance ───────────────────────────────────────────────────────
-function renderPitcherStats(rows) {
-  const settled = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.pitcher);
-  if (settled.length === 0) return;
-
-  const map = {};
-  for (const r of settled) {
-    const name = r.pitcher;
-    if (!map[name]) map[name] = { w: 0, l: 0, pnl: 0 };
-    map[name].pnl += r.pnl_u || 0;
-    if (r.result === 'W') map[name].w++; else map[name].l++;
-  }
-
-  const entries = Object.entries(map)
-    .map(([name, s]) => ({ name, ...s, n: s.w + s.l, roi: s.pnl / (s.w + s.l) }))
-    .filter(e => e.n >= 3);
-
-  if (entries.length === 0) return;
-  document.getElementById('pitcher-section').style.display = 'block';
-
-  function pitcherRow(e) {
-    const winPct = (e.w / e.n * 100).toFixed(0) + '%';
-    const roiCls = e.roi >= 0 ? 'pnl-pos' : 'pnl-neg';
-    const uCls   = e.pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
-    return `<tr>
-      <td style="font-weight:500;color:var(--text-2)">${e.name}</td>
-      <td>${e.w}–${e.l}</td>
-      <td>${winPct}</td>
-      <td class="${roiCls}">${e.roi >= 0 ? '+' : ''}${(e.roi*100).toFixed(1)}%</td>
-      <td class="${uCls}">${e.pnl >= 0 ? '+' : ''}${e.pnl.toFixed(1)}u</td>
-    </tr>`;
-  }
-
-  const sorted = [...entries].sort((a, b) => b.roi - a.roi);
-  document.getElementById('top-pitchers-tbody').innerHTML =
-    sorted.slice(0, 8).map(pitcherRow).join('') ||
-    '<tr><td colspan="5" style="color:var(--text-4);padding:10px">Not enough data yet.</td></tr>';
-
-  document.getElementById('bot-pitchers-tbody').innerHTML =
-    sorted.slice(-8).reverse().map(pitcherRow).join('') ||
-    '<tr><td colspan="5" style="color:var(--text-4);padding:10px">Not enough data yet.</td></tr>';
 }
 
 // ── Filter buttons ────────────────────────────────────────────────────────────

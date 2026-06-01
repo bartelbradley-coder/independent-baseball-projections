@@ -83,6 +83,16 @@
 
 .backtest-note { font-size: 10px; color: var(--text-4); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); line-height: 1.5; }
 
+/* Edge table — used by pitcher/team stats */
+.edge-table { width: 100%; border-collapse: collapse; }
+.edge-table th { font-size: 8.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+.edge-table td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 12px; color: var(--text-3); }
+.edge-table tr:last-child td { border-bottom: none; }
+.edge-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+.pnl-pos { color: var(--green); font-weight: 600; }
+.pnl-neg { color: var(--red);   font-weight: 600; }
+
 /* Run Line section */
 .rl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
 @media (max-width: 700px) { .rl-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -332,6 +342,52 @@
     </div>
   </div>
 
+  <!-- Pitcher Performance -->
+  <div class="section" id="pitcher-section" style="display:none">
+    <div class="sec-lbl">Pitcher Performance — 2026 Season (min. 3 picks)</div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">📈 Top Pitchers by ROI</div>
+        <div class="card-sub">Best-performing starters when model picks them</div>
+        <table class="edge-table" id="top-pitchers-table">
+          <thead><tr><th>Pitcher</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+          <tbody id="top-pitchers-tbody"><tr><td colspan="5" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">📉 Underperforming Pitchers</div>
+        <div class="card-sub">Starters the model over-rated this season</div>
+        <table class="edge-table" id="bot-pitchers-table">
+          <thead><tr><th>Pitcher</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+          <tbody id="bot-pitchers-tbody"><tr><td colspan="5" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Per-Team Record -->
+  <div class="section" id="team-section" style="display:none">
+    <div class="sec-lbl">Performance by Team — 2026 Season (min. 3 picks)</div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">🏆 Best Teams by ROI</div>
+        <div class="card-sub">Teams the model has found the most value on</div>
+        <table class="edge-table" id="top-teams-table">
+          <thead><tr><th>Team</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+          <tbody id="top-teams-tbody"></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">📉 Underperforming Teams</div>
+        <div class="card-sub">Teams where model picks have underdelivered</div>
+        <table class="edge-table" id="bot-teams-table">
+          <thead><tr><th>Team</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+          <tbody id="bot-teams-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <!-- Backtest -->
   <div class="results-section backtest-section">
   <div class="section-badge backtest-badge-lg">BACKTEST</div>
@@ -478,6 +534,8 @@ async function loadAll() {
     renderEdgeTiers(pAugmented);
     // renderRLPerformance removed — RL not displayed
     renderThresholdAnalysis(hAugmented ? (hAugmented.rows || []) : []);
+    renderTeamStats(hAugmented ? (hAugmented.rows || []) : []);
+    renderPitcherStats(hAugmented ? (hAugmented.rows || []) : []);
     renderBacktest();
   } catch(e) {
     console.error('[FairLine] loadAll error:', e);
@@ -1053,6 +1111,91 @@ function renderThresholdAnalysis(rows) {
       </td>
     </tr>`;
   }).join('');
+}
+
+// ── Per-team record ───────────────────────────────────────────────────────────
+function renderTeamStats(rows) {
+  const settled = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.pick);
+  if (settled.length === 0) return;
+
+  const map = {};
+  for (const r of settled) {
+    const t = r.pick;
+    if (!map[t]) map[t] = { w: 0, l: 0, pnl: 0 };
+    map[t].pnl += r.pnl_u || 0;
+    if (r.result === 'W') map[t].w++; else map[t].l++;
+  }
+
+  const entries = Object.entries(map)
+    .map(([name, s]) => ({ name, ...s, n: s.w + s.l, roi: s.pnl / (s.w + s.l) }))
+    .filter(e => e.n >= 3);
+
+  if (entries.length === 0) return;
+  document.getElementById('team-section').style.display = 'block';
+
+  function teamRow(e) {
+    const winPct = (e.w / e.n * 100).toFixed(0) + '%';
+    const roiCol = e.roi >= 0 ? 'pnl-pos' : 'pnl-neg';
+    const pnlCol = e.pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
+    return `<tr>
+      <td style="font-weight:600;color:var(--text-2)">${e.name}</td>
+      <td>${e.w}–${e.l}</td>
+      <td>${winPct}</td>
+      <td class="${roiCol}">${e.roi >= 0 ? '+' : ''}${(e.roi*100).toFixed(1)}%</td>
+      <td class="${pnlCol}">${e.pnl >= 0 ? '+' : ''}${e.pnl.toFixed(1)}u</td>
+    </tr>`;
+  }
+
+  const sorted = [...entries].sort((a, b) => b.roi - a.roi);
+  document.getElementById('top-teams-tbody').innerHTML =
+    sorted.slice(0, 8).map(teamRow).join('') ||
+    '<tr><td colspan="5" style="color:var(--text-4);padding:10px">Not enough data yet (min 3 picks/team).</td></tr>';
+  document.getElementById('bot-teams-tbody').innerHTML =
+    sorted.slice(-8).reverse().map(teamRow).join('') ||
+    '<tr><td colspan="5" style="color:var(--text-4);padding:10px">Not enough data yet (min 3 picks/team).</td></tr>';
+}
+
+// ── Pitcher performance ───────────────────────────────────────────────────────
+function renderPitcherStats(rows) {
+  const settled = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.pitcher);
+  if (settled.length === 0) return;
+
+  const map = {};
+  for (const r of settled) {
+    const name = r.pitcher;
+    if (!map[name]) map[name] = { w: 0, l: 0, pnl: 0 };
+    map[name].pnl += r.pnl_u || 0;
+    if (r.result === 'W') map[name].w++; else map[name].l++;
+  }
+
+  const entries = Object.entries(map)
+    .map(([name, s]) => ({ name, ...s, n: s.w + s.l, roi: s.pnl / (s.w + s.l) }))
+    .filter(e => e.n >= 3);
+
+  if (entries.length === 0) return;
+  document.getElementById('pitcher-section').style.display = 'block';
+
+  function pitcherRow(e) {
+    const winPct = (e.w / e.n * 100).toFixed(0) + '%';
+    const roiCls = e.roi >= 0 ? 'pnl-pos' : 'pnl-neg';
+    const uCls   = e.pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
+    return `<tr>
+      <td style="font-weight:500;color:var(--text-2)">${e.name}</td>
+      <td>${e.w}–${e.l}</td>
+      <td>${winPct}</td>
+      <td class="${roiCls}">${e.roi >= 0 ? '+' : ''}${(e.roi*100).toFixed(1)}%</td>
+      <td class="${uCls}">${e.pnl >= 0 ? '+' : ''}${e.pnl.toFixed(1)}u</td>
+    </tr>`;
+  }
+
+  const sorted = [...entries].sort((a, b) => b.roi - a.roi);
+  document.getElementById('top-pitchers-tbody').innerHTML =
+    sorted.slice(0, 8).map(pitcherRow).join('') ||
+    '<tr><td colspan="5" style="color:var(--text-4);padding:10px">Not enough data yet.</td></tr>';
+
+  document.getElementById('bot-pitchers-tbody').innerHTML =
+    sorted.slice(-8).reverse().map(pitcherRow).join('') ||
+    '<tr><td colspan="5" style="color:var(--text-4);padding:10px">Not enough data yet.</td></tr>';
 }
 
 // _showDebugBanner, event listeners → fairline-utils.js
