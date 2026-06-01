@@ -1288,6 +1288,48 @@
   .phb-helper { display: none; }
 }
 
+/* ── Email Capture ── */
+.email-capture-section {
+  background: linear-gradient(135deg, rgba(99,102,241,0.07) 0%, rgba(15,23,42,0) 100%);
+  border: 1px solid rgba(99,102,241,0.22);
+  border-radius: 12px;
+  margin: 8px 0 24px;
+  padding: 28px 24px 22px;
+}
+.ec-inner { display: flex; flex-direction: column; gap: 14px; }
+.ec-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
+  border-radius: 20px; color: #818cf8; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.06em; padding: 3px 10px; text-transform: uppercase; width: fit-content;
+}
+.ec-headline { font-size: 1.05rem; font-weight: 700; color: var(--text); margin: 0; }
+.ec-sub { font-size: 0.84rem; color: var(--text-3, #94a3b8); line-height: 1.65; margin: 0; }
+.ec-form { display: flex; gap: 8px; }
+.ec-input {
+  flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.11);
+  border-radius: 7px; color: var(--text); font-size: 0.88rem; min-width: 0;
+  outline: none; padding: 10px 14px; transition: border-color 0.15s;
+}
+.ec-input::placeholder { color: var(--text-4, #475569); }
+.ec-input:focus { border-color: rgba(99,102,241,0.55); }
+.ec-btn {
+  background: var(--accent, #6366f1); border: none; border-radius: 7px; color: #fff;
+  cursor: pointer; font-size: 0.84rem; font-weight: 600; padding: 10px 18px;
+  transition: background 0.15s; white-space: nowrap;
+}
+.ec-btn:hover { background: #4f46e5; }
+.ec-success {
+  background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25);
+  border-radius: 7px; color: #4ade80; font-size: 0.84rem;
+  padding: 10px 14px; display: none;
+}
+.ec-fine { color: var(--text-4, #475569); font-size: 0.76rem; margin: 0; }
+@media (max-width: 560px) {
+  .ec-form { flex-direction: column; }
+  .ec-btn { width: 100%; }
+}
+
 /* ── Transparency Standards: collapsible ── */
 .transparency-section .ts-header { cursor: pointer; user-select: none; }
 .ts-list-wrap { display: none; }
@@ -1465,6 +1507,33 @@
   <div id="preview-container"></div>
 
   <!-- Yesterday's Results, Week Strip, and Performance Charts removed -->
+
+  <!-- EMAIL CAPTURE -->
+  <section class="email-capture-section" id="email-capture">
+    <div class="ec-inner">
+      <div>
+        <div class="ec-badge">⚾ Free Access — 2026 Season</div>
+      </div>
+      <div>
+        <h3 class="ec-headline">Get the daily picks recap in your inbox</h3>
+        <p class="ec-sub">Full access is free during our 2026 season track record build. Picks are timestamped, CLV-tracked, and auditable. Paid tiers with real-time alerts and expanded analytics launch before the 2027 season.</p>
+      </div>
+      <!-- Replace YOUR_KIT_FORM_ID below with your Kit form ID (digits only) -->
+      <form class="ec-form" id="ec-form"
+            action="https://app.kit.com/forms/YOUR_KIT_FORM_ID/subscriptions"
+            method="post" data-sv-form="YOUR_KIT_FORM_ID" data-uid="fairline-capture"
+            target="_blank"
+            onsubmit="handleEmailSubmit(event)">
+        <input class="ec-input" type="email" name="email_address"
+               placeholder="your@email.com" required autocomplete="email">
+        <button class="ec-btn" type="submit">Get Daily Recap →</button>
+      </form>
+      <div class="ec-success" id="ec-success">
+        ✓ You're on the list — picks recap coming your way. We'll let you know when premium launches.
+      </div>
+      <p class="ec-fine">No spam. One email per day, only on days with picks. Unsubscribe anytime.</p>
+    </div>
+  </section>
 
   <!-- EVIDENCE SECTION: 3 specific, data-backed claims for new visitors -->
   <section id="evidence-section" class="evidence-section" style="display:none">
@@ -1676,6 +1745,25 @@ function _updatePhbHelper() {
     el.innerHTML = 'Enter your bankroll to see <strong>Kelly dollar amounts</strong> on each pick.';
     if (bkWrap) bkWrap.classList.remove('flat-mode');
   }
+}
+
+/* ── Email capture: show success message, still submit to Kit in background ── */
+function handleEmailSubmit(e) {
+  const form = document.getElementById('ec-form');
+  const success = document.getElementById('ec-success');
+  if (!form || !success) return;
+
+  const email = form.querySelector('input[type="email"]').value.trim();
+  if (!email) return;
+
+  // Let the form POST to Kit in the background via fetch (no page navigation)
+  e.preventDefault();
+  const data = new FormData(form);
+  fetch(form.action, { method: 'POST', body: data, mode: 'no-cors' })
+    .catch(() => {}); // Kit's no-cors response is opaque — always treat as success
+
+  form.style.display = 'none';
+  success.style.display = 'block';
 }
 
 window.addEventListener('DOMContentLoaded', () => {
