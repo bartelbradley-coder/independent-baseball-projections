@@ -1287,6 +1287,38 @@
   .phb-sizing-row { padding: 8px 14px; gap: 10px; }
   .phb-helper { display: none; }
 }
+
+/* ── Transparency Standards: collapsible ── */
+.transparency-section .ts-header { cursor: pointer; user-select: none; }
+.ts-list-wrap { display: none; }
+.transparency-section.open .ts-list-wrap { display: block; }
+.ts-chevron { font-size: 10px; color: var(--text-4); margin-left: auto; transition: transform 0.2s; }
+.transparency-section.open .ts-chevron { transform: rotate(180deg); }
+
+/* ── Floating results indicator ── */
+#floating-results {
+  position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 6px 14px;
+  font-size: 11px; font-weight: 600; color: var(--text-2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: none; align-items: center; gap: 6px;
+  cursor: pointer; transition: opacity 0.2s;
+}
+#floating-results:hover { opacity: 0.8; }
+#floating-results .fr-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+#floating-results .fr-dot.live { background: var(--green); animation: pulsedot 1.4s infinite; }
+#floating-results .fr-dot.done { background: var(--text-4); }
+
+/* ── Styled inline disclaimer box ── */
+.site-disclaimer-box {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 10px 14px; border-radius: 8px; margin-bottom: 16px;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  font-size: 10px; color: var(--text-4); line-height: 1.55;
+}
+.sdb-icon { font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+.sdb-text { flex: 1; }
 </style>
 </head>
 <body>
@@ -1376,7 +1408,10 @@
 
   <!-- MARGINAL PICKS -->
   <div class="section" id="marginal-section" style="display:none">
-    <div class="sec-lbl">Marginal — Below 2% Edge Threshold</div>
+    <div class="sec-lbl">Near-Miss Signals — Below 2% Threshold</div>
+    <div style="font-size:10px;color:var(--text-4);margin-bottom:12px;margin-top:-4px">
+      Model found edge below the posting threshold. Tracked for transparency — not recommended bets.
+    </div>
     <div id="marginal-container"></div>
   </div>
 
@@ -1436,22 +1471,28 @@
 
   <!-- TRANSPARENCY STANDARDS -->
   <section class="transparency-section">
-    <div class="ts-header">
+    <div class="ts-header" onclick="this.closest('.transparency-section').classList.toggle('open')">
       <span class="ts-icon">🔒</span>
-      <span class="ts-title">Transparency Standards</span>
+      <span class="ts-title">Transparency Standards ▾</span>
+      <span class="ts-chevron">▾</span>
     </div>
-    <ul class="ts-list">
-      <li>Every posted pick is logged before first pitch.</li>
-      <li>Model probability, market probability, odds, edge, stake, and timestamp are stored at posting.</li>
-      <li>Results are not deleted after losses.</li>
-      <li>Closing-line value is tracked where available.</li>
-      <li>Live results are reported separately from historical backtests.</li>
-      <li>Past performance does not guarantee future results.</li>
-    </ul>
+    <div class="ts-list-wrap">
+      <ul class="ts-list">
+        <li>Every posted pick is logged before first pitch.</li>
+        <li>Model probability, market probability, odds, edge, stake, and timestamp are stored at posting.</li>
+        <li>Results are not deleted after losses.</li>
+        <li>Closing-line value is tracked where available.</li>
+        <li>Live results are reported separately from historical backtests.</li>
+        <li>Past performance does not guarantee future results.</li>
+      </ul>
+    </div>
   </section>
 
   <!-- INLINE DISCLAIMER -->
-  <p class="inline-disclaimer">⚠️ For informational purposes only. Sports betting involves risk. Verify all odds and availability before wagering.</p>
+  <div class="site-disclaimer-box">
+    <span class="sdb-icon">⚠️</span>
+    <span class="sdb-text">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past performance does not guarantee future results. Always verify odds, starters, lineups, and availability before wagering. Must be 18+ and located in a legal jurisdiction. Bet responsibly.</span>
+  </div>
 
   <!-- FAQ -->
   <section class="faq-section" id="faq">
@@ -1462,32 +1503,12 @@
         <div class="faq-a">A fair line (or fair odds) is the theoretical price at which neither side of a bet has an edge — the true implied probability converted to American odds with no bookmaker margin. FairLine computes this from its model probability.</div>
       </details>
       <details class="faq-item">
-        <summary class="faq-q">What does edge mean?</summary>
-        <div class="faq-a">Edge is the difference between the model's estimated win probability and the market's implied probability (after removing the vig). A positive edge means the model believes the bet is priced better than the market suggests.</div>
+        <summary class="faq-q">How is edge calculated?</summary>
+        <div class="faq-a">Edge is the difference between the model's estimated win probability and the market's implied probability (after removing the vig). A positive edge means the model believes the bet is priced better than the market suggests. FairLine only posts picks with at least 2% edge vs. Pinnacle's no-vig line.</div>
       </details>
       <details class="faq-item">
-        <summary class="faq-q">What is no-vig market probability?</summary>
-        <div class="faq-a">Bookmakers add a margin (vig or juice) to odds so both sides sum to more than 100%. No-vig probability removes that margin, giving the market's true implied probability for each side. FairLine uses Pinnacle's no-vig line as the market benchmark.</div>
-      </details>
-      <details class="faq-item">
-        <summary class="faq-q">Why compare to the no-vig market?</summary>
-        <div class="faq-a">Pinnacle accepts sharp money and typically offers the most efficient lines in the market. Beating Pinnacle's no-vig line consistently is the gold standard for demonstrating model edge. It's a much higher bar than beating soft-book lines.</div>
-      </details>
-      <details class="faq-item">
-        <summary class="faq-q">What is closing-line value (CLV)?</summary>
-        <div class="faq-a">CLV measures how the odds at bet time compared to the final closing line before the game. Positive CLV means bets were placed at better prices than the market settled on — a strong signal that the model is identifying genuine edge rather than getting lucky results.</div>
-      </details>
-      <details class="faq-item">
-        <summary class="faq-q">What is Kelly sizing?</summary>
-        <div class="faq-a">Kelly Criterion is a formula that sizes bets proportional to your edge and odds. FairLine uses Half-Kelly (50% of full Kelly) to reduce variance while still betting larger on higher-edge plays. Stake sizes are shown as a percentage of a 10-unit bankroll.</div>
-      </details>
-      <details class="faq-item">
-        <summary class="faq-q">Are these guaranteed picks?</summary>
-        <div class="faq-a">No. Sports betting always involves risk and variance. The model identifies positive expected value based on historical patterns and market signals — not certainty. Never bet more than you can afford to lose.</div>
-      </details>
-      <details class="faq-item">
-        <summary class="faq-q">How are live results different from backtests?</summary>
-        <div class="faq-a">Live results are picks posted on the site before first pitch and tracked in real time. Backtests are historical simulations on past data and are inherently subject to overfitting. FairLine keeps these clearly separated — live performance is the only real validation.</div>
+        <summary class="faq-q">Does past performance guarantee future results?</summary>
+        <div class="faq-a">No. Sports betting always involves risk and variance. The model identifies positive expected value based on historical patterns and market signals — not certainty. Past results, including ROI and CLV, are no guarantee of future performance. Never bet more than you can afford to lose.</div>
       </details>
     </div>
   </section>
@@ -1499,6 +1520,11 @@
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
   <div class="footer-links"><a href="model.html">Model Overview</a> · <a href="history.html">Pick History</a> · <a href="performance.html">Model Dashboard</a></div>
 </footer>
+
+<div id="floating-results" onclick="document.getElementById('idx-tracking-section')?.scrollIntoView({behavior:'smooth'})">
+  <span class="fr-dot" id="fr-dot"></span>
+  <span id="fr-text">—</span>
+</div>
 
 <script src="fairline-utils.js"></script>
 <script>
@@ -3370,6 +3396,7 @@ function render(data, hist, scores = {}, perf = null) {
     refreshBetButtons();
     refreshPersonalTracker();
     _updateTodayTally(scores);
+    updateFloatingResults(scores);
   }
 
   if (marginal.length > 0) {
@@ -3472,6 +3499,37 @@ function getPickResult(p, scores) {
   return { status: 'final', result: pickWon ? 'W' : 'L', score: `${ps}–${os}` };
 }
 
+// ── Floating results indicator ────────────────────────────────────────────────
+function updateFloatingResults(scores) {
+  const pill    = document.getElementById('floating-results');
+  const dotEl   = document.getElementById('fr-dot');
+  const textEl  = document.getElementById('fr-text');
+  if (!pill || !dotEl || !textEl) return;
+
+  // Only consider today's picks (main-tier)
+  const picks = Object.values(picksMap);
+  if (picks.length === 0) { pill.style.display = 'none'; return; }
+
+  const results  = picks.map(p => getPickResult(p, scores)).filter(Boolean);
+  const settled  = results.filter(r => r.status === 'final');
+  const live     = results.filter(r => r.status === 'live').length;
+  const pending  = picks.length - settled.length - live;
+
+  if (settled.length === 0) { pill.style.display = 'none'; return; }
+
+  const wins   = settled.filter(r => r.result === 'W').length;
+  const losses = settled.length - wins;
+
+  let text = `${wins}W–${losses}L`;
+  if (live > 0)          text += ` · ${live} live`;
+  else if (pending > 0)  text += ` · ${pending} pending`;
+  else                   text += ' · final';
+
+  textEl.textContent = text;
+  dotEl.className = 'fr-dot ' + (live > 0 ? 'live' : 'done');
+  pill.style.display = 'inline-flex';
+}
+
 // Lightweight DOM update — refreshes result badges and card classes without re-rendering
 function refreshScoreBadges(scores) {
   for (const [cardId, p] of Object.entries(picksMap)) {
@@ -3507,6 +3565,9 @@ function refreshScoreBadges(scores) {
     const _tp = (_todayDataRef.picks || []).filter(p => (p.edge || 0) >= 0.02);
     renderTodayTrackingIndex(_tp, scores);
   }
+
+  // Update floating results pill
+  updateFloatingResults(scores);
 }
 
 function _updateTodayTally(scores) {
