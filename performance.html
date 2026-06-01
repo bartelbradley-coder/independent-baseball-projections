@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FairLine MLB — Model Dashboard</title>
-<meta name="description" content="Model Dashboard: bankroll growth, CLV trends, edge-tier ROI, monthly performance, and backtested validation for FairLine MLB.">
+<meta name="description" content="Model Dashboard for FairLine MLB. Bankroll growth, P&L curve, win rate trends, calibration, CLV validation, edge-tier ROI, and threshold analysis.">
 <meta property="og:title" content="FairLine MLB — Model Dashboard">
 <meta property="og:description" content="Model Dashboard — bankroll growth, CLV validation, edge-tier breakdown, strategy comparison, and out-of-sample backtest results.">
 <meta property="og:type" content="website">
@@ -95,6 +95,27 @@
 .rl-side-title { font-size: 10px; font-weight: 700; color: var(--text-3); margin-bottom: 6px; letter-spacing: 0.06em; }
 .rl-side-row-inner { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 3px; }
 .rl-side-row-inner span:last-child { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+
+/* P&L curve */
+.pnl-curve-wrap { overflow: hidden; }
+.pnl-curve-meta { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-4); font-family: 'JetBrains Mono', monospace; margin-top: 8px; }
+
+/* Rolling win rate chart */
+.rolling-chart-wrap { position: relative; }
+
+/* Daily P&L bar chart */
+.calendar-wrap { display: block; }
+
+/* Calibration chart */
+.calib-wrap { display: flex; align-items: flex-end; gap: 10px; height: 110px; margin-top: 8px; }
+.calib-col { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+.calib-bar-wrap { width: 100%; display: flex; flex-direction: row; align-items: flex-end; justify-content: center; height: 80px; gap: 3px; }
+.calib-bar { width: 45%; border-radius: 3px 3px 0 0; transition: height 0.3s; }
+.calib-actual { background: var(--green); }
+.calib-ideal  { background: rgba(255,255,255,0.12); border-radius: 3px; }
+.calib-lbl    { font-size: 9px; color: var(--text-4); text-align: center; }
+.calib-pct    { font-size: 9px; font-weight: 600; color: var(--text-2); }
+.calib-n      { font-size: 8px; color: var(--text-4); }
 
 /* Key insight callout */
 .insight-box {
@@ -203,6 +224,39 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- P&L Cumulative Curve -->
+  <div class="section">
+    <div class="sec-lbl">Cumulative P&amp;L Curve — 2026 Season</div>
+    <div class="card" style="padding:16px 20px">
+      <div class="pnl-curve-wrap" id="pnl-curve"><div class="loading" style="padding:20px">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- Rolling Win Rate Chart -->
+  <div class="section" id="rolling-section" style="display:none">
+    <div class="sec-lbl">Rolling 20-Pick Win Rate</div>
+    <div class="card" style="padding:16px 20px">
+      <div id="rolling-chart"></div>
+    </div>
+  </div>
+
+  <!-- Calibration chart -->
+  <div class="section" id="calib-section" style="display:none">
+    <div class="sec-lbl">Model Calibration — Predicted vs. Actual Win Rate</div>
+    <div class="card" style="padding:16px 20px">
+      <div class="card-sub">Each bar shows actual win rate for picks in that model probability bucket. Bars near the diagonal line = well-calibrated model.</div>
+      <div class="calib-wrap" id="calib-chart"></div>
+    </div>
+  </div>
+
+  <!-- Daily P&L bar chart -->
+  <div class="section" id="calendar-section" style="display:none">
+    <div class="sec-lbl">Daily P&amp;L — 2026 Season</div>
+    <div class="card" style="padding:16px 20px">
+      <div class="calendar-wrap" id="calendar-wrap"></div>
     </div>
   </div>
 
@@ -413,6 +467,12 @@ async function loadAll() {
     renderInsight(pAugmented);
     renderBankrollChart(hAugmented);
     renderComparison(pAugmented);
+    const hRows = (hAugmented && hAugmented.rows) ? hAugmented.rows : [];
+    const pnlCurve = (hAugmented && hAugmented.pnl_curve) ? hAugmented.pnl_curve : [];
+    renderCurve(pnlCurve);
+    renderRollingWinRate(hRows);
+    renderCalibration(hRows);
+    renderCalendar(hRows);
     renderCLV(pAugmented);
     renderMonthly(pAugmented);
     renderEdgeTiers(pAugmented);
@@ -701,6 +761,197 @@ function renderMonthly(p) {
     return;
   }
   el.innerHTML = _monthlyChartSVG(monthly);
+}
+
+// ── P&L cumulative curve (moved from history.html) ────────────────────────────
+function renderCurve(curve) {
+  const el = document.getElementById('pnl-curve');
+  if (!curve || curve.length === 0) {
+    el.innerHTML = '<div style="color:var(--text-4);font-size:12px;padding:20px 0">Accumulates as picks settle.</div>';
+    return;
+  }
+  const data = [0, ...curve];
+  const minV = Math.min(...data, 0);
+  const maxV = Math.max(...data, 0);
+  const range = maxV - minV || 1;
+  const W = 800, H = 90, padT = 10, padB = 10;
+  const innerH = H - padT - padB;
+  const yFor = v => padT + innerH * (1 - (v - minV) / range);
+  const xFor = i => (i / (data.length - 1)) * W;
+  const zeroY = yFor(0);
+  const pts = data.map((v, i) => [xFor(i).toFixed(1), yFor(v).toFixed(1)]);
+  const linePath = pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x},${y}`).join(' ');
+  const areaPath = `${linePath} L${pts[pts.length-1][0]},${zeroY.toFixed(1)} L${pts[0][0]},${zeroY.toFixed(1)} Z`;
+  const endVal = curve[curve.length - 1];
+  const col = endVal >= 0 ? 'var(--green)' : 'var(--red)';
+  const [lx, ly] = pts[pts.length - 1];
+  el.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:90px">
+      <path d="${areaPath}" style="fill:${col};fill-opacity:0.12"/>
+      <line x1="0" y1="${zeroY.toFixed(1)}" x2="${W}" y2="${zeroY.toFixed(1)}" style="stroke:rgba(255,255,255,0.15);stroke-width:1;stroke-dasharray:4 3"/>
+      <path d="${linePath}" style="fill:none;stroke:${col};stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round"/>
+      <circle cx="${lx}" cy="${ly}" r="3.5" style="fill:${col}"/>
+    </svg>
+    <div class="pnl-curve-meta">
+      <span>${curve.length} settled picks</span>
+      <span style="opacity:0.4">── 0u baseline ──</span>
+      <span style="color:${col}"><strong>${endVal >= 0 ? '+' : ''}${endVal.toFixed(2)}u</strong> total</span>
+    </div>`;
+}
+
+// ── Rolling 20-pick win rate chart (moved from history.html) ──────────────────
+function renderRollingWinRate(rows) {
+  const WINDOW = 20;
+  const settled = rows
+    .filter(r => r.result === 'W' || r.result === 'L')
+    .sort((a, b) => a.date.localeCompare(b.date));
+  if (settled.length < WINDOW + 3) return;
+  document.getElementById('rolling-section').style.display = 'block';
+
+  const rates = [];
+  for (let i = WINDOW - 1; i < settled.length; i++) {
+    const wins = settled.slice(i - WINDOW + 1, i + 1).filter(r => r.result === 'W').length;
+    rates.push(wins / WINDOW);
+  }
+
+  const W = 800, H = 80, padT = 8, padB = 8, innerH = H - padT - padB;
+  const minV = 0.30, maxV = 0.75, range = maxV - minV;
+  const xFor = i => (i / Math.max(rates.length - 1, 1)) * W;
+  const yFor = v => padT + innerH * (1 - (v - minV) / range);
+
+  const BREAK_EVEN = 0.524;
+  const beY   = yFor(BREAK_EVEN).toFixed(1);
+  const lastV = rates[rates.length - 1];
+  const col   = lastV >= BREAK_EVEN ? 'var(--green)' : 'var(--red)';
+  const pts   = rates.map((v, i) => `${xFor(i).toFixed(1)},${yFor(v).toFixed(1)}`).join(' ');
+
+  const gridLines = [0.40, 0.50, 0.60, 0.70].map(v =>
+    `<line x1="0" y1="${yFor(v).toFixed(1)}" x2="${W}" y2="${yFor(v).toFixed(1)}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`)
+    .join('');
+
+  const areaCol = lastV >= BREAK_EVEN ? 'rgba(34,197,94,0.07)' : 'rgba(239,68,68,0.07)';
+  const firstX = xFor(0).toFixed(1), lastX = xFor(rates.length - 1).toFixed(1);
+  const areaPath = `M${firstX},${yFor(rates[0]).toFixed(1)} ` +
+    rates.slice(1).map((v, i) => `L${xFor(i+1).toFixed(1)},${yFor(v).toFixed(1)}`).join(' ') +
+    ` L${lastX},${beY} L${firstX},${beY} Z`;
+
+  document.getElementById('rolling-chart').innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:80px">
+      ${gridLines}
+      <line x1="0" y1="${beY}" x2="${W}" y2="${beY}" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="5 3"/>
+      <path d="${areaPath}" fill="${areaCol}"/>
+      <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${lastX}" cy="${yFor(lastV).toFixed(1)}" r="3.5" fill="${col}"/>
+    </svg>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:10px;color:var(--text-4);flex-wrap:wrap;gap:6px">
+      <span>Rolling ${WINDOW}-pick window · ${rates.length} data points · dashed line = ~52.4% break-even</span>
+      <span>Current: <strong style="color:${col}">${(lastV*100).toFixed(1)}%</strong> win rate</span>
+    </div>`;
+}
+
+// ── Calibration chart (moved from history.html) ───────────────────────────────
+function renderCalibration(rows) {
+  const settled = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.model_prob != null);
+  if (settled.length < 8) return;
+  document.getElementById('calib-section').style.display = 'block';
+
+  const buckets = {};
+  for (const r of settled) {
+    if (r.model_prob == null) continue;
+    const lo = Math.floor(r.model_prob * 20) / 20;
+    const key = lo.toFixed(2);
+    if (!buckets[key]) buckets[key] = { wins: 0, n: 0, mid: lo + 0.025 };
+    buckets[key].n++;
+    if (r.result === 'W') buckets[key].wins++;
+  }
+
+  const keys = Object.keys(buckets).sort();
+  if (keys.length < 2) return;
+
+  const bars = keys.map(k => {
+    const b = buckets[k];
+    const actual = b.wins / b.n;
+    return { label: `${Math.round(b.mid * 100)}%`, actual, ideal: b.mid, n: b.n };
+  });
+
+  const maxH = 80;
+  document.getElementById('calib-chart').innerHTML = bars.map(b => {
+    const actualH = Math.round(b.actual * maxH);
+    const idealH  = Math.round(b.ideal  * maxH);
+    return `<div class="calib-col">
+      <div class="calib-bar-wrap">
+        <div class="calib-bar calib-actual" style="height:${actualH}px" title="Actual: ${(b.actual*100).toFixed(0)}%"></div>
+        <div class="calib-bar calib-ideal"  style="height:${idealH}px"  title="Ideal: ${(b.ideal*100).toFixed(0)}%"></div>
+      </div>
+      <div class="calib-lbl">${b.label}</div>
+      <div class="calib-pct">${(b.actual*100).toFixed(0)}%</div>
+      <div class="calib-n">n=${b.n}</div>
+    </div>`;
+  }).join('') +
+  `<div style="display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:22px;gap:4px;font-size:9px;color:var(--text-4)">
+    <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--green);border-radius:2px;flex-shrink:0"></span>Actual</span>
+    <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:rgba(255,255,255,0.12);border-radius:2px;flex-shrink:0"></span>Ideal</span>
+  </div>`;
+}
+
+// ── Daily P&L bar chart (moved from history.html) ─────────────────────────────
+function renderCalendar(rows) {
+  const settled = rows.filter(r => r.result === 'W' || r.result === 'L');
+  if (settled.length === 0) return;
+  document.getElementById('calendar-section').style.display = 'block';
+
+  const dayMap = {};
+  for (const r of settled) {
+    if (!r.date) continue;
+    dayMap[r.date] = (dayMap[r.date] || 0) + (r.pnl_u || 0);
+  }
+  const days = Object.keys(dayMap).sort().map(ds => ({
+    ds,
+    pnl: dayMap[ds],
+    lbl: (() => { try { return new Date(ds + 'T12:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric'}); } catch(e){ return ds; } })()
+  }));
+  if (days.length === 0) return;
+
+  const W = 800, H = 110, padT = 6, padB = 28, padL = 4, padR = 4;
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+
+  const maxAbs    = Math.max(...days.map(d => Math.abs(d.pnl)), 0.5);
+  const scaleY    = v => padT + innerH * (1 - (v + maxAbs) / (2 * maxAbs));
+  const zeroYf    = scaleY(0).toFixed(1);
+  const spacing   = innerW / days.length;
+  const barW      = Math.max(2, Math.min(16, spacing * 0.72));
+  const labelEvery = Math.max(1, Math.ceil(days.length / 14));
+
+  const totalPnl   = days.reduce((s, d) => s + d.pnl, 0);
+  const profitDays = days.filter(d => d.pnl > 0.05).length;
+  const lossDays   = days.filter(d => d.pnl < -0.05).length;
+
+  let barsHTML = '', labelsHTML = '';
+  days.forEach((d, i) => {
+    const cx     = padL + (i + 0.5) * spacing;
+    const y0     = parseFloat(zeroYf);
+    const y1     = scaleY(d.pnl);
+    const top    = Math.min(y0, y1);
+    const height = Math.max(2, Math.abs(y0 - y1));
+    const col    = d.pnl >= 0 ? 'var(--green)' : 'var(--red)';
+    barsHTML += `<rect x="${(cx - barW/2).toFixed(1)}" y="${top.toFixed(1)}" width="${barW.toFixed(1)}" height="${height.toFixed(1)}" fill="${col}" fill-opacity="0.85" rx="1.5"><title>${d.lbl}: ${d.pnl >= 0 ? '+' : ''}${d.pnl.toFixed(1)}u</title></rect>`;
+    if (i % labelEvery === 0 || i === days.length - 1) {
+      labelsHTML += `<text x="${cx.toFixed(1)}" y="${(H - 8).toFixed(1)}" text-anchor="middle" font-size="8" fill="rgba(148,163,184,0.55)">${d.lbl}</text>`;
+    }
+  });
+
+  const totalCol = totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('calendar-wrap').innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:${H}px">
+      <line x1="${padL}" y1="${zeroYf}" x2="${W - padR}" y2="${zeroYf}" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="4 3"/>
+      ${barsHTML}
+      ${labelsHTML}
+    </svg>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:10px;color:var(--text-4);flex-wrap:wrap;gap:6px">
+      <span>${days.length} days · <span style="color:var(--green)">${profitDays} profitable</span> · <span style="color:var(--red)">${lossDays} losing</span></span>
+      <span>Season total: <strong style="color:${totalCol}">${totalPnl >= 0 ? '+' : ''}${totalPnl.toFixed(1)}u</strong></span>
+    </div>`;
 }
 
 function renderEdgeTiers(p) {

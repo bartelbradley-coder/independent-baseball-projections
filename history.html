@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FairLine MLB — Pick History</title>
-<meta name="description" content="Full pick history, P&L curve, calibration, and daily results for FairLine MLB. Every posted pick logged with result, CLV, and units.">
+<meta name="description" content="Complete pick log for FairLine MLB. Every posted pick with result, CLV, units, and ROI. Filterable by month, result, edge, and side.">
 <meta property="og:title" content="FairLine MLB — Pick History">
 <meta property="og:description" content="Every posted pick logged with result, CLV, units, and ROI. Filterable pick table, P&L curve, calibration chart, and daily breakdown.">
 <meta property="og:type" content="website">
@@ -25,10 +25,6 @@
 .summary-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
 .summary-row .stat-pill { flex: 1; min-width: 110px; }
 
-/* P&L curve */
-.pnl-curve-wrap { overflow: hidden; }
-.pnl-curve-meta { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-4); font-family: 'JetBrains Mono', monospace; margin-top: 8px; }
-
 /* Analytics two-col */
 .analytics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 700px) { .analytics-row { grid-template-columns: 1fr; } }
@@ -36,28 +32,11 @@
 .card-title { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); margin-bottom: 4px; }
 .card-sub   { font-size: 10px; color: var(--text-4); margin-bottom: 14px; }
 
-/* CLV chart */
-.clv-chart { display: flex; align-items: flex-end; gap: 3px; height: 60px; overflow: hidden; }
-.clv-bar { flex: 1; border-radius: 2px 2px 0 0; min-height: 2px; transition: opacity 0.15s; }
-.clv-bar:hover { opacity: 0.75; }
-.clv-bar.pos { background: var(--green); }
-.clv-bar.neg { background: var(--red); border-radius: 0 0 2px 2px; }
-.clv-avg-display { text-align: center; padding: 10px 0 8px; }
-.clv-avg-num { font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 700; line-height: 1; }
-.clv-avg-lbl { font-size: 10px; color: var(--text-4); margin-top: 4px; }
-
-/* Edge tier table */
+/* Edge tier table — used by pitcher/team tables */
 .edge-table { width: 100%; border-collapse: collapse; }
 .edge-table th { font-size: 8.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
 .edge-table td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 12px; color: var(--text-3); }
 .edge-table tr:last-child td { border-bottom: none; }
-.edge-tier-badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-.et-strong { background: rgba(99,102,241,0.12); color: var(--indigo-lt); }
-.et-value  { background: rgba(20,184,166,0.1); color: var(--teal); }
-.et-all    { background: rgba(255,255,255,0.05); color: var(--text-3); }
-
-/* Monthly ROI — SVG chart (zero-centered) */
-.monthly-chart { display: block; overflow: hidden; max-width: 100%; }
 
 /* Backtest */
 .roi-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
@@ -131,12 +110,6 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 .search-input:focus { border-color: rgba(99,102,241,0.4); }
 .search-input::placeholder { color: var(--text-4); }
 
-/* Kelly ROI table (reuses edge-table styles) */
-.kelly-table { width: 100%; border-collapse: collapse; }
-.kelly-table th { font-size: 8.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-.kelly-table td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 12px; color: var(--text-3); }
-.kelly-table tr:last-child td { border-bottom: none; }
-
 /* Streak + breakdown pills */
 .breakdown-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
 .streak-pill { padding: 10px 16px; border-radius: 10px; font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; display:flex; align-items:center; gap:8px; }
@@ -146,17 +119,6 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 
 .split-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
 @media (max-width:600px) { .split-grid { grid-template-columns:repeat(2,1fr); } }
-
-/* Calibration chart */
-.calib-wrap { display:flex; align-items:flex-end; gap:10px; height:110px; margin-top:8px; }
-.calib-col { display:flex; flex-direction:column; align-items:center; gap:3px; flex:1; }
-.calib-bar-wrap { width:100%; display:flex; flex-direction:row; align-items:flex-end; justify-content:center; height:80px; gap:3px; }
-.calib-bar { width:45%; border-radius:3px 3px 0 0; transition:height 0.3s; }
-.calib-actual { background:var(--green); }
-.calib-ideal  { background:rgba(255,255,255,0.12); border-radius:3px; }
-.calib-lbl    { font-size:9px; color:var(--text-4); text-align:center; }
-.calib-pct    { font-size:9px; font-weight:600; color:var(--text-2); }
-.calib-n      { font-size:8px; color:var(--text-4); }
 
 /* Streak result chips */
 .streak-chips { display: flex; gap: 3px; margin-top: 6px; flex-wrap: wrap; }
@@ -171,16 +133,6 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 .team-table td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 12px; color: var(--text-3); }
 .team-table tr:last-child td { border-bottom: none; }
 .team-table tr:hover td { background: rgba(255,255,255,0.02); }
-
-/* Rolling win rate chart */
-.rolling-chart-wrap { position: relative; }
-
-/* Edge bucket bar chart */
-.edge-bar-row { margin-bottom: 9px; }
-.edge-bar-row:last-child { margin-bottom: 0; }
-
-/* Daily P&L bar chart */
-.calendar-wrap { display:block; }
 
 /* ── Threshold input in filter bar ── */
 .threshold-wrap {
@@ -299,22 +251,6 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
     <div class="loading">Loading…</div>
   </div>
 
-  <!-- P&L Curve -->
-  <div class="section">
-    <div class="sec-lbl">Cumulative P&amp;L Curve — 2026 Season</div>
-    <div class="card" style="padding:16px 20px">
-      <div class="pnl-curve-wrap" id="pnl-curve"><div class="loading" style="padding:20px">Loading…</div></div>
-    </div>
-  </div>
-
-  <!-- Rolling Win Rate Chart -->
-  <div class="section" id="rolling-section" style="display:none">
-    <div class="sec-lbl">Rolling 20-Pick Win Rate</div>
-    <div class="card" style="padding:16px 20px">
-      <div id="rolling-chart"></div>
-    </div>
-  </div>
-
   <!-- Streak + Breakdown stats (#4) -->
   <div class="section" id="breakdown-section" style="display:none">
     <div class="sec-lbl">Streak &amp; Splits</div>
@@ -343,42 +279,6 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
       </div>
     </div>
   </div>
-
-  <!-- CLV Tracking (full-width) -->
-  <div class="section">
-    <div class="sec-lbl">Closing Line Value — 2026 Season</div>
-    <div class="card">
-      <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
-        <div class="clv-avg-display" style="padding:0;flex-shrink:0">
-          <div class="clv-avg-num" id="clv-avg-num">—</div>
-          <div class="clv-avg-lbl">Average CLV · all 2026 picks</div>
-        </div>
-        <div style="flex:1;min-width:180px">
-          <div class="card-sub" style="margin-bottom:10px">Last 30 picks · positive = market moved our way after pick was posted</div>
-          <div class="clv-chart" id="clv-chart"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Calibration chart -->
-  <div class="section" id="calib-section" style="display:none">
-    <div class="sec-lbl">Model Calibration — Predicted vs. Actual Win Rate</div>
-    <div class="card" style="padding:16px 20px">
-      <div class="card-sub">Each bar shows actual win rate for picks in that model probability bucket. Bars near the diagonal line = well-calibrated model.</div>
-      <div class="calib-wrap" id="calib-chart"></div>
-    </div>
-  </div>
-
-  <!-- Daily P&L bar chart -->
-  <div class="section" id="calendar-section" style="display:none">
-    <div class="sec-lbl">Daily P&amp;L — 2026 Season</div>
-    <div class="card" style="padding:16px 20px">
-      <div class="calendar-wrap" id="calendar-wrap"></div>
-    </div>
-  </div>
-
-  <!-- Backtest moved to Model Dashboard (performance.html) -->
 
   <!-- Per-Team Record -->
   <div class="section" id="team-section" style="display:none">
@@ -459,7 +359,6 @@ let activeMonth = 'all';
 let activeSearch = '';
 let activeThreshold = 0;   // minimum edge (0 = no filter)
 let pnlMode = 'units';     // 'units' | 'kelly' | 'dollars'
-let _flatPnlCurve = [];   // preserved so we can rerender without re-fetching
 // Use fairline_bankroll (set on the Picks page). Legacy migration: if the old
 // fairline_unit_size key exists, convert it (unit_size × 10 = bankroll).
 const _bankroll = (() => {
@@ -515,7 +414,6 @@ async function loadAll() {
     if (newSettled.length > 0) {
       allRows = [...allRows, ...newSettled];
     }
-    const pnlCurve   = extendPnlCurve((h && h.pnl_curve) ? h.pnl_curve : [], newSettled);
     const pAugmented = applyTodayToPerf(p, newSettled);
 
     // Populate live metrics row (augmented with today's settled picks)
@@ -527,18 +425,11 @@ async function loadAll() {
       if (pAugmented.updated_at) document.getElementById('lm-updated').textContent = pAugmented.updated_at;
     }
 
-    _flatPnlCurve = pnlCurve;   // store flat curve for mode switching
     renderSummary(allRows);
-    renderCurve(_activeCurve(allRows));
-    renderRollingWinRate(allRows);
     renderBreakdowns(allRows);
-    renderCalibration(allRows);
-    renderCalendar(allRows);
-    renderClv(pAugmented);
-    // Edge tiers, Kelly ROI, Monthly ROI → Model Dashboard (performance.html)
+    // Edge tiers, Kelly ROI, Monthly ROI, CLV, P&L curve, calibration → Model Dashboard (performance.html)
     renderTeamStats(allRows);
     renderPitcherStats(allRows);
-    // renderBacktest() → moved to Model Dashboard (performance.html)
     injectMonthFilter(allRows);
     renderTable(allRows);
     // renderRLPicks removed — RL not displayed
@@ -551,7 +442,6 @@ async function loadAll() {
 
 function renderEmpty() {
   document.getElementById('summary-row').innerHTML = '';
-  document.getElementById('pnl-curve').innerHTML = '<div style="color:var(--text-4);font-size:12px;padding:12px 0">No settled picks yet.</div>';
   document.getElementById('table-wrap').innerHTML = `
     <div class="state-card empty-state" style="max-width:none;margin:0">
       <div class="state-icon">📋</div>
@@ -586,158 +476,6 @@ function renderSummary(rows) {
     <div class="stat-pill"><div class="stat-lbl">Win Rate</div><div class="stat-val white">${winRate != null ? (winRate*100).toFixed(1)+'%' : '—'}</div><div class="stat-sub">~52% break-even</div></div>
     ${avgClv != null ? `<div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${avgClv >= 0 ? 'green' : 'red'}">${pct(avgClv)}</div><div class="stat-sub">n=${clvRows.length}</div></div>` : ''}
   `;
-}
-
-function renderCurve(curve) {
-  const el = document.getElementById('pnl-curve');
-  if (curve.length === 0) {
-    el.innerHTML = '<div style="color:var(--text-4);font-size:12px;padding:20px 0">Accumulates as picks settle.</div>';
-    return;
-  }
-  const data = [0, ...curve];
-  const minV = Math.min(...data, 0);
-  const maxV = Math.max(...data, 0);
-  const range = maxV - minV || 1;
-  const W = 800, H = 90, padT = 10, padB = 10;
-  const innerH = H - padT - padB;
-  const yFor = v => padT + innerH * (1 - (v - minV) / range);
-  const xFor = i => (i / (data.length - 1)) * W;
-  const zeroY = yFor(0);
-  const pts = data.map((v, i) => [xFor(i).toFixed(1), yFor(v).toFixed(1)]);
-  const linePath = pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x},${y}`).join(' ');
-  const areaPath = `${linePath} L${pts[pts.length-1][0]},${zeroY.toFixed(1)} L${pts[0][0]},${zeroY.toFixed(1)} Z`;
-  const endVal = curve[curve.length - 1];
-  const col = endVal >= 0 ? 'var(--green)' : 'var(--red)';
-  const [lx, ly] = pts[pts.length - 1];
-  el.innerHTML = `
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:90px">
-      <path d="${areaPath}" style="fill:${col};fill-opacity:0.12"/>
-      <line x1="0" y1="${zeroY.toFixed(1)}" x2="${W}" y2="${zeroY.toFixed(1)}" style="stroke:rgba(255,255,255,0.15);stroke-width:1;stroke-dasharray:4 3"/>
-      <path d="${linePath}" style="fill:none;stroke:${col};stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round"/>
-      <circle cx="${lx}" cy="${ly}" r="3.5" style="fill:${col}"/>
-    </svg>
-    <div class="pnl-curve-meta">
-      <span>${curve.length} settled picks</span>
-      <span style="opacity:0.4">── 0u baseline ──</span>
-      <span style="color:${col}"><strong>${endVal >= 0 ? '+' : ''}${endVal.toFixed(2)}u</strong> total</span>
-    </div>`;
-}
-
-function renderClv(p) {
-  if (!p) return;
-  const series = p.clv_series || [];
-  const avgClv = p.avg_clv;
-  if (avgClv != null) {
-    const el = document.getElementById('clv-avg-num');
-    el.textContent = pct(avgClv);
-    el.style.color = avgClv >= 0 ? 'var(--green)' : 'var(--red)';
-  }
-  if (series.length > 0) {
-    const maxAbs = Math.max(...series.map(v => Math.abs(v)), 0.001);
-    document.getElementById('clv-chart').innerHTML = series.slice(-30).map(v => {
-      const h = Math.max(3, Math.round(Math.abs(v) / maxAbs * 55));
-      return `<div class="clv-bar ${v>=0?'pos':'neg'}" style="height:${h}px" title="${pct(v)}"></div>`;
-    }).join('');
-  } else {
-    document.getElementById('clv-chart').innerHTML = '<div style="color:var(--text-4);font-size:11px;padding:10px 0;line-height:1.6">CLV captured at closing time daily.<br>Sustained positive CLV = real model edge.</div>';
-  }
-}
-
-function renderEdgeTiers(p) {
-  const tiers = (p && p.edge_tiers) ? p.edge_tiers : [];
-  if (tiers.length > 0) {
-    // Visual bar chart above the table
-    const maxAbsRoi = Math.max(...tiers.map(t => Math.abs(t.roi || 0)), 0.01);
-    document.getElementById('edge-bars').innerHTML = tiers.map(t => {
-      const barW  = Math.min(100, (Math.abs(t.roi || 0) / maxAbsRoi) * 100).toFixed(0);
-      const col   = (t.roi || 0) >= 0 ? 'var(--green)' : 'var(--red)';
-      const roiStr = ((t.roi || 0) >= 0 ? '+' : '') + ((t.roi || 0) * 100).toFixed(1) + '%';
-      return `<div class="edge-bar-row">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;font-size:10px">
-          <span style="color:var(--text-3);font-weight:600">${t.label}</span>
-          <span style="font-family:'JetBrains Mono',monospace;color:${col};font-weight:700">${roiStr} ROI</span>
-        </div>
-        <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:100px;overflow:hidden">
-          <div style="height:100%;width:${barW}%;background:${col};border-radius:100px;transition:width 0.4s"></div>
-        </div>
-        <div style="font-size:9px;color:var(--text-4);margin-top:2px">${t.wins}W–${t.losses}L · ${(t.win_rate*100).toFixed(1)}% win rate · ${t.bets} bets</div>
-      </div>`;
-    }).join('');
-
-    document.getElementById('edge-tbody').innerHTML = tiers.map(t => `
-      <tr>
-        <td><span class="edge-tier-badge ${t.class||'et-all'}">${t.label}</span></td>
-        <td>${t.bets}</td>
-        <td>${t.wins}–${t.losses}</td>
-        <td>${(t.win_rate*100).toFixed(1)}%</td>
-        <td style="color:${t.roi>=0?'var(--green)':'var(--red)'}">${pct(t.roi)}</td>
-        <td style="color:${t.units>=0?'var(--green)':'var(--red)'}">${t.units>=0?'+':''}${t.units.toFixed(1)}u</td>
-      </tr>`).join('');
-  } else {
-    document.getElementById('edge-tbody').innerHTML = `
-      <tr><td colspan="6" style="color:var(--text-4);padding:14px 10px;font-size:11px;line-height:1.6">
-        Edge tier breakdown fills in as 2026 picks settle.<br>
-        <span style="color:var(--text-3)">Backtest: 8%+ tier → +14.2% ROI across 312 bets.</span>
-      </td></tr>`;
-  }
-}
-
-function _monthlyChartSVG(monthly) {
-  const W = 400, padT = 36, padB = 40, padL = 12, padR = 12;
-  const innerW = W - padL - padR;
-  const chartH = 88; const halfH = chartH / 2;
-  const zeroY  = padT + halfH;
-  const totalH = padT + chartH + padB;
-  const maxAbs = Math.max(...monthly.map(m => Math.abs(m.roi)), 0.01);
-  const barSpacing = innerW / monthly.length;
-  const barW = Math.min(barSpacing * 0.68, 55);
-  let s = '';
-  monthly.forEach((m, i) => {
-    const cx   = padL + (i + 0.5) * barSpacing;
-    const barH = Math.max(3, Math.abs(m.roi) / maxAbs * halfH * 0.90);
-    const col  = m.roi >= 0 ? 'var(--green)' : 'var(--red)';
-    const barY = m.roi >= 0 ? zeroY - barH : zeroY;
-    const roiStr  = (m.roi >= 0 ? '+' : '') + (m.roi * 100).toFixed(1) + '%';
-    const labelY  = m.roi >= 0 ? barY - 6 : barY + barH + 13;
-    const unitsStr = (m.units >= 0 ? '+' : '') + m.units + 'u';
-    s += `<rect x="${(cx-barW/2).toFixed(1)}" y="${barY.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${col}" fill-opacity="0.82" rx="2.5"><title>${m.month}: ${roiStr} ROI · ${m.bets} bets · ${unitsStr}</title></rect>`;
-    s += `<text x="${cx.toFixed(1)}" y="${labelY.toFixed(1)}" text-anchor="middle" font-size="9" font-weight="700" fill="${col}">${roiStr}</text>`;
-    s += `<text x="${cx.toFixed(1)}" y="${(zeroY+halfH+14).toFixed(1)}" text-anchor="middle" font-size="9" fill="rgba(148,163,184,0.65)">${m.month}</text>`;
-    if (m.bets != null) s += `<text x="${cx.toFixed(1)}" y="${(zeroY+halfH+26).toFixed(1)}" text-anchor="middle" font-size="8" fill="rgba(148,163,184,0.38)">${m.bets}b</text>`;
-  });
-  return `<div style="position:relative;width:100%;padding-top:${(totalH/W*100).toFixed(1)}%;overflow:hidden">
-    <svg viewBox="0 0 ${W} ${totalH}" preserveAspectRatio="xMidYMid meet" style="position:absolute;top:0;left:0;width:100%;height:100%;display:block">
-      <line x1="${padL}" y1="${zeroY.toFixed(1)}" x2="${W-padR}" y2="${zeroY.toFixed(1)}" stroke="rgba(255,255,255,0.13)" stroke-width="1" stroke-dasharray="3 3"/>
-      ${s}
-    </svg>
-  </div>`;
-}
-
-function renderMonthly(p) {
-  const MONTH_ORDER = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const monthly = [...((p && p.season_roi_by_month) || [])].sort((a, b) =>
-    MONTH_ORDER.indexOf(a.month) - MONTH_ORDER.indexOf(b.month)
-  );
-  if (monthly.length === 0) return;
-  const _ms = document.getElementById('monthly-section'); if (_ms) _ms.style.display = 'block';
-  document.getElementById('monthly-chart').innerHTML = _monthlyChartSVG(monthly);
-}
-
-function renderBacktest() {
-  const backtest = [
-    { year: '2022', roi: 0.007,  bets: 975,  units: 6.8 },
-    { year: '2023', roi: 0.091,  bets: 1093, units: 99.5 },
-    { year: '2024', roi: 0.104,  bets: 977,  units: 101.6 },
-    { year: 'Baseline', roi: -0.040, bets: null, units: null, isBaseline: true },
-  ];
-  const maxRoi = 0.104;
-  document.getElementById('backtest-chart').innerHTML = backtest.map(y => `
-    <div class="roi-row">
-      <div class="roi-year" style="${y.isBaseline?'color:var(--text-4)':''}">${y.year}</div>
-      <div class="roi-bar-wrap"><div class="roi-fill ${y.roi>=0?'pos':'neg'}" style="width:${Math.abs(y.roi)/maxRoi*100}%"></div></div>
-      <div class="roi-pct ${y.roi>=0?'pos':'neg'}">${pct(y.roi)}</div>
-      <div class="roi-meta">${y.bets ? y.bets.toLocaleString()+' bets · +'+y.units+'u' : 'all games · vig drain'}</div>
-    </div>`).join('');
 }
 
 function renderThresholdSummary(rows) {
@@ -881,57 +619,6 @@ function renderTable(rows) {
       renderTable(allRows);
     });
   });
-}
-
-// ── Rolling 20-pick win rate chart ───────────────────────────────────────────
-function renderRollingWinRate(rows) {
-  const WINDOW = 20;
-  const settled = rows
-    .filter(r => r.result === 'W' || r.result === 'L')
-    .sort((a, b) => a.date.localeCompare(b.date));
-  if (settled.length < WINDOW + 3) return;
-  document.getElementById('rolling-section').style.display = 'block';
-
-  const rates = [];
-  for (let i = WINDOW - 1; i < settled.length; i++) {
-    const wins = settled.slice(i - WINDOW + 1, i + 1).filter(r => r.result === 'W').length;
-    rates.push(wins / WINDOW);
-  }
-
-  const W = 800, H = 80, padT = 8, padB = 8, innerH = H - padT - padB;
-  const minV = 0.30, maxV = 0.75, range = maxV - minV;
-  const xFor = i => (i / Math.max(rates.length - 1, 1)) * W;
-  const yFor = v => padT + innerH * (1 - (v - minV) / range);
-
-  const BREAK_EVEN = 0.524;
-  const beY   = yFor(BREAK_EVEN).toFixed(1);
-  const lastV = rates[rates.length - 1];
-  const col   = lastV >= BREAK_EVEN ? 'var(--green)' : 'var(--red)';
-  const pts   = rates.map((v, i) => `${xFor(i).toFixed(1)},${yFor(v).toFixed(1)}`).join(' ');
-
-  const gridLines = [0.40, 0.50, 0.60, 0.70].map(v =>
-    `<line x1="0" y1="${yFor(v).toFixed(1)}" x2="${W}" y2="${yFor(v).toFixed(1)}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`)
-    .join('');
-
-  // Shaded area between line and break-even
-  const areaCol = lastV >= BREAK_EVEN ? 'rgba(34,197,94,0.07)' : 'rgba(239,68,68,0.07)';
-  const firstX = xFor(0).toFixed(1), lastX = xFor(rates.length - 1).toFixed(1);
-  const areaPath = `M${firstX},${yFor(rates[0]).toFixed(1)} ` +
-    rates.slice(1).map((v, i) => `L${xFor(i+1).toFixed(1)},${yFor(v).toFixed(1)}`).join(' ') +
-    ` L${lastX},${beY} L${firstX},${beY} Z`;
-
-  document.getElementById('rolling-chart').innerHTML = `
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:80px">
-      ${gridLines}
-      <line x1="0" y1="${beY}" x2="${W}" y2="${beY}" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="5 3"/>
-      <path d="${areaPath}" fill="${areaCol}"/>
-      <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-      <circle cx="${lastX}" cy="${yFor(lastV).toFixed(1)}" r="3.5" fill="${col}"/>
-    </svg>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:10px;color:var(--text-4);flex-wrap:wrap;gap:6px">
-      <span>Rolling ${WINDOW}-pick window · ${rates.length} data points · dashed line = ~52.4% break-even</span>
-      <span>Current: <strong style="color:${col}">${(lastV*100).toFixed(1)}%</strong> win rate</span>
-    </div>`;
 }
 
 // ── Streak + Breakdowns ───────────────────────────────────────────────────────
@@ -1081,113 +768,6 @@ function exportCSV() {
   URL.revokeObjectURL(url);
 }
 
-// ── Calibration Chart (#3) ────────────────────────────────────────────────────
-function renderCalibration(rows) {
-  const settled = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.model_prob != null);
-  if (settled.length < 8) return;
-  document.getElementById('calib-section').style.display = 'block';
-
-  // Build 5pp buckets from 0.40 to 0.75+
-  const buckets = {};
-  for (const r of settled) {
-    if (r.model_prob == null) continue;
-    const lo = Math.floor(r.model_prob * 20) / 20; // 0.40, 0.45, 0.50 …
-    const key = lo.toFixed(2);
-    if (!buckets[key]) buckets[key] = { wins: 0, n: 0, mid: lo + 0.025 };
-    buckets[key].n++;
-    if (r.result === 'W') buckets[key].wins++;
-  }
-
-  const keys = Object.keys(buckets).sort();
-  if (keys.length < 2) return;
-
-  const bars = keys.map(k => {
-    const b = buckets[k];
-    const actual = b.wins / b.n;
-    return { label: `${Math.round(b.mid * 100)}%`, actual, ideal: b.mid, n: b.n };
-  });
-
-  const maxH = 80;
-  document.getElementById('calib-chart').innerHTML = bars.map(b => {
-    const actualH = Math.round(b.actual * maxH);
-    const idealH  = Math.round(b.ideal  * maxH);
-    return `<div class="calib-col">
-      <div class="calib-bar-wrap">
-        <div class="calib-bar calib-actual" style="height:${actualH}px" title="Actual: ${(b.actual*100).toFixed(0)}%"></div>
-        <div class="calib-bar calib-ideal"  style="height:${idealH}px"  title="Ideal: ${(b.ideal*100).toFixed(0)}%"></div>
-      </div>
-      <div class="calib-lbl">${b.label}</div>
-      <div class="calib-pct">${(b.actual*100).toFixed(0)}%</div>
-      <div class="calib-n">n=${b.n}</div>
-    </div>`;
-  }).join('') +
-  `<div style="display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:22px;gap:4px;font-size:9px;color:var(--text-4)">
-    <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--green);border-radius:2px;flex-shrink:0"></span>Actual</span>
-    <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:rgba(255,255,255,0.12);border-radius:2px;flex-shrink:0"></span>Ideal</span>
-  </div>`;
-}
-
-// ── Daily P&L Bar Chart ───────────────────────────────────────────────────────
-function renderCalendar(rows) {
-  const settled = rows.filter(r => r.result === 'W' || r.result === 'L');
-  if (settled.length === 0) return;
-  document.getElementById('calendar-section').style.display = 'block';
-
-  // Aggregate P&L by date — only days with picks, in date order
-  const dayMap = {};
-  for (const r of settled) {
-    if (!r.date) continue;
-    dayMap[r.date] = (dayMap[r.date] || 0) + (r.pnl_u || 0);
-  }
-  const days = Object.keys(dayMap).sort().map(ds => ({
-    ds,
-    pnl: dayMap[ds],
-    lbl: (() => { try { return new Date(ds + 'T12:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric'}); } catch(e){ return ds; } })()
-  }));
-  if (days.length === 0) return;
-
-  const W = 800, H = 110, padT = 6, padB = 28, padL = 4, padR = 4;
-  const innerW = W - padL - padR;
-  const innerH = H - padT - padB;
-
-  const maxAbs   = Math.max(...days.map(d => Math.abs(d.pnl)), 0.5);
-  const scaleY   = v => padT + innerH * (1 - (v + maxAbs) / (2 * maxAbs));
-  const zeroYf   = scaleY(0).toFixed(1);
-  const spacing  = innerW / days.length;
-  const barW     = Math.max(2, Math.min(16, spacing * 0.72));
-  const labelEvery = Math.max(1, Math.ceil(days.length / 14));
-
-  const totalPnl  = days.reduce((s, d) => s + d.pnl, 0);
-  const profitDays = days.filter(d => d.pnl > 0.05).length;
-  const lossDays   = days.filter(d => d.pnl < -0.05).length;
-
-  let barsHTML = '', labelsHTML = '';
-  days.forEach((d, i) => {
-    const cx     = padL + (i + 0.5) * spacing;
-    const y0     = parseFloat(zeroYf);
-    const y1     = scaleY(d.pnl);
-    const top    = Math.min(y0, y1);
-    const height = Math.max(2, Math.abs(y0 - y1));
-    const col    = d.pnl >= 0 ? 'var(--green)' : 'var(--red)';
-    barsHTML += `<rect x="${(cx - barW/2).toFixed(1)}" y="${top.toFixed(1)}" width="${barW.toFixed(1)}" height="${height.toFixed(1)}" fill="${col}" fill-opacity="0.85" rx="1.5"><title>${d.lbl}: ${d.pnl >= 0 ? '+' : ''}${d.pnl.toFixed(1)}u</title></rect>`;
-    if (i % labelEvery === 0 || i === days.length - 1) {
-      labelsHTML += `<text x="${cx.toFixed(1)}" y="${(H - 8).toFixed(1)}" text-anchor="middle" font-size="8" fill="rgba(148,163,184,0.55)">${d.lbl}</text>`;
-    }
-  });
-
-  const totalCol = totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
-  document.getElementById('calendar-wrap').innerHTML = `
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:${H}px">
-      <line x1="${padL}" y1="${zeroYf}" x2="${W - padR}" y2="${zeroYf}" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="4 3"/>
-      ${barsHTML}
-      ${labelsHTML}
-    </svg>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:10px;color:var(--text-4);flex-wrap:wrap;gap:6px">
-      <span>${days.length} days · <span style="color:var(--green)">${profitDays} profitable</span> · <span style="color:var(--red)">${lossDays} losing</span></span>
-      <span>Season total: <strong style="color:${totalCol}">${totalPnl >= 0 ? '+' : ''}${totalPnl.toFixed(1)}u</strong></span>
-    </div>`;
-}
-
 // ── Month filter injection ────────────────────────────────────────────────────
 function injectMonthFilter(rows) {
   const months = [...new Set(
@@ -1217,23 +797,7 @@ function injectMonthFilter(rows) {
   filtersEl.appendChild(sel);
 }
 
-// ── Kelly ROI breakdown ───────────────────────────────────────────────────────
-function renderKellyROI(p) {
-  const tiers = (p && p.kelly_roi_tiers) ? p.kelly_roi_tiers : [];
-  if (tiers.length === 0) return;
-  const _ks = document.getElementById('kelly-section'); if (_ks) _ks.style.display = 'block';
-  document.getElementById('kelly-tbody').innerHTML = tiers.map(t => `
-    <tr>
-      <td style="font-weight:600;color:var(--text-2)">${t.label}</td>
-      <td>${t.bets}</td>
-      <td>${t.wins}–${t.losses}</td>
-      <td>${(t.win_rate * 100).toFixed(1)}%</td>
-      <td style="color:${t.roi >= 0 ? 'var(--green)' : 'var(--red)'}">${t.roi >= 0 ? '+' : ''}${(t.roi * 100).toFixed(1)}%</td>
-      <td style="color:${t.units >= 0 ? 'var(--green)' : 'var(--red)'}">${t.units >= 0 ? '+' : ''}${t.units.toFixed(1)}u</td>
-    </tr>`).join('');
-}
-
-// ── Pitcher performance (#8) ──────────────────────────────────────────────────
+// ── Pitcher performance ───────────────────────────────────────────────────────
 function renderPitcherStats(rows) {
   const settled = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.pitcher);
   if (settled.length === 0) return;
@@ -1291,26 +855,6 @@ document.getElementById('search-input').addEventListener('input', e => {
   renderTable(allRows);
 });
 
-// ── Kelly P&L curve helper ────────────────────────────────────────────────────
-// Computes a cumulative Kelly-sized P&L curve from the rows array.
-// Each pick's contribution = kelly_units × pnl_u (pnl_u already encodes the
-// odds: +1.5 for a +150 win, -1.0 for any loss, etc.).
-function _computeKellyCurve(rows) {
-  const settled = rows
-    .filter(r => (r.result === 'W' || r.result === 'L') && r.pnl_u != null)
-    .sort((a, b) => a.date.localeCompare(b.date));
-  let cum = 0;
-  return settled.map(r => {
-    const stake = r.kelly_units != null ? r.kelly_units : 1;
-    cum = Math.round((cum + stake * r.pnl_u) * 1000) / 1000;
-    return cum;
-  });
-}
-
-function _activeCurve(rows) {
-  return pnlMode === 'kelly' ? _computeKellyCurve(rows) : _flatPnlCurve;
-}
-
 // ── P&L mode toggle: Flat Units → Kelly Units → Dollar amounts ────────────────
 function togglePnlMode() {
   const cycle = ['units', 'kelly', 'dollars'];
@@ -1330,7 +874,6 @@ function togglePnlMode() {
   }
   renderTable(allRows);
   renderSummary(allRows);
-  renderCurve(_activeCurve(allRows));
 }
 
 // ── Format a P&L value based on current mode ─────────────────────────────────
