@@ -294,12 +294,6 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
     </ul>
   </section>
 
-  <!-- Today's Picks — Live Tracking -->
-  <div class="section" id="today-tracking-section" style="display:none">
-    <div class="sec-lbl">Today's Picks — Live Tracking</div>
-    <div class="card" style="padding:0;overflow:hidden" id="today-tracking-card"></div>
-  </div>
-
   <!-- Summary pills -->
   <div class="summary-row" id="summary-row">
     <div class="loading">Loading…</div>
@@ -482,57 +476,6 @@ const _unitSize = _bankroll / 100;  // 1 unit = 1% of bankroll (100-unit convent
 
 // fetchESPNScores, ESPN_ABBR_MAP → fairline-utils.js
 
-function renderTodayTracking(picks, scores) {
-  const section = document.getElementById('today-tracking-section');
-  const card    = document.getElementById('today-tracking-card');
-  if (!picks || picks.length === 0) return;
-  section.style.display = 'block';
-
-  const rows = picks.map(p => {
-    const g    = scores[p.game];
-    const side = (p.side || '').toUpperCase();
-    let statusHTML, borderCls = '';
-    if (!g || g.status === 'scheduled') {
-      statusHTML = `<span style="color:var(--text-4);font-size:10px">⏳ Upcoming</span>`;
-    } else if (g.status === 'live') {
-      statusHTML = `<span style="color:var(--green);font-size:10px;font-weight:700">● LIVE ${g.awayScore}–${g.homeScore}</span>`;
-    } else {
-      const won = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
-      const ps  = side === 'AWAY' ? g.awayScore : g.homeScore;
-      const os  = side === 'AWAY' ? g.homeScore : g.awayScore;
-      const col = won ? 'var(--green)' : 'var(--red)';
-      borderCls = won ? 'border-left:3px solid rgba(34,197,94,0.5);' : 'border-left:3px solid rgba(239,68,68,0.4);';
-      statusHTML = `<span style="color:${col};font-family:'Oswald',sans-serif;font-size:14px;font-weight:700">${won?'W':'L'} ${ps}–${os}</span>`;
-    }
-    const oddsStr = p.odds > 0 ? `+${p.odds}` : String(p.odds);
-    const edgeStr = p.edge ? `+${(p.edge*100).toFixed(1)}%` : '';
-    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);${borderCls}">
-      <div style="flex:1;min-width:0">
-        <div style="font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;color:var(--text-2)">${p.pick} <span style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px">${oddsStr}</span></div>
-        <div style="font-size:10px;color:var(--text-4);margin-top:1px">${p.game}${edgeStr ? ' · ' + edgeStr + ' edge' : ''}</div>
-      </div>
-      ${statusHTML}
-    </div>`;
-  }).join('');
-
-  // Tally
-  const allG = picks.map(p => ({ p, g: scores[p.game] }));
-  const done = allG.filter(({g}) => g && g.status === 'final');
-  const wins = done.filter(({p,g}) => {
-    const s = (p.side||'').toUpperCase();
-    return s === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
-  }).length;
-  const losses = done.length - wins;
-  const pending = picks.length - done.length;
-  const tallyHTML = `<div style="padding:10px 14px 6px;font-size:11px;color:var(--text-4)">
-    ${done.length > 0
-      ? `<strong style="color:var(--text-2)">${wins}W–${losses}L</strong> settled · `
-      : ''}${pending} pick${pending !== 1 ? 's' : ''} pending
-  </div>`;
-
-  card.innerHTML = tallyHTML + rows + '<div style="height:4px"></div>';
-}
-
 // computeTodaySettled, extendPnlCurve, applyTodayToPerf → fairline-utils.js
 
 async function loadAll() {
@@ -582,11 +525,6 @@ async function loadAll() {
       const wr = (sAug.wins + sAug.losses) > 0 ? sAug.wins / (sAug.wins + sAug.losses) : 0;
       document.getElementById('lm-winrate').textContent = (wr * 100).toFixed(1) + '%';
       if (pAugmented.updated_at) document.getElementById('lm-updated').textContent = pAugmented.updated_at;
-    }
-
-    // Today's picks live tracking
-    if (today && today.picks && today.picks.length > 0) {
-      renderTodayTracking(today.picks.filter(pk => (pk.edge || 0) >= 0.02), scores);
     }
 
     _flatPnlCurve = pnlCurve;   // store flat curve for mode switching
