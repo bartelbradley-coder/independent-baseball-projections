@@ -1344,17 +1344,7 @@
     <div id="marginal-container"></div>
   </div>
 
-  <!-- YESTERDAY'S RESULTS -->
-  <div class="section" id="yesterday-section" style="display:none">
-    <div class="sec-lbl">Yesterday's Results</div>
-    <div class="card" style="padding:0;overflow:hidden" id="yesterday-card"></div>
-  </div>
-
-  <!-- Week-at-a-Glance — moved below picks -->
-  <div id="week-strip-container"></div>
-
-  <!-- Performance charts — moved below picks -->
-  <div id="perf-charts" style="margin-bottom:16px"></div>
+  <!-- Yesterday's Results, Week Strip, and Performance Charts removed -->
 
   <!-- EVIDENCE SECTION: 3 specific, data-backed claims for new visitors -->
   <section id="evidence-section" class="evidence-section" style="display:none">
@@ -1882,11 +1872,6 @@ function renderEvidenceSection(data, perf) {
 }
 
 // ── Week strip toggle ─────────────────────────────────────────────────────────
-function toggleWeekStrip() {
-  const el = document.getElementById('week-strip');
-  if (el) el.classList.toggle('open');
-}
-
 // ── Picks page P&L mode toggle (Flat ↔ Kelly) ────────────────────────────────
 let _indexPnlMode = 'flat';  // 'flat' | 'kelly'
 let _todayDataRef = null;    // saved so toggle can re-render without re-fetching
@@ -1976,7 +1961,6 @@ function setPicksPnlMode(mode) {
   _updatePhbHelper();
   if (_todayDataRef && _histDataRef) {
     renderPicksHeaderBlock(_todayDataRef, _histDataRef);
-    renderWeekStrip(_todayDataRef, _histDataRef);
   }
 }
 
@@ -1999,7 +1983,6 @@ async function loadPicks() {
     _histRef = hist;
     if (data) render(data, hist, scores, perf);
     else renderEmptyState(null, hist);
-    if (perf) renderPerfCharts(perf);
   } catch (e) {
     console.error('[FairLine] loadPicks error:', e);
     document.getElementById('picks-container').innerHTML = `
@@ -2011,75 +1994,10 @@ async function loadPicks() {
   }
 }
 
-function renderPerfCharts(perf) {
-  const container = document.getElementById('perf-charts');
-  if (!container) return;
-
-  // ── Month-by-month ROI bar chart ────────────────────────────────────────
-  const months = perf.season_roi_by_month || [];
-  let monthChart = '';
-  if (months.length > 0) {
-    const maxAbs = Math.max(...months.map(m => Math.abs(m.roi || 0)), 0.01);
-    const bars = months.map(m => {
-      const roi = m.roi || 0;
-      const pct = Math.min(100, (Math.abs(roi) / maxAbs) * 100);
-      const col = roi >= 0 ? 'var(--green)' : 'var(--red)';
-      const roiStr = (roi >= 0 ? '+' : '') + (roi * 100).toFixed(1) + '%';
-      return `<div class="pchart-bar-col">
-        <div class="pchart-bar-wrap">
-          <div class="pchart-bar" style="height:${pct.toFixed(1)}%;background:${col}"></div>
-        </div>
-        <div class="pchart-bar-lbl">${m.month}</div>
-        <div class="pchart-bar-val" style="color:${col}">${roiStr}</div>
-      </div>`;
-    }).join('');
-    monthChart = `<div class="pchart-section">
-      <div class="pchart-title">Monthly ROI</div>
-      <div class="pchart-bars">${bars}</div>
-    </div>`;
-  }
-
-  // ── CLV rolling sparkline ───────────────────────────────────────────────
-  const clvArr = perf.clv_series || [];
-  let clvChart = '';
-  if (clvArr.length >= 3) {
-    const W = 180, H = 44, PAD = 4;
-    const min = Math.min(...clvArr), max = Math.max(...clvArr);
-    const range = max - min || 0.01;
-    const pts = clvArr.map((v, i) => {
-      const x = PAD + (i / (clvArr.length - 1)) * (W - PAD * 2);
-      const y = H - PAD - ((v - min) / range) * (H - PAD * 2);
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    }).join(' ');
-    const zeroY = H - PAD - ((0 - min) / range) * (H - PAD * 2);
-    const avgClv = clvArr.reduce((s, v) => s + v, 0) / clvArr.length;
-    const avgCol = avgClv >= 0 ? 'var(--green)' : 'var(--red)';
-    const avgStr = (avgClv >= 0 ? '+' : '') + (avgClv * 100).toFixed(2) + '%';
-    clvChart = `<div class="pchart-section">
-      <div class="pchart-title">CLV Trend <span class="pchart-sub">(last ${clvArr.length} bets)</span></div>
-      <div style="position:relative;width:100%;padding-top:${(H/W*100).toFixed(1)}%;overflow:hidden">
-        <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:100%;height:100%;display:block">
-          <line x1="${PAD}" y1="${zeroY.toFixed(1)}" x2="${W-PAD}" y2="${zeroY.toFixed(1)}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-          <polyline points="${pts}" fill="none" stroke="${avgCol}" stroke-width="1.5" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="pchart-clv-avg" style="color:${avgCol}">Avg CLV: ${avgStr}</div>
-    </div>`;
-  }
-
-  container.innerHTML = (monthChart || clvChart)
-    ? `<div class="perf-charts-row">${monthChart}${clvChart}</div>`
-    : '';
-}
+// renderPerfCharts removed — monthly ROI chart and CLV trend removed from Today's Picks page
 
 function renderEmptyState(data, hist, marginal = []) {
-  const yestPicks = data && data.yesterday_picks ? data.yesterday_picks : [];
   const s = data && data.season ? data.season : null;
-
-  let yestHTML = '';
-  if (yestPicks.length > 0) {
-    yestHTML = `<div class="yest-section card" style="padding:0;overflow:hidden;margin-top:20px">${buildYesterdayHTML(yestPicks)}</div>`;
-  }
 
   const stripHTML = s ? `
     <div class="record-strip" style="margin-bottom:16px">
@@ -2113,7 +2031,6 @@ function renderEmptyState(data, hist, marginal = []) {
       <div class="state-sub">Check back after the next model update. The model runs at 10:08 AM and 10:30 AM CT.</div>
     </div>
     ${nearMissHTML}
-    ${yestHTML}
     ${stripHTML}`;
 }
 
@@ -3026,7 +2943,6 @@ function render(data, hist, scores = {}, perf = null) {
     const ks = isKelly && hist && hist.rows ? _kellyStatsFromHist(hist.rows) : null;
 
     const flatSeason = data.season || {};
-    const flatLast7  = data.last7  || {};
 
     const seasonUnits = isKelly && ks ? ks.season.units : (flatSeason.units || 0);
     const seasonRoi   = isKelly && ks ? ks.season.roi   : flatSeason.roi;
@@ -3231,81 +3147,6 @@ function render(data, hist, scores = {}, perf = null) {
 
   // renderCLVBanner removed — CLV is now in the picks header block (Row 1)
 
-  // ── Week-at-a-Glance strip ──────────────────────────────────────────────
-  window.renderWeekStrip = function(data, hist) {
-    const container = document.getElementById('week-strip-container');
-    if (!container) return;
-    const picks = data.week_picks || [];
-    const isKelly = _indexPnlMode === 'kelly';
-
-    // W-L counts and bets always from data.last7 (stable, same in both modes).
-    // Only units/ROI switch to Kelly values when Kelly mode is active.
-    const flatL7 = data.last7 || {};
-    let kellyPickLookup = {};
-    let kellyL7Units = flatL7.units || 0;
-    let kellyL7Roi   = flatL7.roi   || 0;
-    if (isKelly && hist && hist.rows) {
-      const ks = _kellyStatsFromHist(hist.rows);
-      kellyL7Units = ks.last7.units;
-      kellyL7Roi   = ks.last7.roi;
-      kellyPickLookup = ks.pickLookup;
-    }
-    if (!picks.length || !flatL7.bets) { container.innerHTML = ''; return; }
-
-    const u7     = isKelly ? kellyL7Units : (flatL7.units || 0);
-    const roi7   = isKelly ? kellyL7Roi   : (flatL7.roi   || 0);
-    const uCol   = u7 >= 0 ? 'var(--green)' : 'var(--red)';
-    const uStr   = (u7 >= 0 ? '+' : '') + u7.toFixed(1) + 'u';
-    const roiStr = (roi7 >= 0 ? '+' : '') + (roi7 * 100).toFixed(0) + '%';
-
-    // Month/day formatter
-    function fmtDate(s) {
-      if (!s) return '';
-      try {
-        const d = new Date(s + 'T12:00:00');
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      } catch(e) { return s.slice(5); }
-    }
-
-    const chips = picks.map(p => {
-      const isWin  = p.result === 'W';
-      // Use Kelly pnl from hist lookup when in Kelly mode
-      const lookupKey = `${p.date}|${p.pick}|${p.game}`;
-      const dispPnl   = isKelly && kellyPickLookup[lookupKey] != null
-        ? kellyPickLookup[lookupKey]
-        : p.pnl_u;
-      const pnlStr = dispPnl != null
-        ? (dispPnl >= 0 ? '+' : '') + dispPnl.toFixed(2) + 'u' : '';
-      const pnlCls = dispPnl != null ? (dispPnl >= 0 ? 'pos' : 'neg') : '';
-      return `<div class="wpc ${isWin ? 'wpc-win' : 'wpc-loss'}" title="${p.game}">
-        <span class="wpc-pick">${p.pick || '—'}</span>
-        <span class="wpc-date">${fmtDate(p.date)}</span>
-        ${pnlStr ? `<span class="wpc-pnl ${pnlCls}">${pnlStr}</span>` : ''}
-        <span class="wpc-result ${p.result}">${p.result}</span>
-      </div>`;
-    }).join('');
-
-    container.innerHTML = `
-      <div class="week-strip" id="week-strip">
-        <div class="week-strip-header" onclick="toggleWeekStrip()">
-          <div class="wsh-left">
-            <span class="wsh-label">Last 7 Days</span>
-            <span class="wsh-record" style="color:${uCol}">${flatL7.wins}W–${flatL7.losses}L</span>
-            <span class="wsh-units" style="color:${uCol}">${uStr}</span>
-            <span class="wsh-roi">${roiStr} ROI</span>
-          </div>
-          <span class="wsh-chevron">▼</span>
-        </div>
-        <div class="week-strip-body">
-          ${picks.length
-            ? `<div class="week-picks-grid">${chips}</div>`
-            : '<div class="week-strip-empty">No settled picks in the last 7 days.</div>'}
-        </div>
-      </div>`;
-  }
-
-  renderWeekStrip(data, hist);
-
   // Today's Picks — Live Tracking table (compact at-a-glance above pick cards)
   const _mainForTracking = (data.picks || []).filter(p => (p.edge || 0) >= 0.02);
   renderTodayTrackingIndex(_mainForTracking, scores);
@@ -3432,12 +3273,6 @@ function render(data, hist, scores = {}, perf = null) {
     refreshKellyUSD();
   }
 
-  // Yesterday's results
-  const yest = data.yesterday_picks || [];
-  if (yest.length > 0) {
-    document.getElementById('yesterday-section').style.display = 'block';
-    document.getElementById('yesterday-card').innerHTML = buildYesterdayHTML(yest);
-  }
 }
 
 // ── Live countdown updater ────────────────────────────────────────────────────
@@ -3578,47 +3413,7 @@ function _updateTodayTally(scores) {
     `Today · ${pending > 0 ? pending + ' pending' : 'all done'}`;
 }
 
-// ── Yesterday top performer callout ──────────────────────────────────────────
-function buildYesterdayHTML(yest) {
-  if (!yest || yest.length === 0) return '';
-  const settled = yest.filter(p => p.result === 'W' || p.result === 'L');
-  const yPnl = settled.reduce((s, p) => s + (p.pnl_u || 0), 0);
-  const yW = settled.filter(p => p.result === 'W').length;
-  const yL = settled.filter(p => p.result === 'L').length;
-
-  const topWin = [...settled.filter(p => p.result === 'W')]
-    .sort((a, b) => (b.pnl_u || 0) - (a.pnl_u || 0))[0];
-
-  const callout = topWin ? `
-    <div class="yesterday-callout">
-      <span class="yc-icon">🎯</span>
-      <div class="yc-text">
-        <strong>${topWin.pick}</strong>
-        ${topWin.odds ? formatOdds(topWin.odds) : ''} cashed
-        ${topWin.edge ? ` · ${(topWin.edge*100).toFixed(1)}% edge` : ''}
-        ${topWin.clv != null ? ` · CLV ${topWin.clv >= 0 ? '+' : ''}${(topWin.clv*100).toFixed(1)}%` : ''}
-      </div>
-      <span class="yc-result W">W</span>
-    </div>` : '';
-
-  return `<div style="padding:14px 16px 6px"><span style="font-size:11px;font-weight:700;color:var(--text-2)">${yW}W–${yL}L</span> <span style="font-size:10px;color:var(--text-4)">· ${yPnl>=0?'+':''}${yPnl.toFixed(1)}u yesterday</span></div>
-    <div style="padding:0 12px">${callout}</div>` +
-    settled.map(p => {
-      const pnlCls = (p.pnl_u || 0) >= 0 ? 'pos' : 'neg';
-      const pnlStr = p.pnl_u != null ? ((p.pnl_u>=0?'+':'')+p.pnl_u.toFixed(1)+'u') : '—';
-      const clvStr = p.clv != null ? 'CLV '+(p.clv>=0?'+':'')+(p.clv*100).toFixed(1)+'%' : '';
-      return `<div class="yest-row">
-        <div><div class="yest-game">${p.game||'—'}</div>
-          <div class="yest-pick">${p.pick||''}${p.odds?' · '+formatOdds(p.odds):''}${p.edge?' · +'+(p.edge*100).toFixed(1)+'% edge':''}</div>
-        </div>
-        <div class="yest-right">
-          <div class="yest-clv">${clvStr}</div>
-          <div class="yest-pnl ${pnlCls}">${pnlStr}</div>
-          <div class="yest-result ${p.result}">${p.result||'—'}</div>
-        </div>
-      </div>`;
-    }).join('') + '<div style="height:8px"></div>';
-}
+// buildYesterdayHTML removed — yesterday results no longer shown on Today's Picks page
 
 // _showDebugBanner, event listeners → fairline-utils.js
 
