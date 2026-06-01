@@ -1742,28 +1742,37 @@ function _updatePhbHelper() {
   }
 }
 
-/* ── Email capture: pre-fill Beehiiv subscribe page, show inline success ── */
+/* ── Email capture: POST to Cloudflare Worker proxy → Beehiiv API ── */
 function handleEmailSubmit(e) {
   e.preventDefault();
   const form = document.getElementById('ec-form');
   const success = document.getElementById('ec-success');
+  const btn = form ? form.querySelector('.ec-btn') : null;
   if (!form || !success) return;
 
   const email = (form.querySelector('input[type="email"]').value || '').trim();
   if (!email) return;
 
-  // Open Beehiiv subscribe page in new tab with email pre-filled.
-  // Beehiiv's API blocks browser CORS requests, so this hosted-page approach
-  // is the reliable path for a static site — subscriber confirms there,
-  // lands in the Beehiiv audience automatically.
-  window.open(
-    'https://bradleys-newsletter-efc9c7.beehiiv.com/subscribe?email=' + encodeURIComponent(email),
-    '_blank',
-    'noopener,noreferrer'
-  );
+  if (btn) { btn.disabled = true; btn.textContent = 'Subscribing…'; }
 
-  form.style.display = 'none';
-  success.style.display = 'block';
+  fetch('https://fairline-subscribe.bartel-bradley.workers.dev/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  })
+  .then(r => r.json())
+  .then(() => {
+    form.style.display = 'none';
+    success.style.display = 'block';
+  })
+  .catch(() => {
+    if (btn) { btn.disabled = false; btn.textContent = 'Get Daily Recap →'; }
+    // Fallback: open Beehiiv page directly if Worker fails
+    window.open(
+      'https://bradleys-newsletter-efc9c7.beehiiv.com/subscribe?email=' + encodeURIComponent(email),
+      '_blank', 'noopener,noreferrer'
+    );
+  });
 }
 
 window.addEventListener('DOMContentLoaded', () => {
