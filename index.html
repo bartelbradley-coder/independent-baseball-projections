@@ -1767,11 +1767,7 @@ function handleEmailSubmit(e) {
   })
   .catch(() => {
     if (btn) { btn.disabled = false; btn.textContent = 'Get Daily Recap →'; }
-    // Fallback: open Beehiiv page directly if Worker fails
-    window.open(
-      'https://bradleys-newsletter-efc9c7.beehiiv.com/subscribe?email=' + encodeURIComponent(email),
-      '_blank', 'noopener,noreferrer'
-    );
+    alert('Something went wrong — please try again in a moment.');
   });
 }
 
