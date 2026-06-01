@@ -135,6 +135,129 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 .footer { margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: space-between; }
 .footer-l { font-size: 9px; color: #1e293b; letter-spacing: 0.05em; line-height: 1.6; }
 .footer-r { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; color: #1e293b; letter-spacing: 0.12em; }
+
+/* ── QUICK SUMMARY ── */
+.quick-summary {
+  background: rgba(99,102,241,0.06);
+  border: 1px solid rgba(99,102,241,0.18);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+.qs-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #818cf8;
+  margin-bottom: 10px;
+}
+.qs-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+}
+.qs-list li {
+  font-size: 11.5px;
+  color: #64748b;
+  line-height: 1.5;
+  padding-left: 14px;
+  position: relative;
+}
+.qs-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #6366f1;
+  font-size: 10px;
+}
+.qs-list li strong { color: #94a3b8; font-weight: 600; }
+
+/* ── PAGE NAV ── */
+.page-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+.pn-link {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #475569;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s;
+}
+.pn-link:hover { color: #818cf8; }
+.pn-sep { color: #1e293b; font-size: 10px; }
+
+/* ── COLLAPSIBLE MATH ── */
+.coll-trigger {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  user-select: none;
+}
+.coll-trigger:hover .coll-arrow-m { color: #818cf8; }
+.coll-arrow-m {
+  font-size: 10px;
+  color: #334155;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.math-coll.open .coll-arrow-m { transform: rotate(180deg); }
+.coll-body-m { display: none; padding-top: 12px; }
+.math-coll.open .coll-body-m { display: block; }
+
+/* ── EXAMPLE CARD ── */
+.example-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.055);
+  border-radius: 10px;
+  padding: 18px;
+}
+.ex-row { display: flex; flex-direction: column; gap: 14px; margin-bottom: 14px; }
+.ex-step { display: flex; align-items: flex-start; gap: 12px; }
+.ex-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(99,102,241,0.15);
+  border: 1px solid rgba(99,102,241,0.3);
+  color: #818cf8; font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.ex-content { flex: 1; }
+.ex-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #475569; margin-bottom: 3px; }
+.ex-text { font-size: 11px; color: #3d4f65; line-height: 1.5; }
+.ex-text strong { color: #64748b; font-weight: 600; }
+.ex-note { font-size: 10px; color: #2d3d50; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 10px; line-height: 1.5; }
+
+/* ── MOBILE ── */
+@media (max-width: 700px) {
+  .fbox { overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: pre; }
+  .math-grid { grid-template-columns: 1fr; }
+  .imp-grid { grid-template-columns: 1fr; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .pipeline { flex-direction: column; }
+  .pipe-stage { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .pipe-stage:last-child { border-bottom: none; }
+  .msig { flex-direction: column; }
+  .msig-cell { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .msig-cell:last-child { border-bottom: none; }
+  .wrap { padding: 16px 14px 32px; }
+}
 </style>
 </head>
 <body>
@@ -172,6 +295,31 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
     <div class="hdr-pill p-sla">CLV Tracked</div>
     <div class="hdr-pill p-sla">7,359 Games OOS</div>
   </div>
+</div>
+
+<!-- QUICK SUMMARY -->
+<div class="quick-summary">
+  <div class="qs-title">How FairLine Works — At a Glance</div>
+  <ul class="qs-list">
+    <li>Projects expected runs for each team using a <strong>Dual-Poisson model</strong> calibrated on park, weather, pitcher quality, and lineup data</li>
+    <li><strong>32 log-odds adjustments</strong> refine the base win probability — pitching matchup, lineup confirmation, bullpen form, BvP, precipitation, line movement, and more</li>
+    <li>Calibrated monthly on 2026 live results using <strong>Platt scaling</strong> — parameters updated as the season progresses</li>
+    <li><strong>Edge = model probability − Pinnacle no-vig price.</strong> Only picks where the model sees ≥2% mispricing are posted</li>
+    <li>Every pick logged with timestamp before first pitch. <strong>CLV tracked to closing line</strong> to validate the signal is real, not luck</li>
+  </ul>
+</div>
+
+<!-- PAGE NAV -->
+<div class="page-nav">
+  <a class="pn-link" href="#section-pipeline">Pipeline</a>
+  <span class="pn-sep">·</span>
+  <a class="pn-link" href="#section-math">Math</a>
+  <span class="pn-sep">·</span>
+  <a class="pn-link" href="#section-signals">Adjustments</a>
+  <span class="pn-sep">·</span>
+  <a class="pn-link" href="#section-features">Features</a>
+  <span class="pn-sep">·</span>
+  <a class="pn-link" href="#section-validation">Validation</a>
 </div>
 
 <!-- TODAY'S PICKS CTA -->
@@ -239,7 +387,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 </div>
 
 <!-- PIPELINE -->
-<div class="section">
+<div class="section" id="section-pipeline">
   <div class="sec-lbl">Inference Pipeline — Input → Transform → Output at Each Stage</div>
   <div class="pipeline">
 
@@ -343,8 +491,9 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 </div>
 
 <!-- CORE MATHEMATICS -->
-<div class="section">
-  <div class="sec-lbl">Core Mathematics — Formulas Behind Each Pipeline Stage</div>
+<div class="section math-coll" id="section-math">
+  <div class="sec-lbl coll-trigger" onclick="toggleMathSection(this)">Core Mathematics — Formulas Behind Each Pipeline Stage<span class="coll-arrow-m">▾</span></div>
+  <div class="coll-body-m">
   <div class="math-grid">
 
     <div class="math-block ci">
@@ -436,10 +585,11 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
     </div>
 
   </div>
+  </div><!-- /.coll-body-m -->
 </div>
 
 <!-- SIGNAL IMPORTANCE -->
-<div class="section">
+<div class="section" id="section-signals">
   <div class="sec-lbl">Signal Importance — Avg. Abs. Log-Odds Contribution per Factor (αᵢ) · Relative Magnitudes Approximate · v2 = 2026 update</div>
   <div class="imp-grid">
 
@@ -503,7 +653,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 </div>
 
 <!-- FEATURE ENGINEERING -->
-<div class="section">
+<div class="section" id="section-features">
   <div class="sec-lbl">Feature Engineering — 33 Live Signals Across 4 Layers (v2/v3: 10 new signals added 2026)</div>
   <div class="feature-grid">
 
@@ -566,8 +716,46 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   </div>
 </div>
 
+<!-- FROM MODEL TO PICK -->
+<div class="section" id="section-example">
+  <div class="sec-lbl">From Model to Pick — A Practical Example</div>
+  <div class="example-card">
+    <div class="ex-row">
+      <div class="ex-step">
+        <div class="ex-num">1</div>
+        <div class="ex-content">
+          <div class="ex-title">Dual-Poisson base</div>
+          <div class="ex-text">Team RS/RA, park factor, and starter xFIP generate λ_home = 4.2 runs, λ_away = 3.8 runs → <strong>P(home wins) = 53.1%</strong></div>
+        </div>
+      </div>
+      <div class="ex-step">
+        <div class="ex-num">2</div>
+        <div class="ex-content">
+          <div class="ex-title">32 log-odds adjustments</div>
+          <div class="ex-text">Home starter Stuff+ 118 (+0.3pp), lineup quality +0.8pp, TTO penalty −0.4pp, umpire wide zone +0.2pp, BvP +0.5pp → net <strong>+1.4pp adjustment</strong></div>
+        </div>
+      </div>
+      <div class="ex-step">
+        <div class="ex-num">3</div>
+        <div class="ex-content">
+          <div class="ex-title">Platt calibration</div>
+          <div class="ex-text">Logit-scaled by fitted slope 0.587 + intercept 0.021 → <strong>final model probability: 54.5%</strong></div>
+        </div>
+      </div>
+      <div class="ex-step">
+        <div class="ex-num">4</div>
+        <div class="ex-content">
+          <div class="ex-title">Market comparison</div>
+          <div class="ex-text">Pinnacle no-vig says home team wins <strong>50.3%</strong>. Model says 54.5%. Gap = <strong>+4.2% edge</strong> → pick is posted at +148 best available odds.</div>
+        </div>
+      </div>
+    </div>
+    <div class="ex-note">This pick's signal breakdown appears in the Details section of each pick card on the Today's Picks page. CLV is tracked at close to verify the market agreed with the model's direction.</div>
+  </div>
+</div>
+
 <!-- VALIDATION -->
-<div class="section">
+<div class="section" id="section-validation">
   <div class="sec-lbl">Out-of-Sample Validation — 2022–2024 · Flat $100/Bet · 5%+ Edge Threshold</div>
   <div class="val-wrap">
 
@@ -627,8 +815,9 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 </div>
 
 <!-- OTHER MARKETS -->
-<div class="section">
-  <div class="sec-lbl">Other Markets — Run Line &amp; Over/Under Calibration</div>
+<div class="section math-coll">
+  <div class="sec-lbl coll-trigger" onclick="toggleMathSection(this)">Other Markets — Run Line &amp; Over/Under Calibration<span class="coll-arrow-m">▾</span></div>
+  <div class="coll-body-m">
   <div class="math-grid">
 
     <div class="math-block ci">
@@ -687,6 +876,7 @@ Bias by total line:
     </div>
 
   </div>
+  </div><!-- /.coll-body-m -->
 </div>
 
 <!-- FOOTER -->
@@ -704,5 +894,10 @@ Bias by total line:
 </div>
 
 </div>
+<script>
+function toggleMathSection(el) {
+  el.closest('.math-coll').classList.toggle('open');
+}
+</script>
 </body>
 </html>
