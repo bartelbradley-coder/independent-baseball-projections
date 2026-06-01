@@ -1014,14 +1014,7 @@
 
 /* ── Slim brand bar ──────────────────────────────────────────────────────────── */
 /* First element inside the page container — identity + live track record.      */
-.brand-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 20px; margin-bottom: 6px;
-  background: var(--bg-card);
-  border: 1px solid var(--border); border-radius: 12px;
-  border-top: 2px solid rgba(99,102,241,0.55);   /* indigo accent — marks the top of the page */
-  gap: 16px; flex-wrap: wrap;
-}
+/* .brand-bar removed — identity merged into phb-card */
 .bb-left { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
 .bb-name {
   font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700;
@@ -1112,13 +1105,28 @@
   .evidence-claim:last-child  { padding-bottom: 0; border-bottom: none; }
 }
 
-/* ── Picks header block (replaces record strip + CLV banner + bankroll widget) ── */
+/* ── Picks header block — unified dashboard header ───────────────────────────── */
+/* Single card: brand identity → stats → sizing controls. Replaces the old       */
+/* separate brand bar + header block.                                             */
 .phb-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 12px;
+  border-top: 2px solid rgba(99,102,241,0.55);   /* indigo accent — page entry point */
   overflow: hidden;
   margin-bottom: 16px;
+}
+/* Brand identity row at top of the unified card */
+.phb-brand-row {
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.phb-brand-tagline {
+  font-size: 11px; color: var(--text-4);
+  letter-spacing: 0.02em; margin-top: 4px; line-height: 1.4;
+}
+@media (max-width: 600px) {
+  .phb-brand-row { padding: 12px 16px 12px; }
 }
 /* Row 1 — performance stats */
 .phb-stats-row {
@@ -1256,19 +1264,7 @@
 
 <div class="page" id="picks">
 
-  <!-- BRAND BAR: identity + live track record, replaces hero + trust strip -->
-  <div class="brand-bar">
-    <div class="bb-left">
-      <div class="bb-name">FAIRLINE <em>MLB</em></div>
-      <div class="bb-tagline">Dual-Poisson win probability model · Edge vs. no-vig Pinnacle · 2026 Season</div>
-    </div>
-    <div class="bb-record" id="bb-record">
-      <!-- Populated by JS from today.json season stats -->
-    </div>
-  </div>
-
-  <!-- DIFFERENTIATOR LINE: one sharp sentence, not a paragraph -->
-  <p class="lp-tagline">Every pick logged before first pitch. Track record verified daily.</p>
+  <!-- Brand bar and differentiator line merged into phb-card above picks -->
 
   <!-- CONTEXT BAR: today's slate — leads with outcome, not process -->
   <div class="today-context">
@@ -1794,37 +1790,7 @@ function renderTodayTrackingIndex(picks, scores) {
   card.innerHTML = tallyHTML + rows;
 }
 
-// ── Brand bar: populate season stats ─────────────────────────────────────────
-function renderBrandBar(data) {
-  const rec = document.getElementById('bb-record');
-  if (!rec || !data.season) return;
-  const s   = data.season;
-  const roi = s.roi != null
-    ? (s.roi >= 0 ? '+' : '') + (s.roi * 100).toFixed(1) + '%' : null;
-  const clv = data.avg_clv != null
-    ? (data.avg_clv >= 0 ? '+' : '') + (data.avg_clv * 100).toFixed(2) + '%' : null;
-  const roiCol = (s.roi || 0) >= 0 ? 'var(--green)' : 'var(--red)';
-  const clvCol = (data.avg_clv || 0) >= 0 ? 'var(--green)' : 'var(--red)';
-
-  // Stats are the headline — larger Oswald font, prominent colour
-  rec.innerHTML = `
-    <div class="bb-stat">
-      <span class="bb-stat-val" style="color:var(--text-1)">${s.wins}W–${s.losses}L</span>
-      <span class="bb-stat-lbl">2026 Record</span>
-    </div>
-    ${roi ? `<div class="bb-stat">
-      <span class="bb-stat-val" style="color:${roiCol}">${roi}</span>
-      <span class="bb-stat-lbl">ROI / Bet</span>
-    </div>` : ''}
-    ${clv ? `<div class="bb-stat">
-      <span class="bb-stat-val" style="color:${clvCol}">${clv}</span>
-      <span class="bb-stat-lbl">Avg CLV<span class="tip" style="margin-left:3px" data-tip="Closing Line Value — the market moves toward our picks after posting, confirming genuine edge.">?</span></span>
-    </div>` : ''}
-    <div class="bb-stat">
-      <span class="bb-stat-val" style="color:var(--text-3)" id="bb-today-count">—</span>
-      <span class="bb-stat-lbl">Today's Picks</span>
-    </div>`;
-}
+// renderBrandBar removed — brand identity merged into renderPicksHeaderBlock
 
 // ── Evidence section: 3 data-backed claims for new visitors ──────────────────
 function renderEvidenceSection(data, perf) {
@@ -3000,6 +2966,12 @@ function render(data, hist, scores = {}, perf = null) {
     container.innerHTML = `
       <div class="phb-card">
 
+        <!-- Brand identity (merged from brand bar) -->
+        <div class="phb-brand-row">
+          <div class="bb-name">FAIRLINE <em>MLB</em></div>
+          <div class="phb-brand-tagline">Dual-Poisson win probability model · Edge vs. no-vig Pinnacle · 2026 Season</div>
+        </div>
+
         <!-- Row 1: Performance stats -->
         <div class="phb-stats-row">
           <div class="phb-stat-group">
@@ -3059,14 +3031,6 @@ function render(data, hist, scores = {}, perf = null) {
       </div>`;
   }
 
-  renderBrandBar(data);
-  // Populate today's pick count in brand bar after renderBrandBar creates the element
-  const _bbCount = document.getElementById('bb-today-count');
-  if (_bbCount) {
-    const _mainCount = (data.picks || []).filter(p => (p.edge || 0) >= 0.02).length;
-    _bbCount.textContent = _mainCount > 0 ? String(_mainCount) : '—';
-    _bbCount.style.color = _mainCount > 0 ? 'var(--green)' : 'var(--text-4)';
-  }
   renderPicksHeaderBlock(data, hist);
   renderEvidenceSection(data, perf);
 
