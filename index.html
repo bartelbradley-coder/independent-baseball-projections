@@ -1756,9 +1756,8 @@ function handleEmailSubmit(e) {
   // Beehiiv's API blocks browser CORS requests, so this hosted-page approach
   // is the reliable path for a static site — subscriber confirms there,
   // lands in the Beehiiv audience automatically.
-  const pubId = 'pub_92dd3ec1-fd37-440a-89db-3169a0a8b509';
   window.open(
-    'https://www.beehiiv.com/subscribe/' + pubId + '?email=' + encodeURIComponent(email),
+    'https://bradleys-newsletter-efc9c7.beehiiv.com/subscribe?email=' + encodeURIComponent(email),
     '_blank',
     'noopener,noreferrer'
   );
