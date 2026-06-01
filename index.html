@@ -1319,6 +1319,43 @@
 }
 .sdb-icon { font-size: 12px; flex-shrink: 0; margin-top: 1px; }
 .sdb-text { flex: 1; }
+
+@media (max-width: 600px) {
+  /* Header block: stats wrap into 2×3 grid on mobile */
+  .phb-stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 12px 14px;
+  }
+  .phb-stat-group {
+    padding: 10px 8px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .phb-stat-group:nth-child(odd) { border-right: 1px solid var(--border); }
+  .phb-stat-group:last-child,
+  .phb-stat-group:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .phb-vdivider { display: none; }
+  .phb-stat-val { font-size: 18px; }
+  .phb-stat-record { font-size: 18px; }
+  .phb-right-group { display: none; }
+  /* Sizing row: stack toggle + bankroll */
+  .phb-sizing-row { flex-direction: column; gap: 10px; align-items: flex-start; }
+  .phb-helper { display: none; }
+}
+
+@media (max-width: 600px) {
+  /* Pick card action row: larger touch targets */
+  .uc-action-row-v2 { gap: 0; }
+  .uav-btn { padding: 6px 12px; font-size: 12px; }
+  .uav-sep { padding: 0 2px; }
+}
+
+@media (max-width: 480px) {
+  /* Floating results indicator: move up and shrink on very small screens */
+  #floating-results { bottom: 12px; right: 12px; font-size: 10px; padding: 5px 11px; }
+}
 </style>
 </head>
 <body>
@@ -1332,8 +1369,11 @@
     <a class="nav-link active" href="index.html">Today's Picks</a>
     <a class="nav-link" href="history.html">Pick History</a>
     <a class="nav-link" href="performance.html">Model Dashboard</a>
-    <a class="nav-link" href="model.html">Model</a>
+    <a class="nav-link" href="model.html">Methodology</a>
   </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
   <div class="nav-right">
     <span class="nav-updated" id="last-updated">—</span>
     <span class="refresh-indicator" id="refresh-indicator">—</span>
@@ -1518,7 +1558,7 @@
 <footer>
   <div class="footer-brand">FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 32 Log-Odds Adjustments + Platt Calibration</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
-  <div class="footer-links"><a href="model.html">Model Overview</a> · <a href="history.html">Pick History</a> · <a href="performance.html">Model Dashboard</a></div>
+  <div class="footer-links"><a href="model.html">Methodology</a> · <a href="history.html">Pick History</a> · <a href="performance.html">Model Dashboard</a></div>
 </footer>
 
 <div id="floating-results" onclick="document.getElementById('idx-tracking-section')?.scrollIntoView({behavior:'smooth'})">
@@ -3592,6 +3632,21 @@ function _updateTodayTally(scores) {
 
 loadPicks();
 startAutoRefresh();
+
+// ── Mobile hamburger nav ──────────────────────────────────────────────────────
+function toggleNav() {
+  const links = document.querySelector('.nav-links');
+  const btn   = document.getElementById('nav-hamburger');
+  if (links) links.classList.toggle('open');
+  if (btn)   btn.classList.toggle('open');
+}
+// Close nav when a link is clicked on mobile
+document.querySelectorAll('.nav-link').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelector('.nav-links')?.classList.remove('open');
+    document.getElementById('nav-hamburger')?.classList.remove('open');
+  });
+});
 
 </script>
 </body>

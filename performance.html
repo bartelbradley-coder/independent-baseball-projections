@@ -165,6 +165,21 @@
 .naive-pill { flex: 1; min-width: 120px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: center; }
 .naive-pill-val { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
 .naive-pill-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); }
+
+@media (max-width: 600px) {
+  .hero-stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .hero-stat {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 14px;
+  }
+  .hero-stat:nth-child(odd) { border-right: 1px solid var(--border) !important; }
+  .hero-stat:nth-last-child(-n+2) { border-bottom: none; }
+  .hero-val { font-size: 22px; }
+}
 </style>
 </head>
 <body>
@@ -178,8 +193,11 @@
     <a class="nav-link" href="index.html">Today's Picks</a>
     <a class="nav-link" href="history.html">Pick History</a>
     <a class="nav-link active" href="performance.html">Model Dashboard</a>
-    <a class="nav-link" href="model.html">Model</a>
+    <a class="nav-link" href="model.html">Methodology</a>
   </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
   <div class="nav-right">
     <span class="nav-updated" id="last-updated">—</span>
     <span id="auto-refresh-pill" style="display:none;margin-left:6px;font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--green);padding:3px 9px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:6px;align-items:center;gap:5px"></span>
@@ -488,7 +506,7 @@
 <footer>
   <div class="footer-brand">FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 32 Log-Odds Adjustments + Platt Calibration</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
-  <div class="footer-links"><a href="model.html">Model Overview</a> · <a href="history.html">Pick History</a> · <a href="index.html">Today's Picks</a></div>
+  <div class="footer-links"><a href="model.html">Methodology</a> · <a href="history.html">Pick History</a> · <a href="index.html">Today's Picks</a></div>
 </footer>
 
 <script src="fairline-utils.js"></script>
@@ -1283,6 +1301,21 @@ setInterval(_doAutoRefresh, 5 * 60 * 1000);
 setInterval(_updateRefreshPill, 60 * 1000);
 
 loadAll().then(() => { _lastRefreshAt = Date.now(); _updateRefreshPill(); });
+
+// ── Mobile hamburger nav ──────────────────────────────────────────────────────
+function toggleNav() {
+  const links = document.querySelector('.nav-links');
+  const btn   = document.getElementById('nav-hamburger');
+  if (links) links.classList.toggle('open');
+  if (btn)   btn.classList.toggle('open');
+}
+// Close nav when a link is clicked on mobile
+document.querySelectorAll('.nav-link').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelector('.nav-links')?.classList.remove('open');
+    document.getElementById('nav-hamburger')?.classList.remove('open');
+  });
+});
 </script>
 </body>
 </html>

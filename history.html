@@ -193,6 +193,12 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 .rl-table th { font-size:8.5px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-4); padding:8px 10px; text-align:left; border-bottom:1px solid var(--border); }
 .rl-table td { padding:9px 10px; border-bottom:1px solid rgba(255,255,255,0.03); font-size:12px; color:var(--text-3); }
 .rl-table tr:last-child td { border-bottom:none; }
+
+@media (max-width: 700px) {
+  #table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .picks-table { font-size: 11px; }
+  .picks-table th, .picks-table td { padding: 7px 6px; }
+}
 </style>
 </head>
 <body>
@@ -206,8 +212,11 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
     <a class="nav-link" href="index.html">Today's Picks</a>
     <a class="nav-link active" href="history.html">Pick History</a>
     <a class="nav-link" href="performance.html">Model Dashboard</a>
-    <a class="nav-link" href="model.html">Model</a>
+    <a class="nav-link" href="model.html">Methodology</a>
   </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
   <div class="nav-right">
     <span class="nav-updated" id="last-updated">—</span>
     <span id="auto-refresh-pill" class="auto-refresh-pill" style="display:none"><span class="arp-dot pulse"></span>&nbsp;Live</span>
@@ -313,7 +322,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 <footer>
   <div class="footer-brand">FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 29 Log-Odds Adjustments + Platt Calibration</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
-  <div class="footer-links"><a href="model.html">Model Overview</a> · <a href="index.html">Today's Picks</a> · <a href="performance.html">Model Dashboard</a></div>
+  <div class="footer-links"><a href="model.html">Methodology</a> · <a href="index.html">Today's Picks</a> · <a href="performance.html">Model Dashboard</a></div>
 </footer>
 
 <script src="fairline-utils.js"></script>
@@ -828,6 +837,21 @@ setInterval(_doAutoRefresh, 5 * 60 * 1000);   // full reload every 5 min
 setInterval(_updateRefreshPill, 60 * 1000);    // tick the "X min ago" label every minute
 
 loadAll().then(() => { _lastRefreshAt = Date.now(); _updateRefreshPill(); });
+
+// ── Mobile hamburger nav ──────────────────────────────────────────────────────
+function toggleNav() {
+  const links = document.querySelector('.nav-links');
+  const btn   = document.getElementById('nav-hamburger');
+  if (links) links.classList.toggle('open');
+  if (btn)   btn.classList.toggle('open');
+}
+// Close nav when a link is clicked on mobile
+document.querySelectorAll('.nav-link').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelector('.nav-links')?.classList.remove('open');
+    document.getElementById('nav-hamburger')?.classList.remove('open');
+  });
+});
 </script>
 </body>
 </html>
