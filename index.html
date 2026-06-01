@@ -1016,9 +1016,10 @@
 /* First element inside the page container — identity + live track record.      */
 .brand-bar {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 20px; margin-bottom: 14px;
+  padding: 18px 20px; margin-bottom: 6px;
   background: var(--bg-card);
   border: 1px solid var(--border); border-radius: 12px;
+  border-top: 2px solid rgba(99,102,241,0.55);   /* indigo accent — marks the top of the page */
   gap: 16px; flex-wrap: wrap;
 }
 .bb-left { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
@@ -1039,13 +1040,27 @@
 }
 .bb-stat:first-child { border-left: none; }
 .bb-stat-val {
-  font-family: 'JetBrains Mono', monospace; font-size: 15px;
-  font-weight: 700; line-height: 1.1; white-space: nowrap;
+  font-family: 'Oswald', sans-serif; font-size: 22px;
+  font-weight: 700; line-height: 1; white-space: nowrap;
 }
 .bb-stat-lbl {
-  font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-4); margin-top: 2px; white-space: nowrap;
+  font-size: 8.5px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--text-4); margin-top: 3px; white-space: nowrap;
 }
+
+/* ── Landing-page differentiator line ─────────────────────────────────────── */
+.lp-tagline {
+  font-size: 11.5px; color: var(--text-3); letter-spacing: 0.02em;
+  margin: 0 0 12px; line-height: 1.5; font-style: italic;
+}
+
+/* ── Track record anchor link ─────────────────────────────────────────────── */
+.track-record-link {
+  display: block; text-align: right; font-size: 10px;
+  color: var(--text-4); text-decoration: none; letter-spacing: 0.04em;
+  margin-bottom: 14px; transition: color 0.15s;
+}
+.track-record-link:hover { color: var(--indigo-lt); }
 @media (max-width: 600px) {
   .brand-bar { flex-direction: column; align-items: flex-start; gap: 12px; padding: 14px 16px; }
   .bb-record { gap: 0; }
@@ -1252,19 +1267,25 @@
     </div>
   </div>
 
-  <!-- CONTEXT BAR: today's slate (compact, replaces large page-header) -->
+  <!-- DIFFERENTIATOR LINE: one sharp sentence, not a paragraph -->
+  <p class="lp-tagline">Every pick logged before first pitch. Track record verified daily.</p>
+
+  <!-- CONTEXT BAR: today's slate — leads with outcome, not process -->
   <div class="today-context">
-    <span class="tc-date" id="page-date">Today's Value Bets</span>
+    <span id="signal-count">—</span> picks posted today
     <span class="tc-sep">·</span>
-    <span id="games-scanned">—</span> games scanned
+    <span id="games-scanned">—</span> games modeled
     <span class="tc-sep">·</span>
-    <span id="signal-count">—</span> cleared 2% threshold
+    Posted <span id="ctx-posted-time">—</span>
     <span class="tc-sep">·</span>
     edge vs. no-vig Pinnacle
   </div>
 
   <!-- PICKS HEADER BLOCK: performance stats + sizing controls -->
   <div id="picks-header-block"></div>
+
+  <!-- Track record anchor — subtle link for curious new visitors -->
+  <a href="#evidence-section" class="track-record-link">↓ View track record &amp; methodology</a>
 
   <!-- MODEL INFO STRIP -->
   <div class="model-info-strip">
@@ -1293,7 +1314,7 @@
 
   <!-- TODAY'S PICKS -->
   <div class="section">
-    <div class="sec-lbl">Value Bets</div>
+    <div class="sec-lbl" id="page-date">Today's Value Bets</div>
     <div id="picks-container">
       <div id="loading-placeholder" style="display:flex;flex-direction:column;gap:14px">
         <div class="skeleton-card">
@@ -1795,6 +1816,7 @@ function renderBrandBar(data) {
   const roiCol = (s.roi || 0) >= 0 ? 'var(--green)' : 'var(--red)';
   const clvCol = (data.avg_clv || 0) >= 0 ? 'var(--green)' : 'var(--red)';
 
+  // Stats are the headline — larger Oswald font, prominent colour
   rec.innerHTML = `
     <div class="bb-stat">
       <span class="bb-stat-val" style="color:var(--text-1)">${s.wins}W–${s.losses}L</span>
@@ -1806,8 +1828,12 @@ function renderBrandBar(data) {
     </div>` : ''}
     ${clv ? `<div class="bb-stat">
       <span class="bb-stat-val" style="color:${clvCol}">${clv}</span>
-      <span class="bb-stat-lbl">Avg CLV</span>
-    </div>` : ''}`;
+      <span class="bb-stat-lbl">Avg CLV<span class="tip" style="margin-left:3px" data-tip="Closing Line Value — the market moves toward our picks after posting, confirming genuine edge.">?</span></span>
+    </div>` : ''}
+    <div class="bb-stat">
+      <span class="bb-stat-val" style="color:var(--text-3)" id="bb-today-count">—</span>
+      <span class="bb-stat-lbl">Today's Picks</span>
+    </div>`;
 }
 
 // ── Evidence section: 3 data-backed claims for new visitors ──────────────────
@@ -2939,17 +2965,26 @@ function render(data, hist, scores = {}, perf = null) {
   _histContextFn = buildHistContextFn((hist && hist.rows) ? hist.rows : []);
   startCountdownTimer();
 
-  // Date header
+  // Date header — now used as the section label just above the picks
   if (data.date) {
     const d = new Date(data.date + 'T12:00:00');
-    const dateStr = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
-    document.getElementById('page-date').textContent = dateStr + ' Value Bets';
+    const shortDate = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    document.getElementById('page-date').textContent = `Today's Value Bets · ${shortDate}`;
     const mainPicks = (data.picks || []).filter(p => (p.edge || 0) >= 0.02);
     const strongCount = mainPicks.filter(p => (p.edge || 0) >= 0.08).length;
     if (mainPicks.length > 0) {
       document.title = mainPicks.length + ' Value Bet' + (mainPicks.length !== 1 ? 's' : '') +
         (strongCount > 0 ? ' · ' + strongCount + ' Strong' : '') + ' — FairLine MLB';
     }
+  }
+
+  // Context bar posted time — use earliest pick's posted_at (when picks went live)
+  const _postedTimes = (data.picks || []).map(p => p.posted_at).filter(Boolean);
+  const _postedEl = document.getElementById('ctx-posted-time');
+  if (_postedEl && _postedTimes.length > 0) {
+    _postedEl.textContent = _postedTimes[0];   // e.g. "9:21 AM CT"
+  } else if (_postedEl && data.generated_at) {
+    _postedEl.textContent = data.generated_at.split(' · ')[0];  // fallback: export time
   }
 
   if (data.generated_at) {
@@ -3109,6 +3144,13 @@ function render(data, hist, scores = {}, perf = null) {
   }
 
   renderBrandBar(data);
+  // Populate today's pick count in brand bar after renderBrandBar creates the element
+  const _bbCount = document.getElementById('bb-today-count');
+  if (_bbCount) {
+    const _mainCount = (data.picks || []).filter(p => (p.edge || 0) >= 0.02).length;
+    _bbCount.textContent = _mainCount > 0 ? String(_mainCount) : '—';
+    _bbCount.style.color = _mainCount > 0 ? 'var(--green)' : 'var(--text-4)';
+  }
   renderPicksHeaderBlock(data, hist);
   renderEvidenceSection(data, perf);
 
