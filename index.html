@@ -1518,12 +1518,7 @@
         <h3 class="ec-headline">Get the daily picks recap in your inbox</h3>
         <p class="ec-sub">Full access is free during our 2026 season track record build. Picks are timestamped, CLV-tracked, and auditable. Paid tiers with real-time alerts and expanded analytics launch before the 2027 season.</p>
       </div>
-      <!-- Replace YOUR_KIT_FORM_ID below with your Kit form ID (digits only) -->
-      <form class="ec-form" id="ec-form"
-            action="https://app.kit.com/forms/YOUR_KIT_FORM_ID/subscriptions"
-            method="post" data-sv-form="YOUR_KIT_FORM_ID" data-uid="fairline-capture"
-            target="_blank"
-            onsubmit="handleEmailSubmit(event)">
+      <form class="ec-form" id="ec-form" onsubmit="handleEmailSubmit(event)">
         <input class="ec-input" type="email" name="email_address"
                placeholder="your@email.com" required autocomplete="email">
         <button class="ec-btn" type="submit">Get Daily Recap →</button>
@@ -1747,20 +1742,26 @@ function _updatePhbHelper() {
   }
 }
 
-/* ── Email capture: show success message, still submit to Kit in background ── */
+/* ── Email capture: pre-fill Beehiiv subscribe page, show inline success ── */
 function handleEmailSubmit(e) {
+  e.preventDefault();
   const form = document.getElementById('ec-form');
   const success = document.getElementById('ec-success');
   if (!form || !success) return;
 
-  const email = form.querySelector('input[type="email"]').value.trim();
+  const email = (form.querySelector('input[type="email"]').value || '').trim();
   if (!email) return;
 
-  // Let the form POST to Kit in the background via fetch (no page navigation)
-  e.preventDefault();
-  const data = new FormData(form);
-  fetch(form.action, { method: 'POST', body: data, mode: 'no-cors' })
-    .catch(() => {}); // Kit's no-cors response is opaque — always treat as success
+  // Open Beehiiv subscribe page in new tab with email pre-filled.
+  // Beehiiv's API blocks browser CORS requests, so this hosted-page approach
+  // is the reliable path for a static site — subscriber confirms there,
+  // lands in the Beehiiv audience automatically.
+  const pubId = 'pub_92dd3ec1-fd37-440a-89db-3169a0a8b509';
+  window.open(
+    'https://www.beehiiv.com/subscribe/' + pubId + '?email=' + encodeURIComponent(email),
+    '_blank',
+    'noopener,noreferrer'
+  );
 
   form.style.display = 'none';
   success.style.display = 'block';
