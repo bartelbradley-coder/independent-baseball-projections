@@ -1494,18 +1494,53 @@ function shareAllPicks() {
 }
 
 // Bankroll widget init
-// _onBankrollChange: called whenever the bankroll input in the header block changes.
-// Syncs _bankroll, updates Kelly badge amounts on pick cards, and re-renders helper text.
+// _onBankrollChange: called whenever the bankroll input changes.
+// Uses targeted DOM updates only — never replaces the full card innerHTML,
+// which would destroy the input element and reset focus after every keystroke.
 function _onBankrollChange(val) {
   _bankroll = parseFloat(val) || 0;
   _unitSize = _bankroll / 100;
   localStorage.setItem('fairline_bankroll', String(_bankroll));
   refreshKellyUSD();
   refreshPersonalTracker();
-  // Re-render header so Kelly P&L dollar amount updates live
-  if (_todayDataRef && _histDataRef) {
-    renderPicksHeaderBlock(_todayDataRef, _histDataRef);
+  _updateTotalDollarStat();   // update Total $ value in place
+  _updatePhbHelper();          // update helper text in place
+}
+
+// Targeted update for the Total $ stat — patches the two spans by ID
+// without re-rendering the card (which would reset focus on the bankroll input).
+function _updateTotalDollarStat() {
+  const valEl = document.getElementById('phb-total-dollar-val');
+  const subEl = document.getElementById('phb-total-dollar-sub');
+  if (!valEl || !subEl || !_todayDataRef) return;
+
+  let dollarStr, dollarSub, dollarCol;
+  if (_indexPnlMode === 'kelly') {
+    // Kelly: pnl_units × bankroll ÷ 100
+    const ks     = _histDataRef && _histDataRef.rows ? _kellyStatsFromHist(_histDataRef.rows) : null;
+    const uPnl   = ks ? ks.season.units : ((_todayDataRef.season || {}).units || 0);
+    if (_bankroll > 0) {
+      const d    = Math.round(uPnl * _bankroll / 100);
+      dollarStr  = (d >= 0 ? '+$' : '-$') + Math.abs(d).toLocaleString();
+      dollarSub  = `at $${_bankroll.toLocaleString()} bankroll`;
+      dollarCol  = d >= 0 ? 'green' : 'red';
+    } else {
+      dollarStr  = '—';
+      dollarSub  = 'enter bankroll above';
+      dollarCol  = 'muted';
+    }
+  } else {
+    // Flat: pnl_units × $100 (flat bet size, bankroll-independent)
+    const flatPnl = ((_todayDataRef.season || {}).units || 0);
+    const d       = Math.round(flatPnl * 100);
+    dollarStr = (d >= 0 ? '+$' : '-$') + Math.abs(d).toLocaleString();
+    dollarSub = 'at $100/bet';
+    dollarCol = d >= 0 ? 'green' : 'red';
   }
+
+  valEl.textContent = dollarStr;
+  valEl.className   = `phb-stat-val ${dollarCol}`;
+  subEl.textContent = dollarSub;
 }
 
 function _updatePhbHelper() {
@@ -2987,8 +3022,8 @@ function render(data, hist, scores = {}, perf = null) {
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
             <span class="phb-stat-label">Total $</span>
-            <span class="phb-stat-val ${totalDollarCol}">${totalDollarStr}</span>
-            <span class="phb-stat-sub">${totalDollarSub}</span>
+            <span class="phb-stat-val ${totalDollarCol}" id="phb-total-dollar-val">${totalDollarStr}</span>
+            <span class="phb-stat-sub" id="phb-total-dollar-sub">${totalDollarSub}</span>
           </div>
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
