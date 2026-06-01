@@ -35,11 +35,26 @@
 .hl-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-4); }
 .hl-sub { font-size: 10px; color: var(--text-4); margin-top: 4px; }
 
+/* Hero stats row */
+.hero-stats-row { display: flex; gap: 0; margin-bottom: 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.hero-stat { flex: 1; padding: 18px 20px; border-right: 1px solid var(--border); text-align: center; }
+.hero-stat:last-child { border-right: none; }
+.hero-val { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+.hero-val.green { color: var(--green); }
+.hero-val.white { color: var(--text-1); }
+.hero-val.red { color: var(--red); }
+.hero-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); }
+@media (max-width: 600px) { .hero-stats-row { flex-wrap: wrap; } .hero-stat { flex: 1 1 50%; border-bottom: 1px solid var(--border); } }
+
 /* Two-col grid */
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
 @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
 .card-title { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); margin-bottom: 4px; }
 .card-sub { font-size: 10px; color: var(--text-4); margin-bottom: 14px; }
+
+/* Two-col stats (team + pitcher grid) */
+.two-col-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+@media (max-width: 700px) { .two-col-stats { grid-template-columns: 1fr; } }
 
 /* Bankroll chart */
 .bankroll-chart-wrap { position: relative; }
@@ -136,6 +151,20 @@
 .insight-box .ib-head { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
 .insight-box .ib-body { font-size: 12px; color: var(--text-2); line-height: 1.6; }
 .insight-box .ib-body strong { color: #f1f5f9; }
+
+/* Collapsible sections */
+.collapsible-trigger { cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 8.5px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: var(--text-4); padding: 8px 0; margin-bottom: 0; }
+.collapsible-trigger:hover { color: var(--text-3); }
+.coll-arrow { transition: transform 0.2s; font-size: 11px; }
+.collapsible-section.open .coll-arrow { transform: rotate(180deg); }
+.collapsible-content { display: none; padding-top: 12px; }
+.collapsible-section.open .collapsible-content { display: block; }
+
+/* Naive comparison callout */
+.naive-callout { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+.naive-pill { flex: 1; min-width: 120px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: center; }
+.naive-pill-val { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.naive-pill-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); }
 </style>
 </head>
 <body>
@@ -190,6 +219,26 @@
     <div class="ib-body" id="insight-body"></div>
   </div>
 
+  <!-- CHANGE 1: Hero stats row -->
+  <div class="hero-stats-row" id="hero-stats-row" style="display:none">
+    <div class="hero-stat">
+      <div class="hero-val green" id="hero-roi">—</div>
+      <div class="hero-lbl">Season ROI / Bet</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-val white" id="hero-record">—</div>
+      <div class="hero-lbl">2026 Record</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-val green" id="hero-clv">—</div>
+      <div class="hero-lbl">Avg CLV</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-val green" id="hero-clv-pct">—</div>
+      <div class="hero-lbl">Picks Beat Close</div>
+    </div>
+  </div>
+
   <!-- Bankroll growth chart -->
   <div class="section">
     <div class="sec-lbl">$5,000 Bankroll Growth — Flat $100/bet (2%) vs. Half-Kelly · 2026 Season</div>
@@ -200,44 +249,7 @@
     </div>
   </div>
 
-  <!-- Model vs. Naive Strategies -->
-  <div class="section">
-    <div class="sec-lbl">Model vs. Naive Strategies — 2026 Season</div>
-    <div class="two-col">
-      <div class="card">
-        <div class="card-title">📊 Strategy Comparison</div>
-        <div class="card-sub">Our model vs. common alternatives — live 2026 data where available</div>
-        <table class="compare-table" id="compare-table">
-          <thead><tr><th>Strategy</th><th>W–L</th><th>ROI</th><th>Units</th></tr></thead>
-          <tbody id="compare-tbody"><tr><td colspan="4" style="color:var(--text-4);padding:14px 10px">Loading…</td></tr></tbody>
-        </table>
-        <div style="font-size:9px;color:var(--text-4);margin-top:10px;line-height:1.5">
-          <span style="background:rgba(255,255,255,0.05);padding:1px 4px;border-radius:3px;border:1px solid var(--border)">Est.</span>
-          = historical MLB average. Our model results are live 2026 data.
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">🧠 Why Edge Matters</div>
-        <div class="card-sub">Understanding the model's advantage over naive strategies</div>
-        <div style="display:flex;flex-direction:column;gap:12px">
-          <div>
-            <div style="font-size:10px;font-weight:700;color:var(--text-2);margin-bottom:3px">Vig drain is unavoidable</div>
-            <div style="font-size:11px;color:var(--text-3);line-height:1.5">Every bet incurs vig (typically −4% to −5% per game at US books). Naive strategies bleed this every time. You must find mispriced games to overcome it.</div>
-          </div>
-          <div>
-            <div style="font-size:10px;font-weight:700;color:var(--text-2);margin-bottom:3px">Closing Line Value is the key signal</div>
-            <div style="font-size:11px;color:var(--text-3);line-height:1.5">Positive CLV means the market moved toward our pick after we posted it — the sharpest bettors in the world confirmed the pricing gap we found. This is the gold standard of model validation.</div>
-          </div>
-          <div>
-            <div style="font-size:10px;font-weight:700;color:var(--text-2);margin-bottom:3px">Selectivity compounds</div>
-            <div style="font-size:11px;color:var(--text-3);line-height:1.5">We only post picks that clear a 2% edge threshold. Betting every game results in the vig drain above. Betting selectively on mispriced markets is the entire advantage.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- P&L Cumulative Curve -->
+  <!-- P&L Cumulative Curve (moved up from #3 to #3) -->
   <div class="section">
     <div class="sec-lbl">Cumulative P&amp;L Curve — 2026 Season</div>
     <div class="card" style="padding:16px 20px">
@@ -245,32 +257,7 @@
     </div>
   </div>
 
-  <!-- Rolling Win Rate Chart -->
-  <div class="section" id="rolling-section" style="display:none">
-    <div class="sec-lbl">Rolling 20-Pick Win Rate</div>
-    <div class="card" style="padding:16px 20px">
-      <div id="rolling-chart"></div>
-    </div>
-  </div>
-
-  <!-- Calibration chart -->
-  <div class="section" id="calib-section" style="display:none">
-    <div class="sec-lbl">Model Calibration — Predicted vs. Actual Win Rate</div>
-    <div class="card" style="padding:16px 20px">
-      <div class="card-sub">Each bar shows actual win rate for picks in that model probability bucket. Bars near the diagonal line = well-calibrated model.</div>
-      <div class="calib-wrap" id="calib-chart"></div>
-    </div>
-  </div>
-
-  <!-- Daily P&L bar chart -->
-  <div class="section" id="calendar-section" style="display:none">
-    <div class="sec-lbl">Daily P&amp;L — 2026 Season</div>
-    <div class="card" style="padding:16px 20px">
-      <div class="calendar-wrap" id="calendar-wrap"></div>
-    </div>
-  </div>
-
-  <!-- CLV + Monthly ROI -->
+  <!-- CLV + Monthly ROI (moved up) -->
   <div class="section">
     <div class="two-col">
       <div class="card">
@@ -292,6 +279,14 @@
           <div class="loading">Loading…</div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Rolling Win Rate Chart -->
+  <div class="section" id="rolling-section" style="display:none">
+    <div class="sec-lbl">Rolling 20-Pick Win Rate</div>
+    <div class="card" style="padding:16px 20px">
+      <div id="rolling-chart"></div>
     </div>
   </div>
 
@@ -342,79 +337,151 @@
     </div>
   </div>
 
-  <!-- Pitcher Performance -->
-  <div class="section" id="pitcher-section" style="display:none">
-    <div class="sec-lbl">Pitcher Performance — 2026 Season (min. 3 picks)</div>
-    <div class="two-col">
-      <div class="card">
-        <div class="card-title">📈 Top Pitchers by ROI</div>
-        <div class="card-sub">Best-performing starters when model picks them</div>
-        <table class="edge-table" id="top-pitchers-table">
-          <thead><tr><th>Pitcher</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
-          <tbody id="top-pitchers-tbody"><tr><td colspan="5" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
-        </table>
-      </div>
-      <div class="card">
-        <div class="card-title">📉 Underperforming Pitchers</div>
-        <div class="card-sub">Starters the model over-rated this season</div>
-        <table class="edge-table" id="bot-pitchers-table">
-          <thead><tr><th>Pitcher</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
-          <tbody id="bot-pitchers-tbody"><tr><td colspan="5" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Per-Team Record -->
-  <div class="section" id="team-section" style="display:none">
-    <div class="sec-lbl">Performance by Team — 2026 Season (min. 3 picks)</div>
-    <div class="two-col">
-      <div class="card">
-        <div class="card-title">🏆 Best Teams by ROI</div>
-        <div class="card-sub">Teams the model has found the most value on</div>
-        <table class="edge-table" id="top-teams-table">
-          <thead><tr><th>Team</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
-          <tbody id="top-teams-tbody"></tbody>
-        </table>
-      </div>
-      <div class="card">
-        <div class="card-title">📉 Underperforming Teams</div>
-        <div class="card-sub">Teams where model picks have underdelivered</div>
-        <table class="edge-table" id="bot-teams-table">
-          <thead><tr><th>Team</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
-          <tbody id="bot-teams-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Backtest -->
-  <div class="results-section backtest-section">
-  <div class="section-badge backtest-badge-lg">BACKTEST</div>
-  <div class="section-sub">Historical model validation using prior seasons. Not live betting results.</div>
+  <!-- CHANGE 5: Model vs Naive Strategies — trimmed to collapsible callout -->
   <div class="section">
-    <div class="sec-lbl">Backtested Model Validation — Out-of-Sample 2022–2024 · Not Live Results</div>
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px">
-        <div>
-          <div class="card-title" style="margin-bottom:4px">Improving Every Out-of-Sample Year</div>
-          <div class="card-sub" style="margin-bottom:0">vs. −4.0% baseline (bet every game, full vig drain) · 7,359 games backtested</div>
+    <div class="card" style="padding:16px 20px">
+      <div class="collapsible-section" id="naive-collapsible">
+        <div class="collapsible-trigger" onclick="toggleSection('naive-body', 'naive-collapsible')">
+          Model vs. Naive Strategies — 2026 Season <span class="coll-arrow">▾</span>
         </div>
-        <div style="font-family:'Oswald',sans-serif;font-size:32px;font-weight:700;color:var(--green)">+10.4%</div>
-      </div>
-      <div id="backtest-chart"></div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
-        <div class="stat-pill" style="opacity:0.8"><div class="stat-lbl">Sharpe Ratio</div><div class="stat-val amber">1.82</div><div class="stat-sub">backtested · annualized</div></div>
-        <div class="stat-pill" style="opacity:0.8"><div class="stat-lbl">Brier Score</div><div class="stat-val white">0.234</div><div class="stat-sub">vs. 0.250 market</div></div>
-        <div class="stat-pill" style="opacity:0.8"><div class="stat-lbl">Max Drawdown</div><div class="stat-val red">−12.4u</div><div class="stat-sub">backtested</div></div>
-        <div class="stat-pill" style="opacity:0.8"><div class="stat-lbl">Edge Threshold</div><div class="stat-val white">2%</div><div class="stat-sub">min to post</div></div>
-      </div>
-      <div class="backtest-note">
-        All figures above are <strong style="color:var(--text-2)">out-of-sample backtest results</strong> (2022–2024). Each year trained on prior seasons only — no lookahead bias. Live 2026 results appear in the sections above as picks settle.
+        <div id="naive-body" class="collapsible-content">
+          <div style="font-size:12px;color:var(--text-2);line-height:1.7;margin-bottom:14px">
+            FairLine picks returned <strong id="naive-model-roi" style="color:var(--green)">—</strong> ROI vs. approximately −4.0% for a naive flat-bet-every-game approach — a meaningful advantage driven by selectivity and edge. Picking only mispriced games beats the vig.
+          </div>
+          <div class="naive-callout">
+            <div class="naive-pill">
+              <div class="naive-pill-val" id="naive-pill-model" style="color:var(--green)">—</div>
+              <div class="naive-pill-lbl">Model ROI / Bet</div>
+            </div>
+            <div class="naive-pill">
+              <div class="naive-pill-val" style="color:var(--red)">−4.0%</div>
+              <div class="naive-pill-lbl">Naive (Bet All) ROI</div>
+            </div>
+          </div>
+          <div style="font-size:9px;color:var(--text-4);margin-top:10px;line-height:1.5">
+            Naive estimate based on historical MLB vig drain (~−4% to −5% per game). Our model results are live 2026 data.
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  </div><!-- end backtest-section -->
+
+  <!-- CHANGE 4: Daily P&L bars — collapsible -->
+  <div class="section" id="calendar-section" style="display:none">
+    <div class="card" style="padding:16px 20px">
+      <div class="collapsible-section" id="calendar-collapsible">
+        <div class="collapsible-trigger" onclick="toggleSection('calendar-body', 'calendar-collapsible')">
+          Daily P&amp;L — 2026 Season <span class="coll-arrow">▾</span>
+        </div>
+        <div id="calendar-body" class="collapsible-content">
+          <div class="calendar-wrap" id="calendar-wrap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANGE 3: Team + Pitcher stats as two-column grid -->
+  <div class="two-col-stats" id="team-pitcher-section">
+
+    <!-- Per-Team Record -->
+    <div class="section" id="team-section" style="display:none">
+      <div class="sec-lbl">Performance by Team — 2026 Season (min. 3 picks)</div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">🏆 Best Teams by ROI</div>
+          <div class="card-sub">Teams the model has found the most value on</div>
+          <table class="edge-table" id="top-teams-table">
+            <thead><tr><th>Team</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+            <tbody id="top-teams-tbody"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">📉 Underperforming Teams</div>
+          <div class="card-sub">Teams where model picks have underdelivered</div>
+          <table class="edge-table" id="bot-teams-table">
+            <thead><tr><th>Team</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+            <tbody id="bot-teams-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pitcher Performance -->
+    <div class="section" id="pitcher-section" style="display:none">
+      <div class="sec-lbl">Pitcher Performance — 2026 Season (min. 3 picks)</div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">📈 Top Pitchers by ROI</div>
+          <div class="card-sub">Best-performing starters when model picks them</div>
+          <table class="edge-table" id="top-pitchers-table">
+            <thead><tr><th>Pitcher</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+            <tbody id="top-pitchers-tbody"><tr><td colspan="5" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">📉 Underperforming Pitchers</div>
+          <div class="card-sub">Starters the model over-rated this season</div>
+          <table class="edge-table" id="bot-pitchers-table">
+            <thead><tr><th>Pitcher</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+            <tbody id="bot-pitchers-tbody"><tr><td colspan="5" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end two-col-stats -->
+
+  <!-- CHANGE 4: Calibration — collapsible -->
+  <div class="section" id="calib-section" style="display:none">
+    <div class="card" style="padding:16px 20px">
+      <div class="collapsible-section" id="calib-collapsible">
+        <div class="collapsible-trigger" onclick="toggleSection('calib-body', 'calib-collapsible')">
+          Model Calibration — Predicted vs. Actual Win Rate <span class="coll-arrow">▾</span>
+        </div>
+        <div id="calib-body" class="collapsible-content">
+          <div class="card-sub">Each bar shows actual win rate for picks in that model probability bucket. Bars near the diagonal line = well-calibrated model.</div>
+          <div class="calib-wrap" id="calib-chart"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANGE 4: Backtest — collapsible -->
+  <div class="collapsible-section" id="backtest-collapsible">
+    <div class="results-section backtest-section">
+      <div class="collapsible-trigger" onclick="toggleSection('backtest-body', 'backtest-collapsible')" style="padding:0;margin-bottom:0">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="section-badge backtest-badge-lg">BACKTEST</div>
+          <div class="section-sub" style="margin:0">Historical model validation using prior seasons. Not live betting results.</div>
+        </div>
+        <span class="coll-arrow" style="margin-right:4px">▾</span>
+      </div>
+      <div id="backtest-body" class="collapsible-content">
+        <div class="section">
+          <div class="sec-lbl">Backtested Model Validation — Out-of-Sample 2022–2024 · Not Live Results</div>
+          <div class="card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+              <div>
+                <div class="card-title" style="margin-bottom:4px">Improving Every Out-of-Sample Year</div>
+                <div class="card-sub" style="margin-bottom:0">vs. −4.0% baseline (bet every game, full vig drain) · 7,359 games backtested</div>
+              </div>
+              <div style="font-family:'Oswald',sans-serif;font-size:32px;font-weight:700;color:var(--green)">+10.4%</div>
+            </div>
+            <div id="backtest-chart"></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+              <div class="stat-pill" style="opacity:0.8"><div class="stat-lbl">Sharpe Ratio</div><div class="stat-val amber">1.82</div><div class="stat-sub">backtested · annualized</div></div>
+              <div class="stat-pill" style="opacity:0.8"><div class="stat-lbl">Brier Score</div><div class="stat-val white">0.234</div><div class="stat-sub">vs. 0.250 market</div></div>
+              <div class="stat-pill" style="opacity:0.8"><div class="stat-lbl">Max Drawdown</div><div class="stat-val red">−12.4u</div><div class="stat-sub">backtested</div></div>
+              <div class="stat-pill" style="opacity:0.8"><div class="stat-lbl">Edge Threshold</div><div class="stat-val white">2%</div><div class="stat-sub">min to post</div></div>
+            </div>
+            <div class="backtest-note">
+              All figures above are <strong style="color:var(--text-2)">out-of-sample backtest results</strong> (2022–2024). Each year trained on prior seasons only — no lookahead bias. Live 2026 results appear in the sections above as picks settle.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- end backtest collapsible -->
 
 </div>
 
@@ -434,6 +501,15 @@ function fmtU(v) {
 }
 
 // fetchESPNScores, ESPN_ABBR_MAP → fairline-utils.js
+
+// CHANGE 4: Toggle collapsible sections
+function toggleSection(bodyId, sectionId) {
+  const section = document.getElementById(sectionId);
+  const body    = document.getElementById(bodyId);
+  if (!section || !body) return;
+  const isOpen = section.classList.toggle('open');
+  body.style.display = isOpen ? 'block' : 'none';
+}
 
 function renderTodayPerfBanner(picks, scores) {
   const banner = document.getElementById('today-perf-banner');
@@ -520,20 +596,21 @@ async function loadAll() {
 
     // Today's pick status shown on Today's Picks tab — not duplicated here
     renderHeadline(pAugmented, hAugmented);
+    renderHeroStats(pAugmented, hAugmented);
     renderInsight(pAugmented);
     renderBankrollChart(hAugmented);
-    renderComparison(pAugmented);
+    renderNaiveCallout(pAugmented);
     const hRows = (hAugmented && hAugmented.rows) ? hAugmented.rows : [];
     const pnlCurve = (hAugmented && hAugmented.pnl_curve) ? hAugmented.pnl_curve : [];
     renderCurve(pnlCurve);
-    renderRollingWinRate(hRows);
-    renderCalibration(hRows);
-    renderCalendar(hRows);
     renderCLV(pAugmented);
     renderMonthly(pAugmented);
+    renderRollingWinRate(hRows);
     renderEdgeTiers(pAugmented);
     // renderRLPerformance removed — RL not displayed
     renderThresholdAnalysis(hAugmented ? (hAugmented.rows || []) : []);
+    renderCalibration(hRows);
+    renderCalendar(hRows);
     renderTeamStats(hAugmented ? (hAugmented.rows || []) : []);
     renderPitcherStats(hAugmented ? (hAugmented.rows || []) : []);
     renderBacktest();
@@ -548,6 +625,35 @@ async function loadAll() {
       </div>`;
     renderBacktest();
   }
+}
+
+// CHANGE 1: Hero stats row
+function renderHeroStats(p, h) {
+  const s   = (p && p.season) || {};
+  const clv = p && p.avg_clv;
+  if (!s.bets) return;
+
+  // Compute CLV positive %
+  const series = (p && p.clv_series) || [];
+  let clvPctStr = '—';
+  if (series.length > 0) {
+    const posCount = series.filter(v => v > 0).length;
+    clvPctStr = Math.round(posCount / series.length * 100) + '%';
+  }
+
+  const roiStr    = s.roi != null ? pct(s.roi) : '—';
+  const recordStr = `${s.wins || 0}–${s.losses || 0}`;
+  const clvStr    = clv != null ? pct(clv) : '—';
+  const roiColor  = s.roi != null && s.roi >= 0 ? 'green' : 'red';
+  const clvColor  = clv != null && clv >= 0 ? 'green' : 'red';
+
+  document.getElementById('hero-roi').textContent  = roiStr;
+  document.getElementById('hero-roi').className     = 'hero-val ' + roiColor;
+  document.getElementById('hero-record').textContent = recordStr;
+  document.getElementById('hero-clv').textContent   = clvStr;
+  document.getElementById('hero-clv').className      = 'hero-val ' + clvColor;
+  document.getElementById('hero-clv-pct').textContent = clvPctStr;
+  document.getElementById('hero-stats-row').style.display = 'flex';
 }
 
 function renderHeadline(p, h) {
@@ -595,6 +701,17 @@ function renderInsight(p) {
   const clvStr = pct(clv);
   const roiStr = pct(s.roi);
   body.innerHTML = `The model has delivered <strong>${clvStr} average CLV</strong> across ${s.bets} picks — meaning the market consistently moved toward our posted lines. Combined with a <strong>${roiStr} ROI per bet</strong>, both the process and the results validate that the edge is real, not luck.`;
+}
+
+// CHANGE 5: Populate naive callout
+function renderNaiveCallout(p) {
+  const s = (p && p.season) || {};
+  const roiStr = s.roi != null ? pct(s.roi) : '—';
+  const roiColor = s.roi != null && s.roi >= 0 ? 'var(--green)' : 'var(--red)';
+  const naiveModelRoi = document.getElementById('naive-model-roi');
+  const naivePillModel = document.getElementById('naive-pill-model');
+  if (naiveModelRoi) { naiveModelRoi.textContent = roiStr; naiveModelRoi.style.color = roiColor; }
+  if (naivePillModel) { naivePillModel.textContent = roiStr; naivePillModel.style.color = roiColor; }
 }
 
 function renderBankrollChart(h) {
@@ -677,63 +794,6 @@ function renderBankrollChart(h) {
     <div style="font-size:9px;color:var(--text-4);margin-top:6px">
       Both start at $5,000 · ${settled.length} bets · Flat = $100/bet (2% of bankroll) · Kelly ≈ $274/bet avg (5.5% of bankroll) · static sizing on initial bankroll
     </div>`;
-}
-
-function renderComparison(p) {
-  const s = (p && p.season) || {};
-  const hasLive = (s.bets || 0) > 0;
-  const strategies = [
-    {
-      label: '🎯 FairLine Model',
-      cls:   'our-model',
-      badge: 'model',
-      wl:    hasLive ? `${s.wins}–${s.losses}` : '—',
-      roi:   hasLive ? pct(s.roi) : '—',
-      units: hasLive ? fmtU(s.units) : '—',
-      live:  true,
-    },
-    {
-      label: 'Bet All Home Favorites',
-      cls:   '',
-      badge: 'naive',
-      wl:    '—',
-      roi:   '−3.5%',
-      units: '−',
-      live:  false,
-      note:  'Est.',
-    },
-    {
-      label: 'Bet All Underdogs',
-      cls:   '',
-      badge: 'naive',
-      wl:    '—',
-      roi:   '−4.2%',
-      units: '−',
-      live:  false,
-      note:  'Est.',
-    },
-    {
-      label: 'Closing Line (break-even)',
-      cls:   '',
-      badge: 'naive',
-      wl:    '—',
-      roi:   '≈ 0%',
-      units: '−',
-      live:  false,
-      note:  'Def.',
-    },
-  ];
-
-  document.getElementById('compare-tbody').innerHTML = strategies.map(st => `
-    <tr class="${st.cls}">
-      <td>
-        <span class="strategy-badge ${st.badge}">${st.label}</span>
-        ${st.note ? `<span class="est-tag">${st.note}</span>` : ''}
-      </td>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${st.wl}</td>
-      <td style="font-weight:700;color:${st.roi.startsWith('+') ? 'var(--green)' : st.roi.startsWith('−') ? 'var(--red)' : 'var(--text-3)'}">${st.roi}</td>
-      <td style="color:${st.units && st.units.startsWith('+') ? 'var(--green)' : 'var(--text-4)'}">${st.units}</td>
-    </tr>`).join('');
 }
 
 function renderCLV(p) {
