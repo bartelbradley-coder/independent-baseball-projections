@@ -1,5 +1,5 @@
 /* ── FAIRLINE MLB — Shared Styles ── */
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;800;900&family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -54,24 +54,21 @@ nav {
 .nav-logo {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
   flex-shrink: 0;
 }
 
 .nav-name {
-  font-family: 'Oswald', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
+  font-family: 'Barlow Condensed', 'Oswald', sans-serif;
+  font-size: 17px;
   letter-spacing: 0.06em;
   color: #f1f5f9;
 }
-
-.nav-name em { color: var(--indigo-lt); font-style: normal; }
+.nav-fair { font-weight: 400; color: #74849a; }
+.nav-bold { font-weight: 800; color: #f1f5f9; }
+.nav-name em { color: var(--indigo-lt); font-style: normal; font-weight: 700; }
 
 .nav-links {
   display: flex;
