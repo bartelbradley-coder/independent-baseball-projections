@@ -8,11 +8,11 @@
 <meta property="og:title" content="FairLine MLB — Today's Value Bets">
 <meta property="og:description" content="Bet the number, not the noise. Model-driven MLB edges tracked every day — picks logged before first pitch, full record auditable.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://bartelbradley-coder.github.io/fairline-mlb/og-image.png">
+<meta property="og:image" content="https://www.fairlinemlb.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://bartelbradley-coder.github.io/fairline-mlb/og-image.png">
-<meta property="og:url" content="https://bartelbradley-coder.github.io/fairline-mlb/">
+<meta name="twitter:image" content="https://www.fairlinemlb.com/og-image.png">
+<meta property="og:url" content="https://www.fairlinemlb.com/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="FairLine MLB — Today's Value Bets">
 <meta name="twitter:description" content="Bet the number, not the noise. Model-driven MLB edges tracked every day — picks logged before first pitch, full record auditable.">
@@ -1727,7 +1727,7 @@ function shareOnX(id) {
   let text = `🎯 FairLine MLB: ${p.pick} ${formatOdds(p.odds)} (+${edge}% edge)`;
   if (model && mkt) text += `\nModel ${model}% vs. Pinnacle ${mkt}%`;
   if (p.pitcher) text += `\n⚾ ${p.pitcher}`;
-  text += `\n📊 bartelbradley-coder.github.io/fairline-mlb/`;
+  text += `\n📊 www.fairlinemlb.com/`;
   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank', 'width=550,height=420');
 }
 
@@ -1735,7 +1735,7 @@ async function sharePickCard(id) {
   const p = picksMap[id];
   if (!p) return;
   const team    = (p.pick || '').replace(/\s/g, '');
-  const cardUrl = `https://bartelbradley-coder.github.io/fairline-mlb/share-cards/share_${team}.png`;
+  const cardUrl = `https://www.fairlinemlb.com/share-cards/share_${team}.png`;
   const btn     = document.querySelector(`[data-share-id="${id}"]`);
 
   // Web Share API with image — works on iOS Safari + Android Chrome
@@ -1748,7 +1748,7 @@ async function sharePickCard(id) {
         await navigator.share({
           files: [file],
           title: `FairLine MLB — ${p.pick}`,
-          text:  'Bet the number, not the noise. fairline-mlb.github.io',
+          text:  'Bet the number, not the noise. www.fairlinemlb.com',
         });
         if (btn) { btn.textContent = '✓ Shared'; setTimeout(() => { btn.textContent = '⬆ Share Card'; btn.disabled = false; }, 2000); }
         return;
@@ -1769,7 +1769,7 @@ function shareAllPicks() {
   if (!picks || picks.length === 0) return;
   const lines = picks.map(p => `• ${p.pick} ${formatOdds(p.odds)} +${(p.edge*100).toFixed(1)}% edge`);
   let text = `⚾ FairLine MLB Picks:\n` + lines.join('\n');
-  text += `\n📊 bartelbradley-coder.github.io/fairline-mlb/`;
+  text += `\n📊 www.fairlinemlb.com/`;
   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank', 'width=550,height=420');
 }
 
