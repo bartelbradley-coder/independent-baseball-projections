@@ -2256,8 +2256,9 @@ async function loadPicks() {
     const perf    = perfRes.ok     ? await perfRes.json()     : null;
     const preview = (previewRes && previewRes.ok) ? await previewRes.json() : null;
     _histRef = hist;
-    if (data) render(data, hist, scores, perf);
-    else renderEmptyState(null, hist);
+    const _ctToday = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
+    if (data && data.date === _ctToday) render(data, hist, scores, perf);
+    else renderEmptyState(data, hist);
     renderPreview(preview);
   } catch (e) {
     console.error('[FairLine] loadPicks error:', e);
