@@ -273,7 +273,8 @@
   transition: all 0.15s; white-space: nowrap;
   text-decoration: none; display: inline-flex; align-items: center; gap: 3px;
 }
-.share-btn:hover { color: #1d9bf0; border-color: rgba(29,155,240,0.3); }
+.share-btn:hover { color: var(--indigo-lt); border-color: rgba(99,102,241,0.3); }
+.share-btn:disabled { opacity: 0.5; cursor: default; }
 
 /* ── Line movement indicator ── */
 .line-move {
@@ -1635,6 +1636,39 @@ function shareOnX(id) {
   if (p.pitcher) text += `\n⚾ ${p.pitcher}`;
   text += `\n📊 bartelbradley-coder.github.io/fairline-mlb/`;
   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank', 'width=550,height=420');
+}
+
+async function sharePickCard(id) {
+  const p = picksMap[id];
+  if (!p) return;
+  const team    = (p.pick || '').replace(/\s/g, '');
+  const cardUrl = `https://bartelbradley-coder.github.io/fairline-mlb/share-cards/share_${team}.png`;
+  const btn     = document.querySelector(`[data-share-id="${id}"]`);
+
+  // Web Share API with image — works on iOS Safari + Android Chrome
+  if (navigator.share && navigator.canShare) {
+    try {
+      if (btn) { btn.textContent = '⏳'; btn.disabled = true; }
+      const blob = await fetch(cardUrl).then(r => r.blob());
+      const file = new File([blob], `fairline-${team}.png`, { type: 'image/png' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: `FairLine MLB — ${p.pick}`,
+          text:  'Bet the number, not the noise. fairline-mlb.github.io',
+        });
+        if (btn) { btn.textContent = '✓ Shared'; setTimeout(() => { btn.textContent = '⬆ Share Card'; btn.disabled = false; }, 2000); }
+        return;
+      }
+    } catch(e) {
+      if (btn) { btn.textContent = '⬆ Share Card'; btn.disabled = false; }
+      if (e.name === 'AbortError') return; // user cancelled — no fallback needed
+    }
+  }
+
+  // Fallback: open image in new tab so user can save/share manually
+  window.open(cardUrl, '_blank', 'noopener,noreferrer');
+  if (btn) { btn.textContent = '⬆ Share Card'; btn.disabled = false; }
 }
 
 function shareAllPicks() {
@@ -3132,7 +3166,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       <span class="uav-sep">·</span>
       <button class="uav-btn secondary bet-toggle" data-bet-id="${cardId}" onclick="toggleBet('${cardId}')">Track</button>
       <span class="uav-sep">·</span>
-      <button class="uav-btn secondary share-btn" onclick="shareOnX('${cardId}')">Share</button>
+      <button class="uav-btn secondary share-btn" data-share-id="${cardId}" onclick="sharePickCard('${cardId}')">⬆ Share Card</button>
       <span class="uav-sep">·</span>
       <button class="uav-btn secondary copy-btn" data-copy-id="${cardId}" onclick="copyPick('${cardId}')">Copy pick</button>
     </div>`;
