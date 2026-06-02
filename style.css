@@ -999,3 +999,29 @@ details[open] .faq-q::after { content: '−'; }
 .preview-empty-icon { font-size: 32px; margin-bottom: 10px; }
 .preview-empty-title { font-family: 'Oswald',sans-serif; font-size:16px; color:var(--text-3); margin-bottom:6px; }
 .preview-empty-sub { font-size: 12px; color: var(--text-4); line-height: 1.6; }
+
+/* ══════════════════════════════════════════════════════════════
+   FOOTER SPORT MARKS
+══════════════════════════════════════════════════════════════ */
+.footer-sport-marks {
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 6px; margin-bottom: 12px;
+}
+.fsm-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.fsm-item.fsm-soon { opacity: 0.28; }
+.fsm-sep {
+  width: 1px; height: 32px; background: rgba(255,255,255,0.07);
+  margin: 0 3px; align-self: center;
+}
+.fsm-lbl {
+  font-family: system-ui, sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: #334155;
+}
+.fsm-lbl.fsm-active { color: #94a3b8; }
+.fsm-badge {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.06em;
+  background: rgba(99,102,241,0.15); color: #6366f1;
+  padding: 1px 5px; border-radius: 3px;
+}
