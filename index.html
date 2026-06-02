@@ -2514,7 +2514,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   // Includes "as of [time]" disclaimer since SP data is captured at model run time (~9 AM CT)
   const spText    = parseSP(p.meta);
   const oppSP     = p.opp_pitcher || null;
-  const spAsOf    = p.posted_at ? `<span class="sp-as-of" title="Starting pitcher info captured at model run time. Verify current starters before betting.">as of ${p.posted_at} CT ⚠</span>` : '';
+  const spAsOf    = p.posted_at ? `<span class="sp-as-of" title="Starting pitcher info captured at model run time. Verify current starters before betting.">as of ${p.posted_at} ⚠</span>` : '';
   const spHTML = spText
     ? (oppSP
         ? `<div class="sp-line">⚾ <strong>${spText}</strong> <span style="color:var(--text-4);font-size:10px">vs.</span> <strong>${oppSP}</strong>${spAsOf}</div>`
