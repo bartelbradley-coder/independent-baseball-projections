@@ -1,5 +1,5 @@
 /* ── FAIRLINE MLB — Shared Styles ── */
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;800;900&family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;800;900&family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -66,8 +66,8 @@ nav {
   letter-spacing: 0.06em;
   color: #f1f5f9;
 }
-.nav-fair { font-weight: 400; color: #74849a; }
-.nav-bold { font-weight: 800; color: #f1f5f9; }
+.nav-fair { font-weight: 300; color: #64748b; }
+.nav-bold { font-weight: 900; color: #f1f5f9; }
 .nav-name em { color: var(--indigo-lt); font-style: normal; font-weight: 700; }
 
 .nav-links {
