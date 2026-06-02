@@ -1,28 +1,20 @@
 {
-  "updated_at": "6:19 PM CT \u00b7 Jun 1",
+  "updated_at": "7:19 AM CT \u00b7 Jun 2",
   "season": {
-    "wins": 198,
-    "losses": 168,
-    "units": 58.34,
-    "bets": 366,
-    "roi": 0.1594
+    "wins": 201,
+    "losses": 174,
+    "units": 56.54,
+    "bets": 375,
+    "roi": 0.1508
   },
   "last30": {
-    "wins": 17,
-    "losses": 13,
-    "units": 3.02
+    "wins": 13,
+    "losses": 17,
+    "units": -4.06
   },
-  "avg_clv": 0.0045,
-  "clv_count": 308,
+  "avg_clv": 0.004,
+  "clv_count": 316,
   "clv_series": [
-    0.0169,
-    0.0382,
-    -0.0043,
-    0.0241,
-    0.052,
-    -0.0257,
-    -0.0272,
-    -0.0223,
     -0.0141,
     0.0157,
     0.0497,
@@ -44,7 +36,15 @@
     0.0066,
     -0.0015,
     0.0021,
-    -0.0409
+    -0.0409,
+    -0.0206,
+    0.0014,
+    -0.095,
+    0.0284,
+    0.0108,
+    -0.0128,
+    0.0047,
+    -0.0171
   ],
   "season_roi_by_month": [
     {
@@ -64,28 +64,34 @@
       "roi": 0.1985,
       "units": 27.79,
       "bets": 140
+    },
+    {
+      "month": "Jun",
+      "roi": -0.2004,
+      "units": -1.8,
+      "bets": 9
     }
   ],
   "edge_tiers": [
     {
       "label": "2\u20135%",
       "class": "et-all",
-      "bets": 216,
-      "wins": 110,
-      "losses": 106,
-      "win_rate": 0.5093,
-      "roi": 0.0322,
-      "units": 6.95
+      "bets": 224,
+      "wins": 112,
+      "losses": 112,
+      "win_rate": 0.5,
+      "roi": 0.0194,
+      "units": 4.34
     },
     {
       "label": "5\u20138%",
       "class": "et-value",
-      "bets": 89,
-      "wins": 54,
+      "bets": 90,
+      "wins": 55,
       "losses": 35,
-      "win_rate": 0.6067,
-      "roi": 0.356,
-      "units": 31.68
+      "win_rate": 0.6111,
+      "roi": 0.361,
+      "units": 32.49
     },
     {
       "label": "8%+",
@@ -101,12 +107,12 @@
   "kelly_roi_tiers": [
     {
       "label": "< 0.5u",
-      "bets": 366,
-      "wins": 198,
-      "losses": 168,
-      "win_rate": 0.541,
-      "roi": 0.1594,
-      "units": 58.34
+      "bets": 375,
+      "wins": 201,
+      "losses": 174,
+      "win_rate": 0.536,
+      "roi": 0.1508,
+      "units": 56.54
     }
   ]
 }
