@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FairLine MLB — Tomorrow's Opening Lines</title>
+<meta name="description" content="Tomorrow's early MLB model signals based on opening lines and projected lineups. Not official picks — official picks post at 9 AM CT after lineup confirmation.">
+<meta property="og:title" content="FairLine MLB — Tomorrow's Opening Lines">
+<meta property="og:description" content="Early model signals for tomorrow's MLB games. Opening lines, projected lineups, preliminary edge estimates. Official picks post at 9 AM CT.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://bartelbradley-coder.github.io/fairline-mlb/og-image.png">
+<meta property="og:url" content="https://bartelbradley-coder.github.io/fairline-mlb/preview.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FairLine MLB — Tomorrow's Opening Lines">
+<meta name="twitter:description" content="Early model signals for tomorrow's MLB games based on opening lines.">
+<meta name="twitter:image" content="https://bartelbradley-coder.github.io/fairline-mlb/og-image.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='9' y='21' font-family='system-ui,sans-serif' font-size='12' font-weight='900' fill='white'>F</text><text x='17' y='21' font-family='system-ui,sans-serif' font-size='12' font-weight='900' fill='%2360a5fa'>L</text><line x1='22' y1='22' x2='26' y2='17' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='26' cy='17' r='1.5' fill='%2322c55e'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=3">
+<style>
+.page-header { margin-bottom: 6px; }
+.page-title  { font-family: 'Oswald', sans-serif; font-size: 26px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+.page-sub    { font-size: 12px; color: var(--text-3); margin-bottom: 20px; line-height: 1.5; }
+.page-sub a  { color: var(--indigo-lt); text-decoration: none; }
+.page-sub a:hover { text-decoration: underline; }
+.gen-at { font-size: 11px; color: var(--text-4); margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-logo"><svg width="32" height="32" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg"><circle cx="44" cy="44" r="32" fill="rgba(99,102,241,0.1)"/><circle cx="44" cy="44" r="32" stroke="rgba(255,255,255,0.82)" stroke-width="1.8" fill="none"/><path d="M18,26 Q26,34 19,44 Q13,54 20,62" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M70,26 Q62,34 69,44 Q75,54 68,62" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/><text x="28" y="53" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="white">F</text><text x="45" y="53" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#60a5fa">L</text><line x1="54" y1="58" x2="62" y2="48" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/><circle cx="62" cy="48" r="3.5" fill="#22c55e"/></svg></div>
+    <div class="nav-name"><span class="nav-fair">FAIR</span><span class="nav-bold">LINE</span> <em>MLB</em></div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Today's Picks</a>
+    <a class="nav-link active" href="preview.html">Tomorrow</a>
+    <a class="nav-link" href="history.html">Pick History</a>
+    <a class="nav-link" href="performance.html">Model Dashboard</a>
+    <a class="nav-link" href="model.html">Methodology</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-right">
+    <span class="nav-updated" id="last-updated">—</span>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-header">
+    <div class="page-title">Tomorrow's Opening Lines</div>
+    <div class="page-sub">
+      Early model signals based on overnight opening lines and projected lineups.
+      <strong>These are not official picks.</strong>
+      Official picks post at <strong>9:00 AM CT</strong> the following morning after lineup confirmation and CLV tracking begins.
+      <a href="index.html">→ View today's official picks</a>
+    </div>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="preview-page-disclaimer">
+    <div class="ppd-icon">⚠️</div>
+    <div class="ppd-text">
+      <strong>Preliminary estimates only.</strong>
+      Lineups are unconfirmed — the model applies confidence shrinkage to projected rosters.
+      Opening lines shift before first pitch. Edge estimates here will differ from the final official pick.
+      Always verify starting pitchers and batting orders before placing any bet.
+    </div>
+  </div>
+
+  <div id="gen-at" class="gen-at"></div>
+
+  <!-- Pick cards -->
+  <div id="preview-picks"></div>
+
+  <!-- Footer -->
+  <div style="margin-top:28px;padding-top:16px;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--text-4);line-height:1.8">
+    Opening lines posted nightly around 8:00 PM CT · Official picks post at 9:00 AM CT<br>
+    Picks are logged before first pitch and tracked to closing line value<br>
+    <span style="color:var(--indigo-lt)">fairline-mlb.github.io</span>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+// ── Nav hamburger ─────────────────────────────────────────────────────────────
+function toggleNav() {
+  const links = document.querySelector('.nav-links');
+  const btn   = document.getElementById('nav-hamburger');
+  if (!links) return;
+  links.classList.toggle('open');
+  btn?.classList.toggle('open');
+}
+document.querySelectorAll('.nav-link').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelector('.nav-links')?.classList.remove('open');
+  });
+});
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function formatOdds(v) {
+  if (v == null) return '—';
+  return v > 0 ? '+' + v : String(v);
+}
+
+function formatGameTime(utcStr) {
+  if (!utcStr) return '';
+  try {
+    const dt = new Date(utcStr);
+    return dt.toLocaleTimeString('en-US', {
+      hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago'
+    }) + ' CT';
+  } catch { return ''; }
+}
+
+function formatDate(utcStr) {
+  if (!utcStr) return '';
+  try {
+    const dt = new Date(utcStr);
+    return dt.toLocaleDateString('en-US', {
+      weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/Chicago'
+    });
+  } catch { return ''; }
+}
+
+// ── Load + render ─────────────────────────────────────────────────────────────
+async function loadPreview() {
+  const container = document.getElementById('preview-picks');
+  const genAtEl   = document.getElementById('gen-at');
+  const v = Date.now();
+
+  try {
+    const res = await fetch('data/preview.json?v=' + v);
+    if (!res.ok) throw new Error('not found');
+    const data = await res.json();
+
+    // Check if preview is for tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().slice(0, 10);
+
+    if (data.generated_at) {
+      genAtEl.textContent = 'Generated ' + data.generated_at;
+    }
+
+    document.getElementById('last-updated').textContent = data.generated_at || '—';
+
+    const picks = data.picks || [];
+
+    // Update page title with date
+    if (data.date) {
+      document.querySelector('.page-title').textContent =
+        'Opening Lines — ' + formatDate(data.date + 'T12:00:00Z');
+    }
+
+    if (picks.length === 0 || (data.date && data.date < tomorrowStr)) {
+      container.innerHTML = `
+        <div class="preview-empty">
+          <div class="preview-empty-icon">🔭</div>
+          <div class="preview-empty-title">Preview posts at 8:00 PM CT</div>
+          <div class="preview-empty-sub">
+            The evening pipeline runs nightly at 8 PM CT and fetches tomorrow's opening lines.<br>
+            Check back then for early model signals.
+          </div>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = picks.map(p => {
+      const edge    = p.edge ? (p.edge * 100).toFixed(1) : null;
+      const odds    = formatOdds(p.odds);
+      const book    = p.book || '';
+      const pitchers = [p.pitcher, p.opp_pitcher].filter(Boolean).join(' vs. ');
+      const gameTime = formatGameTime(p.game_time);
+      const edgeHtml = edge
+        ? `<div class="ppc-edge">+${edge}%</div>`
+        : '';
+      const modelPct = p.model_prob ? (p.model_prob * 100).toFixed(1) + '%' : null;
+      const mktPct   = p.market_prob ? (p.market_prob * 100).toFixed(1) + '%' : null;
+      const probLine = (modelPct && mktPct)
+        ? `<div style="font-size:10px;color:var(--text-4);margin-top:4px">Model ${modelPct} · Market ${mktPct}</div>`
+        : '';
+      const playable = p.playable_to
+        ? `<div style="font-size:10px;color:var(--amber);margin-top:2px">Max ${p.playable_to > 0 ? '+' + p.playable_to : p.playable_to}</div>`
+        : '';
+
+      return `
+        <div class="preview-pick-card">
+          <div class="ppc-left">
+            <div class="ppc-team">${p.pick || '—'}
+              <span class="ppc-prelim">PRELIMINARY</span>
+            </div>
+            <div class="ppc-game">${p.game || ''}${gameTime ? ' · ' + gameTime : ''}</div>
+            ${pitchers ? `<div class="ppc-pitchers">${pitchers}</div>` : ''}
+            ${probLine}
+          </div>
+          <div class="ppc-right">
+            ${edgeHtml}
+            <div class="ppc-odds">${odds}</div>
+            <div class="ppc-book">${book}</div>
+            ${playable}
+          </div>
+        </div>`;
+    }).join('');
+
+  } catch (e) {
+    container.innerHTML = `
+      <div class="preview-empty">
+        <div class="preview-empty-icon">🔭</div>
+        <div class="preview-empty-title">Preview posts at 8:00 PM CT</div>
+        <div class="preview-empty-sub">
+          The evening pipeline runs nightly at 8 PM CT and fetches tomorrow's opening lines.<br>
+          Check back then for early model signals.
+        </div>
+      </div>`;
+  }
+}
+
+loadPreview();
+</script>
+</body>
+</html>

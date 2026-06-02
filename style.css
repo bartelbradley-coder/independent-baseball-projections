@@ -867,3 +867,135 @@ details[open] .faq-q::after { content: '−'; }
   .lm-card { min-width: 80px; }
   .pick-key-info { gap: 4px; font-size: 10px; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   STATUS STRIP — daily picks state indicator
+══════════════════════════════════════════════════════════════ */
+.status-strip {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 10px 14px; border-radius: 9px; margin-bottom: 14px;
+  font-size: 12px; border: 1px solid;
+}
+.status-strip.ss-pending {
+  background: rgba(99,102,241,0.05); border-color: rgba(99,102,241,0.18);
+}
+.status-strip.ss-locked {
+  background: rgba(34,197,94,0.05); border-color: rgba(34,197,94,0.2);
+}
+.status-strip.ss-active {
+  background: rgba(239,68,68,0.05); border-color: rgba(239,68,68,0.22);
+}
+.status-strip.ss-done {
+  background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.07);
+}
+.ss-badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.09em;
+  padding: 2px 7px; border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+}
+.ss-badge-locked { background: rgba(34,197,94,0.14); color: var(--green); }
+.ss-badge-live   { background: rgba(239,68,68,0.16); color: #f87171; animation: ss-pulse 2s infinite; }
+.ss-badge-done   { background: rgba(255,255,255,0.07); color: var(--text-3); }
+.ss-badge-pending{ background: rgba(99,102,241,0.14); color: var(--indigo-lt); }
+@keyframes ss-pulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
+.ss-text { flex: 1; color: var(--text-2); min-width: 0; }
+.ss-time { font-size: 11px; color: var(--text-4); flex-shrink: 0; }
+.ss-link {
+  font-size: 11px; color: var(--indigo-lt); text-decoration: none;
+  flex-shrink: 0; white-space: nowrap;
+}
+.ss-link:hover { color: var(--text); }
+
+/* ══════════════════════════════════════════════════════════════
+   PICK LIFECYCLE BADGE
+══════════════════════════════════════════════════════════════ */
+.plc-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 4px; flex-shrink: 0; align-self: flex-start;
+}
+.plc-locked { background: rgba(34,197,94,0.10); color: var(--green); }
+.plc-live   { background: rgba(239,68,68,0.14); color: #f87171; }
+.plc-win    { background: rgba(34,197,94,0.10); color: var(--green); }
+.plc-loss   { background: rgba(239,68,68,0.06); color: var(--text-4); }
+
+/* ══════════════════════════════════════════════════════════════
+   NO-PICKS-YET STATE (before 9 AM)
+══════════════════════════════════════════════════════════════ */
+.picks-pending-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 36px 24px; text-align: center;
+}
+.ppc-time { font-size: 28px; margin-bottom: 10px; }
+.ppc-title {
+  font-family: 'Oswald', sans-serif; font-size: 17px; font-weight: 600;
+  color: var(--text-2); letter-spacing: 0.04em; margin-bottom: 6px;
+}
+.ppc-sub { font-size: 12px; color: var(--text-4); line-height: 1.65; margin-bottom: 18px; }
+.ppc-preview-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.25);
+  border-radius: 7px; padding: 8px 16px; text-decoration: none;
+  font-size: 12px; font-weight: 600; color: var(--indigo-lt);
+  transition: background 0.15s;
+}
+.ppc-preview-link:hover { background: rgba(99,102,241,0.18); }
+
+/* ══════════════════════════════════════════════════════════════
+   ABOUT THIS MODEL — collapsed below-fold section
+══════════════════════════════════════════════════════════════ */
+.about-model {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; margin-bottom: 16px; overflow: hidden;
+}
+.about-model summary {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px; cursor: pointer; list-style: none;
+  color: var(--text-4); font-size: 12px; font-weight: 600;
+  letter-spacing: 0.04em; user-select: none;
+}
+.about-model summary::-webkit-details-marker { display: none; }
+.about-model summary:hover { color: var(--text-3); background: rgba(255,255,255,0.02); }
+.about-model[open] summary { border-bottom: 1px solid var(--border); color: var(--text-3); }
+.am-chevron { margin-left: auto; font-size: 10px; transition: transform 0.2s; }
+.about-model[open] .am-chevron { transform: rotate(180deg); }
+.about-model-body { padding: 16px; }
+
+/* ══════════════════════════════════════════════════════════════
+   PREVIEW PAGE — tomorrow's opening lines
+══════════════════════════════════════════════════════════════ */
+.preview-page-disclaimer {
+  background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.22);
+  border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.ppd-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.ppd-text { font-size: 12px; color: var(--text-3); line-height: 1.65; }
+.ppd-text strong { color: var(--amber); font-weight: 600; }
+
+.preview-pick-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 18px; margin-bottom: 10px;
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.ppc-left { flex: 1; min-width: 0; }
+.ppc-team {
+  font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700;
+  color: var(--text); letter-spacing: 0.02em; line-height: 1;
+}
+.ppc-game { font-size: 11px; color: var(--text-4); margin-top: 3px; }
+.ppc-pitchers { font-size: 11px; color: var(--text-4); margin-top: 2px; }
+.ppc-right { text-align: right; flex-shrink: 0; }
+.ppc-edge { font-size: 18px; font-weight: 800; color: var(--green); line-height: 1; }
+.ppc-odds { font-size: 13px; font-weight: 600; color: var(--text-2); margin-top: 3px; }
+.ppc-book { font-size: 11px; color: var(--text-4); }
+.ppc-prelim {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+  padding: 2px 6px; border-radius: 4px; margin-top: 6px; display: inline-block;
+  background: rgba(245,158,11,0.12); color: var(--amber);
+}
+.preview-empty {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 40px 24px; text-align: center;
+}
+.preview-empty-icon { font-size: 32px; margin-bottom: 10px; }
+.preview-empty-title { font-family: 'Oswald',sans-serif; font-size:16px; color:var(--text-3); margin-bottom:6px; }
+.preview-empty-sub { font-size: 12px; color: var(--text-4); line-height: 1.6; }

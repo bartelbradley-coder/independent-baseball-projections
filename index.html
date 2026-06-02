@@ -1412,6 +1412,7 @@
   </a>
   <div class="nav-links">
     <a class="nav-link active" href="index.html">Today's Picks</a>
+    <a class="nav-link" href="preview.html">Tomorrow</a>
     <a class="nav-link" href="history.html">Pick History</a>
     <a class="nav-link" href="performance.html">Model Dashboard</a>
     <a class="nav-link" href="model.html">Methodology</a>
@@ -1426,6 +1427,12 @@
 </nav>
 
 <div class="page" id="picks">
+
+  <!-- STATUS STRIP: always-visible daily state indicator -->
+  <div id="status-strip" class="status-strip ss-pending" style="display:none">
+    <span class="ss-badge ss-badge-pending">Loading…</span>
+    <span class="ss-text"></span>
+  </div>
 
   <!-- Brand bar and differentiator line merged into phb-card above picks -->
 
@@ -1539,86 +1546,50 @@
     <div class="evidence-grid" id="evidence-grid"></div>
   </section>
 
-  <!-- METHODOLOGY NOTE (moved below picks) -->
-  <details class="methodology-note" style="margin-bottom:16px">
-    <summary class="mn-summary">
-      <span class="mn-icon">ℹ️</span>
-      <span class="mn-title">FairLine is a market-informed model</span>
-      <span class="mn-chevron">›</span>
+  <!-- ABOUT THIS MODEL — collapsed single expandable replacing 4 sections -->
+  <details class="about-model" id="about-model">
+    <summary>
+      <span>ℹ️</span>
+      <span>About this model</span>
+      <span class="am-chevron">▾</span>
     </summary>
-    <div class="mn-body">
-      <p class="mn-text">Raw team strength, pitching, lineup, park, weather, and situational signals generate the baseline projection. Market information is used as a stabilizing input to reduce extreme outputs and align with betting market run environments. After calibration, the final FairLine probability is compared against the no-vig market probability to identify remaining pricing gaps.</p>
-      <p class="mn-note">Because the market is used as both a stabilizing input and a comparison benchmark, FairLine should be understood as a market-informed fair-line model rather than a fully market-independent projection.</p>
-    </div>
-  </details>
-
-  <!-- MODEL METADATA (moved below picks) -->
-  <div class="trust-strip" style="margin-bottom:16px">
-    <div class="trust-card">
-      <div class="trust-label">Model Type</div>
-      <div class="trust-val">Dual-Poisson + log-odds</div>
-    </div>
-    <div class="trust-card">
-      <div class="trust-label">Market Benchmark</div>
-      <div class="trust-val">No-vig Pinnacle probability</div>
-    </div>
-    <div class="trust-card">
-      <div class="trust-label">Adjustments</div>
-      <div class="trust-val">32 log-odds signals</div>
-    </div>
-    <div class="trust-card">
-      <div class="trust-label">Calibration</div>
-      <div class="trust-val">Platt-scaled, updated monthly</div>
-    </div>
-    <div class="trust-card">
-      <div class="trust-label">Pick Filter</div>
-      <div class="trust-val">≥2% edge vs. Pinnacle no-vig</div>
-    </div>
-  </div>
-
-  <!-- TRANSPARENCY STANDARDS -->
-  <section class="transparency-section">
-    <div class="ts-header" onclick="this.closest('.transparency-section').classList.toggle('open')">
-      <span class="ts-icon">🔒</span>
-      <span class="ts-title">Transparency Standards ▾</span>
-      <span class="ts-chevron">▾</span>
-    </div>
-    <div class="ts-list-wrap">
-      <ul class="ts-list">
-        <li>Every posted pick is logged before first pitch.</li>
-        <li>Model probability, market probability, odds, edge, stake, and timestamp are stored at posting.</li>
-        <li>Results are not deleted after losses.</li>
-        <li>Closing-line value is tracked where available.</li>
-        <li>Live results are reported separately from historical backtests.</li>
-        <li>Past performance does not guarantee future results.</li>
+    <div class="about-model-body">
+      <p style="font-size:12px;color:var(--text-3);line-height:1.7;margin-bottom:14px">
+        Raw team strength, pitching, lineup, park, weather, and situational signals generate the baseline projection.
+        Market information stabilizes outputs and aligns with betting market run environments.
+        The final FairLine probability is compared against the no-vig Pinnacle probability to identify pricing gaps.
+        Only picks with ≥2% edge are posted.
+      </p>
+      <div class="trust-strip" style="margin-bottom:14px">
+        <div class="trust-card"><div class="trust-label">Model</div><div class="trust-val">Dual-Poisson + log-odds</div></div>
+        <div class="trust-card"><div class="trust-label">Benchmark</div><div class="trust-val">No-vig Pinnacle</div></div>
+        <div class="trust-card"><div class="trust-label">Signals</div><div class="trust-val">32 log-odds adj.</div></div>
+        <div class="trust-card"><div class="trust-label">Calibration</div><div class="trust-val">Platt-scaled monthly</div></div>
+      </div>
+      <ul style="font-size:11px;color:var(--text-4);line-height:1.9;padding-left:16px;margin-bottom:14px">
+        <li>Every pick is logged before first pitch — timestamps are immutable</li>
+        <li>Results are never deleted after losses</li>
+        <li>Closing-line value is tracked to verify edge holds to close</li>
+        <li>Live results are reported separately from historical backtests</li>
+        <li>Past performance does not guarantee future results</li>
       </ul>
-    </div>
-  </section>
-
-  <!-- INLINE DISCLAIMER -->
-  <div class="site-disclaimer-box">
-    <span class="sdb-icon">⚠️</span>
-    <span class="sdb-text">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past performance does not guarantee future results. Always verify odds, starters, lineups, and availability before wagering. Must be 18+ and located in a legal jurisdiction. Bet responsibly.</span>
-  </div>
-
-  <!-- FAQ -->
-  <section class="faq-section" id="faq">
-    <h2 class="faq-heading">Frequently Asked Questions</h2>
-    <div class="faq-list">
-      <details class="faq-item">
+      <details class="faq-item" style="margin-bottom:6px">
         <summary class="faq-q">What is a fair line?</summary>
-        <div class="faq-a">A fair line (or fair odds) is the theoretical price at which neither side of a bet has an edge — the true implied probability converted to American odds with no bookmaker margin. FairLine computes this from its model probability.</div>
+        <div class="faq-a">The theoretical price at which neither side has an edge — the true implied probability converted to American odds with no margin. FairLine computes this from its model probability.</div>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" style="margin-bottom:6px">
         <summary class="faq-q">How is edge calculated?</summary>
-        <div class="faq-a">Edge is the difference between the model's estimated win probability and the market's implied probability (after removing the vig). A positive edge means the model believes the bet is priced better than the market suggests. FairLine only posts picks with at least 2% edge vs. Pinnacle's no-vig line.</div>
+        <div class="faq-a">Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). FairLine only posts picks with at least 2% edge vs. Pinnacle's no-vig line.</div>
       </details>
       <details class="faq-item">
         <summary class="faq-q">Does past performance guarantee future results?</summary>
-        <div class="faq-a">No. Sports betting always involves risk and variance. The model identifies positive expected value based on historical patterns and market signals — not certainty. Past results, including ROI and CLV, are no guarantee of future performance. Never bet more than you can afford to lose.</div>
+        <div class="faq-a">No. Sports betting involves risk and variance. The model identifies positive expected value — not certainty. Never bet more than you can afford to lose.</div>
       </details>
+      <div style="margin-top:14px;font-size:10px;color:var(--text-4);line-height:1.7">
+        ⚠️ For informational and educational purposes only. Not financial advice. Must be 18+ and located in a legal jurisdiction. Bet responsibly.
+      </div>
     </div>
-  </section>
+  </details>
 
 </div>
 
@@ -2257,7 +2228,7 @@ async function loadPicks() {
     const preview = (previewRes && previewRes.ok) ? await previewRes.json() : null;
     _histRef = hist;
     if (data) render(data, hist, scores, perf);
-    else renderEmptyState(null, hist);
+    else { renderEmptyState(null, hist); renderStatusStrip([], true, null); }
     renderPreview(preview);
   } catch (e) {
     console.error('[FairLine] loadPicks error:', e);
@@ -2300,12 +2271,28 @@ function renderEmptyState(data, hist, marginal = []) {
       </div>`;
   }
 
+  // Determine if we're before 9 AM CT (picks not yet posted) or just no picks today
+  const nowCT = new Date(new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}));
+  const isPre9AM = nowCT.getHours() < 9;
+
+  const emptyCard = isPre9AM
+    ? `<div class="picks-pending-card">
+        <div class="ppc-time">🕐</div>
+        <div class="ppc-title">Today's Picks Post at 9:00 AM CT</div>
+        <div class="ppc-sub">
+          The model runs each morning after overnight data and opening lines are confirmed.<br>
+          Picks are locked before first pitch and tracked to closing line value.
+        </div>
+        <a class="ppc-preview-link" href="preview.html">🔭 View tomorrow's opening line estimates →</a>
+      </div>`
+    : `<div class="state-card empty-state">
+        <div class="state-icon">📊</div>
+        <div class="state-title">No picks clear the edge threshold today.</div>
+        <div class="state-sub">The model found no bets with sufficient edge vs. Pinnacle no-vig lines.</div>
+      </div>`;
+
   document.getElementById('picks-container').innerHTML = `
-    <div class="state-card empty-state">
-      <div class="state-icon">📊</div>
-      <div class="state-title">No picks clear the edge threshold today.</div>
-      <div class="state-sub">Check back after the next model update. The model runs at 10:08 AM and 10:30 AM CT.</div>
-    </div>
+    ${emptyCard}
     ${nearMissHTML}
     ${stripHTML}`;
 }
@@ -2476,6 +2463,17 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   const isDog    = p.odds > 0;
   const isLive   = isLiveGame(p);
   const isOver   = isGameOver(p);
+  const hasResult = p.result && p.result !== '';
+  const isWin    = hasResult && (String(p.result).toLowerCase().includes('w') || p.pnl > 0);
+  const isLoss   = hasResult && (String(p.result).toLowerCase().includes('l') || (p.pnl != null && p.pnl <= 0 && hasResult));
+
+  // Lifecycle badge
+  let plcBadge = '';
+  if (isOver && isWin)        plcBadge = '<span class="plc-badge plc-win">WIN</span>';
+  else if (isOver && isLoss)  plcBadge = '<span class="plc-badge plc-loss">LOSS</span>';
+  else if (isOver)            plcBadge = '<span class="plc-badge plc-loss">FINAL</span>';
+  else if (isLive)            plcBadge = '<span class="plc-badge plc-live">● LIVE</span>';
+  else                        plcBadge = '<span class="plc-badge plc-locked">LOCKED</span>';
 
   // Matchup parse
   let awayTeam = p.game || '', homeTeam = '';
@@ -3093,6 +3091,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       ${matchLabelHTML}
       ${resultBadgeHTML}
       ${headerTimeHTML ? `<span class="uc-tier-dot">·</span>${headerTimeHTML}` : ''}
+      <span style="margin-left:auto">${plcBadge}</span>
     </div>`;
 
   // ── Pick headline — dominant: large team name + large odds + edge badge ────
@@ -3159,10 +3158,60 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
 }
 
 // ── Main render ───────────────────────────────────────────────────────────────
+// ── Status strip ──────────────────────────────────────────────────────────────
+function renderStatusStrip(picks, noPicksYet, generatedAt) {
+  const strip = document.getElementById('status-strip');
+  if (!strip) return;
+  strip.style.display = 'flex';
+
+  if (noPicksYet || !picks || picks.length === 0) {
+    const nowCT  = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Chicago'}));
+    const pre9   = nowCT.getHours() < 9;
+    strip.className = 'status-strip ss-pending';
+    strip.innerHTML = `
+      <span class="ss-badge ss-badge-pending">${pre9 ? '🕐 PENDING' : '📊 NO PICKS'}</span>
+      <span class="ss-text">${pre9 ? 'Picks post at 9:00 AM CT after lineup confirmation' : 'No picks clear the 2% edge threshold today'}</span>
+      <a class="ss-link" href="preview.html">Tomorrow's opening lines →</a>`;
+    return;
+  }
+
+  const liveCount    = picks.filter(p => isLiveGame(p)).length;
+  const doneCount    = picks.filter(p => isGameOver(p)).length;
+  const pendingCount = picks.length - liveCount - doneCount;
+  const firstPitch   = picks
+    .filter(p => !isLiveGame(p) && !isGameOver(p))
+    .map(p => p.game_time).filter(Boolean).sort()[0];
+  const fpStr = firstPitch
+    ? ' · First pitch ' + (new Date(firstPitch).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/Chicago'})) + ' CT'
+    : '';
+  const postedStr = picks[0]?.posted_at ? ' · Posted ' + picks[0].posted_at : '';
+
+  if (liveCount > 0) {
+    strip.className = 'status-strip ss-active';
+    strip.innerHTML = `
+      <span class="ss-badge ss-badge-live">● LIVE</span>
+      <span class="ss-text">${liveCount} active · ${doneCount} final · ${pendingCount} upcoming</span>
+      <span class="ss-time">${postedStr.replace(' · ','')}</span>`;
+  } else if (doneCount === picks.length) {
+    strip.className = 'status-strip ss-done';
+    strip.innerHTML = `
+      <span class="ss-badge ss-badge-done">✓ FINAL</span>
+      <span class="ss-text">All ${picks.length} game${picks.length !== 1 ? 's' : ''} complete</span>
+      <span class="ss-time">${postedStr.replace(' · ','')}</span>`;
+  } else {
+    strip.className = 'status-strip ss-locked';
+    strip.innerHTML = `
+      <span class="ss-badge ss-badge-locked">✓ LOCKED</span>
+      <span class="ss-text">${picks.length} pick${picks.length !== 1 ? 's' : ''} for today${fpStr}</span>
+      <span class="ss-time">${postedStr.replace(' · ','')}</span>`;
+  }
+}
+
 function render(data, hist, scores = {}, perf = null) {
   // Build historical context lookup and start countdown timer (both idempotent)
   _histContextFn = buildHistContextFn((hist && hist.rows) ? hist.rows : []);
   startCountdownTimer();
+  renderStatusStrip(data.picks, data.no_picks_yet, data.generated_at);
 
   // Date header — now used as the section label just above the picks
   if (data.date) {
