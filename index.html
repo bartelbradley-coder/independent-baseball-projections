@@ -2996,8 +2996,8 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     // Inline stat detail when raw data is available (xFIP, OAA, bullpen pitches)
     function facDetail(f) {
       const label = f.label;
-      if (label.includes('Starter') && rs.pick_xfip && rs.opp_xfip) {
-        return `${rs.pick_xfip.toFixed(2)} vs ${rs.opp_xfip.toFixed(2)} xFIP`;
+      if (label.includes('Pitcher quality') && rs.pick_xfip && rs.opp_xfip) {
+        return `Pick ${rs.pick_xfip.toFixed(2)} vs Opp ${rs.opp_xfip.toFixed(2)} xFIP`;
       }
       if (label.includes('Defense') && (rs.pick_oaa !== 0 || rs.opp_oaa !== 0)) {
         const net = (rs.pick_oaa || 0) - (rs.opp_oaa || 0);
