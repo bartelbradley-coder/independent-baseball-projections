@@ -2999,6 +2999,9 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       if (label.includes('Pitcher quality') && rs.pick_xfip && rs.opp_xfip) {
         return `Pick ${rs.pick_xfip.toFixed(2)} vs Opp ${rs.opp_xfip.toFixed(2)} xFIP`;
       }
+      if (label.includes('Bullpen quality') && rs.pick_bp_xfip && rs.opp_bp_xfip) {
+        return `Pick ${rs.pick_bp_xfip.toFixed(2)} vs Opp ${rs.opp_bp_xfip.toFixed(2)} xFIP`;
+      }
       if (label.includes('Defense') && (rs.pick_oaa !== 0 || rs.opp_oaa !== 0)) {
         const net = (rs.pick_oaa || 0) - (rs.opp_oaa || 0);
         return `OAA ${net >= 0 ? '+' : ''}${net}`;
