@@ -802,6 +802,42 @@
   font-weight: 600; color: inherit;
 }
 
+/* ── Current State Panel ── */
+.cs-header {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin: 10px 0 8px; padding-top: 4px;
+}
+.cs-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-4);
+}
+.cs-lineup-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.06em;
+  padding: 2px 7px; border-radius: 4px; flex-shrink: 0;
+}
+.cs-lc-confirmed { background: rgba(34,197,94,0.12); color: var(--green); }
+.cs-lc-projected { background: rgba(245,158,11,0.12); color: var(--amber); }
+.cs-opp-lineup   { font-size: 9px; color: var(--text-4); }
+.cs-metrics {
+  display: flex; gap: 0; margin-bottom: 10px;
+}
+.cs-metric { flex: 1; text-align: center; padding: 8px 4px; }
+.cs-metric + .cs-metric { border-left: 1px solid var(--border); }
+.cs-m-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-4); margin-bottom: 3px; }
+.cs-m-val   { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--text-2); }
+.cs-signals { display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+.cs-sig-row {
+  display: flex; align-items: center; gap: 6px; font-size: 11px;
+}
+.cs-sig-dot   { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.cs-sig-label { flex: 1; color: var(--text-2); min-width: 0; }
+.cs-sig-bar-wrap {
+  width: 60px; height: 5px; background: var(--border);
+  border-radius: 3px; flex-shrink: 0; overflow: hidden;
+}
+.cs-sig-bar-fill { height: 100%; border-radius: 3px; }
+.cs-sig-val { font-family: 'JetBrains Mono', monospace; font-size: 10px; flex-shrink: 0; min-width: 44px; text-align: right; }
+
 /* ── Pick card redesign ── */
 .matchup-teams { display: flex; align-items: baseline; gap: 7px; margin-bottom: 3px; flex-wrap: wrap; }
 .mt-pick { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; color: var(--text-2); }
@@ -2660,22 +2696,21 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   // current edge → re-computed on each 30-min refresh with confirmed lineups.
   function buildLiveEdgePanel() {
     const currEdge = p.current_edge;
-    // Don't render when no live data exists (current_model.json not yet written)
     if (currEdge == null || !p.current_refresh_time) return { panelHTML: '', warnHTML: '' };
+
+    // Hide current state panel once game is live or over — not actionable
+    if (isLiveGame(p) || isGameOver(p)) return { panelHTML: '', warnHTML: '' };
 
     const postedPct = (p.edge * 100).toFixed(1);
     const currPct   = (Math.abs(currEdge) * 100).toFixed(1);
-    const delta     = Math.abs(currEdge - p.edge);
-    const rec       = p.current_recommendation;  // "same"|"reduced"|"flipped"|null
+    const delta     = currEdge - p.edge;  // signed: positive = improved
+    const rec       = p.current_recommendation;
 
-    // Colour for the posted (locked) value
-    const postedCls = p.edge >= 0.05 ? 'lep-amber' : 'lep-green';
-
-    // Colour + text for the current value
-    let currCls  = 'lep-green';
+    // Current edge colour
+    let currCls = 'lep-green';
     let currText = `+${currPct}%`;
     if (rec === 'flipped') {
-      currCls  = 'lep-red';
+      currCls = 'lep-red';
       const ft = p.current_flipped_team || 'OPP';
       const fp = ((p.current_flipped_edge || 0) * 100).toFixed(1);
       currText = `${ft} +${fp}%`;
@@ -2684,47 +2719,87 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       currText = currEdge < 0 ? `${(currEdge * 100).toFixed(1)}%` : `+${currPct}%`;
     }
 
-    // Delta bar: width = fraction of posted edge that was lost (capped at 100%)
-    const deltaRatio = p.edge > 0 ? Math.min(1.0, delta / p.edge) : 0;
-    const barWidth   = (deltaRatio * 100).toFixed(0);
-    let barColor = '#22c55e';
-    let statusText  = 'Stable';
-    let statusColor = '#22c55e';
-    if (rec === 'flipped') {
-      barColor = '#ef4444'; statusColor = '#ef4444'; statusText = 'Recommendation flipped';
-    } else if (rec === 'reduced' && currEdge < 0.02) {
-      barColor = '#f97316'; statusColor = '#f97316'; statusText = 'Below threshold';
-    } else if (delta >= 0.02) {
-      barColor = '#f59e0b'; statusColor = '#f59e0b';
-      statusText = `−${(delta * 100).toFixed(1)}pp`;
-    } else if (delta >= 0.005) {
-      statusText = `−${(delta * 100).toFixed(1)}pp`;
-    }
+    // Edge shift indicator
+    const absDelta = Math.abs(delta);
+    let statusText = 'Stable';
+    let statusColor = 'var(--green)';
+    if (rec === 'flipped') { statusText = 'Flipped'; statusColor = 'var(--red)'; }
+    else if (delta <= -0.025) { statusText = `↓ −${(absDelta*100).toFixed(1)}pp`; statusColor = 'var(--amber)'; }
+    else if (delta <= -0.005) { statusText = `↓ −${(absDelta*100).toFixed(1)}pp`; }
+    else if (delta >= 0.005)  { statusText = `↑ +${(delta*100).toFixed(1)}pp`; }
 
-    const postedLabel  = p.posted_at    || 'Morning run';
+    // Lineup badge
+    const lc = p.current_lineup_confirmed;
+    const olc = p.current_opp_lineup_confirmed;
+    let lineupBadge = '';
+    if (lc === true)       lineupBadge = `<span class="cs-lineup-badge cs-lc-confirmed">✓ Lineup Confirmed</span>`;
+    else if (lc === false) lineupBadge = `<span class="cs-lineup-badge cs-lc-projected">⚠ Lineup Projected</span>`;
+    const oppLineupNote = (olc === true) ? ' · Opp confirmed' : (olc === false) ? ' · Opp projected' : '';
+
+    // Current derived values
+    const currFair     = p.current_fair_odds    || p.fair_odds  || '—';
+    const currPlayable = p.current_playable_to != null
+      ? (p.current_playable_to > 0 ? '+' + p.current_playable_to : String(p.current_playable_to))
+      : (p.playable_to != null
+          ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to))
+          : '—');
+    const currMp = p.current_model_prob
+      ? (p.current_model_prob * 100).toFixed(1) + '%' : '—';
+
+    // Current top signals
+    const factors = p.current_top_factors || [];
+    const MAX_SIG = 0.60;
+    const signalRows = factors.map(f => {
+      const pct   = Math.min(100, Math.round(Math.abs(f.pp) / MAX_SIG * 100));
+      const col   = f.positive ? 'var(--green)' : 'var(--red)';
+      const ppStr = (f.positive ? '+' : '') + f.pp.toFixed(2) + 'pp';
+      return `<div class="cs-sig-row">
+        <span class="cs-sig-dot" style="background:${col}"></span>
+        <span class="cs-sig-label">${f.label}</span>
+        <div class="cs-sig-bar-wrap"><div class="cs-sig-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+        <span class="cs-sig-val" style="color:${col}">${ppStr}</span>
+      </div>`;
+    }).join('');
+
     const refreshLabel = p.current_refresh_time || 'Last refresh';
-    const lineupLabel  = rec === 'same' ? '✓ confirmed lineup' : 'confirmed lineup';
+    const postedLabel  = p.posted_at || 'Morning run';
 
     const panelHTML = `
       <div class="live-edge-panel">
+        <!-- Row 1: posted edge (locked for tracking) -->
         <div class="lep-row">
           <span class="lep-label">Posted</span>
-          <span class="lep-value ${postedCls}">+${postedPct}%</span>
+          <span class="lep-value lep-green">+${postedPct}%</span>
           <span class="lep-meta">${postedLabel} · projected lineup</span>
         </div>
         <hr class="lep-divider">
+        <!-- Row 2: current edge -->
         <div class="lep-row">
           <span class="lep-label">Current</span>
           <span class="lep-value ${currCls}">${currText}</span>
-          <span class="lep-meta">${refreshLabel} · ${lineupLabel}</span>
+          <span class="lep-meta lep-delta-status" style="color:${statusColor}">${statusText}</span>
         </div>
-        <div class="lep-delta-bar">
-          <div class="lep-delta-fill" style="width:${barWidth}%;background:${barColor}"></div>
+        <hr class="lep-divider">
+        <!-- Current state section -->
+        <div class="cs-header">
+          <span class="cs-title">⟳ Current Model · ${refreshLabel}</span>
+          ${lineupBadge}${oppLineupNote ? `<span class="cs-opp-lineup">${oppLineupNote}</span>` : ''}
         </div>
-        <div class="lep-delta-label">
-          <span>Model confidence shift: ${delta < 0.005 ? 'None' : '−' + (delta * 100).toFixed(1) + 'pp'}</span>
-          <span class="lep-delta-status" style="color:${statusColor}">${statusText}</span>
+        <div class="cs-metrics">
+          <div class="cs-metric">
+            <div class="cs-m-label">Model Prob</div>
+            <div class="cs-m-val" style="color:var(--indigo-lt)">${currMp}</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-m-label">Fair ML</div>
+            <div class="cs-m-val">${currFair}</div>
+          </div>
+          <div class="cs-metric">
+            <div class="cs-m-label">Playable To</div>
+            <div class="cs-m-val" style="color:var(--amber)">${currPlayable}</div>
+          </div>
         </div>
+        ${factors.length ? `<div class="cs-signals">${signalRows}</div>` : ''}
       </div>`;
 
     // Warning banners for significant changes
