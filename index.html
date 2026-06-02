@@ -3040,8 +3040,12 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     </div>` : '';
 
   // Playable threshold + key info line (fairOddsStr defined above)
-  const modelProbStr = modelPct ? modelPct + '%' : '—';
-  const mktProbStr   = mktPct   ? mktPct   + '%' : '—';
+  const modelProbStr  = modelPct ? modelPct + '%' : '—';
+  const mktProbStr    = mktPct   ? mktPct   + '%' : '—';
+  const playableRaw   = p.playable_to;
+  const playableStr   = playableRaw != null
+    ? (playableRaw > 0 ? '+' + playableRaw : String(playableRaw))
+    : null;
   const keyInfoHTML = `
     <div class="pick-key-info">
       <span class="pki-item"><span class="pki-lbl">Model</span>&nbsp;<span class="pki-val">${modelProbStr}</span></span>
@@ -3049,6 +3053,8 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       <span class="pki-item"><span class="pki-lbl">Market</span>&nbsp;<span class="pki-val">${mktProbStr}</span></span>
       <span class="pki-sep">·</span>
       <span class="pki-item"><span class="pki-lbl">Fair odds</span>&nbsp;<span class="pki-val pki-threshold">${fairOddsStr}</span></span>
+      ${playableStr ? `<span class="pki-sep">·</span>
+      <span class="pki-item"><span class="pki-lbl">Playable to</span>&nbsp;<span class="pki-val pki-playable">${playableStr}</span></span>` : ''}
     </div>`;
 
   // ── Header row: tier · matchup · time + value badge ───────────────────────
