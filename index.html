@@ -595,12 +595,10 @@
 .tas-sub { font-size: 8px; color: var(--text-4); margin-top: 2px; }
 .tas-div { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; }
 
-/* ── Narrative preview (always-visible, one line) ── */
+/* ── Narrative preview (always-visible) ── */
 .uc-narrative-preview-line {
-  font-size: 10.5px; color: var(--text-3); line-height: 1.5;
+  font-size: 10.5px; color: var(--text-3); line-height: 1.55;
   margin: 4px 0 6px;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 /* ── Card spacing: more breathing room between picks ── */
@@ -3291,10 +3289,10 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     finalScoreHTML = `<div class="uph-final-score ${won ? 'won' : 'lost'}">${won ? 'W' : 'L'} ${gameResult.score} — Final</div>`;
   }
 
-  // One-line narrative preview (first sentence, max 2 lines)
-  const _firstSentence = (fullNarrativeText || '').split('. ')[0];
-  const narrativePreviewLineHTML = _firstSentence && _firstSentence.length > 20
-    ? `<div class="uc-narrative-preview-line">${_firstSentence}.</div>`
+  // Narrative preview — reuse narrativePreview() for consistent 2-sentence extraction
+  const _narrativePreviewText = narrativePreview(fullNarrativeText || '');
+  const narrativePreviewLineHTML = _narrativePreviewText && _narrativePreviewText.length > 20
+    ? `<div class="uc-narrative-preview-line">${_narrativePreviewText}</div>`
     : '';
 
   const pickHeadlineHTML = `
