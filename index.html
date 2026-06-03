@@ -3097,16 +3097,12 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   // RL/O/U removed from display — still tracked in backend (picks_log.csv, rl_picks_log.csv)
   const omBadgesHTML = '';  // RL + O/U badges removed
 
-  // ── Narrative preview (always visible) ──────────────────────────────────────
-  // Source the text from narrative field, or build from model/market %
+  // ── Narrative text source (used by narrativePreviewLineHTML below) ──────────
   const fullNarrativeText = (p.narrative && p.narrative.trim())
     ? p.narrative.trim()
     : (modelPct && mktPct
         ? `${p.pick} is the ${isDog ? 'underdog' : 'favorite'} at ${formatOdds(p.odds)}. Model: ${modelPct}% win probability vs. market's ${mktPct}% — +${edgePct}% pricing edge.`
         : null);
-  const previewHTML = fullNarrativeText
-    ? `<div class="uc-narrative-preview">${narrativePreview(fullNarrativeText)}</div>`
-    : '';
 
   // ── Markets table: ML only (RL + O/U removed from display, still tracked) ──
   const mlBarW = Math.min(100, (p.edge / 0.12) * 100).toFixed(0);
