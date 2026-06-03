@@ -2580,16 +2580,20 @@ function toggleDetails(id, btn) {
   btn.classList.toggle('open', open);
 }
 
-// ── Narrative preview: first ~1 sentence for always-visible area ──────────────
+// ── Narrative preview: full text if short; 2 sentences if long ────────────────
 function narrativePreview(text) {
   if (!text || !text.trim()) return '';
   const s = text.trim();
-  // Break at first sentence end between 70–220 chars
-  const m = s.match(/^.{70,220}?\.\s/);
-  if (m) return m[0].trim();
-  if (s.length <= 200) return s;
-  const cut = s.lastIndexOf(' ', 200);
-  return s.slice(0, cut > 0 ? cut : 200) + '…';
+  // Short narrative (≤480 chars = ~2–3 sentences) — show it all
+  if (s.length <= 480) return s;
+  // Long narrative — collect sentence breaks and cut to first 2
+  const re = /\.\s+(?=[A-Z])/g;
+  let m, cuts = [];
+  while ((m = re.exec(s)) !== null) cuts.push(m.index + 1);
+  if (cuts.length >= 2) return s.slice(0, cuts[1]).trim();
+  if (cuts.length >= 1) return s.slice(0, cuts[0]).trim();
+  const cut = s.lastIndexOf(' ', 380);
+  return s.slice(0, cut > 0 ? cut : 380) + '…';
 }
 
 // ── Pick card HTML ────────────────────────────────────────────────────────────
