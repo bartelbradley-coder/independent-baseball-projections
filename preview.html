@@ -169,32 +169,25 @@ async function loadPreview() {
     if (!res.ok) throw new Error('not found');
     const data = await res.json();
 
-    // Check if preview is for tomorrow — use LOCAL date arithmetic, not UTC,
-    // so CT evening hours don't roll toISOString() into the day after tomorrow.
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.getFullYear() + '-' +
-      String(tomorrow.getMonth() + 1).padStart(2, '0') + '-' +
-      String(tomorrow.getDate()).padStart(2, '0');
+    // Build today and tomorrow strings using LOCAL date (not UTC) so CT
+    // evening hours don't roll into the wrong calendar day.
+    const _now = new Date();
+    const _pad = n => String(n).padStart(2, '0');
+    const todayStr    = `${_now.getFullYear()}-${_pad(_now.getMonth()+1)}-${_pad(_now.getDate())}`;
+    const _tmr = new Date(_now); _tmr.setDate(_tmr.getDate() + 1);
+    const tomorrowStr = `${_tmr.getFullYear()}-${_pad(_tmr.getMonth()+1)}-${_pad(_tmr.getDate())}`;
 
-    if (data.generated_at) {
-      const gamesNote = data.games_in_cache != null
-        ? ` · ${data.games_in_cache} game${data.games_in_cache !== 1 ? 's' : ''} with lines`
-        : '';
-      genAtEl.textContent = 'Updated ' + data.generated_at + gamesNote + ' · Refreshes at 7, 9 & 11 PM CT';
-    }
-
-    document.getElementById('last-updated').textContent = data.generated_at || '—';
+    // isToday: preview date has rolled into today (midnight → 9 AM CT window)
+    // isTomorrow: normal evening preview window
+    const previewDate  = data.date || '';
+    const isToday      = previewDate === todayStr;
+    const isTomorrow   = previewDate === tomorrowStr;
+    const isStale      = previewDate < todayStr;   // older than today — genuinely expired
 
     const picks = data.picks || [];
 
-    // Update page title with date
-    if (data.date) {
-      document.querySelector('.page-title').textContent =
-        'Opening Lines — ' + formatDate(data.date + 'T12:00:00Z');
-    }
-
-    if (picks.length === 0 || (data.date && data.date < tomorrowStr)) {
+    // Expired or empty — show placeholder
+    if (picks.length === 0 || isStale) {
       container.innerHTML = `
         <div class="preview-empty">
           <div class="preview-empty-icon">🔭</div>
@@ -206,7 +199,38 @@ async function loadPreview() {
       return;
     }
 
-    container.innerHTML = picks.map(p => {
+    // Page title — adapt label depending on whether this is still "tomorrow"
+    // or has rolled into today's slate after midnight
+    if (data.date) {
+      document.querySelector('.page-title').textContent = isToday
+        ? 'Preliminary Estimates — ' + formatDate(data.date + 'T12:00:00Z')
+        : 'Opening Lines — '         + formatDate(data.date + 'T12:00:00Z');
+    }
+
+    // Subtitle / generated-at line
+    if (data.generated_at) {
+      const gamesNote = data.games_in_cache != null
+        ? ` · ${data.games_in_cache} game${data.games_in_cache !== 1 ? 's' : ''} with lines`
+        : '';
+      const refreshNote = isToday
+        ? ' · Official picks post at 9 AM CT'
+        : ' · Refreshes at 7, 9 & 11 PM CT';
+      genAtEl.textContent = 'Updated ' + data.generated_at + gamesNote + refreshNote;
+    }
+
+    document.getElementById('last-updated').textContent = data.generated_at || '—';
+
+    // After midnight: show a banner explaining these are preliminary estimates
+    const todayBanner = isToday ? `
+      <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);
+                  border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:11px;
+                  color:var(--amber);line-height:1.5;">
+        <strong>Preliminary estimates</strong> — lineups not yet confirmed.
+        Official picks post at <strong>9:00 AM CT</strong> after lineup confirmation.
+        <a href="index.html" style="color:var(--amber);margin-left:6px;">→ View today's picks</a>
+      </div>` : '';
+
+    container.innerHTML = todayBanner + picks.map(p => {
       const edge    = p.edge ? (p.edge * 100).toFixed(1) : null;
       const odds    = formatOdds(p.odds);
       const book    = p.book || '';
