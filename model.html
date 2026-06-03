@@ -316,9 +316,9 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   <div class="qs-title">How FairLine Works — At a Glance</div>
   <ul class="qs-list">
     <li>Projects expected runs for each team using a <strong>Dual-Poisson model</strong> calibrated on park, weather, pitcher quality, and lineup data</li>
-    <li><strong>32 log-odds adjustments</strong> refine the base win probability — pitching matchup, lineup confirmation, bullpen form, BvP, precipitation, line movement, and more</li>
+    <li><strong>33 log-odds adjustments</strong> refine the base win probability — pitcher quality, lineup confirmation, bullpen form, BvP, precipitation, line movement, and more</li>
     <li>Calibrated monthly on 2026 live results using <strong>Platt scaling</strong> — parameters updated as the season progresses</li>
-    <li><strong>Edge = model probability − Pinnacle no-vig price.</strong> Only picks where the model sees ≥2% mispricing are posted</li>
+    <li><strong>Edge = blended model probability − Pinnacle no-vig price.</strong> Only picks where the model sees ≥2% mispricing are posted. <em>Pure model probability</em> (no market input) is tracked separately for calibration — never using market-blended numbers to evaluate model skill.</li>
     <li>Every pick logged with timestamp before first pitch. <strong>CLV tracked to closing line</strong> to validate the signal is real, not luck</li>
   </ul>
 </div>
@@ -360,7 +360,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   </div>
   <div class="msig-cell">
     <div class="msig-lbl">Adjustments</div>
-    <div class="msig-val">32 log-odds</div>
+    <div class="msig-val">33 log-odds</div>
     <div class="msig-sub">logit(p) += Σ αᵢ</div>
   </div>
   <div class="msig-cell">
@@ -537,7 +537,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="fbox"><span class="fn">P</span>(home wins) <span class="op">=</span>
   <span class="fn">Σ</span>_{k=1}^∞ <span class="fn">P</span>(<span class="v">R_home</span><span class="op">=</span><span class="v">k</span>) <span class="op">·</span> <span class="fn">CDF</span><sub>Pois</sub>(<span class="v">λ_away</span><span class="op">,</span> <span class="v">k</span><span class="op">−</span><span class="n">1</span>)
 <span class="cm">// Tie → extra innings as 50/50</span></div>
-      <div class="math-note">No Monte Carlo needed — win prob is computed exactly from Poisson CDFs. Teams are modeled as independent (no run correlation). Pitcher, park, and lineup signals enter via λ; 32 log-odds factors adjust the derived win probability directly.</div>
+      <div class="math-note">No Monte Carlo needed — win prob is computed exactly from Poisson CDFs. Teams are modeled as independent (no run correlation). Pitcher, park, and lineup signals enter via λ; 33 log-odds factors adjust the derived win probability directly.</div>
     </div>
 
     <div class="math-block ct">
@@ -679,7 +679,10 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
           <div class="feat-col-src">FanGraphs · Baseball Savant</div>
         </div>
       </div>
-      <div class="feat-item"><div class="feat-name">starter_xfip</div><div class="feat-desc">Regressed ERA estimator — normalizes FIP by league LD%, removes BABIP luck and HR/FB variance. Primary pitcher quality signal.</div></div>
+      <div class="feat-item"><div class="feat-name">starter_xfip</div><div class="feat-desc">Regressed ERA estimator — normalizes FIP by league LD%, removes BABIP luck and HR/FB variance. Primary pitcher quality signal. Blended 70% individual / 30% league average to reduce overconfidence at extremes.</div></div>
+      <div class="feat-item"><div class="feat-name">pitcher_quality_xfip <span style="color:var(--green);font-size:9px;font-weight:700">v4</span></div><div class="feat-desc">Display-only approximation of the starter's xFIP contribution to the Poisson λ ratio. Shows the pick team's starter quality advantage vs opponent — e.g. +1.9pp when facing a 4.77 xFIP opponent with a 2.31 xFIP starter. Not a separate log-odds adjustment (would double-count); captures the Poisson core contribution explicitly.</div></div>
+      <div class="feat-item"><div class="feat-name">bullpen_quality_xfip <span style="color:var(--green);font-size:9px;font-weight:700">v4</span></div><div class="feat-desc">Same approximation applied to the bullpen innings share (~42% at default projected IP). Surfaces bullpen quality differential as a visible signal when one team's 'pen is meaningfully better than the other's.</div></div>
+      <div class="feat-item"><div class="feat-name">projected_starter_ip <span style="color:var(--green);font-size:9px;font-weight:700">v4</span></div><div class="feat-desc">Phase 1 IP projection: weighted blend of season IP/start (60%), last-5 starts (25%), and last-3 starts (15%) with Bayesian smoothing toward 5.3 IP league average. Rest adjustment (−0.4 short rest to +0.1 extra rest) and pitch-count fatigue applied. Controls the starter/bullpen xFIP split weight — a starter projected for 6.5 IP weights the starter signal at 72% vs 28% bullpen.</div></div>
       <div class="feat-item"><div class="feat-name">xera_blend <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v2</span></div><div class="feat-desc">Statcast xERA (contact quality from exit velocity/launch angle) blended with xFIP — up to 30% weight at 300+ PA faced. Captures contact suppression independent of K/BB.</div></div>
       <div class="feat-item"><div class="feat-name">k_minus_bb_pct <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v2</span></div><div class="feat-desc">FanGraphs K%−BB% — direct command + dominance signal. Complements SwStr% by capturing walk suppression that swinging-strike rate misses.</div></div>
       <div class="feat-item"><div class="feat-name">tto_penalty <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v2</span></div><div class="feat-desc">Times-through-order degradation: ~0.25 runs/TTO beyond the first. Batters adapt; a starter projected for 7+ IP faces measurably higher opponent scoring late.</div></div>
@@ -720,7 +723,8 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="feat-item"><div class="feat-name">lineup_ops_split</div><div class="feat-desc">Per-batter OPS vs. LHP/RHP from posted lineups only. Weighted OPS delta vs. team season mean, matched to starter's hand.</div></div>
       <div class="feat-item"><div class="feat-name">lineup_quality_delta</div><div class="feat-desc">Today's lineup aggregate OPS vs. team season average. Detects rest-day lineups and injury absences.</div></div>
       <div class="feat-item"><div class="feat-name">lineup_certainty <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v2</span></div><div class="feat-desc">When lineups aren't confirmed at pick time, the adjustment stack is shrunk 5% toward the Poisson base — correctly reducing confidence without distorting the run-environment estimate.</div></div>
-      <div class="feat-item"><div class="feat-name">bvp_career_matchup <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v2</span></div><div class="feat-desc">Career batter-vs-pitcher xwOBA from Baseball Savant, PA-weighted regression toward league average. Capped ±1pp per batter, ±2.5pp per team. Captures genuine matchup history without overfitting small samples.</div></div>
+      <div class="feat-item"><div class="feat-name">bvp_career_matchup <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v2</span></div><div class="feat-desc">Career batter-vs-pitcher xwOBA from Baseball Savant, PA-weighted regression toward league average. Capped ±1pp per batter, ±2.5pp per team. Captures genuine matchup history without overfitting small samples. Displayed on pick cards as <strong>Career Matchup</strong>.</div></div>
+      <div class="feat-item"><div class="feat-name">starter_rest_adj</div><div class="feat-desc">Days since last start + prior pitch count penalty. Captures rest-days fatigue only — pitch quality (xFIP) is handled separately via the λ ratio. Displayed as <strong>Starter Rest</strong> on pick cards. Short rest (≤3 days): −2.5pp. Extra rest: +0.5pp. Prior start 105+ pitches: additional penalty.</div></div>
       <div class="feat-item"><div class="feat-name">bullpen_availability</div><div class="feat-desc">Binary fatigue flag: closer/setup used 2+ times in last 3 days → tier downgrade in bullpen xFIP blend.</div></div>
       <div class="feat-item"><div class="feat-name">opener_shrinkage <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v2</span></div><div class="feat-desc">When a starter is TBD or listed as an opener, the full adjustment stack is shrunk 20% — the xFIP-based projection is unreliable and the model should not over-project on opener games.</div></div>
       <div class="feat-item"><div class="feat-name">novig_pinnacle_prob</div><div class="feat-desc">Pinnacle moneyline de-juiced via simultaneous margin strip. Sharpest market benchmark — hold ≈ 2.5%.</div></div>
@@ -745,7 +749,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="ex-step">
         <div class="ex-num">2</div>
         <div class="ex-content">
-          <div class="ex-title">32 log-odds adjustments</div>
+          <div class="ex-title">33 log-odds adjustments</div>
           <div class="ex-text">Home starter Stuff+ 118 (+0.3pp), lineup quality +0.8pp, TTO penalty −0.4pp, umpire wide zone +0.2pp, BvP +0.5pp → net <strong>+1.4pp adjustment</strong></div>
         </div>
       </div>
@@ -918,7 +922,7 @@ Bias by total line:
   </div>
 <div class="footer">
   <div class="footer-l">
-    FAIRLINE MLB · Dual-Poisson Win Probability Engine · 33 Live Signals · 32 Log-Odds Adjustments · Platt Calibration · Half-Kelly Sizing · CLV Tracked<br>
+    FAIRLINE MLB · Dual-Poisson Win Probability Engine · 33 Live Signals · 33 Log-Odds Adjustments · Platt Calibration · Half-Kelly Sizing · CLV Tracked<br>
     Sources: MLB Stats API · FanGraphs · Baseball Savant · Open-Meteo · UmpScoreCards · Pinnacle (Odds API)<br>
     <span style="font-size:9px;color:#1e293b">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Never bet more than you can afford to lose. 18+ only. Bet responsibly.</span>
   </div>
