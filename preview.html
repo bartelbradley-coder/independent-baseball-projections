@@ -178,7 +178,10 @@ async function loadPreview() {
       String(tomorrow.getDate()).padStart(2, '0');
 
     if (data.generated_at) {
-      genAtEl.textContent = 'Generated ' + data.generated_at;
+      const gamesNote = data.games_in_cache != null
+        ? ` · ${data.games_in_cache} game${data.games_in_cache !== 1 ? 's' : ''} with lines`
+        : '';
+      genAtEl.textContent = 'Updated ' + data.generated_at + gamesNote + ' · Refreshes at 7, 9 & 11 PM CT';
     }
 
     document.getElementById('last-updated').textContent = data.generated_at || '—';
@@ -195,10 +198,9 @@ async function loadPreview() {
       container.innerHTML = `
         <div class="preview-empty">
           <div class="preview-empty-icon">🔭</div>
-          <div class="preview-empty-title">Preview posts at 8:00 PM CT</div>
+          <div class="preview-empty-title">Preview posts at 7:00 PM CT</div>
           <div class="preview-empty-sub">
-            The evening pipeline runs nightly at 8 PM CT and fetches tomorrow's opening lines.<br>
-            Check back then for early model signals.
+            The preview refreshes automatically at 7, 9, and 11 PM CT<br>as Pinnacle posts tomorrow's opening lines.
           </div>
         </div>`;
       return;
@@ -245,7 +247,7 @@ async function loadPreview() {
     container.innerHTML = `
       <div class="preview-empty">
         <div class="preview-empty-icon">🔭</div>
-        <div class="preview-empty-title">Preview posts at 8:00 PM CT</div>
+        <div class="preview-empty-title">Preview posts at 7:00 PM CT</div>
         <div class="preview-empty-sub">
           The evening pipeline runs nightly at 8 PM CT and fetches tomorrow's opening lines.<br>
           Check back then for early model signals.
