@@ -1743,14 +1743,20 @@ async function sharePickCard(id) {
   const p = picksMap[id];
   if (!p) return;
   const team    = (p.pick || '').replace(/\s/g, '');
-  const cardUrl = `https://www.fairlinemlb.com/share-cards/share_${team}.png`;
+  // Cache-bust with today's date so stale CDN versions don't get used
+  const today   = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const cardUrl = `https://www.fairlinemlb.com/share-cards/share_${team}.png?v=${today}`;
   const btn     = document.querySelector(`[data-share-id="${id}"]`);
 
   // Web Share API with image — works on iOS Safari + Android Chrome
   if (navigator.share && navigator.canShare) {
     try {
       if (btn) { btn.textContent = '⏳'; btn.disabled = true; }
-      const blob = await fetch(cardUrl).then(r => r.blob());
+      const resp = await fetch(cardUrl);
+      if (!resp.ok) throw new Error(`Card not found (${resp.status})`);
+      const blob = await resp.blob();
+      // Verify we got an actual image (not an HTML error page)
+      if (!blob.type.startsWith('image/')) throw new Error('Not an image');
       const file = new File([blob], `fairline-${team}.png`, { type: 'image/png' });
       if (navigator.canShare({ files: [file] })) {
         await navigator.share({
