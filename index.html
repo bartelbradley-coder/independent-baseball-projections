@@ -1380,15 +1380,52 @@
 }
 /* det-v8-panel always visible inside the right panel */
 #md-right .det-v8-panel { display: block; overflow-x: hidden; }
-/* Force single column — the actual wrapper class is prob-action-v8, not pa-wrap */
+/* Force single column — wrapper class is prob-action-v8 */
 #md-right .prob-action-v8 { grid-template-columns: 1fr !important; }
-/* Remove desktop-only side border when stacked */
 #md-right .pa-v8-col.prob-c { border-right: none; border-bottom: 1px solid rgba(255,255,255,.04); }
 #md-right .pa-v8-col.action-c { background: none; }
-/* Tighter section padding inside right panel */
-#md-right .det-v8-sec { padding: 11px 14px; }
-/* Prevent any child content from causing horizontal overflow */
+/* Section padding */
+#md-right .det-v8-sec { padding: 12px 16px; }
+/* Larger section header labels */
+#md-right .det-v8-hdr {
+  font-size: 9.5px !important;
+  color: var(--text-3) !important;
+  letter-spacing: .16em;
+  margin-bottom: 10px;
+}
+/* Larger Win Probability Gap numbers */
+#md-right .pv-val { font-size: 26px !important; }
+#md-right .pv-val.edgev { font-size: 18px !important; }
+#md-right .prob-v8-bar { height: 12px !important; border-radius: 5px !important; }
+#md-right .pv-mkt, #md-right .pv-edge { border-radius: 0 !important; }
+/* Prevent horizontal overflow */
 #md-right { overflow-x: hidden; }
+
+/* Two-row panel header */
+.md-hdr-r1 { display:flex;align-items:center;gap:10px;margin-bottom:7px }
+.md-hdr-r2 { display:flex;align-items:center;gap:7px;font-size:11px;flex-wrap:wrap }
+.md-hdr-edge { font-family:var(--font-mono);font-weight:700;font-size:12px }
+.v .md-hdr-edge,.value .md-hdr-edge { color:var(--green) }
+.cond .md-hdr-edge,.conditional .md-hdr-edge { color:var(--amber) }
+.md-hdr-model { color:var(--text-2) }
+.md-hdr-model strong { color:#60a5fa }
+.md-hdr-market { color:var(--text-3) }
+.md-hdr-market strong { color:var(--text-2) }
+.md-hdr-sep { color:rgba(255,255,255,.12);user-select:none }
+.md-hdr-game { font-size:10px;color:var(--text-4) }
+/* Verdict badge in header */
+.md-vbadge { font-size:8.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:2px 8px;border-radius:4px }
+.md-vbadge.value  { background:rgba(34,197,94,.10);color:var(--green);border:1px solid rgba(34,197,94,.22) }
+.md-vbadge.strong { background:rgba(245,158,11,.10);color:var(--amber);border:1px solid rgba(245,158,11,.22) }
+.md-vbadge.conditional,.md-vbadge.reduced { background:rgba(245,158,11,.08);color:var(--amber);border:1px solid rgba(245,158,11,.18) }
+.md-vbadge.watchlist,.md-vbadge.marginal { background:rgba(99,102,241,.08);color:var(--indigo-lt);border:1px solid rgba(99,102,241,.18) }
+
+/* Below-threshold collapsible */
+.odds-below-toggle { font-size:10px;color:var(--text-4);cursor:pointer;margin-top:6px;list-style:none }
+.odds-below-toggle::-webkit-details-marker { display:none }
+.odds-below-toggle summary { display:flex;align-items:center;gap:5px;padding:3px 0 }
+.odds-below-toggle summary::before { content:'▶';font-size:8px;transition:transform .15s }
+.odds-below-toggle[open] summary::before { transform:rotate(90deg) }
 
 /* Right panel header (pick identity + close) */
 .md-panel-hdr {
@@ -3139,11 +3176,22 @@ function buildDetailsV8(p, cardId) {
       ? `Do not bet below ${playable_to}`
       : `Do not bet worse than ${playable_to}`;
 
-    const bestRow = `<div class="odds-v8-best"><span class="ov8-name">${bestEntry.book}</span><span class="ov8-odds">${bestEntry.odds > 0 ? '+' : ''}${bestEntry.odds}</span><span class="ov8-best-tag">BEST</span></div>`;
-    const playableRow = stillPlayable.length
-      ? `<div class="odds-v8-inline">${stillPlayable.map(e=>`${e.book} ${e.odds > 0 ? '+' : ''}${e.odds}`).join(' · ')}</div>` : '';
+    const fmtOdds = (e) => `${e.odds > 0 ? '+' : ''}${e.odds}`;
+    const bestRow = `<div class="odds-v8-best"><span class="ov8-name">${bestEntry.book}</span><span class="ov8-odds">${fmtOdds(bestEntry)}</span><span class="ov8-best-tag">BEST</span></div>`;
+
+    // Cap "still playable" at 4 books shown — extras noted with count
+    const MAX_SHOWN = 4;
+    const shownPlayable = stillPlayable.slice(0, MAX_SHOWN);
+    const extraCount    = stillPlayable.length - shownPlayable.length;
+    const playableRow = shownPlayable.length
+      ? `<div class="odds-v8-inline">${shownPlayable.map(e=>`${e.book} ${fmtOdds(e)}`).join(' · ')}${extraCount > 0 ? ` <span style="color:var(--text-4)">+${extraCount} more</span>` : ''}</div>` : '';
+
+    // Below threshold — collapsed behind a <details> toggle, non-actionable
     const belowRow = below.length
-      ? `<div class="odds-v8-inline"><span class="ov8-below">${below.map(e=>`${e.book} ${e.odds > 0 ? '+' : ''}${e.odds}`).join(' · ')}</span></div>` : '';
+      ? `<details class="odds-below-toggle">
+           <summary>${below.length} book${below.length>1?'s':''} below threshold</summary>
+           <div class="odds-v8-inline" style="margin-top:5px"><span class="ov8-below">${below.map(e=>`${e.book} ${fmtOdds(e)}`).join(' · ')}</span></div>
+         </details>` : '';
 
     oddsHTML = `
       <div class="det-v8-sec">
@@ -3151,7 +3199,7 @@ function buildDetailsV8(p, cardId) {
         <div class="odds-v8-note">Playable to ${playable_to} · ${playableLabel}</div>
         ${bestRow ? `<div class="odds-v8-group"><div class="odds-v8-glbl">Best Available</div>${bestRow}</div>` : ''}
         ${playableRow ? `<div class="odds-v8-group"><div class="odds-v8-glbl">Still Playable</div>${playableRow}</div>` : ''}
-        ${belowRow ? `<div class="odds-v8-group"><div class="odds-v8-glbl">Below Threshold</div>${belowRow}</div>` : ''}
+        ${belowRow}
       </div>`;
   } else if (bestOddsNum) {
     oddsHTML = `
@@ -3217,38 +3265,44 @@ function buildDetailsV8(p, cardId) {
     </div>`;
   }
 
-  // ── Assemble official play (full) ──
+  // ── Assemble official play — reordered for right-panel UX ──
+  // Order: Action Summary → Win Prob Gap → Analysis → Drivers → Odds → Lineup → History
   return `
   <div id="${cardId}-det" class="det-v8-panel">
+
+    <!-- 1. ACTION SUMMARY — first thing visible, most actionable -->
     <div class="det-v8-sec">
-      <div class="det-v8-hdr">Quick Audit</div>
+      <div class="det-v8-hdr">Action Summary</div>
+      <div class="as-v8 ${actionClass}">${actionBodyHTML}</div>
+      <div class="det-v8-cta">${ctaHTML}</div>
+    </div>
+
+    <!-- 2. WIN PROBABILITY GAP — solo full-width section, numbers enlarged via CSS -->
+    <div class="det-v8-sec">
+      <div class="det-v8-hdr">Win Probability Gap</div>
+      <div class="prob-v8-card">
+        <div class="prob-v8-row">
+          <div class="prob-v8-col"><span class="pv-lbl">Market</span><div class="pv-val mkt">${mktPct || '—'}%</div></div>
+          <div class="prob-v8-div"></div>
+          <div class="prob-v8-col"><span class="pv-lbl">Edge</span><div class="pv-val edgev">+${edgePct}pp</div></div>
+          <div class="prob-v8-div"></div>
+          <div class="prob-v8-col"><span class="pv-lbl">Model</span><div class="pv-val mdl">${modelPct || '—'}%</div></div>
+        </div>
+        <div class="prob-v8-bar"><div class="pv-mkt" style="width:${mktFill}%"></div><div class="${edgeFillClass}" style="left:${mktFill}%;width:${edgeFill}%"></div></div>
+      </div>
+    </div>
+
+    <!-- 3. MODEL ANALYSIS — Thesis row removed (redundant with header + metric strip) -->
+    <div class="det-v8-sec">
+      <div class="det-v8-hdr">Model Analysis</div>
       <div class="qa-v8">
-        <div class="qa-v8-row"><span class="qa-v8-lbl thesis">Thesis</span><span class="qa-v8-val">${thesis}</span></div>
         <div class="qa-v8-row"><span class="qa-v8-lbl driver">Driver</span><span class="qa-v8-val">${driver}</span></div>
         <div class="qa-v8-row"><span class="qa-v8-lbl risk">Risk</span><span class="qa-v8-val" style="color:${isReduced ? 'var(--amber)' : 'var(--text-2)'}">${risk}</span></div>
         <div class="qa-v8-row"><span class="qa-v8-lbl ev">EV</span>${evHTML}</div>
       </div>
     </div>
-    <div class="prob-action-v8">
-      <div class="pa-v8-col prob-c">
-        <div class="det-v8-hdr">Win Probability Gap</div>
-        <div class="prob-v8-card">
-          <div class="prob-v8-row">
-            <div class="prob-v8-col"><span class="pv-lbl">Market</span><div class="pv-val mkt">${mktPct || '—'}%</div></div>
-            <div class="prob-v8-div"></div>
-            <div class="prob-v8-col"><span class="pv-lbl">Edge</span><div class="pv-val edgev">+${edgePct}pp</div></div>
-            <div class="prob-v8-div"></div>
-            <div class="prob-v8-col"><span class="pv-lbl">Model</span><div class="pv-val mdl">${modelPct || '—'}%</div></div>
-          </div>
-          <div class="prob-v8-bar"><div class="pv-mkt" style="width:${mktFill}%"></div><div class="${edgeFillClass}" style="left:${mktFill}%;width:${edgeFill}%"></div></div>
-        </div>
-      </div>
-      <div class="pa-v8-col ${actionColClass}">
-        <div class="det-v8-hdr">Action Summary</div>
-        <div class="as-v8 ${actionClass}">${actionBodyHTML}</div>
-        <div class="det-v8-cta">${ctaHTML}</div>
-      </div>
-    </div>
+
+    <!-- 4–7. Drivers, Odds, Lineup, Historical -->
     ${driversHTML}
     ${oddsHTML}
     ${statusHTML}
@@ -3287,17 +3341,34 @@ function toggleDetails(id, btn) {
 
   // Build and inject into #md-detail — placeholder is untouched
   const detHTML = buildDetailsV8(p, id);
-  const oddsStr = formatOdds(p.odds);
-  const edgePct = (p.edge * 100).toFixed(1);
-  const oddsCls = p.odds > 0 ? 'pos' : 'neg';
+  const oddsStr  = formatOdds(p.odds);
+  const edgePct  = (p.edge * 100).toFixed(1);
+  const oddsCls  = p.odds > 0 ? 'pos' : 'neg';
+  const modelPct = p.model_prob  ? (p.model_prob  * 100).toFixed(1) : null;
+  const mktPct   = p.market_prob ? (p.market_prob * 100).toFixed(1) : null;
+  const [, tierClass] = tierLabel(p.edge, p.verdict);
+  // Verdict-coloured top accent
+  const accentCol = (tierClass === 'strong' || tierClass === 'value')
+    ? 'rgba(34,197,94,.55)'
+    : (tierClass === 'conditional' || tierClass === 'reduced')
+    ? 'rgba(245,158,11,.45)'
+    : 'rgba(99,102,241,.38)';
+  const verdictLabel = (p.verdict || tierClass || 'VALUE').replace('_',' ').toUpperCase();
 
   detail.innerHTML = `
-    <div class="md-panel-hdr">
-      <span class="md-panel-team">${p.pick}</span>
-      <span class="md-panel-odds ${oddsCls}">${oddsStr}</span>
-      <span class="md-panel-edge">+${edgePct}pp edge</span>
-      <span class="md-panel-game">${p.game || ''}</span>
-      <button class="md-panel-close" onclick="closeExpandPanel()" title="Close (Esc)">✕</button>
+    <div class="md-panel-hdr" style="border-top:2px solid ${accentCol}">
+      <div class="md-hdr-r1">
+        <span class="md-panel-team">${p.pick}</span>
+        <span class="md-panel-odds ${oddsCls}">${oddsStr}</span>
+        <span class="md-vbadge ${tierClass}">${verdictLabel}</span>
+        <button class="md-panel-close" style="margin-left:auto" onclick="closeExpandPanel()" title="Close (Esc)">✕</button>
+      </div>
+      <div class="md-hdr-r2">
+        <span class="md-hdr-edge ${tierClass}">+${edgePct}pp edge</span>
+        ${modelPct ? `<span class="md-hdr-sep">·</span><span class="md-hdr-model">Model <strong>${modelPct}%</strong></span>` : ''}
+        ${mktPct   ? `<span class="md-hdr-sep">·</span><span class="md-hdr-market">Market <strong>${mktPct}%</strong></span>` : ''}
+        ${p.game   ? `<span class="md-hdr-sep">·</span><span class="md-hdr-game">${p.game}</span>` : ''}
+      </div>
     </div>
     ${detHTML}`;
 
