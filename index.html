@@ -520,12 +520,13 @@
   padding: 6px 0 4px; gap: 8px;
 }
 .uph-team {
-  font-family: var(--font-display); font-size: 22px; font-weight: 800;
+  font-family: var(--font-display); font-size: 30px; font-weight: 900;
   color: var(--text-1, #f1f5f9); line-height: 1; flex: 1; min-width: 0;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  letter-spacing: -.01em;
 }
 .uph-odds {
-  font-family: var(--font-mono); font-size: 22px; font-weight: 700;
+  font-family: var(--font-mono); font-size: 26px; font-weight: 700;
   line-height: 1; flex-shrink: 0;
 }
 .uph-odds.dog { color: var(--green); }
@@ -629,8 +630,55 @@
 .sk-line.short { width: 40%; }
 .sk-line.xs    { height: 6px; width: 80%; }
 
-/* ── Details button — slightly bolder to be most prominent action ── */
-.uav-btn.primary { font-weight: 600 !important; }
+/* ── Details button — pill treatment, primary CTA ── */
+.uav-btn.primary {
+  font-weight: 700 !important;
+  background: rgba(34,197,94,.09) !important;
+  border: 1px solid rgba(34,197,94,.25) !important;
+  border-radius: 6px !important;
+  padding: 4px 12px !important;
+  color: var(--green) !important;
+}
+.uav-btn.primary:hover { background: rgba(34,197,94,.16) !important; color: #4ade80 !important; }
+.uav-btn.primary.open  { background: rgba(34,197,94,.18) !important; }
+
+/* ── Compact live edge line (replaces multi-row panel in collapsed card) ── */
+.lep-compact {
+  display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+  padding: 6px 14px; font-size: 10.5px; font-family: var(--font-ui);
+  background: rgba(255,255,255,.018); border-top: 1px solid rgba(255,255,255,.04);
+}
+.lep-c-label { font-size: 8px; font-weight: 700; letter-spacing: .10em; text-transform: uppercase; color: var(--text-4); }
+.lep-c-val   { font-family: var(--font-mono); font-weight: 700; font-size: 11px; }
+.lep-c-delta { font-size: 10px; font-weight: 600; font-family: var(--font-mono); }
+.lep-c-sep   { color: rgba(255,255,255,.12); }
+.lep-c-time  { font-size: 10px; color: var(--text-4); font-family: var(--font-mono); }
+
+/* ── Win Probability Gap: larger numbers in expanded view ── */
+.det-v8-panel .pv-val { font-size: 26px !important; }
+.det-v8-panel .pv-val.edgev { font-size: 18px !important; }
+.det-v8-panel .prob-v8-bar { height: 12px !important; border-radius: 5px !important; }
+
+/* ── Expansion header connecting expanded panel to the card ── */
+.det-exp-hdr {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.02);
+}
+.deh-pick { font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: .02em; }
+.deh-edge { font-family: var(--font-mono); font-size: 13px; font-weight: 700; }
+.det-v8-panel.pick-tier-value  .deh-edge { color: var(--green); }
+.det-v8-panel.pick-tier-strong .deh-edge { color: var(--amber); }
+.det-v8-panel.pick-tier-cond   .deh-edge { color: var(--amber); }
+.det-v8-panel.pick-tier-other  .deh-edge { color: var(--indigo-lt); }
+.deh-label { font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--text-4); margin-left: auto; }
+
+/* ── Visual weight tiers for expanded sections ── */
+/* Primary sections: slightly stronger */
+.det-v8-sec.sec-primary { background: rgba(255,255,255,.01); }
+/* Secondary sections: reduced label contrast */
+.det-v8-sec.sec-secondary .det-v8-hdr { color: var(--text-4) !important; font-size: 8px !important; }
+.det-v8-sec.sec-secondary { padding: 10px 14px; }
 
 /* ── Week-at-a-Glance strip ─────────────────────────────────────────────── */
 .week-strip {
@@ -3062,10 +3110,10 @@ function buildDetailsV8(p, cardId) {
       <div class="as-v8-row"><span class="as-v8-lbl">Current Edge</span><span class="as-v8-val d">+${edgePct}pp</span></div>
       <div class="as-v8-row"><span class="as-v8-lbl">Action</span><span class="as-v8-val a">Monitor only — do not bet</span></div>`;
   } else {
+    // Best Available removed from here — covered fully in the Odds section below
     actionBodyHTML = `
       <div class="as-v8-row"><span class="as-v8-lbl">Official Play</span>${officialStatus}</div>
       <div class="as-v8-row"><span class="as-v8-lbl">Bet</span><span class="as-v8-val m">${p.pick || '—'} ML</span></div>
-      <div class="as-v8-row"><span class="as-v8-lbl">Best Available</span><span class="as-v8-val g">${bestOdds} · ${bestBook}</span></div>
       <div class="as-v8-row"><span class="as-v8-lbl">Playable To</span><span class="as-v8-val a">${playable_to}</span></div>
       <div class="as-v8-row"><span class="as-v8-lbl">Stake</span><span class="as-v8-val m">${stakeStr}${stakeUSD ? ' / ' + stakeUSD : ''}</span></div>
       <div class="as-v8-row"><span class="as-v8-lbl">Re-check</span>${recheck}</div>`;
@@ -3077,23 +3125,20 @@ function buildDetailsV8(p, cardId) {
   const topAdjs = adjs.slice(0, 5);
   if (topAdjs.length) {
     const rows = topAdjs.map(a => {
-      const val   = a.pp || 0;
-      const pos   = a.positive !== false && val >= 0;
+      const val    = a.pp || 0;
+      const pos    = a.positive !== false && val >= 0;
       const impCls = pos ? 'pos' : (Math.abs(val) > 0.5 ? 'neg' : 'risk');
       const sign   = pos ? '+' : '';
-      const pillCls = pos ? 'pos' : 'risk';
-      const pillTxt = pos ? '+' : '⚠';
       return `<tr>
         <td class="dv-factor">${a.label || '—'}</td>
         <td class="dv-impact ${impCls}">${sign}${Math.abs(val).toFixed(1)}pp</td>
-        <td class="dv-type"><span class="dv-pill ${pillCls}">${pillTxt}</span></td>
       </tr>`;
     }).join('');
     driversHTML = `
-      <div class="det-v8-sec" style="padding:11px 14px">
+      <div class="det-v8-sec sec-secondary">
         <div class="det-v8-hdr">Drivers &amp; Risks</div>
         <table class="drv-v8">
-          <thead><tr><th>Factor</th><th>Impact</th><th>Type</th></tr></thead>
+          <thead><tr><th>Factor</th><th style="text-align:right">Impact</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       </div>`;
@@ -3203,20 +3248,33 @@ function buildDetailsV8(p, cardId) {
     </div>`;
   }
 
-  // ── Assemble official play — reordered for right-panel UX ──
-  // Order: Action Summary → Win Prob Gap → Analysis → Drivers → Odds → Lineup → History
-  return `
-  <div id="${cardId}-det" class="det-v8-panel">
+  // ── Assemble official play ──
+  // Tier class for expansion header accent
+  const [, epTierClass] = tierLabel(p.edge, p.verdict);
+  const epTier = (epTierClass === 'value' || epTierClass === 'strong') ? 'value'
+               : (epTierClass === 'conditional' || epTierClass === 'reduced') ? 'cond'
+               : 'other';
+  const epOdds = p.odds ? (p.odds > 0 ? '+' + p.odds : String(p.odds)) : '';
 
-    <!-- 1. ACTION SUMMARY — first thing visible, most actionable -->
-    <div class="det-v8-sec">
+  return `
+  <div id="${cardId}-det" class="det-v8-panel pick-tier-${epTier}">
+
+    <!-- Expansion header: clear "you're in detailed view" signal -->
+    <div class="det-exp-hdr">
+      <span class="deh-pick">${p.pick || '—'} ML ${epOdds}</span>
+      <span class="deh-edge">+${edgePct}pp edge</span>
+      <span class="deh-label">Full Analysis</span>
+    </div>
+
+    <!-- 1. ACTION SUMMARY — first thing visible, most actionable (primary) -->
+    <div class="det-v8-sec sec-primary">
       <div class="det-v8-hdr">Action Summary</div>
       <div class="as-v8 ${actionClass}">${actionBodyHTML}</div>
       <div class="det-v8-cta">${ctaHTML}</div>
     </div>
 
-    <!-- 2. WIN PROBABILITY GAP — solo full-width section, numbers enlarged via CSS -->
-    <div class="det-v8-sec">
+    <!-- 2. WIN PROBABILITY GAP — solo, numbers enlarged via CSS (primary) -->
+    <div class="det-v8-sec sec-primary">
       <div class="det-v8-hdr">Win Probability Gap</div>
       <div class="prob-v8-card">
         <div class="prob-v8-row">
@@ -3230,7 +3288,7 @@ function buildDetailsV8(p, cardId) {
       </div>
     </div>
 
-    <!-- 3. MODEL ANALYSIS — Thesis row removed (redundant with header + metric strip) -->
+    <!-- 3. MODEL ANALYSIS — Driver, Risk, EV (no redundant Thesis row) -->
     <div class="det-v8-sec">
       <div class="det-v8-hdr">Model Analysis</div>
       <div class="qa-v8">
@@ -3240,10 +3298,14 @@ function buildDetailsV8(p, cardId) {
       </div>
     </div>
 
-    <!-- 4–7. Drivers, Odds, Lineup, Historical -->
+    <!-- 4. Drivers (secondary weight via driversHTML sec-secondary class) -->
     ${driversHTML}
+
+    <!-- 5. Odds (full detail, best available moved here from action summary) -->
     ${oddsHTML}
-    ${statusHTML}
+
+    <!-- 6–7. Lineup + Historical (secondary) -->
+    ${statusHTML ? statusHTML.replace('class="det-v8-sec"', 'class="det-v8-sec sec-secondary"') : ''}
     ${histHTML}
   </div>`;
 }
@@ -3511,42 +3573,16 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     const refreshLabel = p.current_refresh_time || 'Last refresh';
     const postedLabel  = p.posted_at || 'Morning run';
 
+    // Compact single-line edge status — keeps collapsed card height tight
+    const deltaStr = delta > 0.003 ? ` ↑ +${(delta*100).toFixed(1)}pp` : delta < -0.003 ? ` ↓ −${(Math.abs(delta)*100).toFixed(1)}pp` : '';
     const panelHTML = `
-      <div class="live-edge-panel">
-        <!-- Row 1: posted edge (locked for tracking) -->
-        <div class="lep-row">
-          <span class="lep-label">Posted</span>
-          <span class="lep-value lep-green">+${postedPct}%</span>
-          <span class="lep-meta">${postedLabel} · projected lineup</span>
-        </div>
-        <hr class="lep-divider">
-        <!-- Row 2: current edge -->
-        <div class="lep-row">
-          <span class="lep-label">Current</span>
-          <span class="lep-value ${currCls}">${currText}</span>
-          <span class="lep-meta lep-delta-status" style="color:${statusColor}">${statusText}</span>
-        </div>
-        <hr class="lep-divider">
-        <!-- Current state section -->
-        <div class="cs-header">
-          <span class="cs-title">⟳ Current Model · ${refreshLabel}</span>
-          ${lineupBadge}${oppLineupNote ? `<span class="cs-opp-lineup">${oppLineupNote}</span>` : ''}
-        </div>
-        <div class="cs-metrics">
-          <div class="cs-metric">
-            <div class="cs-m-label">Model Prob</div>
-            <div class="cs-m-val" style="color:var(--indigo-lt)">${currMp}</div>
-          </div>
-          <div class="cs-metric">
-            <div class="cs-m-label">Fair ML</div>
-            <div class="cs-m-val">${currFair}</div>
-          </div>
-          <div class="cs-metric">
-            <div class="cs-m-label">Playable To</div>
-            <div class="cs-m-val" style="color:var(--amber)">${currPlayable}</div>
-          </div>
-        </div>
-        ${factors.length ? `<div class="cs-signals">${signalRows}</div>` : ''}
+      <div class="lep-compact">
+        <span class="lep-c-label">Current</span>
+        <span class="lep-c-val ${currCls}">${currText}</span>
+        ${deltaStr ? `<span class="lep-c-delta" style="color:${statusColor}">${deltaStr}</span>` : ''}
+        <span class="lep-c-sep">·</span>
+        <span class="lep-c-time">${refreshLabel}</span>
+        ${lineupBadge ? `<span class="lep-c-sep">·</span>${lineupBadge}` : ''}
       </div>`;
 
     // Warning banners for significant changes
@@ -4067,6 +4103,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to))
     : '—';
 
+  // Collapsed strip: Edge · Model · Market only — Fair ML + Playable To live in expanded view
   const metricsStripHTML = `
     <div class="pc-v8-nums">
       <div class="pc-v8-num">
@@ -4081,13 +4118,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
         <div class="nv-lbl">Market</div>
         <div class="nv-val">${mktPct}%</div>
       </div>` : ''}
-      <div class="pc-v8-num">
-        <div class="nv-lbl">Fair ML</div>
-        <div class="nv-val fair">${fairOddsV8}</div>
-      </div>
-      ${isWlCard
-        ? `<div class="pc-v8-num"><div class="nv-lbl">Threshold</div><div class="nv-val" style="color:var(--text-3)">4.0pp</div></div>`
-        : (playableV8 !== '—' ? `<div class="pc-v8-num"><div class="nv-lbl">Playable To</div><div class="nv-val play">${playableV8}</div></div>` : '')}
+      ${isWlCard ? `<div class="pc-v8-num"><div class="nv-lbl">Threshold</div><div class="nv-val" style="color:var(--text-3)">4.0pp</div></div>` : ''}
     </div>`;
 
   // ── v8 collapsed: probability bar ───────────────────────────────────────
