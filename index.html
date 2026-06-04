@@ -19,7 +19,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='9' y='21' font-family='system-ui,sans-serif' font-size='12' font-weight='900' fill='white'>F</text><text x='17' y='21' font-family='system-ui,sans-serif' font-size='12' font-weight='900' fill='%2360a5fa'>L</text><line x1='22' y1='22' x2='26' y2='17' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='26' cy='17' r='1.5' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=3">
 <style>
 :root {
@@ -28,7 +28,7 @@
   --font-mono: "IBM Plex Mono", monospace;
 }
 .page-header { margin-bottom: 28px; }
-.page-title { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+.page-title { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
 .page-subtitle { font-size: 12px; color: var(--text-3); }
 .page-subtitle span { color: var(--indigo-lt); font-weight: 500; }
 
@@ -49,7 +49,7 @@
   color: var(--text-4);
 }
 .no-picks-yet .np-icon { font-size: 36px; margin-bottom: 12px; }
-.no-picks-yet .np-title { font-family: 'Oswald', sans-serif; font-size: 18px; color: var(--text-3); margin-bottom: 6px; letter-spacing: 0.05em; }
+.no-picks-yet .np-title { font-family: var(--font-display); font-size: 18px; color: var(--text-3); margin-bottom: 6px; letter-spacing: 0.05em; }
 .no-picks-yet .np-sub { font-size: 12px; color: var(--text-4); line-height: 1.6; }
 
 .picks-count-badge {
@@ -64,7 +64,7 @@
 .pick-posted {
   font-size: 9px;
   color: var(--text-4);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   margin-bottom: 6px;
   letter-spacing: 0.04em;
   display: flex;
@@ -172,7 +172,7 @@
 .bw-input {
   width: 72px; background: rgba(255,255,255,0.04);
   border: 1px solid var(--border); border-radius: 5px;
-  color: var(--text-2); font-family: 'JetBrains Mono', monospace;
+  color: var(--text-2); font-family: var(--font-mono);
   font-size: 11px; padding: 3px 7px; text-align: right;
 }
 .bw-input:focus { outline: none; border-color: rgba(99,102,241,0.4); }
@@ -185,7 +185,7 @@
   border: 1px solid var(--border); border-radius: 10px; text-align: center;
 }
 .streak-chip .sc-lbl { font-size: 8px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-4); margin-bottom: 5px; }
-.streak-chip .sc-val { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; line-height: 1; }
+.streak-chip .sc-val { font-family: var(--font-display); font-size: 20px; font-weight: 700; line-height: 1; }
 .streak-chip .sc-val.W { color: var(--green); }
 .streak-chip .sc-val.L { color: var(--red); }
 
@@ -203,10 +203,10 @@
 .yest-title { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-4); margin-bottom: 10px; }
 .yest-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 5px; }
 .yest-row:last-child { margin-bottom: 0; }
-.yest-game { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; color: var(--text-2); }
+.yest-game { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--text-2); }
 .yest-pick { font-size: 11px; color: var(--text-3); }
 .yest-right { display: flex; align-items: center; gap: 10px; }
-.yest-result { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700; min-width: 22px; text-align: center; }
+.yest-result { font-family: var(--font-display); font-size: 16px; font-weight: 700; min-width: 22px; text-align: center; }
 .yest-result.W { color: var(--green); }
 .yest-result.L { color: var(--red); }
 .yest-pnl { font-size: 11px; font-weight: 600; min-width: 44px; text-align: right; }
@@ -223,7 +223,7 @@
 }
 .yc-icon  { font-size: 16px; flex-shrink: 0; }
 .yc-text  { flex: 1; font-size: 11px; color: var(--text-2); line-height: 1.5; }
-.yc-result { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 700; flex-shrink: 0; }
+.yc-result { font-family: var(--font-display); font-size: 18px; font-weight: 700; flex-shrink: 0; }
 .yc-result.W { color: var(--green); }
 .yc-result.L { color: var(--red); }
 
@@ -239,7 +239,7 @@
 /* Game time chip */
 .game-time-chip {
   display: inline-block;
-  font-size: 9px; font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; font-family: var(--font-mono);
   color: var(--text-4); background: rgba(255,255,255,0.04);
   padding: 2px 7px; border-radius: 4px;
   vertical-align: middle;
@@ -252,7 +252,7 @@
 /* Auto-refresh countdown */
 .refresh-indicator {
   font-size: 9px; color: var(--text-4);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   margin-left: 8px; display: none;
 }
 
@@ -296,28 +296,30 @@
   padding: 8px 14px; background: rgba(99,102,241,0.07);
   border: 1px solid rgba(99,102,241,0.25); border-radius: 10px; text-align: center;
 }
-.today-chip .tc-val { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 700; color: var(--indigo-lt); line-height: 1; }
+.today-chip .tc-val { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--indigo-lt); line-height: 1; }
 .today-chip .tc-lbl { font-size: 8px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-4); margin-top: 4px; }
 
 /* ── Share all picks button ── */
 .share-all-row { margin-bottom: 10px; }
 .share-all-btn {
   display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 13px; background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border); border-radius: 6px;
-  font-size: 10px; color: var(--text-4); cursor: pointer; transition: all 0.15s;
+  padding: 6px 16px;
+  background: rgba(99,102,241,0.12);
+  border: 1px solid rgba(99,102,241,0.30); border-radius: 7px;
+  font-size: 11px; font-weight: 600; color: var(--indigo-lt);
+  cursor: pointer; transition: all 0.15s; letter-spacing: 0.01em;
 }
-.share-all-btn:hover { color: #1d9bf0; border-color: rgba(29,155,240,0.3); }
+.share-all-btn:hover { background: rgba(99,102,241,0.20); border-color: rgba(99,102,241,0.45); }
 
 /* ── Personal tracker result badges ── */
-.pt-result { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 700; margin-left: auto; }
+.pt-result { font-family: var(--font-display); font-size: 13px; font-weight: 700; margin-left: auto; }
 .pt-result.W { color: var(--green); }
 .pt-result.L { color: var(--red); }
 
 /* ── Refresh pill (better visibility) ── */
 .refresh-pill {
   display: inline-flex; align-items: center; gap: 5px;
-  font-size: 9px; color: var(--text-4); font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--text-4); font-family: var(--font-mono);
   padding: 3px 8px; background: rgba(255,255,255,0.03);
   border: 1px solid var(--border); border-radius: 6px; margin-left: 6px;
 }
@@ -381,7 +383,7 @@
 .pick-card.card-loss { background: rgba(239,68,68,0.02)  !important; }
 /* Result score line displayed below team name on completed cards */
 .uph-final-score {
-  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  font-family: var(--font-mono); font-size: 12px;
   color: var(--text-4); letter-spacing: 0.04em; margin-top: 2px;
 }
 .uph-final-score.won { color: rgba(34,197,94,0.75); }
@@ -397,7 +399,7 @@
 .psh-dot.live   { background: var(--green); animation: pulsedot 1.4s infinite; }
 .psh-dot.upcoming  { background: rgba(255,255,255,0.22); }
 .psh-dot.completed { background: rgba(255,255,255,0.1); }
-.psh-label { font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.psh-label { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
 .psh-label.live      { color: var(--green); }
 .psh-label.upcoming  { color: var(--text-3); }
 .psh-label.completed { color: var(--text-4); }
@@ -406,7 +408,7 @@
 
 /* ── Result badge (W / L + score) ── */
 .result-badge {
-  font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 700;
+  font-family: var(--font-display); font-size: 11px; font-weight: 700;
   letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
 }
 .result-badge-win  { color: var(--green); background: rgba(34,197,94,0.12);   border: 1px solid rgba(34,197,94,0.35); }
@@ -438,7 +440,7 @@
   font-size: 9px; color: var(--amber);
   opacity: 0.7;
   margin-left: 6px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   cursor: help;
   white-space: nowrap;
 }
@@ -463,7 +465,7 @@
 }
 .adj-approx-note {
   font-weight: 400; font-size: 8px; letter-spacing: 0; text-transform: none;
-  opacity: 0.6; font-family: 'JetBrains Mono', monospace;
+  opacity: 0.6; font-family: var(--font-mono);
 }
 .adj-row {
   display: flex; align-items: center; gap: 7px; margin-bottom: 4px;
@@ -484,7 +486,7 @@
 .adj-bar-fill.pos { background: rgba(34,197,94,0.7); }
 .adj-bar-fill.neg { background: rgba(239,68,68,0.6); }
 .adj-pp {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px; font-weight: 600; width: 42px;
   text-align: right; flex-shrink: 0;
 }
@@ -595,7 +597,7 @@
 .tas-label { font-size: 8px; font-weight: 700; letter-spacing: 0.14em;
              text-transform: uppercase; color: var(--text-4); flex-shrink: 0; }
 .tas-stat { display: flex; flex-direction: column; align-items: center; }
-.tas-val { font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 700;
+.tas-val { font-family: var(--font-display); font-size: 15px; font-weight: 700;
            color: var(--text-2); line-height: 1; }
 .tas-sub { font-size: 8px; color: var(--text-4); margin-top: 2px; }
 .tas-div { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; }
@@ -649,7 +651,7 @@
 .wsh-left  { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .wsh-label { font-size: 9px; font-weight: 700; letter-spacing: 0.14em;
              text-transform: uppercase; color: var(--text-4); flex-shrink: 0; }
-.wsh-record { font-family: 'Oswald', sans-serif; font-size: 15px;
+.wsh-record { font-family: var(--font-display); font-size: 15px;
               font-weight: 700; line-height: 1; }
 .wsh-units  { font-size: 11px; font-weight: 600; }
 .wsh-roi    { font-size: 10px; color: var(--text-4); padding: 1px 7px;
@@ -668,7 +670,7 @@
 }
 .wpc.wpc-win  { border-color: rgba(34,197,94,0.3);  background: rgba(34,197,94,0.05); }
 .wpc.wpc-loss { border-color: rgba(239,68,68,0.25); background: rgba(239,68,68,0.04); opacity: 0.8; }
-.wpc-pick   { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 700;
+.wpc-pick   { font-family: var(--font-display); font-size: 13px; font-weight: 700;
               color: var(--text-1); line-height: 1.1; }
 .wpc-date   { font-size: 8.5px; color: var(--text-4); margin-top: 1px; }
 .wpc-pnl    { font-size: 9.5px; font-weight: 700; margin-top: 2px; }
@@ -707,7 +709,7 @@
 }
 .clv-banner-title.negative { color: var(--red); }
 .clv-banner-stat {
-  font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 700;
+  font-family: var(--font-display); font-size: 18px; font-weight: 700;
   color: var(--green); line-height: 1;
 }
 .clv-banner-stat.negative { color: var(--red); }
@@ -728,7 +730,7 @@
   min-width: 56px;
 }
 .clv-mini-pill .cmp-val {
-  font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 700;
   color: var(--green); line-height: 1.2;
 }
 .clv-mini-pill .cmp-lbl {
@@ -827,7 +829,7 @@
 .cs-metric { flex: 1; text-align: center; padding: 8px 4px; }
 .cs-metric + .cs-metric { border-left: 1px solid var(--border); }
 .cs-m-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-4); margin-bottom: 3px; }
-.cs-m-val   { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--text-2); }
+.cs-m-val   { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--text-2); }
 .cs-signals { display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
 .cs-sig-row {
   display: flex; align-items: center; gap: 6px; font-size: 11px;
@@ -839,11 +841,11 @@
   border-radius: 3px; flex-shrink: 0; overflow: hidden;
 }
 .cs-sig-bar-fill { height: 100%; border-radius: 3px; }
-.cs-sig-val { font-family: 'JetBrains Mono', monospace; font-size: 10px; flex-shrink: 0; min-width: 44px; text-align: right; }
+.cs-sig-val { font-family: var(--font-mono); font-size: 10px; flex-shrink: 0; min-width: 44px; text-align: right; }
 
 /* ── Pick card redesign ── */
 .matchup-teams { display: flex; align-items: baseline; gap: 7px; margin-bottom: 3px; flex-wrap: wrap; }
-.mt-pick { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; color: var(--text-2); }
+.mt-pick { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--text-2); }
 .mt-pick::after { content: ' ←'; font-size: 9px; color: var(--green); }
 .mt-opp  { font-size: 12px; color: var(--text-4); }
 .mt-at   { font-size: 10px; color: var(--text-4); }
@@ -885,7 +887,7 @@
 
 /* Tier section headers */
 .tier-header { display: flex; align-items: center; gap: 8px; margin: 18px 0 10px; padding: 0 2px; }
-.tier-header .tier-label { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.tier-header .tier-label { font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
 .tier-header .tier-edge-tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.04em; }
 .tier-header .tier-divider { flex: 1; height: 1px; background: var(--border); }
 .tier-header.strong-tier .tier-label { color: var(--amber); }
@@ -959,7 +961,7 @@
   background: rgba(99,102,241,0.04);
 }
 .boc-name { font-size: 9px; color: var(--text-4); }
-.boc-odds { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--text-2); }
+.boc-odds { font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--text-2); }
 .boc-best .boc-name { color: rgba(34,197,94,0.75); }
 .boc-best .boc-odds { color: var(--green); }
 .boc-pinn .boc-name { color: rgba(99,102,241,0.65); }
@@ -981,7 +983,7 @@
 .bor-books { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex: 1; }
 .bor-book { display: inline-flex; align-items: center; gap: 5px; }
 .bor-bname { font-size: 9px; color: var(--text-4); }
-.bor-bval { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--text-2); }
+.bor-bval { font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--text-2); }
 .bor-bval.best { color: var(--green); }
 .bor-pinn .bor-bval { color: var(--text-3); }
 
@@ -1032,7 +1034,7 @@
   text-transform: uppercase; color: var(--text-4); margin-bottom: 6px;
 }
 .om-main {
-  font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 600;
+  font-family: var(--font-display); font-size: 16px; font-weight: 600;
   color: var(--text-2); margin-bottom: 4px;
 }
 .om-row {
@@ -1060,7 +1062,7 @@
 /* .brand-bar removed — identity merged into phb-card */
 .bb-left { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
 .bb-name {
-  font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700;
+  font-family: var(--font-display); font-size: 22px; font-weight: 700;
   color: var(--text-1); letter-spacing: 0.05em; line-height: 1;
 }
 .bb-name em { font-style: normal; color: var(--indigo-lt); }
@@ -1076,7 +1078,7 @@
 }
 .bb-stat:first-child { border-left: none; }
 .bb-stat-val {
-  font-family: 'Oswald', sans-serif; font-size: 22px;
+  font-family: var(--font-display); font-size: 22px;
   font-weight: 700; line-height: 1; white-space: nowrap;
 }
 .bb-stat-lbl {
@@ -1111,7 +1113,7 @@
   margin-bottom: 14px; font-size: 11px; color: var(--text-4);
 }
 .today-context .tc-date {
-  font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600;
+  font-family: var(--font-display); font-size: 14px; font-weight: 600;
   color: var(--text-2); letter-spacing: 0.02em;
 }
 .today-context .tc-sep { color: var(--border); user-select: none; }
@@ -1154,10 +1156,10 @@
 }
 .preview-row:last-child { border-bottom: none; }
 .preview-pick-name {
-  font-family: 'Oswald', sans-serif; font-size: 14px;
+  font-family: var(--font-display); font-size: 14px;
   font-weight: 600; color: var(--text-2);
 }
-.preview-odds { font-family: 'JetBrains Mono', monospace; color: var(--amber); font-size: 12px; }
+.preview-odds { font-family: var(--font-mono); color: var(--amber); font-size: 12px; }
 .preview-meta { flex: 1; font-size: 10px; color: var(--text-4); min-width: 0;
                 white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .preview-edge { font-size: 11px; font-weight: 700; color: var(--amber); flex-shrink: 0; }
@@ -1177,7 +1179,7 @@
 }
 .evidence-claim { display: flex; flex-direction: column; gap: 5px; }
 .ec-stat {
-  font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700;
+  font-family: var(--font-display); font-size: 22px; font-weight: 700;
   color: var(--green); line-height: 1;
 }
 .ec-stat.amber { color: var(--amber); }
@@ -1233,11 +1235,11 @@
   display: flex; align-items: center; gap: 3px;
 }
 .phb-stat-record {
-  font-family: 'Oswald', sans-serif; font-size: 18px;
+  font-family: var(--font-display); font-size: 18px;
   font-weight: 700; color: var(--text-1); line-height: 1;
 }
 .phb-stat-val {
-  font-family: 'Oswald', sans-serif; font-size: 18px;
+  font-family: var(--font-display); font-size: 18px;
   font-weight: 700; line-height: 1;
 }
 .phb-stat-val.green { color: var(--green); }
@@ -1300,7 +1302,7 @@
 .phb-bk-dollar { font-size: 11px; color: var(--text-4); }
 .phb-bk-input {
   background: transparent; border: none; outline: none;
-  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  font-family: var(--font-mono); font-size: 11px;
   color: var(--text-2); width: 72px; text-align: right;
 }
 .phb-bk-input::placeholder { color: var(--text-4); }
@@ -1317,12 +1319,124 @@
   border: 1px solid var(--border); border-radius: 6px;
 }
 .phb-streak-lbl { font-size: 7.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); }
-.phb-streak-val { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700; line-height: 1.1; }
+.phb-streak-val { font-family: var(--font-display); font-size: 16px; font-weight: 700; line-height: 1.1; }
 .phb-streak-val.W { color: var(--green); }
 .phb-streak-val.L { color: var(--red); }
 /* Kelly mode: bankroll grays out in flat mode */
 .phb-bankroll.flat-mode .phb-bk-label,
 .phb-bankroll.flat-mode .phb-bk-dollar { opacity: 0.45; }
+
+/* ── Full-width expand panel (details moved out of card column) ── */
+#pick-expand-wrap {
+  margin-top: 4px;
+}
+.ep-card {
+  background: rgba(9,13,22,.96);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 12px; overflow: hidden;
+  animation: epSlideIn .18s ease;
+}
+@keyframes epSlideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.ep-acc-green { border-top: 2px solid rgba(34,197,94,.55); }
+.ep-acc-amber { border-top: 2px solid rgba(245,158,11,.45); }
+.ep-acc-strong { border-top: 2px solid rgba(245,158,11,.70); }
+.ep-card-hdr {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 18px; border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-wrap: wrap;
+}
+.ep-card-team {
+  font-family: var(--font-display); font-size: 20px; font-weight: 800;
+  color: var(--text-1, #f1f5f9); letter-spacing: .02em;
+}
+.ep-card-odds { font-family: var(--font-mono); font-size: 16px; font-weight: 700; }
+.ep-card-odds.ep-neg { color: var(--indigo-lt); }
+.ep-card-odds.ep-pos { color: var(--amber); }
+.ep-card-edge {
+  font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 5px;
+  background: rgba(34,197,94,.10); color: var(--green);
+  border: 1px solid rgba(34,197,94,.20);
+}
+.ep-card-game { font-size: 11px; color: var(--text-3); }
+.ep-card-close {
+  margin-left: auto; font-size: 11px; font-weight: 600; color: var(--text-4);
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
+  border-radius: 6px; padding: 5px 12px; cursor: pointer; transition: all .15s;
+}
+.ep-card-close:hover { color: var(--text-2); }
+/* det-v8-panel inside global expand panel is always visible (not toggled) */
+#pick-expand-wrap .det-v8-panel { display: block; }
+/* Two-column prob+action inside global panel on desktop */
+#pick-expand-wrap .pa-wrap { grid-template-columns: 1fr 1fr; }
+@media (max-width: 760px) {
+  #pick-expand-wrap .pa-wrap { grid-template-columns: 1fr; }
+}
+/* Active card highlight when its details panel is open */
+.pick-card.ep-active {
+  border-color: rgba(99,102,241,.40) !important;
+  box-shadow: 0 0 0 1px rgba(99,102,241,.12);
+}
+
+/* ── Corrected exposure block (replaces today-action-strip) ── */
+.exposure-block {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 18px; margin-bottom: 14px;
+}
+.eb-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; flex-wrap: wrap; gap: 10px;
+}
+.eb-title {
+  font-size: 9px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--text-3);
+}
+.eb-sizing { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.eb-kelly-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10px; font-weight: 600; color: var(--green);
+  background: rgba(34,197,94,.07); border: 1px solid rgba(34,197,94,.20);
+  border-radius: 6px; padding: 4px 10px; white-space: nowrap;
+}
+.eb-ka-dot {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--green);
+  animation: pulsedot 2s infinite; flex-shrink: 0;
+}
+.eb-flat-lbl {
+  font-size: 10px; color: var(--text-4); white-space: nowrap;
+}
+.eb-bankroll {
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-2);
+  padding: 4px 10px; background: rgba(255,255,255,.04);
+  border: 1px solid var(--border); border-radius: 6px; white-space: nowrap;
+}
+.eb-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 9px;
+}
+@media (max-width: 540px) { .eb-grid { grid-template-columns: repeat(2,1fr); } }
+.eb-stat {
+  background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.05);
+  border-radius: 8px; padding: 9px 11px;
+}
+.eb-stat.hi { border-color: rgba(34,197,94,.14); background: rgba(34,197,94,.025); }
+.eb-lbl { font-size: 7.5px; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; color: var(--text-4); margin-bottom: 2px; }
+.eb-val { font-family: var(--font-mono); font-size: 17px; font-weight: 700; color: var(--text); line-height: 1; }
+.eb-val.g { color: var(--green); }
+.eb-sub { font-size: 8.5px; color: var(--text-3); margin-top: 2px; }
+
+/* Kelly active indicator pill */
+.phb-kelly-active {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; color: var(--green);
+  background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.22);
+  border-radius: 6px; padding: 5px 12px; white-space: nowrap; flex-shrink: 0;
+}
+.phb-ka-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+  animation: pulsedot 2s infinite; flex-shrink: 0;
+}
 @media (max-width: 600px) {
   .phb-stats-row { padding: 12px 14px; }
   .phb-stat-group { padding-right: 12px; }
@@ -1691,6 +1805,7 @@
   <!-- TODAY'S PICKS -->
   <div class="section">
     <div class="sec-lbl" id="page-date">Today's Value Bets</div>
+    <div id="page-refresh-meta" style="display:none;font-size:10px;color:var(--text-4);margin-top:3px;margin-bottom:2px;font-family:var(--font-mono)"></div>
     <div id="picks-container">
       <div id="loading-placeholder" style="display:flex;flex-direction:column;gap:14px">
         <div class="skeleton-card">
@@ -1713,6 +1828,9 @@
       </div>
     </div>
   </div>
+
+  <!-- FULL-WIDTH EXPAND PANEL — populated by toggleDetails(), never inside a card -->
+  <div id="pick-expand-wrap" style="display:none"></div>
 
   <!-- MARGINAL PICKS -->
   <div class="section" id="marginal-section" style="display:none">
@@ -1771,10 +1889,9 @@
     </summary>
     <div class="about-model-body">
       <p style="font-size:12px;color:var(--text-3);line-height:1.7;margin-bottom:14px">
-        Raw team strength, pitching, lineup, park, weather, and situational signals generate the baseline projection.
-        Market information stabilizes outputs and aligns with betting market run environments.
+        Pitcher quality, lineup status, park factors, weather, bullpen quality, BvP career matchup, arsenal fit, market audit, and more — applied as model adjustments before the market edge comparison.
         The final FairLine probability is compared against the no-vig Pinnacle probability to identify pricing gaps.
-        Only picks with ≥4% edge are posted.
+        Only picks with ≥4% edge vs. Pinnacle are posted.
       </p>
       <div class="trust-strip" style="margin-bottom:14px">
         <div class="trust-card"><div class="trust-label">Model</div><div class="trust-val">Dual-Poisson + log-odds</div></div>
@@ -1893,6 +2010,7 @@ if (!_bankroll && localStorage.getItem('fairline_unit_size')) {
 let _unitSize = _bankroll / 100;  // kept for any legacy references; derived from bankroll
 let _histRef  = null; // history data reference for tracker result lookup
 let _mainPicksRef = []; // today's main picks for share-all
+let _expandActiveId = null; // card whose details are open in the global expand panel
 let _histContextFn = null;      // set in render() — returns hist-context HTML for a pick
 let _countdownTimerStarted = false;
 
@@ -2241,7 +2359,7 @@ function refreshPersonalTracker() {
     const kellyStr = b.kelly ? `<span style="color:var(--green)">${b.kelly.toFixed(1)}u</span>` : '';
     return `<div class="pt-row">
       <span style="font-weight:600;color:var(--text-2)">${b.pick}</span>
-      <span style="color:var(--amber);font-family:'JetBrains Mono',monospace">${formatOdds(b.odds)}</span>
+      <span style="color:var(--amber);font-family:var(--font-mono)">${formatOdds(b.odds)}</span>
       <span style="color:var(--text-4);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.game}</span>
       ${kellyStr}
       ${resultHTML}
@@ -2277,7 +2395,7 @@ function renderTodayTrackingIndex(picks, scores) {
       borderCls = won
         ? 'border-left:3px solid rgba(34,197,94,0.5);'
         : 'border-left:3px solid rgba(239,68,68,0.4);';
-      statusHTML = `<span style="color:${col};font-family:'Oswald',sans-serif;font-size:14px;font-weight:700">${won?'W':'L'}&nbsp;${ps}–${os}</span>`;
+      statusHTML = `<span style="color:${col};font-family:var(--font-display);font-size:14px;font-weight:700">${won?'W':'L'}&nbsp;${ps}–${os}</span>`;
     }
 
     const oddsStr  = p.odds > 0 ? `+${p.odds}` : String(p.odds);
@@ -2289,8 +2407,8 @@ function renderTodayTrackingIndex(picks, scores) {
 
     return `<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.04);${borderCls}">
       <div style="flex:1;min-width:0;overflow:hidden">
-        <div style="font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-          ${p.pick} <span style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px">${oddsStr}</span>
+        <div style="font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+          ${p.pick} <span style="color:var(--amber);font-family:var(--font-mono);font-size:12px">${oddsStr}</span>
         </div>
         <div style="font-size:10px;color:var(--text-4);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
           ${p.game}${edgeStr ? ' · ' + edgeStr + ' edge' : ''}${kellyStr ? ' · ' + kellyStr + kellyDol : ''}
@@ -2568,9 +2686,9 @@ function renderEmptyState(data, hist, marginal = []) {
   if (marginal.length > 0) {
     const rows = marginal.map(p => `
       <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid rgba(255,255,255,0.04);font-size:11px">
-        <span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;color:var(--text-2)">${p.pick}</span>
+        <span style="font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text-2)">${p.pick}</span>
         <span style="color:var(--text-4)">${p.game}</span>
-        <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;color:var(--amber)">${formatOdds(p.odds)}</span>
+        <span style="margin-left:auto;font-family:var(--font-mono);color:var(--amber)">${formatOdds(p.odds)}</span>
         <span style="font-weight:600;color:var(--text-4)">+${(p.edge*100).toFixed(1)}% edge</span>
       </div>`).join('');
     nearMissHTML = `
@@ -3020,26 +3138,65 @@ function buildDetailsV8(p, cardId) {
 
 // ── Details panel toggle ─────────────────────────────────────────────────────
 function toggleDetails(id, btn) {
-  // First check if det panel exists; if not, build it
-  const detId = id + '-det';
-  let detPanel = document.getElementById(detId);
-  if (!detPanel) {
-    const cardId = id.replace(/-det$/, '');
-    const p = picksMap[cardId];
-    if (p) {
-      const panelHTML = buildDetailsV8(p, cardId);
-      const cardEl = btn.closest('.pick-card');
-      if (cardEl) {
-        cardEl.insertAdjacentHTML('beforeend', panelHTML);
-        detPanel = document.getElementById(detId);
-      }
-    }
+  const wrap = document.getElementById('pick-expand-wrap');
+  if (!wrap) return;
+
+  // Reset all detail buttons and card highlights
+  document.querySelectorAll('.details-toggle').forEach(b => {
+    b.textContent = 'Details ▾'; b.classList.remove('open');
+  });
+  document.querySelectorAll('.pick-card').forEach(c => c.classList.remove('ep-active'));
+
+  // Same card → close panel
+  if (_expandActiveId === id) {
+    _expandActiveId = null;
+    wrap.style.display = 'none';
+    return;
   }
-  if (detPanel) {
-    const open = detPanel.classList.toggle('open');
-    btn.textContent = open ? 'Details ▲' : 'Details ▾';
-    btn.classList.toggle('open', open);
-  }
+
+  const p = picksMap[id];
+  if (!p) return;
+
+  _expandActiveId = id;
+  btn.textContent = 'Details ▲';
+  btn.classList.add('open');
+  document.getElementById(id)?.classList.add('ep-active');
+
+  // Build details content
+  const detHTML = buildDetailsV8(p, id);
+  const [, tierClass] = tierLabel(p.edge, p.verdict);
+  const accentCls = tierClass === 'strong' ? 'ep-acc-strong' : tierClass === 'value' ? 'ep-acc-green' : 'ep-acc-amber';
+  const oddsStr   = formatOdds(p.odds);
+  const edgePct   = (p.edge * 100).toFixed(1);
+  const oddsCls   = p.odds > 0 ? 'ep-pos' : 'ep-neg';
+
+  wrap.innerHTML = `
+    <div class="ep-card ${accentCls}">
+      <div class="ep-card-hdr">
+        <span class="ep-card-team">${p.pick}</span>
+        <span class="ep-card-odds ${oddsCls}">${oddsStr}</span>
+        <span class="ep-card-edge">+${edgePct}% edge</span>
+        <span class="ep-card-game">${p.game || ''}</span>
+        <button class="ep-card-close" onclick="closeExpandPanel()">✕ Close</button>
+      </div>
+      ${detHTML}
+    </div>`;
+
+  // Animate in
+  wrap.style.display = 'none';
+  void wrap.offsetWidth;
+  wrap.style.display = 'block';
+  setTimeout(() => wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+}
+
+function closeExpandPanel() {
+  _expandActiveId = null;
+  const wrap = document.getElementById('pick-expand-wrap');
+  if (wrap) wrap.style.display = 'none';
+  document.querySelectorAll('.details-toggle').forEach(b => {
+    b.textContent = 'Details ▾'; b.classList.remove('open');
+  });
+  document.querySelectorAll('.pick-card').forEach(c => c.classList.remove('ep-active'));
 }
 
 // ── Narrative preview: full text if short; 2 sentences if long ────────────────
@@ -3212,9 +3369,10 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     const lc = p.current_lineup_confirmed;
     const olc = p.current_opp_lineup_confirmed;
     let lineupBadge = '';
-    if (lc === true)       lineupBadge = `<span class="cs-lineup-badge cs-lc-confirmed">✓ Lineup Confirmed</span>`;
-    else if (lc === false) lineupBadge = `<span class="cs-lineup-badge cs-lc-projected">⚠ Lineup Projected</span>`;
-    const oppLineupNote = (olc === true) ? ' · Opp confirmed' : (olc === false) ? ' · Opp projected' : '';
+    // null (morning pick, pre-lineup) and false both → Projected
+    if (lc === true) lineupBadge = `<span class="cs-lineup-badge cs-lc-confirmed">✓ Lineup Confirmed</span>`;
+    else             lineupBadge = `<span class="cs-lineup-badge cs-lc-projected">⚠ Lineup Projected</span>`;
+    const oppLineupNote = (olc === true) ? ' · Opp confirmed' : ' · Opp projected';
 
     // Current derived values
     const currFair     = p.current_fair_odds    || p.fair_odds  || '—';
@@ -3775,8 +3933,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       ${p.kelly_units ? `<span class="uph-kelly-badge" data-kelly-units="${p.kelly_units.toFixed(2)}">${_bankroll > 0 ? `${p.kelly_units.toFixed(1)}u · $${Math.round(p.kelly_units * _bankroll / 100)}` : `${p.kelly_units.toFixed(1)}u Half-Kelly`}</span>` : ''}
       ${p.is_flagged ? `<span style="font-size:9.5px;font-weight:600;color:var(--amber);background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.28);border-radius:4px;padding:2px 7px;letter-spacing:0.04em">${p.kelly_multiplier < 0.6 ? '↘ REDUCED SIZING' : '⚠ FLAGGED'}</span>` : ''}
       ${modelPct && mktPct ? `<span class="uph-prob-context">Model <strong>${modelPct}%</strong> · Market <strong>${mktPct}%</strong>${fairOddsInline}</span>` : ''}
-    </div>
-    ${narrativePreviewLineHTML}`;
+    </div>`;
 
   // ── Action row v2 — text links, no box buttons ────────────────────────────
   // Note: passing cardId (not detailsId) so toggleDetails can build the v8 panel as cardId+'-det'
@@ -3860,10 +4017,11 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   const oppTeamV8  = isHomePick ? awayTeam || '—' : homeTeam || '—';
   const pickConfV8 = isHomePick ? homeConfV8 : awayConfV8;
   const oppConfV8  = isHomePick ? awayConfV8 : homeConfV8;
-  const luPickCls  = pickConfV8 ? 'conf' : (pickConfV8 === false ? 'proj' : 'unk');
-  const luOppCls   = oppConfV8  ? 'conf' : (oppConfV8  === false ? 'proj' : 'unk');
-  const luPickTxt  = pickConfV8 ? 'Lineup confirmed' : (pickConfV8 === false ? 'Lineup projected' : 'Lineup unknown');
-  const luOppTxt   = oppConfV8  ? 'Confirmed' : (oppConfV8  === false ? 'Projected' : 'Unknown');
+  // null (Python None) = morning pick, lineups not yet posted → treat as Projected, not Unknown
+  const luPickCls  = pickConfV8 === true ? 'conf' : 'proj';
+  const luOppCls   = oppConfV8  === true ? 'conf' : 'proj';
+  const luPickTxt  = pickConfV8 === true ? 'Lineup confirmed' : 'Lineup projected';
+  const luOppTxt   = oppConfV8  === true ? 'Confirmed' : 'Projected';
 
   stakeV8HTML = `
     <div class="pc-v8-sl-row">
@@ -3918,7 +4076,6 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       ${_liveEdgeWarnHTML}
       ${spFlagsRowHTML}
       ${actionRowHTML}
-      ${detailsBodyHTML}
     </div>`;
 }
 
@@ -3983,6 +4140,14 @@ function render(data, hist, scores = {}, perf = null) {
     const d = new Date(data.date + 'T12:00:00');
     const shortDate = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
     document.getElementById('page-date').textContent = `Today's Value Bets · ${shortDate}`;
+    // Model refresh metadata — shown under the section header (moved from hero tile)
+    if (data.generated_at) {
+      const metaEl = document.getElementById('page-refresh-meta');
+      if (metaEl) {
+        metaEl.textContent = 'Model refresh: ' + data.generated_at;
+        metaEl.style.display = 'block';
+      }
+    }
     const mainPicks = (data.picks || []).filter(p => (p.edge || 0) >= 0.02);
     const strongCount = mainPicks.filter(p => (p.edge || 0) >= 0.08).length;
     if (mainPicks.length > 0) {
@@ -4146,6 +4311,7 @@ function render(data, hist, scores = {}, perf = null) {
             <button class="phb-tog${isKelly ? ' active' : ''}" id="phb-kelly-btn"
               onclick="setPicksPnlMode('kelly')">Kelly</button>
           </div>
+          ${isKelly ? '<span class="phb-kelly-active"><span class="phb-ka-dot"></span>Kelly Sizing Active</span>' : ''}
           <div class="phb-bankroll${isKelly ? '' : ' flat-mode'}" id="phb-bankroll-wrap">
             <span class="phb-bk-label">Bankroll</span>
             <div class="phb-bk-input-wrap">
@@ -4266,24 +4432,48 @@ function render(data, hist, scores = {}, perf = null) {
       ? `<div class="share-all-row"><button class="share-all-btn" onclick="shareAllPicks()">𝕏 Share All ${main.length} Picks</button></div>`
       : '';
 
-    // ── Today's action strip ─────────────────────────────────────────────
-    const _totalKU  = main.reduce((s, p) => s + (p.kelly_units || 0), 0);
-    const _avgKU    = main.length ? _totalKU / main.length : 0;
-    const _bPct     = (_totalKU / 10 * 100).toFixed(1);
-    const _dollarPart = _bankroll > 0
-      ? `<div class="tas-div"></div><div class="tas-stat"><div class="tas-val" style="color:var(--green)">$${Math.round(_totalKU * _bankroll / 100).toLocaleString()}</div><div class="tas-sub">total stake</div></div>`
-      : '';
+    // ── Today's exposure block ────────────────────────────────────────────
+    const _totalKU   = main.reduce((s, p) => s + (p.kelly_units || 0), 0);
+    const _avgKU     = main.length ? _totalKU / main.length : 0;
+    // Exposure %: 1 Kelly unit = 1% of bankroll (not ÷10 ×100 which gives 10× too high)
+    const _totalDol  = _bankroll > 0 ? Math.round(_totalKU * _bankroll / 100) : null;
+    const _bPct      = _bankroll > 0
+      ? ((_totalDol / _bankroll) * 100).toFixed(1)   // e.g. 442/10000*100 = 4.4
+      : _totalKU.toFixed(1);                          // fallback: units ARE the %
+    const _isKellyOn = _indexPnlMode === 'kelly';
     const actionStripHTML = _totalKU > 0 ? `
-      <div class="today-action-strip">
-        <span class="tas-label">Today's Kelly Exposure</span>
-        <div class="tas-stat"><div class="tas-val">${main.length}</div><div class="tas-sub">picks</div></div>
-        <div class="tas-div"></div>
-        <div class="tas-stat"><div class="tas-val">${_totalKU.toFixed(1)}u</div><div class="tas-sub">total Kelly</div></div>
-        <div class="tas-div"></div>
-        <div class="tas-stat"><div class="tas-val">${_avgKU.toFixed(1)}u</div><div class="tas-sub">avg/pick</div></div>
-        <div class="tas-div"></div>
-        <div class="tas-stat"><div class="tas-val">${_bPct}%</div><div class="tas-sub">of bankroll</div></div>
-        ${_dollarPart}
+      <div class="exposure-block">
+        <div class="eb-top">
+          <span class="eb-title">Today's Exposure</span>
+          <div class="eb-sizing">
+            ${_isKellyOn
+              ? '<span class="eb-kelly-pill"><span class="eb-ka-dot"></span>Kelly Sizing Active</span>'
+              : '<span class="eb-flat-lbl">Flat $100 mode</span>'}
+            ${_bankroll > 0 ? `<span class="eb-bankroll">Bankroll: $${_bankroll.toLocaleString()}</span>` : ''}
+          </div>
+        </div>
+        <div class="eb-grid">
+          <div class="eb-stat hi">
+            <div class="eb-lbl">Total Stake</div>
+            <div class="eb-val g">${_totalDol != null ? '$' + _totalDol.toLocaleString() : _totalKU.toFixed(1) + 'u'}</div>
+            <div class="eb-sub">${main.length} pick${main.length !== 1 ? 's' : ''} combined</div>
+          </div>
+          <div class="eb-stat">
+            <div class="eb-lbl">Bankroll Exposure</div>
+            <div class="eb-val">${_bPct}%</div>
+            <div class="eb-sub">${_bankroll > 0 ? 'of $' + _bankroll.toLocaleString() : 'Kelly units'}</div>
+          </div>
+          <div class="eb-stat">
+            <div class="eb-lbl">Avg Pick</div>
+            <div class="eb-val">${_avgKU.toFixed(1)}u</div>
+            <div class="eb-sub">${_totalDol != null ? '$' + Math.round(_avgKU * _bankroll / 100) + ' avg stake' : 'per pick'}</div>
+          </div>
+          <div class="eb-stat">
+            <div class="eb-lbl">Total Units</div>
+            <div class="eb-val">${_totalKU.toFixed(1)}u</div>
+            <div class="eb-sub">fractional Kelly</div>
+          </div>
+        </div>
       </div>` : '';
 
     // ── Group picks by live score status ─────────────────────────────────────
