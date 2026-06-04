@@ -389,7 +389,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
       <span class="fsm-badge">soon</span>
     </div>
   </div>
-  <div class="footer-brand" style="display:none">FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 29 Log-Odds Adjustments + Platt Calibration</div>
+  <div class="footer-brand" style="display:none">FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 33 Log-Odds Adjustments + Platt Calibration</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
   <div class="footer-links"><a href="model.html">Methodology</a> · <a href="index.html">Today's Picks</a> · <a href="performance.html">Model Dashboard</a></div>
 </footer>
@@ -634,7 +634,7 @@ function renderTable(rows) {
     const probStr = r.model_prob != null ? (r.model_prob * 100).toFixed(1) + '%' : '—';
     const pnlStr  = r.pnl_u != null ? _fmtPnl(r.pnl_u, r) : '—';
     const clvStr  = r.clv != null ? pct(r.clv)
-      : '<abbr title="CLV not captured — game may have been a day game settled before the 3:30 PM CT closing line snapshot" style="text-decoration:none;cursor:help">—</abbr>';
+      : '<abbr title="CLV not captured — game may have been settled before the pre-game closing line snapshot" style="text-decoration:none;cursor:help">—</abbr>';
     const dateStr = r.date ? (() => { try { return new Date(r.date + 'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}); } catch(e){ return r.date; } })() : '—';
     const rowClass = r.edge >= 0.08 ? 'row-strong' : r.edge >= 0.05 ? 'row-value' : '';
     return `<tr class="${rowClass}">

@@ -1498,7 +1498,7 @@
 
   <!-- MODEL INFO STRIP -->
   <div class="model-info-strip">
-    <strong>Picks post daily by 9:30 AM CT.</strong>
+    <strong>Picks post daily by 9:00 AM CT.</strong>
     Starting pitcher info and odds are captured at model run time — always verify current starters and lines before betting.
     <span id="games-scanned-strip"></span>
   </div>
@@ -1601,7 +1601,7 @@
         Raw team strength, pitching, lineup, park, weather, and situational signals generate the baseline projection.
         Market information stabilizes outputs and aligns with betting market run environments.
         The final FairLine probability is compared against the no-vig Pinnacle probability to identify pricing gaps.
-        Only picks with ≥2% edge are posted.
+        Only picks with ≥4% edge are posted.
       </p>
       <div class="trust-strip" style="margin-bottom:14px">
         <div class="trust-card"><div class="trust-label">Model</div><div class="trust-val">Dual-Poisson + log-odds</div></div>
@@ -1622,7 +1622,7 @@
       </details>
       <details class="faq-item" style="margin-bottom:6px">
         <summary class="faq-q">How is edge calculated?</summary>
-        <div class="faq-a">Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). FairLine only posts picks with at least 2% edge vs. Pinnacle's no-vig line.</div>
+        <div class="faq-a">Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). FairLine only posts picks with at least 4% edge vs. Pinnacle's no-vig line.</div>
       </details>
       <details class="faq-item">
         <summary class="faq-q">Does past performance guarantee future results?</summary>
@@ -2406,7 +2406,7 @@ function renderEmptyState(data, hist, marginal = []) {
           ⚠️ ${marginal.length} Signal${marginal.length > 1 ? 's' : ''} Below 2% Threshold
         </div>
         ${rows}
-        <div style="font-size:10px;color:var(--text-4);margin-top:8px">Model found signals — none cleared the 2% minimum edge for a recommended bet.</div>
+        <div style="font-size:10px;color:var(--text-4);margin-top:8px">Model found signals — none cleared the 4% minimum edge for a recommended bet.</div>
       </div>`;
   }
 
@@ -2849,7 +2849,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
         <div class="lep-warn-banner lep-orange">
           <span class="lep-warn-icon">⚠️</span>
           <span class="lep-warn-text">
-            <strong>Current edge below 2% posting threshold</strong>
+            <strong>Current edge below 4% posting threshold</strong>
             With confirmed lineup, model shows +${currPct}% — below the minimum for a new
             recommendation. Posted pick retained for tracking. Verify lineup before betting.
           </span>
@@ -3368,7 +3368,7 @@ function renderStatusStrip(picks, noPicksYet, generatedAt) {
     strip.className = 'status-strip ss-pending';
     strip.innerHTML = `
       <span class="ss-badge ss-badge-pending">${pre9 ? '🕐 PENDING' : '📊 NO PICKS'}</span>
-      <span class="ss-text">${pre9 ? 'Picks post at 9:00 AM CT after lineup confirmation' : 'No picks clear the 2% edge threshold today'}</span>
+      <span class="ss-text">${pre9 ? 'Picks post at 9:00 AM CT after lineup confirmation' : 'No picks clear the 4% edge threshold today'}</span>
       <a class="ss-link" href="preview.html">Tomorrow's opening lines →</a>`;
     return;
   }

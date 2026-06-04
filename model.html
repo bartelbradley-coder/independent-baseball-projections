@@ -302,8 +302,8 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
     </div>
   </div>
   <div class="hdr-pills">
-    <div class="hdr-pill p-ind">23 Live Signals</div>
-    <div class="hdr-pill p-ind">32 Log-Odds Adj.</div>
+    <div class="hdr-pill p-ind">33 Live Signals</div>
+    <div class="hdr-pill p-ind">33 Log-Odds Adj.</div>
     <div class="hdr-pill p-vio">Dual-Poisson</div>
     <div class="hdr-pill p-tea">Platt Calibrated</div>
     <div class="hdr-pill p-sla">CLV Tracked</div>
@@ -460,7 +460,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
         <div class="pipe-name">Log-Odds Adj.</div>
       </div>
       <div class="pipe-io">
-        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">p_base + 32 αᵢ float signals</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">p_base + 33 αᵢ float signals</div></div>
         <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">p_adj — logit(p_base)+Σαᵢ → sigmoid</div></div>
       </div>
     </div>
@@ -516,11 +516,11 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="fbox"><span class="v">λ_base</span> <span class="op">=</span> (<span class="n">0.65</span> × <span class="v">RS₃ᵧᵣ</span> <span class="op">+</span> <span class="n">0.35</span> × <span class="v">RS_L15</span>) <span class="op">/</span> <span class="v">G</span>
          × <span class="v">park_factor</span>
 <span class="cm">// RS₃ᵧᵣ: 3yr rolling RS/G · RS_L15: last 15G avg</span></div>
-      <div class="f-lbl">Log-odds stacking — 32 factors, logit space</div>
+      <div class="f-lbl">Log-odds stacking — 33 factors, logit space</div>
       <div class="fbox"><span class="fn">logit</span>(<span class="v">p</span>) <span class="op">=</span> <span class="fn">log</span>(<span class="v">p</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">−</span> <span class="v">p</span>))
 
 <span class="fn">logit</span>(<span class="v">p_adj</span>) <span class="op">=</span> <span class="fn">logit</span>(<span class="v">p_base</span>) <span class="op">+</span> <span class="fn">Σᵢ</span> <span class="v">αᵢ</span>
-<span class="cm">// 32 αᵢ ∈ ℝ · logit prevents p ∉ (0,1)</span>
+<span class="cm">// 33 αᵢ ∈ ℝ · logit prevents p ∉ (0,1)</span>
 
 <span class="v">p_adj</span> <span class="op">=</span> <span class="fn">sigmoid</span>(<span class="fn">logit</span>(<span class="v">p_adj</span>))</div>
       <div class="math-note">65/35 blend weights recent L15 performance to capture hot/cold streaks without overreacting to small samples. Park adjustment applied symmetrically to both offensive and defensive λ.</div>
@@ -588,7 +588,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="math-hdr">📈  Closing Line Value — Process Validation</div>
       <div class="f-lbl">Definition — Pinnacle no-vig both sides</div>
       <div class="fbox"><span class="v">CLV</span> <span class="op">=</span> <span class="v">p_close_nv</span> <span class="op">−</span> <span class="v">p_open_nv</span>
-<span class="cm">// Snapshot: 3:30 PM PT pre-game lock</span></div>
+<span class="cm">// Snapshot: pre-game closing line (CT)</span></div>
       <div class="f-lbl">Interpretation</div>
       <div class="fbox"><span class="v">CLV</span> <span class="op">&gt;</span> <span class="n">0</span>  → market moved <span class="v">toward</span> pick
 <span class="v">CLV</span> <span class="op">&lt;</span> <span class="n">0</span>  → market moved <span class="v">against</span> pick
@@ -862,7 +862,7 @@ Away <span class="op">+</span><span class="n">1.5</span> win rate vs model edge:
   <span class="op">≥</span> <span class="n">5%</span> edge <span class="op">→</span> <span class="n">67.2%</span>
   <span class="op">≥</span> <span class="n">8%</span> edge <span class="op">→</span> <span class="n">68.4%</span>
   <span class="op">≥</span><span class="n">10%</span> edge <span class="op">→</span> <span class="n">69.6%</span>   <span class="cm">// genuine discriminatory power</span></div>
-      <div class="math-note">RL edge = p_rl_cal − p_nv_Pinnacle_RL. Bet flagged when edge ≥ 2%. CLV tracked separately via Pinnacle spreads market snapshot at 3:30 PM PT. Home −1.5 volume is low (&lt;40 bets at ≥8% edge over 3 seasons) — treated as a specialty bet requiring high model confidence.</div>
+      <div class="math-note">RL edge = p_rl_cal − p_nv_Pinnacle_RL. Bet flagged when edge ≥ 4%. CLV tracked separately via Pinnacle spreads pre-game closing line snapshot. Home −1.5 volume is low (&lt;40 bets at ≥8% edge over 3 seasons) — treated as a specialty bet requiring high model confidence.</div>
     </div>
 
     <div class="math-block cv">
