@@ -1336,9 +1336,24 @@
   flex: 1;
   min-width: 0; /* prevent overflow */
 }
-/* Pick grid inside left column: 2-col max within narrower container */
+/* Single-column pick list in master-detail — removes grid ambiguity */
 .md-left .pick-grid {
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  grid-template-columns: 1fr !important;
+}
+
+/* When a card is selected, dim all other cards clearly */
+.md-split.has-active .pick-card:not(.ep-active) {
+  opacity: 0.42;
+  transition: opacity 0.2s ease;
+}
+.md-split.has-active .pick-card:not(.ep-active):hover {
+  opacity: 0.70; /* restore on hover so user can switch picks */
+}
+/* Selected card: clear visual identity */
+.pick-card.ep-active {
+  border-left-color: var(--indigo) !important;
+  box-shadow: 0 0 0 1px rgba(99,102,241,.20), 0 4px 16px rgba(0,0,0,.25);
+  opacity: 1 !important;
 }
 .md-right {
   width: 420px;
@@ -3254,6 +3269,7 @@ function toggleDetails(id, btn) {
   // Same card clicked again → close (restore placeholder)
   if (_mdActiveId === id) {
     _mdActiveId = null;
+    document.getElementById('md-split')?.classList.remove('has-active');
     _showMdPlaceholder();
     return;
   }
@@ -3265,6 +3281,7 @@ function toggleDetails(id, btn) {
   btn.textContent = 'Details ▲';
   btn.classList.add('open');
   document.getElementById(id)?.classList.add('ep-active');
+  document.getElementById('md-split')?.classList.add('has-active');
 
   // Build the v8 details panel
   const detHTML  = buildDetailsV8(p, id);
@@ -3294,6 +3311,7 @@ function toggleDetails(id, btn) {
 
 function closeExpandPanel() {
   _mdActiveId = null;
+  document.getElementById('md-split')?.classList.remove('has-active');
   document.querySelectorAll('.details-toggle').forEach(b => {
     b.textContent = 'Details ▾'; b.classList.remove('open');
   });
