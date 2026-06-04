@@ -1341,12 +1341,13 @@
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
 }
 .md-right {
-  width: 360px;
+  width: 420px;
   flex-shrink: 0;
   position: sticky;
   top: calc(var(--nav-h) + 14px);
   max-height: calc(100vh - var(--nav-h) - 28px);
   overflow-y: auto;
+  overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: rgba(99,102,241,.25) transparent;
 }
@@ -1363,11 +1364,16 @@
   overflow: hidden;
 }
 /* det-v8-panel always visible inside the right panel */
-#md-right .det-v8-panel { display: block; }
-/* Single column for prob+action in the narrower right panel */
-#md-right .pa-wrap { grid-template-columns: 1fr !important; }
+#md-right .det-v8-panel { display: block; overflow-x: hidden; }
+/* Force single column — the actual wrapper class is prob-action-v8, not pa-wrap */
+#md-right .prob-action-v8 { grid-template-columns: 1fr !important; }
+/* Remove desktop-only side border when stacked */
+#md-right .pa-v8-col.prob-c { border-right: none; border-bottom: 1px solid rgba(255,255,255,.04); }
+#md-right .pa-v8-col.action-c { background: none; }
 /* Tighter section padding inside right panel */
 #md-right .det-v8-sec { padding: 11px 14px; }
+/* Prevent any child content from causing horizontal overflow */
+#md-right { overflow-x: hidden; }
 
 /* Right panel header (pick identity + close) */
 .md-panel-hdr {
