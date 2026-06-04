@@ -318,7 +318,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
     <li>Projects expected runs for each team using a <strong>Dual-Poisson model</strong> calibrated on park, weather, pitcher quality, and lineup data</li>
     <li><strong>33 log-odds adjustments</strong> refine the base win probability — pitcher quality, lineup confirmation, bullpen form, BvP, precipitation, line movement, and more</li>
     <li>Calibrated monthly on 2026 live results using <strong>Platt scaling</strong> — parameters updated as the season progresses</li>
-    <li><strong>Edge = blended model probability − Pinnacle no-vig price.</strong> Only picks where the model sees ≥2% mispricing are posted. <em>Pure model probability</em> (no market input) is tracked separately for calibration — never using market-blended numbers to evaluate model skill.</li>
+    <li><strong>Edge = blended model probability − Pinnacle no-vig price.</strong> Only picks where the model sees ≥4% mispricing are posted as official plays. <em>Pure model probability</em> (no market input) is tracked separately for calibration — never using market-blended numbers to evaluate model skill.</li>
     <li>Every pick logged with timestamp before first pitch. <strong>CLV tracked to closing line</strong> to validate the signal is real, not luck</li>
   </ul>
 </div>
@@ -370,7 +370,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   </div>
   <div class="msig-cell">
     <div class="msig-lbl">Bet Filter</div>
-    <div class="msig-val">edge ≥ 2%</div>
+    <div class="msig-val">edge ≥ 4%</div>
     <div class="msig-sub">vs. no-vig Pinnacle</div>
   </div>
   <div class="msig-cell">
@@ -485,7 +485,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       </div>
       <div class="pipe-io">
         <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">p_cal + p_nv_Pinnacle</div></div>
-        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">edge float; bet_flag if ≥ 0.02</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">edge float; bet_flag if ≥ 0.04</div></div>
       </div>
     </div>
 
@@ -571,17 +571,17 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
     </div>
 
     <div class="math-block ca">
-      <div class="math-hdr">⚡  Edge Detection &amp; Half-Kelly Sizing</div>
+      <div class="math-hdr">⚡  Edge Detection &amp; Stake Sizing</div>
       <div class="f-lbl">Model edge vs. no-vig Pinnacle</div>
       <div class="fbox"><span class="v">edge</span> <span class="op">=</span> <span class="v">p_cal</span> <span class="op">−</span> <span class="v">p_nv_Pinnacle</span>
-<span class="cm">// Bet flagged if edge ≥ 0.02</span></div>
-      <div class="f-lbl">Half-Kelly criterion — 50% of full Kelly</div>
-      <div class="fbox"><span class="v">b</span>  <span class="op">=</span> decimal_odds <span class="op">−</span> <span class="n">1</span>
+<span class="cm">// Bet flagged if edge ≥ 0.04</span></div>
+      <div class="f-lbl">Fractional Kelly sizing — conservative multi-step reduction</div>
+<div class="fbox"><span class="v">b</span>  <span class="op">=</span> decimal_odds <span class="op">−</span> <span class="n">1</span>
 <span class="v">p</span>  <span class="op">=</span> <span class="v">p_cal</span>  <span class="op">;</span>  <span class="v">q</span> <span class="op">=</span> <span class="n">1</span> <span class="op">−</span> <span class="v">p</span>
 
 <span class="v">f*</span> <span class="op">=</span> <span class="n">0.5</span> <span class="op">×</span> (<span class="v">b</span> <span class="op">·</span> <span class="v">p</span> <span class="op">−</span> <span class="v">q</span>) <span class="op">/</span> <span class="v">b</span>
 <span class="cm">// units = f* × bankroll  ;  cap: 3u</span></div>
-      <div class="math-note">Half-Kelly reduces variance by ~50% with only ~25% EV reduction. The 3u cap prevents over-sizing on high-edge outliers that may reflect data anomalies rather than genuine model confidence.</div>
+      <div class="math-note">Stake sizes use a conservative fractional Kelly approach: base fraction × verdict multiplier × display fraction. CONDITIONAL picks (4–6pp) are full-sized; REDUCED CONF. picks are sized at half the normal rate; FLAGGED picks at ¾. The 3u cap prevents over-sizing on high-edge outliers.</div>
     </div>
 
     <div class="math-block ce">
@@ -922,7 +922,7 @@ Bias by total line:
   </div>
 <div class="footer">
   <div class="footer-l">
-    FAIRLINE MLB · Dual-Poisson Win Probability Engine · 33 Live Signals · 33 Log-Odds Adjustments · Platt Calibration · Half-Kelly Sizing · CLV Tracked<br>
+    FAIRLINE MLB · Dual-Poisson Win Probability Engine · 33 Live Signals · 33 Log-Odds Adjustments · Platt Calibration · Fractional Kelly Sizing · CLV Tracked<br>
     Sources: MLB Stats API · FanGraphs · Baseball Savant · Open-Meteo · UmpScoreCards · Pinnacle (Odds API)<br>
     <span style="font-size:9px;color:#1e293b">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Never bet more than you can afford to lose. 18+ only. Bet responsibly.</span>
   </div>

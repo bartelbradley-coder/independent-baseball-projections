@@ -1847,7 +1847,7 @@ function _updatePhbHelper() {
     const samplePick = Object.values(picksMap).find(p => p.kelly_units);
     const exUnits = samplePick ? samplePick.kelly_units.toFixed(1) : '1.3';
     const exDollar = samplePick ? Math.round(samplePick.kelly_units * _bankroll / 100) : Math.round(1.3 * _bankroll / 100);
-    el.innerHTML = `<strong>${exUnits}u Half-Kelly = $${exDollar}</strong> at $${_bankroll.toLocaleString()} bankroll`;
+    el.innerHTML = `<strong>${exUnits}u = $${exDollar}</strong> at $${_bankroll.toLocaleString()} bankroll`;
     if (bkWrap) bkWrap.classList.remove('flat-mode');
   } else {
     el.innerHTML = 'Enter your bankroll to see <strong>Kelly dollar amounts</strong> on each pick.';
@@ -1907,7 +1907,7 @@ function refreshKellyUSD() {
     if (!units) return;
     el.textContent = (_bankroll > 0)
       ? `${units.toFixed(1)}u · $${Math.round(units * _bankroll / 100)}`
-      : `${units.toFixed(1)}u Half-Kelly`;
+      : `${units.toFixed(1)}u Kelly`;
   });
 }
 
@@ -2508,9 +2508,20 @@ function formatWeather(p) {
   return { text: '🌤 ' + parts.join(' · '), highWind };
 }
 
-function tierLabel(edge) {
+function tierLabel(edge, verdict) {
+  // v2+: use the explicit verdict from today.json when available
+  if (verdict) {
+    if (verdict.includes('STRONG'))      return ['STRONG',        'strong'];
+    if (verdict.includes('REDUCED'))     return ['REDUCED CONF.', 'reduced'];
+    if (verdict.includes('FLAGGED'))     return ['FLAGGED',       'flagged'];
+    if (verdict.includes('CONDITIONAL')) return ['CONDITIONAL',   'conditional'];
+    if (verdict.includes('VALUE'))       return ['VALUE',         'value'];
+    if (verdict.includes('MARGINAL'))    return ['MARGINAL',      'marginal'];
+  }
+  // Pre-v2 fallback: derive from edge (picks without verdict field)
   if (edge >= 0.08) return ['STRONG VALUE', 'strong'];
-  if (edge >= 0.05) return ['VALUE', 'value'];
+  if (edge >= 0.06) return ['VALUE',        'value'];
+  if (edge >= 0.04) return ['CONDITIONAL',  'conditional'];
   return ['MARGINAL', 'marginal'];
 }
 
@@ -2598,7 +2609,7 @@ function narrativePreview(text) {
 function pickCardHTML(p, isTopPick = false, gameResult = null) {
   const edgePct  = (p.edge * 100).toFixed(1);
   const barWidth = Math.min(100, (p.edge / 0.12) * 100).toFixed(0);
-  const [tierText, tierClass] = tierLabel(p.edge);
+  const [tierText, tierClass] = tierLabel(p.edge, p.verdict);
   const modelPct = p.model_prob  ? (p.model_prob  * 100).toFixed(1) : null;
   const mktPct   = p.market_prob ? (p.market_prob * 100).toFixed(1) : null;
   const bePct    = p.break_even  ? (p.break_even  * 100).toFixed(1) : null;
@@ -3075,7 +3086,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       <div class="ps-box"><div class="ps-lbl">Best Odds</div><div class="ps-val amber">${formatOdds(p.best_odds || p.odds)}</div><div class="ps-sub">at bet time</div></div>
       <div class="ps-box"><div class="ps-lbl">Fair Odds</div><div class="ps-val">${p.fair_odds || '—'}</div><div class="ps-sub">model price</div></div>
       <div class="ps-box">
-        <div class="ps-lbl">Half-Kelly<span class="tip" data-tip="½-Kelly criterion on a 10-unit bankroll. Enter your bankroll above to see dollar amounts.">?</span></div>
+        <div class="ps-lbl">Stake Size<span class="tip" data-tip="Fractional Kelly sizing on a 10-unit bankroll. Enter your bankroll above to see dollar amounts.">?</span></div>
         <div class="ps-val">${kellyStr}</div>
         <div class="ps-sub">10u bankroll</div>
         ${kellyUSD}
@@ -3237,7 +3248,14 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     </div>`;
 
   // ── Header row: tier · matchup · time + value badge ───────────────────────
-  const tierLabelCls = tierClass === 'strong' ? '' : tierClass === 'value' ? 'value-label' : 'marginal-label';
+  const tierLabelCls = (
+    tierClass === 'strong'      ? '' :
+    tierClass === 'value'       ? 'value-label' :
+    tierClass === 'conditional' ? 'conditional-label' :
+    tierClass === 'reduced'     ? 'reduced-label' :
+    tierClass === 'flagged'     ? 'flagged-label' :
+    'marginal-label'
+  );
   const tierStarHTML = tierClass === 'marginal' ? '' : '<span class="uc-tier-star">⭐</span>';
   const headerTimeHTML = chipText
     ? `<span class="${chipCls}"${timeAttr}>⏱ ${chipText}</span>`
