@@ -19,9 +19,14 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='9' y='21' font-family='system-ui,sans-serif' font-size='12' font-weight='900' fill='white'>F</text><text x='17' y='21' font-family='system-ui,sans-serif' font-size='12' font-weight='900' fill='%2360a5fa'>L</text><line x1='22' y1='22' x2='26' y2='17' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='26' cy='17' r='1.5' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=3">
 <style>
+:root {
+  --font-display: "Barlow Condensed", sans-serif;
+  --font-ui: "Inter", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
 .page-header { margin-bottom: 28px; }
 .page-title { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
 .page-subtitle { font-size: 12px; color: var(--text-3); }
@@ -513,12 +518,12 @@
   padding: 6px 0 4px; gap: 8px;
 }
 .uph-team {
-  font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700;
+  font-family: var(--font-display); font-size: 22px; font-weight: 800;
   color: var(--text-1, #f1f5f9); line-height: 1; flex: 1; min-width: 0;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .uph-odds {
-  font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700;
+  font-family: var(--font-mono); font-size: 22px; font-weight: 700;
   line-height: 1; flex-shrink: 0;
 }
 .uph-odds.dog { color: var(--green); }
@@ -1436,6 +1441,174 @@
   /* Floating results indicator: move up and shrink on very small screens */
   #floating-results { bottom: 12px; right: 12px; font-size: 10px; padding: 5px 11px; }
 }
+
+/* ── v8 Pick Card: collapsed card hierarchy ── */
+.pc-v8-top { display:flex;align-items:center;flex-wrap:wrap;gap:5px;padding:10px 14px 0 }
+.pc-v8-verdict-row { display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:0 }
+
+/* Context tags (Away Fav / Home Dog etc.) */
+.ctx-tag-v8 { font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;flex-shrink:0;font-family:var(--font-ui) }
+.ctx-tag-v8.fav  { background:rgba(99,102,241,.10);color:var(--indigo-lt);border:1px solid rgba(99,102,241,.20) }
+.ctx-tag-v8.dog  { background:rgba(245,158,11,.10);color:var(--amber);border:1px solid rgba(245,158,11,.20) }
+.ctx-tag-v8.hfav { background:rgba(34,197,94,.08);color:var(--green);border:1px solid rgba(34,197,94,.18) }
+
+/* Pick price subtitle */
+.pc-v8-price-meta { font-size:9.5px;color:var(--text-3);font-weight:500;margin-top:3px;font-family:var(--font-ui) }
+.pc-v8-price-meta strong { color:var(--text-2);font-weight:600 }
+
+/* Key metric strip */
+.pc-v8-nums { display:flex;padding:6px 14px 0;border-top:1px solid rgba(255,255,255,.045);margin-top:6px }
+.pc-v8-num { flex:1;padding:6px 0;border-right:1px solid var(--border) }
+.pc-v8-num:last-child { border-right:none }
+.pc-v8-num:not(:first-child) { padding-left:8px }
+.pc-v8-num .nv-lbl { font-size:8px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;font-family:var(--font-ui) }
+.pc-v8-num .nv-val { font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--text) }
+.pc-v8-num .nv-val.edge  { color:var(--green) }
+.pc-v8-num .nv-val.model { color:#60a5fa }
+.pc-v8-num .nv-val.fair  { color:var(--indigo-lt) }
+.pc-v8-num .nv-val.play  { color:var(--amber) }
+@media(max-width:380px) { .pc-v8-num .nv-val { font-size:11px } .pc-v8-num .nv-lbl { font-size:7px } }
+
+/* Probability bar */
+.pc-v8-bar { padding:10px 14px 8px }
+.pc-v8-bar .pb8-hdr { display:flex;justify-content:space-between;align-items:center;margin-bottom:6px }
+.pc-v8-bar .pb8-lbl { font-size:8.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-family:var(--font-ui) }
+.pc-v8-bar .pb8-lbl.mkt { color:var(--text-3) }
+.pc-v8-bar .pb8-lbl.mdl { color:#60a5fa }
+.pc-v8-bar .pb8-track { height:7px;background:rgba(255,255,255,.05);border-radius:4px;position:relative;overflow:hidden }
+.pb8-mkt-fill { position:absolute;left:0;top:0;bottom:0;background:rgba(115,130,155,.45);border-radius:4px 0 0 4px }
+.pb8-edge-fill { position:absolute;top:0;bottom:0;background:rgba(34,197,94,.65);border-radius:0 4px 4px 0 }
+.pb8-edge-fill.wl { background:rgba(99,102,241,.45) }
+
+/* Stake + lineup row */
+.pc-v8-sl-row { display:flex;align-items:stretch;gap:8px;padding:8px 14px }
+.stake-v8 { background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:8px 10px;flex-shrink:0;min-width:106px }
+.stake-v8.reduced { border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04) }
+.stake-v8.muted   { border-color:rgba(255,255,255,.04);opacity:.60;border-style:dashed }
+.stake-v8 .sv-lbl { font-size:8px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;font-family:var(--font-ui) }
+.stake-v8.reduced .sv-lbl { color:var(--amber) }
+.stake-v8 .sv-units  { font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--text);line-height:1 }
+.stake-v8 .sv-dollars { font-size:12px;font-weight:600;color:var(--text-2);font-family:var(--font-mono) }
+.stake-v8 .sv-note { font-size:8.5px;color:var(--text-3);margin-top:3px }
+.lu-v8-block { flex:1;display:flex;flex-direction:column;justify-content:center;gap:5px }
+.lu-v8-item { display:flex;align-items:center;gap:6px }
+.lu-v8-dot { width:6px;height:6px;border-radius:50%;flex-shrink:0 }
+.lu-v8-dot.conf { background:var(--green) }
+.lu-v8-dot.proj { background:var(--amber) }
+.lu-v8-dot.unk  { background:var(--text-4) }
+.lu-v8-team { font-size:10px;font-weight:600;color:var(--text-2);min-width:28px }
+.lu-v8-status { font-size:9.5px }
+.lu-v8-status.conf { color:var(--green) }
+.lu-v8-status.proj { color:var(--amber) }
+.lu-v8-status.unk  { color:var(--text-3) }
+
+/* Primary driver line */
+.pc-v8-driver { padding:10px 14px;font-size:11px;color:#b8ccdf;line-height:1.55;border-top:1px solid rgba(255,255,255,.065) }
+.pc-v8-driver strong { color:var(--text);font-weight:600 }
+.pc-v8-flag-line { padding:7px 14px;font-size:10px;color:var(--amber);line-height:1.5;background:rgba(245,158,11,.06);border-top:1px solid rgba(245,158,11,.15) }
+.pc-v8-flag-line strong { font-weight:600 }
+
+/* ── v8 Expanded Details Panel ── */
+.det-v8-panel { background:rgba(255,255,255,.016);border-top:2px solid rgba(255,255,255,.055);display:none }
+.det-v8-panel.open { display:block }
+.det-v8-sec { padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.045) }
+.det-v8-sec:last-child { border-bottom:none }
+.det-v8-hdr { font-size:8px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;font-family:var(--font-ui) }
+
+/* Quick Audit */
+.qa-v8 { border:1px solid rgba(255,255,255,.055);border-radius:8px;overflow:hidden }
+.qa-v8-row { display:flex;align-items:baseline;gap:8px;padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.04) }
+.qa-v8-row:last-child { border-bottom:none }
+.qa-v8-lbl { font-size:8px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;flex-shrink:0;min-width:60px;font-family:var(--font-ui) }
+.qa-v8-lbl.thesis { color:var(--text-3) }
+.qa-v8-lbl.driver { color:#60a5fa }
+.qa-v8-lbl.risk   { color:var(--amber) }
+.qa-v8-lbl.ev     { color:var(--green) }
+.qa-v8-val { font-size:11px;color:var(--text-2);line-height:1.4;font-family:var(--font-ui) }
+.qa-v8-val strong { color:var(--text);font-weight:600 }
+.qa-v8-val.ev-good { color:var(--green);font-family:var(--font-mono);font-weight:700;font-size:12px }
+.qa-v8-val.ev-bad  { color:var(--text-3);font-family:var(--font-mono);font-weight:600;font-size:12px }
+
+/* Prob + Action side-by-side on desktop */
+.prob-action-v8 { display:grid;grid-template-columns:1fr;border-bottom:1px solid rgba(255,255,255,.045) }
+@media(min-width:900px) { .prob-action-v8 { grid-template-columns:1fr 1fr } }
+.pa-v8-col { padding:12px 14px }
+.pa-v8-col.prob-c { border-bottom:1px solid rgba(255,255,255,.04) }
+@media(min-width:900px) {
+  .pa-v8-col.prob-c { border-bottom:none;border-right:1px solid rgba(255,255,255,.045) }
+  .pa-v8-col.action-c { background:rgba(34,197,94,.028) }
+  .pa-v8-col.action-c.cond-c { background:rgba(245,158,11,.022) }
+}
+.prob-v8-card { background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:8px;padding:12px 14px }
+.prob-v8-row  { display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:10px }
+.prob-v8-col  { text-align:center;flex:1 }
+.prob-v8-col .pv-lbl { font-size:8px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;margin-bottom:2px;color:var(--text-4);display:block;font-family:var(--font-ui) }
+.prob-v8-col .pv-val { font-family:var(--font-mono);font-size:18px;font-weight:700;line-height:1 }
+.pv-val.mkt   { color:var(--text-2) }
+.pv-val.edgev { color:var(--green);font-size:15px }
+.pv-val.mdl   { color:#60a5fa }
+.prob-v8-div  { width:1px;background:var(--border);height:34px;flex-shrink:0 }
+.prob-v8-bar  { height:8px;background:rgba(255,255,255,.05);border-radius:4px;position:relative;overflow:hidden }
+.pv-mkt  { position:absolute;left:0;top:0;bottom:0;background:rgba(115,130,155,.45);border-radius:4px 0 0 4px }
+.pv-edge { position:absolute;top:0;bottom:0;background:rgba(34,197,94,.65);border-radius:0 4px 4px 0 }
+.pv-edge.wl { background:rgba(99,102,241,.45) }
+
+/* Action Summary */
+.as-v8 { border:1px solid rgba(34,197,94,.28);border-radius:8px;overflow:hidden;background:rgba(34,197,94,.04) }
+.as-v8.cond    { border-color:rgba(245,158,11,.28);background:rgba(245,158,11,.04) }
+.as-v8.reduced { border-color:rgba(245,158,11,.30);background:rgba(245,158,11,.05) }
+.as-v8.wl      { border-color:rgba(99,102,241,.22);background:rgba(99,102,241,.04) }
+.as-v8-row { display:flex;align-items:center;gap:10px;padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.045) }
+.as-v8-row:first-child { padding:9px 10px }
+.as-v8-row:last-child { border-bottom:none }
+.as-v8-lbl { font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-4);min-width:100px;flex-shrink:0;font-family:var(--font-ui) }
+.as-v8-val { font-size:11px;font-weight:600;font-family:var(--font-mono) }
+.as-v8-val.g { color:var(--green) } .as-v8-val.a { color:var(--amber) } .as-v8-val.r { color:var(--red) }
+.as-v8-val.m { color:var(--text-2) } .as-v8-val.d { color:var(--text-3) }
+.det-v8-cta { display:flex;gap:8px;flex-wrap:wrap;margin-top:10px }
+.cta-v8 { font-size:11px;font-weight:700;padding:8px 16px;border-radius:7px;border:1px solid;cursor:pointer;font-family:var(--font-ui) }
+.cta-v8.bet { background:rgba(34,197,94,.13);border-color:rgba(34,197,94,.32);color:var(--green) }
+.cta-v8.trk { background:rgba(99,102,241,.10);border-color:rgba(99,102,241,.25);color:var(--indigo-lt) }
+.cta-v8.mon { background:rgba(99,102,241,.06);border-color:rgba(99,102,241,.18);color:var(--indigo-lt);opacity:.75 }
+
+/* Drivers table */
+.drv-v8 { width:100%;border-collapse:collapse }
+.drv-v8 th { font-size:8px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--text-4);padding:3px 6px;border-bottom:1px solid var(--border);font-family:var(--font-ui) }
+.drv-v8 th:nth-child(2) { text-align:right }
+.drv-v8 th:nth-child(3) { text-align:center }
+.drv-v8 td { padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle }
+.drv-v8 tr:last-child td { border-bottom:none }
+.drv-v8 td.dv-factor { color:var(--text-2);font-size:11px;font-family:var(--font-ui) }
+.drv-v8 td.dv-impact { font-family:var(--font-mono);font-weight:700;font-size:13px;text-align:right;white-space:nowrap }
+.dv-impact.pos { color:#4ade80 } .dv-impact.risk { color:#fbbf24 } .dv-impact.neg { color:#f87171 }
+.drv-v8 td.dv-type { text-align:center;padding:5px 4px }
+.dv-pill { font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:3px;font-family:var(--font-ui) }
+.dv-pill.pos  { background:rgba(34,197,94,.10);color:var(--green) }
+.dv-pill.risk { background:rgba(245,158,11,.10);color:var(--amber) }
+
+/* Best odds */
+.odds-v8-note { font-family:var(--font-mono);font-size:10.5px;color:var(--amber);font-weight:600;margin-bottom:8px }
+.odds-v8-group { margin-bottom:7px } .odds-v8-group:last-child { margin-bottom:0 }
+.odds-v8-glbl { font-size:8.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-4);margin-bottom:4px;font-family:var(--font-ui) }
+.odds-v8-best { display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.22);border-radius:6px }
+.odds-v8-best .ov8-name { font-weight:600;color:var(--text);flex:1;font-size:11px;font-family:var(--font-ui) }
+.odds-v8-best .ov8-odds { font-family:var(--font-mono);font-weight:700;font-size:13px;color:var(--green) }
+.ov8-best-tag { font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:3px;background:rgba(34,197,94,.15);color:var(--green);font-family:var(--font-ui) }
+.ov8-exch-tag { font-size:8.5px;font-weight:700;padding:2px 5px;border-radius:3px;background:rgba(20,184,166,.12);color:#14b8a6;border:1px solid rgba(20,184,166,.20);font-family:var(--font-ui) }
+.odds-v8-inline { font-size:11px;color:var(--text-2);line-height:1.7;font-family:var(--font-ui) }
+.odds-v8-inline .ov8-below { color:var(--text-4) }
+
+/* Lineup status */
+.lu-tbl-v8 { width:100%;border-collapse:collapse }
+.lu-tbl-v8 td { padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.03) }
+.lu-tbl-v8 tr:last-child td { border-bottom:none }
+.lu-tbl-v8 td.lt-lbl { font-size:9px;color:var(--text-4);font-weight:600;width:42%;letter-spacing:.03em;font-family:var(--font-ui) }
+.lu-tbl-v8 td.lt-val { font-weight:600;font-size:11px;font-family:var(--font-ui) }
+.lt-val.conf { color:var(--green) } .lt-val.proj { color:var(--amber) } .lt-val.ok { color:var(--text-2) }
+
+/* Historical context footer */
+.hist-v8 { padding:9px 14px 11px;font-size:10px;color:var(--text-4);line-height:1.5;font-family:var(--font-ui);font-style:italic }
+.hist-v8 strong { font-style:normal;color:var(--text-3);font-weight:600 }
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LR4YJLHZK4"></script>
@@ -2581,12 +2754,292 @@ function parseSP(meta) {
   return null;
 }
 
+// ── v8 details panel: build complete HTML ────────────────────────────────
+function buildDetailsV8(p, cardId) {
+  const edgePct  = p.edge ? (p.edge * 100).toFixed(1) : '0.0';
+  const modelPct = p.model_prob  ? (p.model_prob  * 100).toFixed(1) : null;
+  const mktPct   = p.market_prob ? (p.market_prob * 100).toFixed(1) : null;
+  const isDog    = p.odds > 0;
+  const isWl     = p.verdict && (p.verdict.includes('WATCHLIST') || p.verdict.includes('👁'));
+  const isReduced= p.verdict && (p.verdict.includes('REDUCED') || p.is_flagged);
+  const isCond   = p.verdict && p.verdict.includes('CONDITIONAL');
+  const actionClass = isReduced ? 'reduced' : isCond ? 'cond' : isWl ? 'wl' : '';
+  const actionColClass = (isReduced || isCond) ? 'action-c cond-c' : 'action-c';
+
+  // ── Format EV ──
+  const evVal = p.ev_per_100;
+  let evHTML = '';
+  if (evVal != null) {
+    const evSign = evVal >= 0 ? '+' : '';
+    const evCls  = evVal >= 0 ? 'ev-good' : 'ev-bad';
+    evHTML = `<span class="qa-v8-val ${evCls}">${evSign}$${Math.abs(evVal).toFixed(2)} per $100 wagered</span>`;
+  } else {
+    evHTML = `<span class="qa-v8-val" style="color:var(--text-3)">—</span>`;
+  }
+
+  // ── Quick Audit copy ──
+  let thesis = '', driver = '', risk = '';
+  if (isWl) {
+    thesis = `Edge <strong>+${edgePct}pp</strong> is below the <strong>4.0pp</strong> minimum. Model ${modelPct || '—'}% vs market ${mktPct || '—'}%.`;
+    driver = p.narrative ? p.narrative.split('.')[0] + '.' : '—';
+    risk   = 'Monitor only. Do not bet.';
+  } else {
+    thesis = modelPct && mktPct
+      ? `<strong>+${edgePct}pp edge:</strong> model ${modelPct}% vs market ${mktPct}%.`
+      : `<strong>+${edgePct}pp edge</strong> vs Pinnacle no-vig.`;
+    // Driver from top signal in adj_breakdown or narrative first sentence
+    const topSig = p.adj_breakdown && p.adj_breakdown.adjustments && p.adj_breakdown.adjustments.length
+      ? p.adj_breakdown.adjustments[0] : null;
+    if (topSig) {
+      const dir = topSig.positive ? '+' : '';
+      driver = `<strong>${topSig.label}</strong>: ${dir}${(topSig.pp||0).toFixed(1)}pp.`;
+    } else if (p.narrative) {
+      driver = p.narrative.split('.')[0] + '.';
+    }
+    // Risk from flags or narrative
+    if (p.downgrade_reasons && p.downgrade_reasons.length > 0) {
+      risk = `<strong>FLAG:</strong> ${p.downgrade_reasons}. Sizing reduced.`;
+    } else if (!p.home_lineup_confirmed || !p.away_lineup_confirmed) {
+      risk = 'One or more lineups projected — model applies certainty shrinkage.';
+    } else {
+      risk = 'Low risk — inputs confirmed.';
+    }
+  }
+
+  // ── Probability bar widths (zoomed range) ──
+  let mktFill = 40, edgeFill = 20;
+  if (modelPct && mktPct) {
+    const lo = Math.min(parseFloat(mktPct), parseFloat(modelPct)) - 10;
+    const hi = Math.max(parseFloat(mktPct), parseFloat(modelPct)) + 10;
+    const range = hi - lo || 1;
+    mktFill  = Math.round((parseFloat(mktPct)   - lo) / range * 100);
+    edgeFill = Math.round((parseFloat(modelPct) - parseFloat(mktPct)) / range * 100);
+  }
+  const edgeFillClass = isWl ? 'pv-edge wl' : 'pv-edge';
+
+  // ── Action Summary ──
+  const playable_to = p.playable_to ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to)) : '—';
+  const bestOdds    = p.odds ? (p.odds > 0 ? '+' + p.odds : String(p.odds)) : '—';
+  const bestBook    = p.best_book || p.book_odds_book || '—';
+  const stakeStr    = p.kelly_units ? `${p.kelly_units.toFixed(1)}u` : '—';
+  const stakeUSD    = (_bankroll > 0 && p.kelly_units) ? `$${Math.round(p.kelly_units * _bankroll / 100)}` : '';
+  const verdictShort = p.verdict || 'VALUE';
+  let officialStatus = isWl
+    ? `<span class="as-v8-val r">No — below 4pp threshold</span>`
+    : isReduced
+      ? `<span class="as-v8-val a">${verdictShort}</span>`
+      : `<span class="as-v8-val g">${verdictShort}</span>`;
+  const recheck = (!p.home_lineup_confirmed || !p.away_lineup_confirmed)
+    ? `<span class="as-v8-val a">Yes — confirm lineups</span>`
+    : `<span class="as-v8-val g">No — all confirmed</span>`;
+
+  let actionBodyHTML = '';
+  if (isWl) {
+    actionBodyHTML = `
+      <div class="as-v8-row"><span class="as-v8-lbl">Official Play</span>${officialStatus}</div>
+      <div class="as-v8-row"><span class="as-v8-lbl">Required Edge</span><span class="as-v8-val d">4.0pp</span></div>
+      <div class="as-v8-row"><span class="as-v8-lbl">Current Edge</span><span class="as-v8-val d">+${edgePct}pp</span></div>
+      <div class="as-v8-row"><span class="as-v8-lbl">Action</span><span class="as-v8-val a">Monitor only — do not bet</span></div>`;
+  } else {
+    actionBodyHTML = `
+      <div class="as-v8-row"><span class="as-v8-lbl">Official Play</span>${officialStatus}</div>
+      <div class="as-v8-row"><span class="as-v8-lbl">Bet</span><span class="as-v8-val m">${p.pick || '—'} ML</span></div>
+      <div class="as-v8-row"><span class="as-v8-lbl">Best Available</span><span class="as-v8-val g">${bestOdds} · ${bestBook}</span></div>
+      <div class="as-v8-row"><span class="as-v8-lbl">Playable To</span><span class="as-v8-val a">${playable_to}</span></div>
+      <div class="as-v8-row"><span class="as-v8-lbl">Stake</span><span class="as-v8-val m">${stakeStr}${stakeUSD ? ' / ' + stakeUSD : ''}</span></div>
+      <div class="as-v8-row"><span class="as-v8-lbl">Re-check</span>${recheck}</div>`;
+  }
+
+  // ── Drivers & Risks table ──
+  let driversHTML = '';
+  const adjs = (p.adj_breakdown && p.adj_breakdown.adjustments) ? p.adj_breakdown.adjustments : [];
+  const topAdjs = adjs.slice(0, 5);
+  if (topAdjs.length) {
+    const rows = topAdjs.map(a => {
+      const val   = a.pp || 0;
+      const pos   = a.positive !== false && val >= 0;
+      const impCls = pos ? 'pos' : (Math.abs(val) > 0.5 ? 'neg' : 'risk');
+      const sign   = pos ? '+' : '';
+      const pillCls = pos ? 'pos' : 'risk';
+      const pillTxt = pos ? '+' : '⚠';
+      return `<tr>
+        <td class="dv-factor">${a.label || '—'}</td>
+        <td class="dv-impact ${impCls}">${sign}${Math.abs(val).toFixed(1)}pp</td>
+        <td class="dv-type"><span class="dv-pill ${pillCls}">${pillTxt}</span></td>
+      </tr>`;
+    }).join('');
+    driversHTML = `
+      <div class="det-v8-sec" style="padding:11px 14px">
+        <div class="det-v8-hdr">Drivers &amp; Risks</div>
+        <table class="drv-v8">
+          <thead><tr><th>Factor</th><th>Impact</th><th>Type</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  }
+
+  // ── Best odds section ──
+  let oddsHTML = '';
+  const bookOddsMap = (() => {
+    try { return typeof p.book_odds === 'object' ? p.book_odds : JSON.parse(p.book_odds || '{}'); }
+    catch(e) { return {}; }
+  })();
+  const playableNum = p.playable_to ? parseInt(p.playable_to) : null;
+  const bestOddsNum = p.odds ? parseInt(p.odds) : null;
+  // Parse book_odds into sorted array
+  const entries = Object.entries(bookOddsMap || {})
+    .map(([book, odds]) => ({ book, odds: typeof odds === 'number' ? odds : parseInt(odds) }))
+    .filter(e => !isNaN(e.odds))
+    .sort((a, b) => isDog ? (b.odds - a.odds) : (a.odds - b.odds));
+
+  if (entries.length > 0 && bestOddsNum && playableNum) {
+    const bestEntry = entries[0];
+    const isBetterOrEqual = (o) => isDog ? (o >= playableNum) : (o <= playableNum);
+    const stillPlayable = entries.slice(1).filter(e => isBetterOrEqual(e.odds));
+    const below = entries.slice(1).filter(e => !isBetterOrEqual(e.odds));
+    const playableLabel = isDog
+      ? `Do not bet below ${playable_to}`
+      : `Do not bet worse than ${playable_to}`;
+
+    const bestRow = `<div class="odds-v8-best"><span class="ov8-name">${bestEntry.book}</span><span class="ov8-odds">${bestEntry.odds > 0 ? '+' : ''}${bestEntry.odds}</span><span class="ov8-best-tag">BEST</span></div>`;
+    const playableRow = stillPlayable.length
+      ? `<div class="odds-v8-inline">${stillPlayable.map(e=>`${e.book} ${e.odds > 0 ? '+' : ''}${e.odds}`).join(' · ')}</div>` : '';
+    const belowRow = below.length
+      ? `<div class="odds-v8-inline"><span class="ov8-below">${below.map(e=>`${e.book} ${e.odds > 0 ? '+' : ''}${e.odds}`).join(' · ')}</span></div>` : '';
+
+    oddsHTML = `
+      <div class="det-v8-sec">
+        <div class="det-v8-hdr">Best Available Odds — ${p.pick || '—'} ML</div>
+        <div class="odds-v8-note">Playable to ${playable_to} · ${playableLabel}</div>
+        ${bestRow ? `<div class="odds-v8-group"><div class="odds-v8-glbl">Best Available</div>${bestRow}</div>` : ''}
+        ${playableRow ? `<div class="odds-v8-group"><div class="odds-v8-glbl">Still Playable</div>${playableRow}</div>` : ''}
+        ${belowRow ? `<div class="odds-v8-group"><div class="odds-v8-glbl">Below Threshold</div>${belowRow}</div>` : ''}
+      </div>`;
+  } else if (bestOddsNum) {
+    oddsHTML = `
+      <div class="det-v8-sec">
+        <div class="det-v8-hdr">Best Available Odds — ${p.pick || '—'} ML</div>
+        <div class="odds-v8-note">Playable to ${playable_to}</div>
+        <div class="odds-v8-group"><div class="odds-v8-best"><span class="ov8-name">${bestBook}</span><span class="ov8-odds">${bestOdds}</span><span class="ov8-best-tag">BEST</span></div></div>
+      </div>`;
+  }
+
+  // ── Lineup & Data Status ──
+  const homeConf = p.home_lineup_confirmed;
+  const awayConf = p.away_lineup_confirmed;
+  const pickConf = (p.side || '').toUpperCase() === 'HOME' ? homeConf : awayConf;
+  const oppConf  = (p.side || '').toUpperCase() === 'HOME' ? awayConf : homeConf;
+  const pickTeam = p.pick || '—';
+  const oppTeam  = p.game && p.game.includes(' @ ')
+    ? ((p.side || '').toUpperCase() === 'HOME'
+        ? p.game.split(' @ ')[0].trim()
+        : p.game.split(' @ ')[1].trim())
+    : '—';
+  const refreshTime = p.current_refresh_time || p.posted_at || '—';
+
+  const statusHTML = `
+    <div class="det-v8-sec">
+      <div class="det-v8-hdr">Lineup &amp; Data Status</div>
+      <table class="lu-tbl-v8">
+        <tr><td class="lt-lbl">${pickTeam} lineup</td><td class="lt-val ${pickConf ? 'conf' : 'proj'}">${pickConf ? '✓ Confirmed' : '⚠ Projected'}</td></tr>
+        <tr><td class="lt-lbl">${oppTeam} lineup</td><td class="lt-val ${oppConf ? 'conf' : 'proj'}">${oppConf ? '✓ Confirmed' : '⚠ Projected'}</td></tr>
+        ${p.pitcher ? `<tr><td class="lt-lbl">${pickTeam} starter</td><td class="lt-val conf">✓ ${p.pitcher}</td></tr>` : ''}
+        ${p.opp_pitcher ? `<tr><td class="lt-lbl">${oppTeam} starter</td><td class="lt-val conf">✓ ${p.opp_pitcher}</td></tr>` : ''}
+        <tr><td class="lt-lbl">Model refresh</td><td class="lt-val ok">${refreshTime}</td></tr>
+      </table>
+    </div>`;
+
+  // ── Historical context ──
+  const histHTML = p.narrative && !isWl
+    ? `<div class="hist-v8"><strong>Historical context:</strong> ${tierLabel(p.edge, p.verdict)[0]} plays this season — see full CLV record in History tab. Supporting context only.</div>`
+    : '';
+
+  // ── CTA buttons ──
+  const ctaHTML = isWl
+    ? `<button class="cta-v8 mon">Monitor Only</button>`
+    : `<button class="cta-v8 bet" onclick="window.open('https://www.fairlinemlb.com', '_blank')">Bet ${p.pick} ML</button><button class="cta-v8 trk" onclick="toggleBet('${cardId}')" title="Track this pick in your personal CLV monitoring record">Track Pick</button>`;
+
+  // ── Assemble watchlist (short) ──
+  if (isWl) {
+    return `
+    <div id="${cardId}-det" class="det-v8-panel">
+      <div class="det-v8-sec">
+        <div class="det-v8-hdr">Why Not Official</div>
+        <div class="qa-v8">
+          <div class="qa-v8-row"><span class="qa-v8-lbl thesis">Status</span><span class="qa-v8-val">${thesis}</span></div>
+          ${evVal != null ? `<div class="qa-v8-row"><span class="qa-v8-lbl ev">EV vs Book</span>${evHTML}</div>` : ''}
+          <div class="qa-v8-row"><span class="qa-v8-lbl risk">Action</span><span class="qa-v8-val" style="color:var(--amber)">Monitor only. Do not bet.</span></div>
+        </div>
+      </div>
+      <div class="det-v8-sec">
+        <div class="det-v8-hdr">Action Summary</div>
+        <div class="as-v8 wl">${actionBodyHTML}</div>
+        <div class="det-v8-cta">${ctaHTML}</div>
+      </div>
+    </div>`;
+  }
+
+  // ── Assemble official play (full) ──
+  return `
+  <div id="${cardId}-det" class="det-v8-panel">
+    <div class="det-v8-sec">
+      <div class="det-v8-hdr">Quick Audit</div>
+      <div class="qa-v8">
+        <div class="qa-v8-row"><span class="qa-v8-lbl thesis">Thesis</span><span class="qa-v8-val">${thesis}</span></div>
+        <div class="qa-v8-row"><span class="qa-v8-lbl driver">Driver</span><span class="qa-v8-val">${driver}</span></div>
+        <div class="qa-v8-row"><span class="qa-v8-lbl risk">Risk</span><span class="qa-v8-val" style="color:${isReduced ? 'var(--amber)' : 'var(--text-2)'}">${risk}</span></div>
+        <div class="qa-v8-row"><span class="qa-v8-lbl ev">EV</span>${evHTML}</div>
+      </div>
+    </div>
+    <div class="prob-action-v8">
+      <div class="pa-v8-col prob-c">
+        <div class="det-v8-hdr">Win Probability Gap</div>
+        <div class="prob-v8-card">
+          <div class="prob-v8-row">
+            <div class="prob-v8-col"><span class="pv-lbl">Market</span><div class="pv-val mkt">${mktPct || '—'}%</div></div>
+            <div class="prob-v8-div"></div>
+            <div class="prob-v8-col"><span class="pv-lbl">Edge</span><div class="pv-val edgev">+${edgePct}pp</div></div>
+            <div class="prob-v8-div"></div>
+            <div class="prob-v8-col"><span class="pv-lbl">Model</span><div class="pv-val mdl">${modelPct || '—'}%</div></div>
+          </div>
+          <div class="prob-v8-bar"><div class="pv-mkt" style="width:${mktFill}%"></div><div class="${edgeFillClass}" style="left:${mktFill}%;width:${edgeFill}%"></div></div>
+        </div>
+      </div>
+      <div class="pa-v8-col ${actionColClass}">
+        <div class="det-v8-hdr">Action Summary</div>
+        <div class="as-v8 ${actionClass}">${actionBodyHTML}</div>
+        <div class="det-v8-cta">${ctaHTML}</div>
+      </div>
+    </div>
+    ${driversHTML}
+    ${oddsHTML}
+    ${statusHTML}
+    ${histHTML}
+  </div>`;
+}
+
 // ── Details panel toggle ─────────────────────────────────────────────────────
 function toggleDetails(id, btn) {
-  const body = document.getElementById(id);
-  const open = body.classList.toggle('open');
-  btn.textContent = open ? 'Details ▲' : 'Details ▾';
-  btn.classList.toggle('open', open);
+  // First check if det panel exists; if not, build it
+  const detId = id + '-det';
+  let detPanel = document.getElementById(detId);
+  if (!detPanel) {
+    const cardId = id.replace(/-det$/, '');
+    const p = picksMap[cardId];
+    if (p) {
+      const panelHTML = buildDetailsV8(p, cardId);
+      const cardEl = btn.closest('.pick-card');
+      if (cardEl) {
+        cardEl.insertAdjacentHTML('beforeend', panelHTML);
+        detPanel = document.getElementById(detId);
+      }
+    }
+  }
+  if (detPanel) {
+    const open = detPanel.classList.toggle('open');
+    btn.textContent = open ? 'Details ▲' : 'Details ▾';
+    btn.classList.toggle('open', open);
+  }
 }
 
 // ── Narrative preview: full text if short; 2 sentences if long ────────────────
@@ -3196,7 +3649,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   const adjBreakdownHTML = buildAdjBreakdown(p);
 
   const detailsBodyHTML = `
-    <div class="details-body" id="${detailsId}">
+    <div class="details-body" id="${detailsId}-legacy" style="display:none">
       ${fullNarrativeHTML}
       ${probHTML}
       ${statsHTML}
@@ -3326,9 +3779,10 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     ${narrativePreviewLineHTML}`;
 
   // ── Action row v2 — text links, no box buttons ────────────────────────────
+  // Note: passing cardId (not detailsId) so toggleDetails can build the v8 panel as cardId+'-det'
   const actionRowHTML = `
     <div class="uc-action-row-v2">
-      <button class="uav-btn primary details-toggle" onclick="toggleDetails('${detailsId}', this)">Details ▾</button>
+      <button class="uav-btn primary details-toggle" onclick="toggleDetails('${cardId}', this)">Details ▾</button>
       <span class="uav-sep">·</span>
       <button class="uav-btn secondary bet-toggle" data-bet-id="${cardId}" onclick="toggleBet('${cardId}')">Track</button>
       <span class="uav-sep">·</span>
@@ -3339,6 +3793,114 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     ? `<div class="top-pick-banner">⭐ Best Bet Today · Highest Model Edge</div>`
     : '';
 
+  // ── v8 collapsed: key metric strip ──────────────────────────────────────
+  const isWlCard = p.verdict && (p.verdict.includes('WATCHLIST') || p.verdict.includes('👁'));
+  const isFlaggedCard = p.is_flagged || (p.verdict && p.verdict.includes('REDUCED'));
+  const fairOddsV8 = p.fair_odds || '—';
+  const playableV8 = p.playable_to != null
+    ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to))
+    : '—';
+
+  const metricsStripHTML = `
+    <div class="pc-v8-nums">
+      <div class="pc-v8-num">
+        <div class="nv-lbl">Edge</div>
+        <div class="nv-val edge">+${edgePct}pp</div>
+      </div>
+      ${modelPct ? `<div class="pc-v8-num">
+        <div class="nv-lbl">Model</div>
+        <div class="nv-val model">${modelPct}%</div>
+      </div>` : ''}
+      ${mktPct ? `<div class="pc-v8-num">
+        <div class="nv-lbl">Market</div>
+        <div class="nv-val">${mktPct}%</div>
+      </div>` : ''}
+      <div class="pc-v8-num">
+        <div class="nv-lbl">Fair ML</div>
+        <div class="nv-val fair">${fairOddsV8}</div>
+      </div>
+      ${isWlCard
+        ? `<div class="pc-v8-num"><div class="nv-lbl">Threshold</div><div class="nv-val" style="color:var(--text-3)">4.0pp</div></div>`
+        : (playableV8 !== '—' ? `<div class="pc-v8-num"><div class="nv-lbl">Playable To</div><div class="nv-val play">${playableV8}</div></div>` : '')}
+    </div>`;
+
+  // ── v8 collapsed: probability bar ───────────────────────────────────────
+  let probBarHTML = '';
+  if (modelPct && mktPct) {
+    const mktF = parseFloat(mktPct).toFixed(1);
+    const edgeF = parseFloat(edgePct).toFixed(1);
+    const edgeFillCls = isWlCard ? 'pb8-edge-fill wl' : 'pb8-edge-fill';
+    probBarHTML = `
+    <div class="pc-v8-bar">
+      <div class="pb8-hdr">
+        <span class="pb8-lbl mkt">Market ${mktPct}%</span>
+        <span class="pb8-lbl mdl">Model ${modelPct}%</span>
+      </div>
+      <div class="pb8-track">
+        <div class="pb8-mkt-fill" style="width:${mktF}%"></div>
+        <div class="${edgeFillCls}" style="left:${mktF}%;width:${edgeF}%"></div>
+      </div>
+    </div>`;
+  }
+
+  // ── v8 collapsed: stake + lineup row ────────────────────────────────────
+  let stakeV8HTML = '';
+  const stakeV8Cls = isFlaggedCard ? 'stake-v8 reduced' : isWlCard ? 'stake-v8 muted' : 'stake-v8';
+  const stakeV8Lbl = isFlaggedCard ? 'REDUCED STAKE' : isWlCard ? 'STAKE (WATCH)' : 'STAKE';
+  const stakeV8Units = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—';
+  const stakeV8USD   = (_bankroll > 0 && p.kelly_units)
+    ? `<div class="sv-dollars">$${Math.round(p.kelly_units * _bankroll / 100)}</div>` : '';
+  const stakeV8Note  = isWlCard ? '<div class="sv-note">Monitor only</div>'
+    : isFlaggedCard ? '<div class="sv-note">Reduced — do not increase</div>'
+    : '<div class="sv-note">Assumes $10k bankroll</div>';
+
+  const homeConfV8 = p.home_lineup_confirmed;
+  const awayConfV8 = p.away_lineup_confirmed;
+  const pickTeamV8 = isHomePick ? homeTeam || p.pick : awayTeam || p.pick;
+  const oppTeamV8  = isHomePick ? awayTeam || '—' : homeTeam || '—';
+  const pickConfV8 = isHomePick ? homeConfV8 : awayConfV8;
+  const oppConfV8  = isHomePick ? awayConfV8 : homeConfV8;
+  const luPickCls  = pickConfV8 ? 'conf' : (pickConfV8 === false ? 'proj' : 'unk');
+  const luOppCls   = oppConfV8  ? 'conf' : (oppConfV8  === false ? 'proj' : 'unk');
+  const luPickTxt  = pickConfV8 ? 'Lineup confirmed' : (pickConfV8 === false ? 'Lineup projected' : 'Lineup unknown');
+  const luOppTxt   = oppConfV8  ? 'Confirmed' : (oppConfV8  === false ? 'Projected' : 'Unknown');
+
+  stakeV8HTML = `
+    <div class="pc-v8-sl-row">
+      <div class="${stakeV8Cls}">
+        <div class="sv-lbl">${stakeV8Lbl}</div>
+        <div class="sv-units">${stakeV8Units}</div>
+        ${stakeV8USD}
+        ${stakeV8Note}
+      </div>
+      <div class="lu-v8-block">
+        <div class="lu-v8-item">
+          <div class="lu-v8-dot ${luPickCls}"></div>
+          <span class="lu-v8-team">${pickTeamV8.length > 12 ? pickTeamV8.slice(0,12) : pickTeamV8}</span>
+          <span class="lu-v8-status ${luPickCls}">${luPickTxt}</span>
+        </div>
+        <div class="lu-v8-item">
+          <div class="lu-v8-dot ${luOppCls}"></div>
+          <span class="lu-v8-team">${oppTeamV8.length > 12 ? oppTeamV8.slice(0,12) : oppTeamV8}</span>
+          <span class="lu-v8-status ${luOppCls}">${luOppTxt}</span>
+        </div>
+      </div>
+    </div>`;
+
+  // ── v8 collapsed: primary driver line ───────────────────────────────────
+  let driverV8HTML = '';
+  if (_narrativePreviewText && _narrativePreviewText.length > 20) {
+    driverV8HTML = `<div class="pc-v8-driver">${_narrativePreviewText}</div>`;
+  }
+
+  // ── v8 collapsed: flag line ──────────────────────────────────────────────
+  let flagV8HTML = '';
+  if (isFlaggedCard && p.downgrade_reasons) {
+    flagV8HTML = `<div class="pc-v8-flag-line"><strong>Flag:</strong> ${p.downgrade_reasons} — stake reduced.</div>`;
+  } else if (isFlaggedCard) {
+    flagV8HTML = `<div class="pc-v8-flag-line"><strong>Reduced confidence</strong> — stake sizing reduced by model.</div>`;
+  }
+
   // ── Assemble card ─────────────────────────────────────────────────────────
   const resultStateClass = gameResult && gameResult.status === 'final'
     ? (gameResult.result === 'W' ? ' card-win' : ' card-loss') : '';
@@ -3347,6 +3909,11 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       ${topPickBannerHTML}
       ${headerRowHTML}
       ${pickHeadlineHTML}
+      ${metricsStripHTML}
+      ${probBarHTML}
+      ${stakeV8HTML}
+      ${driverV8HTML}
+      ${flagV8HTML}
       ${_liveEdgePanelHTML}
       ${_liveEdgeWarnHTML}
       ${spFlagsRowHTML}
