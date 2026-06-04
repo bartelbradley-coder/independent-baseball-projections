@@ -1326,58 +1326,115 @@
 .phb-bankroll.flat-mode .phb-bk-label,
 .phb-bankroll.flat-mode .phb-bk-dollar { opacity: 0.45; }
 
-/* ── Full-width expand panel (details moved out of card column) ── */
-#pick-expand-wrap {
-  margin-top: 4px;
+/* ── Master-detail split layout ── */
+.md-split {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
 }
-.ep-card {
-  background: rgba(9,13,22,.96);
-  border: 1px solid rgba(255,255,255,.10);
-  border-radius: 12px; overflow: hidden;
-  animation: epSlideIn .18s ease;
+.md-left {
+  flex: 1;
+  min-width: 0; /* prevent overflow */
 }
-@keyframes epSlideIn {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* Pick grid inside left column: 2-col max within narrower container */
+.md-left .pick-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
 }
-.ep-acc-green { border-top: 2px solid rgba(34,197,94,.55); }
-.ep-acc-amber { border-top: 2px solid rgba(245,158,11,.45); }
-.ep-acc-strong { border-top: 2px solid rgba(245,158,11,.70); }
-.ep-card-hdr {
-  display: flex; align-items: center; gap: 12px;
-  padding: 11px 18px; border-bottom: 1px solid rgba(255,255,255,.07);
-  flex-wrap: wrap;
+.md-right {
+  width: 360px;
+  flex-shrink: 0;
+  position: sticky;
+  top: calc(var(--nav-h) + 14px);
+  max-height: calc(100vh - var(--nav-h) - 28px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99,102,241,.25) transparent;
 }
-.ep-card-team {
+@media (max-width: 960px) {
+  .md-split { flex-direction: column; }
+  .md-right { width: 100%; position: static; max-height: none; }
+}
+
+/* Right panel container */
+.md-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+/* det-v8-panel always visible inside the right panel */
+#md-right .det-v8-panel { display: block; }
+/* Single column for prob+action in the narrower right panel */
+#md-right .pa-wrap { grid-template-columns: 1fr !important; }
+/* Tighter section padding inside right panel */
+#md-right .det-v8-sec { padding: 11px 14px; }
+
+/* Right panel header (pick identity + close) */
+.md-panel-hdr {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,.02); flex-wrap: wrap;
+}
+.md-panel-team {
   font-family: var(--font-display); font-size: 20px; font-weight: 800;
-  color: var(--text-1, #f1f5f9); letter-spacing: .02em;
+  color: var(--text-1, #f1f5f9); letter-spacing: .02em; line-height: 1;
 }
-.ep-card-odds { font-family: var(--font-mono); font-size: 16px; font-weight: 700; }
-.ep-card-odds.ep-neg { color: var(--indigo-lt); }
-.ep-card-odds.ep-pos { color: var(--amber); }
-.ep-card-edge {
-  font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 5px;
-  background: rgba(34,197,94,.10); color: var(--green);
+.md-panel-odds { font-family: var(--font-mono); font-size: 15px; font-weight: 700; }
+.md-panel-odds.neg { color: var(--indigo-lt); }
+.md-panel-odds.pos { color: var(--amber); }
+.md-panel-edge {
+  font-size: 9.5px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+  background: rgba(34,197,94,.09); color: var(--green);
   border: 1px solid rgba(34,197,94,.20);
 }
-.ep-card-game { font-size: 11px; color: var(--text-3); }
-.ep-card-close {
+.md-panel-game { font-size: 10px; color: var(--text-3); }
+.md-panel-close {
   margin-left: auto; font-size: 11px; font-weight: 600; color: var(--text-4);
-  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
-  border-radius: 6px; padding: 5px 12px; cursor: pointer; transition: all .15s;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
+  border-radius: 6px; padding: 4px 10px; cursor: pointer; transition: all .15s;
+  font-family: var(--font-ui);
 }
-.ep-card-close:hover { color: var(--text-2); }
-/* det-v8-panel inside global expand panel is always visible (not toggled) */
-#pick-expand-wrap .det-v8-panel { display: block; }
-/* Two-column prob+action inside global panel on desktop */
-#pick-expand-wrap .pa-wrap { grid-template-columns: 1fr 1fr; }
-@media (max-width: 760px) {
-  #pick-expand-wrap .pa-wrap { grid-template-columns: 1fr; }
+.md-panel-close:hover { color: var(--text-2); background: rgba(255,255,255,.07); }
+
+/* Placeholder: shown when no pick is selected */
+.md-placeholder {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
+  padding: 36px 24px; gap: 10px; min-height: 260px;
 }
-/* Active card highlight when its details panel is open */
+.mdp-icon { font-size: 28px; opacity: .3; }
+.mdp-title {
+  font-family: var(--font-display); font-size: 17px; font-weight: 700;
+  color: var(--text-3); letter-spacing: .04em;
+}
+.mdp-sub { font-size: 11px; color: var(--text-4); line-height: 1.6; max-width: 210px; }
+.mdp-picks { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; width: 100%; }
+.mdp-pick-btn {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+  color: var(--text-3); background: rgba(255,255,255,.03);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 12px; cursor: pointer; text-align: left; transition: all .15s;
+}
+.mdp-pick-btn:hover {
+  color: var(--text-2); background: rgba(255,255,255,.06);
+  border-color: rgba(99,102,241,.25);
+}
+.mdp-pick-team {
+  font-family: var(--font-display); font-size: 16px; font-weight: 800;
+  color: var(--text); line-height: 1;
+}
+.mdp-pick-odds { font-family: var(--font-mono); font-size: 12px; }
+.mdp-pick-game { font-size: 10px; color: var(--text-4); flex: 1; }
+.mdp-pick-edge {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--green); margin-left: auto; flex-shrink: 0;
+}
+
+/* Active card highlight when selected in master-detail */
 .pick-card.ep-active {
   border-color: rgba(99,102,241,.40) !important;
-  box-shadow: 0 0 0 1px rgba(99,102,241,.12);
+  box-shadow: 0 0 0 1px rgba(99,102,241,.10);
 }
 
 /* ── Corrected exposure block (replaces today-action-strip) ── */
@@ -1802,35 +1859,52 @@
     <div id="pt-rows"></div>
   </div>
 
-  <!-- TODAY'S PICKS -->
-  <div class="section">
-    <div class="sec-lbl" id="page-date">Today's Value Bets</div>
-    <div id="page-refresh-meta" style="display:none;font-size:10px;color:var(--text-4);margin-top:3px;margin-bottom:2px;font-family:var(--font-mono)"></div>
-    <div id="picks-container">
-      <div id="loading-placeholder" style="display:flex;flex-direction:column;gap:14px">
-        <div class="skeleton-card">
-          <div class="sk-line short"></div>
-          <div class="sk-line tall"></div>
-          <div class="sk-line wide"></div>
-          <div class="sk-line xs"></div>
-        </div>
-        <div class="skeleton-card">
-          <div class="sk-line short"></div>
-          <div class="sk-line tall"></div>
-          <div class="sk-line wide"></div>
-          <div class="sk-line xs"></div>
-        </div>
-        <div class="skeleton-card">
-          <div class="sk-line short"></div>
-          <div class="sk-line tall"></div>
-          <div class="sk-line xs"></div>
+  <!-- TODAY'S PICKS — master-detail split: left=picks, right=sticky detail panel -->
+  <div class="md-split" id="md-split">
+
+    <!-- Left column: picks -->
+    <div class="md-left">
+      <div class="section">
+        <div class="sec-lbl" id="page-date">Today's Value Bets</div>
+        <div id="page-refresh-meta" style="display:none;font-size:10px;color:var(--text-4);margin-top:3px;margin-bottom:2px;font-family:var(--font-mono)"></div>
+        <div id="picks-container">
+          <div id="loading-placeholder" style="display:flex;flex-direction:column;gap:14px">
+            <div class="skeleton-card">
+              <div class="sk-line short"></div>
+              <div class="sk-line tall"></div>
+              <div class="sk-line wide"></div>
+              <div class="sk-line xs"></div>
+            </div>
+            <div class="skeleton-card">
+              <div class="sk-line short"></div>
+              <div class="sk-line tall"></div>
+              <div class="sk-line wide"></div>
+              <div class="sk-line xs"></div>
+            </div>
+            <div class="skeleton-card">
+              <div class="sk-line short"></div>
+              <div class="sk-line tall"></div>
+              <div class="sk-line xs"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- FULL-WIDTH EXPAND PANEL — populated by toggleDetails(), never inside a card -->
-  <div id="pick-expand-wrap" style="display:none"></div>
+    <!-- Right column: sticky detail panel — no page scroll needed -->
+    <div class="md-right" id="md-right">
+      <div class="md-panel" id="md-panel">
+        <!-- Placeholder: shown before any pick is selected -->
+        <div class="md-placeholder" id="md-placeholder">
+          <div class="mdp-icon">⚾</div>
+          <div class="mdp-title">Pick Details</div>
+          <div class="mdp-sub">Select a pick to view the full analysis, action summary, and odds breakdown.</div>
+          <div class="mdp-picks" id="mdp-picks"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /md-split -->
 
   <!-- MARGINAL PICKS -->
   <div class="section" id="marginal-section" style="display:none">
@@ -2010,7 +2084,7 @@ if (!_bankroll && localStorage.getItem('fairline_unit_size')) {
 let _unitSize = _bankroll / 100;  // kept for any legacy references; derived from bankroll
 let _histRef  = null; // history data reference for tracker result lookup
 let _mainPicksRef = []; // today's main picks for share-all
-let _expandActiveId = null; // card whose details are open in the global expand panel
+let _mdActiveId = null; // card whose details are currently shown in the right panel
 let _histContextFn = null;      // set in render() — returns hist-context HTML for a pick
 let _countdownTimerStarted = false;
 
@@ -3161,66 +3235,103 @@ function buildDetailsV8(p, cardId) {
 
 // ── Details panel toggle ─────────────────────────────────────────────────────
 function toggleDetails(id, btn) {
-  const wrap = document.getElementById('pick-expand-wrap');
-  if (!wrap) return;
+  const panel  = document.getElementById('md-panel');
+  const holder = document.getElementById('md-placeholder');
+  if (!panel) return;
 
-  // Reset all detail buttons and card highlights
+  // Reset all buttons and card highlights
   document.querySelectorAll('.details-toggle').forEach(b => {
     b.textContent = 'Details ▾'; b.classList.remove('open');
   });
   document.querySelectorAll('.pick-card').forEach(c => c.classList.remove('ep-active'));
 
-  // Same card → close panel
-  if (_expandActiveId === id) {
-    _expandActiveId = null;
-    wrap.style.display = 'none';
+  // Same card clicked again → close (restore placeholder)
+  if (_mdActiveId === id) {
+    _mdActiveId = null;
+    _showMdPlaceholder();
     return;
   }
 
   const p = picksMap[id];
   if (!p) return;
 
-  _expandActiveId = id;
+  _mdActiveId = id;
   btn.textContent = 'Details ▲';
   btn.classList.add('open');
   document.getElementById(id)?.classList.add('ep-active');
 
-  // Build details content
-  const detHTML = buildDetailsV8(p, id);
-  const [, tierClass] = tierLabel(p.edge, p.verdict);
-  const accentCls = tierClass === 'strong' ? 'ep-acc-strong' : tierClass === 'value' ? 'ep-acc-green' : 'ep-acc-amber';
-  const oddsStr   = formatOdds(p.odds);
-  const edgePct   = (p.edge * 100).toFixed(1);
-  const oddsCls   = p.odds > 0 ? 'ep-pos' : 'ep-neg';
+  // Build the v8 details panel
+  const detHTML  = buildDetailsV8(p, id);
+  const oddsStr  = formatOdds(p.odds);
+  const edgePct  = (p.edge * 100).toFixed(1);
+  const oddsCls  = p.odds > 0 ? 'pos' : 'neg';
 
-  wrap.innerHTML = `
-    <div class="ep-card ${accentCls}">
-      <div class="ep-card-hdr">
-        <span class="ep-card-team">${p.pick}</span>
-        <span class="ep-card-odds ${oddsCls}">${oddsStr}</span>
-        <span class="ep-card-edge">+${edgePct}% edge</span>
-        <span class="ep-card-game">${p.game || ''}</span>
-        <button class="ep-card-close" onclick="closeExpandPanel()">✕ Close</button>
-      </div>
-      ${detHTML}
-    </div>`;
+  // Inject: header identifying the pick + details below
+  panel.innerHTML = `
+    <div class="md-panel-hdr">
+      <span class="md-panel-team">${p.pick}</span>
+      <span class="md-panel-odds ${oddsCls}">${oddsStr}</span>
+      <span class="md-panel-edge">+${edgePct}pp edge</span>
+      <span class="md-panel-game">${p.game || ''}</span>
+      <button class="md-panel-close" onclick="closeExpandPanel()" title="Close (Esc)">✕</button>
+    </div>
+    ${detHTML}`;
 
-  // Animate in
-  wrap.style.display = 'none';
-  void wrap.offsetWidth;
-  wrap.style.display = 'block';
-  setTimeout(() => wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+  // Make det-v8-panel visible (it's display:none by default, show:block overridden by CSS)
+  const detPanel = document.getElementById(id + '-det');
+  if (detPanel) detPanel.classList.add('open');
+
+  // Scroll the right panel to top
+  const mdRight = document.getElementById('md-right');
+  if (mdRight) mdRight.scrollTop = 0;
 }
 
 function closeExpandPanel() {
-  _expandActiveId = null;
-  const wrap = document.getElementById('pick-expand-wrap');
-  if (wrap) wrap.style.display = 'none';
+  _mdActiveId = null;
   document.querySelectorAll('.details-toggle').forEach(b => {
     b.textContent = 'Details ▾'; b.classList.remove('open');
   });
   document.querySelectorAll('.pick-card').forEach(c => c.classList.remove('ep-active'));
+  _showMdPlaceholder();
 }
+
+function _showMdPlaceholder() {
+  const panel  = document.getElementById('md-panel');
+  const holder = document.getElementById('md-placeholder');
+  if (!panel || !holder) return;
+  panel.innerHTML = '';
+  panel.appendChild(holder);
+  holder.style.display = 'flex';
+}
+
+// Populate placeholder's quick-select buttons once picks are known
+function renderMdPlaceholder(picks) {
+  const el = document.getElementById('mdp-picks');
+  if (!el || !picks || picks.length === 0) return;
+  el.innerHTML = picks.map(p => {
+    const cardId  = 'card-' + (p.pick || '').replace(/\s/g,'') + (p.game || '').replace(/\s/g,'');
+    const edgePct = (p.edge * 100).toFixed(1);
+    const odds    = formatOdds(p.odds);
+    const oddsCls = p.odds > 0 ? 'style="color:var(--amber)"' : 'style="color:var(--indigo-lt)"';
+    return `
+      <button class="mdp-pick-btn" onclick="selectMdPick('${cardId}')">
+        <span class="mdp-pick-team">${p.pick}</span>
+        <span class="mdp-pick-odds" ${oddsCls}>${odds}</span>
+        <span class="mdp-pick-game">${p.game || ''}</span>
+        <span class="mdp-pick-edge">+${edgePct}pp</span>
+      </button>`;
+  }).join('');
+}
+
+function selectMdPick(cardId) {
+  const btn = document.querySelector(`#${cardId} .details-toggle`);
+  if (btn) toggleDetails(cardId, btn);
+}
+
+// Escape key closes the right panel
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && _mdActiveId) closeExpandPanel();
+});
 
 // ── Narrative preview: full text if short; 2 sentences if long ────────────────
 function narrativePreview(text) {
@@ -4433,6 +4544,9 @@ function render(data, hist, scores = {}, perf = null) {
   // Today's Picks — Live Tracking table (compact at-a-glance above pick cards)
   const _mainForTracking = (data.picks || []).filter(p => (p.edge || 0) >= 0.02);
   renderTodayTrackingIndex(_mainForTracking, scores);
+
+  // Populate master-detail placeholder quick-select buttons
+  renderMdPlaceholder(_mainForTracking);
 
   // Correlated warning
   if (data.correlated_warning) {
