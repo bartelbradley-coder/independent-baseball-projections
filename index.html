@@ -642,6 +642,19 @@
 .uav-btn.primary:hover { background: rgba(34,197,94,.16) !important; color: #4ade80 !important; }
 .uav-btn.primary.open  { background: rgba(34,197,94,.18) !important; }
 
+/* ── Compact Playable To + Best Book line on collapsed card ── */
+.pc-playable-line {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 5px 14px 7px;
+  font-family: var(--font-ui);
+  border-top: 1px solid rgba(255,255,255,.04);
+}
+.ppl-item { display: flex; align-items: center; gap: 5px; }
+.ppl-lbl { font-size: 8px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--text-4); }
+.ppl-val { font-family: var(--font-mono); font-weight: 700; font-size: 12.5px; color: var(--text-2); }
+.ppl-val.play { color: var(--amber); }
+.ppl-sep { color: rgba(255,255,255,.10); }
+
 /* ── Compact live edge line (replaces multi-row panel in collapsed card) ── */
 .lep-compact {
   display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
@@ -3110,10 +3123,10 @@ function buildDetailsV8(p, cardId) {
       <div class="as-v8-row"><span class="as-v8-lbl">Current Edge</span><span class="as-v8-val d">+${edgePct}pp</span></div>
       <div class="as-v8-row"><span class="as-v8-lbl">Action</span><span class="as-v8-val a">Monitor only — do not bet</span></div>`;
   } else {
-    // Best Available removed from here — covered fully in the Odds section below
     actionBodyHTML = `
       <div class="as-v8-row"><span class="as-v8-lbl">Official Play</span>${officialStatus}</div>
       <div class="as-v8-row"><span class="as-v8-lbl">Bet</span><span class="as-v8-val m">${p.pick || '—'} ML</span></div>
+      <div class="as-v8-row"><span class="as-v8-lbl">Best Available</span><span class="as-v8-val g">${bestOdds} · ${bestBook}</span></div>
       <div class="as-v8-row"><span class="as-v8-lbl">Playable To</span><span class="as-v8-val a">${playable_to}</span></div>
       <div class="as-v8-row"><span class="as-v8-lbl">Stake</span><span class="as-v8-val m">${stakeStr}${stakeUSD ? ' / ' + stakeUSD : ''}</span></div>
       <div class="as-v8-row"><span class="as-v8-lbl">Re-check</span>${recheck}</div>`;
@@ -3206,14 +3219,13 @@ function buildDetailsV8(p, cardId) {
     : '—';
   const refreshTime = p.current_refresh_time || p.posted_at || '—';
 
+  // Starter rows removed — already shown on collapsed card SP line; no redundancy needed
   const statusHTML = `
     <div class="det-v8-sec">
       <div class="det-v8-hdr">Lineup &amp; Data Status</div>
       <table class="lu-tbl-v8">
         <tr><td class="lt-lbl">${pickTeam} lineup</td><td class="lt-val ${pickConf ? 'conf' : 'proj'}">${pickConf ? '✓ Confirmed' : '⚠ Projected'}</td></tr>
         <tr><td class="lt-lbl">${oppTeam} lineup</td><td class="lt-val ${oppConf ? 'conf' : 'proj'}">${oppConf ? '✓ Confirmed' : '⚠ Projected'}</td></tr>
-        ${p.pitcher ? `<tr><td class="lt-lbl">${pickTeam} starter</td><td class="lt-val conf">✓ ${p.pitcher}</td></tr>` : ''}
-        ${p.opp_pitcher ? `<tr><td class="lt-lbl">${oppTeam} starter</td><td class="lt-val conf">✓ ${p.opp_pitcher}</td></tr>` : ''}
         <tr><td class="lt-lbl">Model refresh</td><td class="lt-val ok">${refreshTime}</td></tr>
       </table>
     </div>`;
@@ -3288,9 +3300,9 @@ function buildDetailsV8(p, cardId) {
       </div>
     </div>
 
-    <!-- 3. MODEL ANALYSIS — Driver, Risk, EV (no redundant Thesis row) -->
+    <!-- 3. WHY THIS PICK — Driver, Risk, EV -->
     <div class="det-v8-sec">
-      <div class="det-v8-hdr">Model Analysis</div>
+      <div class="det-v8-hdr">Why This Pick</div>
       <div class="qa-v8">
         <div class="qa-v8-row"><span class="qa-v8-lbl driver">Driver</span><span class="qa-v8-val">${driver}</span></div>
         <div class="qa-v8-row"><span class="qa-v8-lbl risk">Risk</span><span class="qa-v8-val" style="color:${isReduced ? 'var(--amber)' : 'var(--text-2)'}">${risk}</span></div>
@@ -4038,10 +4050,9 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
 
   // v2: simplified header — no VALUE badge (redundant with tier label + accent bar)
   // no ⭐ star — tier communicated by left border color
+  // Tier label text removed — accent bar color communicates verdict (green=value, amber=conditional)
   const headerRowHTML = `
     <div class="uc-header-row">
-      <span class="uc-tier-label ${tierLabelCls}">${tierText}</span>
-      <span class="uc-tier-dot">·</span>
       ${headerMatchup}
       ${matchLabelHTML}
       ${resultBadgeHTML}
@@ -4075,9 +4086,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     </div>
     <div class="uph-edge-row">
       <span class="uph-edge-badge">+${edgePct}% edge${p.current_edge != null ? '<span style="font-size:8.5px;opacity:0.55;font-weight:500;margin-left:4px">· Posted</span>' : ''}</span>
-      ${p.kelly_units ? `<span class="uph-kelly-badge" data-kelly-units="${p.kelly_units.toFixed(2)}">${_bankroll > 0 ? `${p.kelly_units.toFixed(1)}u · $${Math.round(p.kelly_units * _bankroll / 100)}` : `${p.kelly_units.toFixed(1)}u Half-Kelly`}</span>` : ''}
       ${p.is_flagged ? `<span style="font-size:9.5px;font-weight:600;color:var(--amber);background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.28);border-radius:4px;padding:2px 7px;letter-spacing:0.04em">${p.kelly_multiplier < 0.6 ? '↘ REDUCED SIZING' : '⚠ FLAGGED'}</span>` : ''}
-      ${modelPct && mktPct ? `<span class="uph-prob-context">Model <strong>${modelPct}%</strong> · Market <strong>${mktPct}%</strong>${fairOddsInline}</span>` : ''}
     </div>`;
 
   // ── Action row v2 — text links, no box buttons ────────────────────────────
@@ -4199,6 +4208,18 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     flagV8HTML = `<div class="pc-v8-flag-line"><strong>Reduced confidence</strong> — stake sizing reduced by model.</div>`;
   }
 
+  // ── Compact Playable To + Best Book line (appears below driver in collapsed card) ──
+  const _bdn_c = {novig:'Novig',prophetx:'ProphetX',pinnacle:'Pinnacle',lowvig:'LowVig',
+    betonlineag:'BetOnline',draftkings:'DraftKings',fanduel:'FanDuel',
+    betmgm:'BetMGM',betrivers:'BetRivers',espnbet:'ESPN Bet'};
+  const _pcBestBook = _bdn_c[(p.best_book||'').toLowerCase()] || p.best_book || '';
+  const _pcBestOdds = p.best_odds ? formatOdds(p.best_odds) : formatOdds(p.odds);
+  const playableLineHTML = (!isOver && !isWlCard && playableV8 !== '—') ? `
+    <div class="pc-playable-line">
+      <span class="ppl-item"><span class="ppl-lbl">Playable To</span>&nbsp;<span class="ppl-val play">${playableV8}</span></span>
+      ${_pcBestBook ? `<span class="ppl-sep">·</span><span class="ppl-item"><span class="ppl-lbl">Best</span>&nbsp;<span class="ppl-val">${_pcBestBook} ${_pcBestOdds}</span></span>` : ''}
+    </div>` : '';
+
   // ── Assemble card ─────────────────────────────────────────────────────────
   const resultStateClass = gameResult && gameResult.status === 'final'
     ? (gameResult.result === 'W' ? ' card-win' : ' card-loss') : '';
@@ -4207,10 +4228,10 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       ${topPickBannerHTML}
       ${headerRowHTML}
       ${pickHeadlineHTML}
-      ${metricsStripHTML}
       ${probBarHTML}
       ${stakeV8HTML}
       ${driverV8HTML}
+      ${playableLineHTML}
       ${flagV8HTML}
       ${_liveEdgePanelHTML}
       ${_liveEdgeWarnHTML}
