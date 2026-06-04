@@ -1326,49 +1326,9 @@
 .phb-bankroll.flat-mode .phb-bk-label,
 .phb-bankroll.flat-mode .phb-bk-dollar { opacity: 0.45; }
 
-/* ── Master-detail split layout ── */
-.md-split {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-}
-.md-left {
-  flex: 1;
-  min-width: 0; /* prevent overflow */
-}
-/* Single-column pick list in master-detail — removes grid ambiguity */
-.md-left .pick-grid {
+/* ── Single-column pick list (inline expansion, no grid ambiguity) ── */
+.pick-grid {
   grid-template-columns: 1fr !important;
-}
-
-/* When a card is selected, dim all other cards clearly */
-.md-split.has-active .pick-card:not(.ep-active) {
-  opacity: 0.42;
-  transition: opacity 0.2s ease;
-}
-.md-split.has-active .pick-card:not(.ep-active):hover {
-  opacity: 0.70; /* restore on hover so user can switch picks */
-}
-/* Selected card: clear visual identity */
-.pick-card.ep-active {
-  border-left-color: var(--indigo) !important;
-  box-shadow: 0 0 0 1px rgba(99,102,241,.20), 0 4px 16px rgba(0,0,0,.25);
-  opacity: 1 !important;
-}
-.md-right {
-  width: 500px;
-  flex-shrink: 0;
-  position: sticky;
-  top: calc(var(--nav-h) + 14px);
-  max-height: calc(100vh - var(--nav-h) - 28px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(99,102,241,.25) transparent;
-}
-@media (max-width: 960px) {
-  .md-split { flex-direction: column; }
-  .md-right { width: 100%; position: static; max-height: none; }
 }
 
 /* Right panel container */
@@ -1917,54 +1877,32 @@
     <div id="pt-rows"></div>
   </div>
 
-  <!-- TODAY'S PICKS — master-detail split: left=picks, right=sticky detail panel -->
-  <div class="md-split" id="md-split">
-
-    <!-- Left column: picks -->
-    <div class="md-left">
-      <div class="section">
-        <div class="sec-lbl" id="page-date">Today's Value Bets</div>
-        <div id="page-refresh-meta" style="display:none;font-size:10px;color:var(--text-4);margin-top:3px;margin-bottom:2px;font-family:var(--font-mono)"></div>
-        <div id="picks-container">
-          <div id="loading-placeholder" style="display:flex;flex-direction:column;gap:14px">
-            <div class="skeleton-card">
-              <div class="sk-line short"></div>
-              <div class="sk-line tall"></div>
-              <div class="sk-line wide"></div>
-              <div class="sk-line xs"></div>
-            </div>
-            <div class="skeleton-card">
-              <div class="sk-line short"></div>
-              <div class="sk-line tall"></div>
-              <div class="sk-line wide"></div>
-              <div class="sk-line xs"></div>
-            </div>
-            <div class="skeleton-card">
-              <div class="sk-line short"></div>
-              <div class="sk-line tall"></div>
-              <div class="sk-line xs"></div>
-            </div>
-          </div>
+  <!-- TODAY'S PICKS — inline expansion below each card -->
+  <div class="section">
+    <div class="sec-lbl" id="page-date">Today's Value Bets</div>
+    <div id="page-refresh-meta" style="display:none;font-size:10px;color:var(--text-4);margin-top:3px;margin-bottom:2px;font-family:var(--font-mono)"></div>
+    <div id="picks-container">
+      <div id="loading-placeholder" style="display:flex;flex-direction:column;gap:14px">
+        <div class="skeleton-card">
+          <div class="sk-line short"></div>
+          <div class="sk-line tall"></div>
+          <div class="sk-line wide"></div>
+          <div class="sk-line xs"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="sk-line short"></div>
+          <div class="sk-line tall"></div>
+          <div class="sk-line wide"></div>
+          <div class="sk-line xs"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="sk-line short"></div>
+          <div class="sk-line tall"></div>
+          <div class="sk-line xs"></div>
         </div>
       </div>
     </div>
-
-    <!-- Right column: sticky detail panel — no page scroll needed -->
-    <div class="md-right" id="md-right">
-      <div class="md-panel" id="md-panel">
-        <!-- Placeholder: permanent element, never destroyed by innerHTML -->
-        <div class="md-placeholder" id="md-placeholder">
-          <div class="mdp-icon">⚾</div>
-          <div class="mdp-title">Pick Details</div>
-          <div class="mdp-sub">Select a pick to view the full analysis, action summary, and odds breakdown.</div>
-          <div class="mdp-picks" id="mdp-picks"></div>
-        </div>
-        <!-- Detail content: injected here, never touches the placeholder -->
-        <div id="md-detail" style="display:none"></div>
-      </div>
-    </div>
-
-  </div><!-- /md-split -->
+  </div>
 
   <!-- MARGINAL PICKS -->
   <div class="section" id="marginal-section" style="display:none">
@@ -2144,7 +2082,7 @@ if (!_bankroll && localStorage.getItem('fairline_unit_size')) {
 let _unitSize = _bankroll / 100;  // kept for any legacy references; derived from bankroll
 let _histRef  = null; // history data reference for tracker result lookup
 let _mainPicksRef = []; // today's main picks for share-all
-let _mdActiveId = null; // card whose details are currently shown in the right panel
+let _mdActiveId = null; // card whose details are currently expanded inline
 let _histContextFn = null;      // set in render() — returns hist-context HTML for a pick
 let _countdownTimerStarted = false;
 
@@ -3310,23 +3248,24 @@ function buildDetailsV8(p, cardId) {
   </div>`;
 }
 
-// ── Details panel toggle ─────────────────────────────────────────────────────
+// ── Details panel toggle — inline expansion below the pick card ──────────────
 function toggleDetails(id, btn) {
-  const detail = document.getElementById('md-detail');
-  const holder = document.getElementById('md-placeholder');
-  if (!detail) return;
-
-  // Reset all buttons and card highlights
+  // Reset all buttons
   document.querySelectorAll('.details-toggle').forEach(b => {
     b.textContent = 'Details ▾'; b.classList.remove('open');
   });
-  document.querySelectorAll('.pick-card').forEach(c => c.classList.remove('ep-active'));
 
-  // Same card clicked again → close (restore placeholder)
+  // Close any previously open panel
+  if (_mdActiveId && _mdActiveId !== id) {
+    const prev = document.getElementById(_mdActiveId + '-det');
+    if (prev) prev.classList.remove('open');
+  }
+
+  // Same card toggled → close
   if (_mdActiveId === id) {
     _mdActiveId = null;
-    document.getElementById('md-split')?.classList.remove('has-active');
-    _showMdPlaceholder();
+    const panel = document.getElementById(id + '-det');
+    if (panel) panel.classList.remove('open');
     return;
   }
 
@@ -3336,98 +3275,35 @@ function toggleDetails(id, btn) {
   _mdActiveId = id;
   btn.textContent = 'Details ▲';
   btn.classList.add('open');
-  document.getElementById(id)?.classList.add('ep-active');
-  document.getElementById('md-split')?.classList.add('has-active');
 
-  // Build and inject into #md-detail — placeholder is untouched
-  const detHTML = buildDetailsV8(p, id);
-  const oddsStr  = formatOdds(p.odds);
-  const edgePct  = (p.edge * 100).toFixed(1);
-  const oddsCls  = p.odds > 0 ? 'pos' : 'neg';
-  const modelPct = p.model_prob  ? (p.model_prob  * 100).toFixed(1) : null;
-  const mktPct   = p.market_prob ? (p.market_prob * 100).toFixed(1) : null;
-  const [, tierClass] = tierLabel(p.edge, p.verdict);
-  // Verdict-coloured top accent
-  const accentCol = (tierClass === 'strong' || tierClass === 'value')
-    ? 'rgba(34,197,94,.55)'
-    : (tierClass === 'conditional' || tierClass === 'reduced')
-    ? 'rgba(245,158,11,.45)'
-    : 'rgba(99,102,241,.38)';
-  const verdictLabel = (p.verdict || tierClass || 'VALUE').replace('_',' ').toUpperCase();
-
-  detail.innerHTML = `
-    <div class="md-panel-hdr" style="border-top:2px solid ${accentCol}">
-      <div class="md-hdr-r1">
-        <span class="md-panel-team">${p.pick}</span>
-        <span class="md-panel-odds ${oddsCls}">${oddsStr}</span>
-        <span class="md-vbadge ${tierClass}">${verdictLabel}</span>
-        <button class="md-panel-close" style="margin-left:auto" onclick="closeExpandPanel()" title="Close (Esc)">✕</button>
-      </div>
-      <div class="md-hdr-r2">
-        <span class="md-hdr-edge ${tierClass}">+${edgePct}pp edge</span>
-        ${modelPct ? `<span class="md-hdr-sep">·</span><span class="md-hdr-model">Model <strong>${modelPct}%</strong></span>` : ''}
-        ${mktPct   ? `<span class="md-hdr-sep">·</span><span class="md-hdr-market">Market <strong>${mktPct}%</strong></span>` : ''}
-        ${p.game   ? `<span class="md-hdr-sep">·</span><span class="md-hdr-game">${p.game}</span>` : ''}
-      </div>
-    </div>
-    ${detHTML}`;
-
-  // Show detail, hide placeholder
-  detail.style.display = 'block';
-  if (holder) holder.style.display = 'none';
-
-  // Make det-v8-panel visible
-  const detPanel = document.getElementById(id + '-det');
-  if (detPanel) detPanel.classList.add('open');
-
-  // Scroll right panel to top
-  const mdRight = document.getElementById('md-right');
-  if (mdRight) mdRight.scrollTop = 0;
+  // Build panel if it doesn't exist yet, append inside the card
+  let detPanel = document.getElementById(id + '-det');
+  if (!detPanel) {
+    const cardEl = document.getElementById(id);
+    if (cardEl) {
+      cardEl.insertAdjacentHTML('beforeend', buildDetailsV8(p, id));
+      detPanel = document.getElementById(id + '-det');
+    }
+  }
+  if (detPanel) {
+    detPanel.classList.add('open');
+    // Smooth scroll so the expanded section is visible
+    setTimeout(() => detPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+  }
 }
 
 function closeExpandPanel() {
+  if (_mdActiveId) {
+    const panel = document.getElementById(_mdActiveId + '-det');
+    if (panel) panel.classList.remove('open');
+  }
   _mdActiveId = null;
-  document.getElementById('md-split')?.classList.remove('has-active');
   document.querySelectorAll('.details-toggle').forEach(b => {
     b.textContent = 'Details ▾'; b.classList.remove('open');
   });
-  document.querySelectorAll('.pick-card').forEach(c => c.classList.remove('ep-active'));
-  _showMdPlaceholder();
 }
 
-function _showMdPlaceholder() {
-  const detail = document.getElementById('md-detail');
-  const holder = document.getElementById('md-placeholder');
-  // Toggle visibility — never destroy either element
-  if (detail) { detail.innerHTML = ''; detail.style.display = 'none'; }
-  if (holder) holder.style.display = 'flex';
-}
-
-// Populate placeholder's quick-select buttons once picks are known
-function renderMdPlaceholder(picks) {
-  const el = document.getElementById('mdp-picks');
-  if (!el || !picks || picks.length === 0) return;
-  el.innerHTML = picks.map(p => {
-    const cardId  = 'card-' + (p.pick || '').replace(/\s/g,'') + (p.game || '').replace(/\s/g,'');
-    const edgePct = (p.edge * 100).toFixed(1);
-    const odds    = formatOdds(p.odds);
-    const oddsCls = p.odds > 0 ? 'style="color:var(--amber)"' : 'style="color:var(--indigo-lt)"';
-    return `
-      <button class="mdp-pick-btn" onclick="selectMdPick('${cardId}')">
-        <span class="mdp-pick-team">${p.pick}</span>
-        <span class="mdp-pick-odds" ${oddsCls}>${odds}</span>
-        <span class="mdp-pick-game">${p.game || ''}</span>
-        <span class="mdp-pick-edge">+${edgePct}pp</span>
-      </button>`;
-  }).join('');
-}
-
-function selectMdPick(cardId) {
-  const btn = document.querySelector(`#${cardId} .details-toggle`);
-  if (btn) toggleDetails(cardId, btn);
-}
-
-// Escape key closes the right panel
+// Escape key closes any open inline panel
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && _mdActiveId) closeExpandPanel();
 });
@@ -4644,8 +4520,6 @@ function render(data, hist, scores = {}, perf = null) {
   const _mainForTracking = (data.picks || []).filter(p => (p.edge || 0) >= 0.02);
   renderTodayTrackingIndex(_mainForTracking, scores);
 
-  // Populate master-detail placeholder quick-select buttons
-  renderMdPlaceholder(_mainForTracking);
 
   // Correlated warning
   if (data.correlated_warning) {
