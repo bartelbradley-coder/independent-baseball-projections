@@ -2270,11 +2270,11 @@ function _kellyStatsFromHist(histRows) {
     .sort((a, b) => a.date.localeCompare(b.date));   // oldest → newest
   const season  = settled.filter(r => r.date && r.date.startsWith('2026'));
 
-  // Derive Kelly units from stored kelly_pct when kelly_units is absent.
-  // Formula mirrors export_site_data.py: kelly_units = 0.5 × kelly_pct × 10
-  // (half-Kelly on a 10-unit bankroll). kelly_pct is the full-Kelly fraction
-  // of bankroll returned by kelly_fraction() and stored in picks_log.csv.
-  // Fallback: null (exclude from Kelly calc rather than pretend flat=Kelly).
+  // Derive Kelly units from stored kelly_units (preferred) or legacy kelly_pct.
+  // kelly_units is pre-calculated by calculate_stake_sizing() in model.py and
+  // already has all fractions applied — use it directly, no multiplier.
+  // Legacy fallback: kelly_pct = final_kelly_pct (base × verdict_multiplier,
+  // display_fraction NOT yet applied). Apply 0.5 × 100 to convert to units.
   function getKu(r) {
     if (r.kelly_units != null) return r.kelly_units;
     if (r.kelly_pct  != null) return Math.round(r.kelly_pct * 0.5 * 100 * 1000) / 1000;
