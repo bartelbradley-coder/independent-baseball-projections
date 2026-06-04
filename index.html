@@ -2935,10 +2935,41 @@ function buildDetailsV8(p, cardId) {
   }
   const edgeFillClass = isWl ? 'pv-edge wl' : 'pv-edge';
 
+  // ── Book odds — computed once, used in Action Summary + Best Odds section ──
+  const _bdn = {                         // book display names
+    novig:'Novig', prophetx:'ProphetX', pinnacle:'Pinnacle', lowvig:'LowVig',
+    betonlineag:'BetOnline', draftkings:'DraftKings', fanduel:'FanDuel',
+    betmgm:'BetMGM', betrivers:'BetRivers', espnbet:'ESPN Bet',
+    hardrockbet:'Hard Rock', betway:'Betway', bovada:'Bovada',
+    mybookieag:'MyBookie', betus:'BetUS',
+  };
+  const _rawBooksObj = (() => {
+    // try book_odds first, then books (both field names appear in various exports)
+    const src = (typeof p.book_odds === 'object' && p.book_odds)
+              ? p.book_odds
+              : (typeof p.books === 'object' && p.books)
+              ? p.books
+              : null;
+    if (src) return src;
+    try { return JSON.parse(p.book_odds || p.books || '{}'); } catch(e) { return {}; }
+  })();
+  const _bookEntries = Object.entries(_rawBooksObj || {})
+    .map(([k, v]) => ({
+      book: _bdn[k.toLowerCase()] || k,
+      odds: typeof v === 'number' ? v : parseInt(v),
+    }))
+    .filter(e => !isNaN(e.odds))
+    // Descending: highest number = best for bettor (−129 > −148; +155 > +120)
+    .sort((a, b) => b.odds - a.odds);
+  const _topEntry = _bookEntries.length > 0 ? _bookEntries[0] : null;
+
   // ── Action Summary ──
   const playable_to = p.playable_to ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to)) : '—';
-  const bestOdds    = p.odds ? (p.odds > 0 ? '+' + p.odds : String(p.odds)) : '—';
-  const bestBook    = p.best_book || p.book_odds_book || '—';
+  // Use live sorted book data when available; fall back to model-run-time p.best_book/p.odds
+  const bestOdds = _topEntry
+    ? (_topEntry.odds > 0 ? '+' + _topEntry.odds : String(_topEntry.odds))
+    : (p.odds ? (p.odds > 0 ? '+' + p.odds : String(p.odds)) : '—');
+  const bestBook = _topEntry ? _topEntry.book : (p.best_book || p.book_odds_book || '—');
   const stakeStr    = p.kelly_units ? `${p.kelly_units.toFixed(1)}u` : '—';
   const stakeUSD    = (_bankroll > 0 && p.kelly_units) ? `$${Math.round(p.kelly_units * _bankroll / 100)}` : '';
   const verdictShort = p.verdict || 'VALUE';
@@ -2996,19 +3027,11 @@ function buildDetailsV8(p, cardId) {
       </div>`;
   }
 
-  // ── Best odds section ──
+  // ── Best odds section (reuses _bookEntries computed above — already sorted) ──
   let oddsHTML = '';
-  const bookOddsMap = (() => {
-    try { return typeof p.book_odds === 'object' ? p.book_odds : JSON.parse(p.book_odds || '{}'); }
-    catch(e) { return {}; }
-  })();
   const playableNum = p.playable_to ? parseInt(p.playable_to) : null;
-  const bestOddsNum = p.odds ? parseInt(p.odds) : null;
-  // Parse book_odds into sorted array
-  const entries = Object.entries(bookOddsMap || {})
-    .map(([book, odds]) => ({ book, odds: typeof odds === 'number' ? odds : parseInt(odds) }))
-    .filter(e => !isNaN(e.odds))
-    .sort((a, b) => isDog ? (b.odds - a.odds) : (a.odds - b.odds));
+  const bestOddsNum = _topEntry ? _topEntry.odds : (p.odds ? parseInt(p.odds) : null);
+  const entries = _bookEntries;
 
   if (entries.length > 0 && bestOddsNum && playableNum) {
     const bestEntry = entries[0];
