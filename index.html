@@ -21,6 +21,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=3">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 :root {
   --font-display: "Barlow Condensed", sans-serif;
@@ -1646,6 +1647,254 @@
 #floating-results .fr-dot.live { background: var(--green); animation: pulsedot 1.4s infinite; }
 #floating-results .fr-dot.done { background: var(--text-4); }
 
+/* ── Share card modal ── */
+.share-modal-overlay {
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(3,5,8,0.88);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; overflow-y: auto;
+}
+.share-modal-overlay.hidden { display: none; }
+.share-modal-box {
+  background: #0f1829; border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px; max-width: 600px; width: 100%;
+  overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.7);
+}
+.share-modal-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.share-modal-title {
+  font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text-3);
+}
+.share-modal-close {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 7px; padding: 4px 12px; font-size: 11px; font-weight: 600;
+  color: var(--text-3); cursor: pointer; transition: all 0.15s;
+}
+.share-modal-close:hover { color: var(--text-1); background: rgba(255,255,255,0.09); }
+.share-modal-preview {
+  padding: 24px; display: flex; justify-content: center; align-items: flex-start;
+  background: #06090f; overflow: auto;
+}
+/* Scale wrapper: the .sc.sq card is 1080px wide; we scale it down to fit */
+.share-modal-scale {
+  transform-origin: top center;
+  display: inline-block; flex-shrink: 0;
+}
+.share-modal-actions {
+  display: flex; align-items: center; gap: 10px; padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.07); flex-wrap: wrap;
+}
+.share-dl-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3);
+  border-radius: 7px; padding: 9px 18px;
+  font-size: 12px; font-weight: 700; color: var(--green);
+  cursor: pointer; transition: all 0.15s; font-family: inherit;
+}
+.share-dl-btn:hover { background: rgba(34,197,94,0.2); }
+.share-dl-btn:disabled { opacity: 0.5; cursor: default; }
+.share-native-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3);
+  border-radius: 7px; padding: 9px 18px;
+  font-size: 12px; font-weight: 700; color: var(--indigo-lt);
+  cursor: pointer; transition: all 0.15s; font-family: inherit;
+}
+.share-native-btn:hover { background: rgba(99,102,241,0.2); }
+.share-modal-hint {
+  font-size: 10px; color: var(--text-4); font-style: italic;
+}
+
+/* ── V5 share card styles — inside modal ── */
+.sc-modal {
+  font-family: "Inter", sans-serif;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden; flex-shrink: 0;
+  background: #06090f;
+  width: 1080px; height: 1080px;
+}
+.sc-modal::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; z-index: 10;
+  background: linear-gradient(90deg, #22c55e, rgba(34,197,94,.15));
+}
+.sc-modal::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 52%;
+  background: radial-gradient(ellipse 100% 100% at 35% -20%, rgba(34,197,94,.065) 0%, transparent 100%);
+  pointer-events: none; z-index: 0;
+}
+.sc-modal > * { position: relative; z-index: 1; }
+
+/* Header 58px */
+.scm-hdr {
+  display: flex; align-items: center;
+  padding: 0 48px; height: 58px; flex-shrink: 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.scm-brand { display: flex; align-items: center; gap: 9px; }
+.scm-logo {
+  width: 24px; height: 24px; background: rgba(99,102,241,.11);
+  border: 1px solid rgba(99,102,241,.24); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.scm-wm {
+  font-family: "Barlow Condensed", sans-serif; font-size: 16px; font-weight: 700;
+  letter-spacing: .05em; color: #c0d8ec; line-height: 1;
+}
+.scm-wm .f { color: rgba(192,216,236,.38); font-weight: 400; }
+.scm-sport {
+  font-size: 7px; font-weight: 700; letter-spacing: .18em;
+  text-transform: uppercase; color: #243848; margin-top: 1px;
+}
+.scm-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 4px; margin: 0 auto;
+  background: rgba(34,197,94,.08); color: #2ecc71; border: 1px solid rgba(34,197,94,.20);
+}
+.scm-date {
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
+  font-weight: 500; color: #4a6880; margin-left: auto;
+}
+
+/* Pick zone 442px */
+.scm-pick {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 28px 48px 22px; height: 442px; flex-shrink: 0;
+  position: relative; overflow: hidden;
+}
+.scm-wm-bg {
+  position: absolute; right: -30px; bottom: -100px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 520px; font-weight: 900; line-height: 1; letter-spacing: -.02em;
+  pointer-events: none; user-select: none; z-index: 0;
+  color: rgba(255,255,255,.025);
+}
+.scm-pick-inner { position: relative; z-index: 1; }
+.scm-team {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 200px; font-weight: 900;
+  color: #f0f8ff; letter-spacing: -.015em; line-height: .84;
+}
+.scm-odds-row { display: flex; align-items: baseline; gap: 14px; margin-top: 14px; }
+.scm-ml {
+  font-family: "Barlow Condensed", sans-serif; font-size: 46px;
+  font-weight: 500; color: #38526a; letter-spacing: .02em;
+}
+.scm-odds {
+  font-family: "Barlow Condensed", sans-serif; font-size: 120px;
+  font-weight: 800; line-height: .88; letter-spacing: -.01em;
+}
+.scm-odds.neg { color: #9da5f8; }
+.scm-odds.pos { color: #f5a523; }
+.scm-stake-row { display: flex; align-items: baseline; gap: 14px; margin-top: 16px; }
+.scm-stake-dollar {
+  font-family: "IBM Plex Mono", monospace; font-size: 48px;
+  font-weight: 700; color: #e8f4ff; line-height: 1;
+}
+.scm-stake-units {
+  font-size: 18px; font-weight: 500; color: #4a6880;
+  font-family: "IBM Plex Mono", monospace;
+}
+.scm-matchup {
+  font-family: "Barlow Condensed", sans-serif; font-size: 22px;
+  font-weight: 600; letter-spacing: .04em; color: #5a7890; margin-top: 14px;
+}
+
+/* Edge + bar zone 298px */
+.scm-edge {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 26px 48px; height: 298px; flex-shrink: 0;
+  border-top: 1px solid rgba(255,255,255,.05);
+}
+.scm-edge-row { display: flex; align-items: baseline; gap: 14px; margin-bottom: 16px; }
+.scm-edge-num {
+  font-family: "IBM Plex Mono", monospace; font-size: 76px;
+  font-weight: 700; line-height: .92; color: #4ade80;
+}
+.scm-edge-lbl {
+  font-size: 12px; font-weight: 700; letter-spacing: .18em;
+  text-transform: uppercase; align-self: center; color: rgba(74,222,128,.72);
+}
+.scm-pb-labels { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.scm-pb-lbl {
+  font-size: 13px; font-weight: 600; letter-spacing: .04em;
+  text-transform: uppercase; font-family: "Inter", sans-serif;
+}
+.scm-pb-lbl.mkt { color: #4a6880; }
+.scm-pb-lbl.mdl { color: #7dd3fc; }
+.scm-pb-lbl.mkt span, .scm-pb-lbl.mdl span {
+  font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 15px;
+}
+.scm-pb-lbl.mdl span { color: #4ade80; }
+.scm-pb-track {
+  height: 22px; background: rgba(255,255,255,.05); border-radius: 4px;
+  position: relative; overflow: hidden; margin-bottom: 16px;
+}
+.scm-pb-mkt {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: rgba(80,110,140,.60); border-radius: 4px 0 0 4px;
+}
+.scm-pb-edge {
+  position: absolute; top: 0; bottom: 0; border-radius: 0 4px 4px 0;
+  background: rgba(74,222,128,.72);
+}
+.scm-action-row { display: flex; align-items: center; gap: 28px; }
+.scm-action-item { display: flex; flex-direction: column; gap: 4px; }
+.scm-action-lbl {
+  font-size: 8.5px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: #2e4250;
+}
+.scm-action-lbl.play { color: #8a6820; }
+.scm-action-val {
+  font-family: "IBM Plex Mono", monospace; font-size: 28px; font-weight: 700;
+}
+.scm-action-val.play { color: #f5a523; }
+.scm-action-val.book { color: #6a90a8; font-size: 22px; }
+.scm-action-div { width: 1px; height: 40px; background: rgba(255,255,255,.06); flex-shrink: 0; }
+
+/* Footer 282px */
+.scm-ftr {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 24px 48px; height: 282px; flex-shrink: 0;
+  border-top: 1px solid rgba(255,255,255,.055);
+  background: rgba(0,0,0,.22); gap: 10px;
+}
+.scm-driver {
+  font-size: 15px; font-weight: 500; color: #88a8c0;
+  font-family: "Inter", sans-serif; line-height: 1.4;
+}
+.scm-driver strong { color: #aec8dc; font-weight: 600; }
+.scm-drv-kicker {
+  font-size: 8px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: #2e4050; display: block; margin-bottom: 5px;
+}
+.scm-ftr-url {
+  font-family: "Barlow Condensed", sans-serif; font-size: 26px;
+  font-weight: 700; letter-spacing: .06em; color: #486078;
+}
+.scm-ftr-record {
+  font-family: "IBM Plex Mono", monospace; font-size: 12px;
+  color: #3e5668; font-weight: 500;
+}
+.scm-ftr-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.scm-pfi { display: flex; align-items: center; gap: 5px; }
+.scm-pfi-lbl {
+  font-size: 7.5px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: #1e2e3a;
+}
+.scm-pfi-val {
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
+  color: #3e5868; font-weight: 500;
+}
+.scm-pfi-dot { width: 3px; height: 3px; border-radius: 50%; background: #101820; flex-shrink: 0; }
+.scm-ftr-disc {
+  font-size: 9px; color: #1e2e3c; letter-spacing: .02em;
+  font-family: "Inter", sans-serif; line-height: 1.55;
+}
+
 /* ── Styled inline disclaimer box ── */
 .site-disclaimer-box {
   display: flex; align-items: flex-start; gap: 8px;
@@ -2119,6 +2368,24 @@
   <div class="footer-links"><a href="model.html">Methodology</a> · <a href="history.html">Pick History</a> · <a href="performance.html">Model Dashboard</a></div>
 </footer>
 
+<!-- ── Share card modal ── -->
+<div id="share-modal" class="share-modal-overlay hidden" onclick="closeShareModalOnBackdrop(event)">
+  <div class="share-modal-box">
+    <div class="share-modal-hdr">
+      <span class="share-modal-title">Share Card Preview</span>
+      <button class="share-modal-close" onclick="closeShareModal()">✕ Close</button>
+    </div>
+    <div class="share-modal-preview" id="share-modal-preview">
+      <!-- card rendered here by JS -->
+    </div>
+    <div class="share-modal-actions">
+      <button class="share-dl-btn" id="share-dl-btn" onclick="downloadShareCard()">⬇ Download PNG</button>
+      <button class="share-native-btn" id="share-native-btn" style="display:none" onclick="nativeShareCard()">⬆ Share Image</button>
+      <span class="share-modal-hint" id="share-modal-hint">1080×1080 · ready to post</span>
+    </div>
+  </div>
+</div>
+
 <div id="floating-results" onclick="document.getElementById('idx-tracking-section')?.scrollIntoView({behavior:'smooth'})">
   <span class="fr-dot" id="fr-dot"></span>
   <span id="fr-text">—</span>
@@ -2158,43 +2425,363 @@ function shareOnX(id) {
   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank', 'width=550,height=420');
 }
 
-async function sharePickCard(id) {
-  const p = picksMap[id];
-  if (!p) return;
-  const team    = (p.pick || '').replace(/\s/g, '');
-  // Cache-bust with today's date so stale CDN versions don't get used
-  const today   = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-  const cardUrl = `https://www.fairlinemlb.com/share-cards/share_${team}.png?v=${today}`;
-  const btn     = document.querySelector(`[data-share-id="${id}"]`);
+// ── Share card: state ────────────────────────────────────────────────────────
+let _shareCardPickId = null;
 
-  // Web Share API with image — works on iOS Safari + Android Chrome
-  if (navigator.share && navigator.canShare) {
-    try {
-      if (btn) { btn.textContent = '⏳'; btn.disabled = true; }
-      const resp = await fetch(cardUrl);
-      if (!resp.ok) throw new Error(`Card not found (${resp.status})`);
-      const blob = await resp.blob();
-      // Verify we got an actual image (not an HTML error page)
-      if (!blob.type.startsWith('image/')) throw new Error('Not an image');
-      const file = new File([blob], `fairline-${team}.png`, { type: 'image/png' });
-      if (navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: `FairLine MLB — ${p.pick}`,
-          text:  'Bet the number, not the noise. www.fairlinemlb.com',
-        });
-        if (btn) { btn.textContent = '✓ Shared'; setTimeout(() => { btn.textContent = '⬆ Share Card'; btn.disabled = false; }, 2000); }
-        return;
-      }
-    } catch(e) {
-      if (btn) { btn.textContent = '⬆ Share Card'; btn.disabled = false; }
-      if (e.name === 'AbortError') return; // user cancelled — no fallback needed
+// ── Build V5 square card HTML from real pick data ────────────────────────────
+function _buildShareCardHTML(p) {
+  const edgePct   = p.edge  ? (p.edge  * 100).toFixed(1) : '0.0';
+  const modelPct  = p.model_prob  ? (p.model_prob  * 100).toFixed(1) : null;
+  const mktPct    = p.market_prob ? (p.market_prob * 100).toFixed(1) : null;
+  const isDog     = (p.odds || 0) > 0;
+
+  // Team abbreviation — use pick field
+  const team = (p.pick || '???').toUpperCase();
+
+  // Odds string
+  const oddsStr = formatOdds(p.odds);
+  const oddsCls = isDog ? 'pos' : 'neg';
+
+  // Stake
+  const stakeUnits = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '';
+  const stakeDollar = (_bankroll > 0 && p.kelly_units)
+    ? `<span class="scm-stake-dollar">$${Math.round(p.kelly_units * _bankroll / 100)}</span>` : '';
+  const stakeRow = (stakeUnits || stakeDollar) ? `
+    <div class="scm-stake-row">
+      ${stakeDollar}
+      ${stakeUnits ? `<span class="scm-stake-units">${stakeUnits}</span>` : ''}
+    </div>` : '';
+
+  // Matchup
+  const matchupStr = p.game || '';
+
+  // Probability bar
+  let pbMktPct = mktPct || '—';
+  let pbMdlPct = modelPct || '—';
+  let pbMktW = 40, pbEdgeW = 15;
+  if (mktPct && modelPct) {
+    pbMktW  = parseFloat(mktPct);
+    pbEdgeW = parseFloat(modelPct) - parseFloat(mktPct);
+  }
+
+  // Playable To
+  const playableTo = p.playable_to != null
+    ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to))
+    : '—';
+
+  // Fair ML from playable_to (the field that represents the no-vig fair line)
+  const fairML = p.fair_odds != null
+    ? (p.fair_odds > 0 ? '+' + p.fair_odds : String(p.fair_odds))
+    : '—';
+
+  // Best available
+  const bestBook = p.best_book || '—';
+  const bestOdds = p.best_odds != null ? formatOdds(p.best_odds) : formatOdds(p.odds);
+
+  // Date header
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  // Driver: first sentence of narrative or top signal from adj_breakdown
+  let driverText = '';
+  let driverBold = '';
+  if (p.adj_breakdown && p.adj_breakdown.adjustments && p.adj_breakdown.adjustments.length) {
+    const top = p.adj_breakdown.adjustments[0];
+    driverBold = top.label || '';
+    driverText = p.narrative ? p.narrative.split('.')[0] + '.' : '';
+  } else if (p.narrative) {
+    const firstSentence = p.narrative.split('.')[0] + '.';
+    // Try to bold the first clause if short
+    const parts = firstSentence.split(' — ');
+    if (parts.length >= 2) {
+      driverBold = parts[0].trim();
+      driverText = parts.slice(1).join(' — ').trim();
+    } else {
+      driverText = firstSentence;
     }
   }
 
-  // Fallback: open image in new tab so user can save/share manually
-  window.open(cardUrl, '_blank', 'noopener,noreferrer');
-  if (btn) { btn.textContent = '⬆ Share Card'; btn.disabled = false; }
+  // Posted time
+  const postedAt = p.posted_at || '—';
+
+  // Lineup status
+  const homeConf = p.home_lineup_confirmed;
+  const awayConf = p.away_lineup_confirmed;
+  const bothConf = homeConf === true && awayConf === true;
+  const lineupStatus = bothConf ? 'Confirmed' : 'Projected — confirm before betting';
+
+  // Season record from _todayDataRef
+  const season = (_todayDataRef && _todayDataRef.season) || {};
+  const recStr = (season.wins != null && season.losses != null)
+    ? `${season.wins}W–${season.losses}L`
+    : '—';
+  const roiStr = (season.roi != null)
+    ? ((season.roi >= 0 ? '+' : '') + (season.roi * 100).toFixed(1) + '% ROI')
+    : '';
+  const betsStr = season.bets ? ` · ${season.bets} picks logged` : '';
+  const recordLine = [recStr, roiStr, '2026 Season' + betsStr].filter(Boolean).join(' · ');
+
+  return `<div class="sc-modal" id="share-card-el">
+    <!-- Header 58px -->
+    <div class="scm-hdr">
+      <div class="scm-brand">
+        <div class="scm-logo">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <circle cx="6" cy="6" r="5.3" stroke="rgba(255,255,255,.6)" stroke-width=".8"/>
+            <text x="1.3" y="8.7" font-family="system-ui" font-size="5.8" font-weight="900" fill="white">F</text>
+            <text x="6" y="8.7" font-family="system-ui" font-size="5.8" font-weight="900" fill="#818cf8">L</text>
+          </svg>
+        </div>
+        <div>
+          <div class="scm-wm"><span class="f">FAIR</span>LINE</div>
+          <div class="scm-sport">MLB · 2026 Season</div>
+        </div>
+      </div>
+      <div class="scm-badge">✓ Official Value Bet</div>
+      <div class="scm-date">${dateStr}</div>
+    </div>
+
+    <!-- Pick zone 442px -->
+    <div class="scm-pick">
+      <div class="scm-wm-bg">${team}</div>
+      <div class="scm-pick-inner">
+        <div class="scm-team">${team}</div>
+        <div class="scm-odds-row">
+          <span class="scm-ml">ML</span>
+          <span class="scm-odds ${oddsCls}">${oddsStr}</span>
+        </div>
+        ${stakeRow}
+        <div class="scm-matchup">${matchupStr}</div>
+      </div>
+    </div>
+
+    <!-- Edge + prob bar 298px -->
+    <div class="scm-edge">
+      <div class="scm-edge-row">
+        <div class="scm-edge-num">+${edgePct}pp</div>
+        <div class="scm-edge-lbl">EDGE</div>
+      </div>
+      <div class="scm-pb-labels">
+        <span class="scm-pb-lbl mkt">Market <span>${pbMktPct}%</span></span>
+        <span class="scm-pb-lbl mdl">Model <span>${pbMdlPct}%</span></span>
+      </div>
+      <div class="scm-pb-track">
+        <div class="scm-pb-mkt" style="width:${pbMktW.toFixed(1)}%"></div>
+        <div class="scm-pb-edge" style="left:${pbMktW.toFixed(1)}%;width:${Math.max(0,pbEdgeW).toFixed(1)}%"></div>
+      </div>
+      <div class="scm-action-row">
+        <div class="scm-action-item">
+          <div class="scm-action-lbl play">Playable To</div>
+          <div class="scm-action-val play">${playableTo}</div>
+        </div>
+        <div class="scm-action-div"></div>
+        <div class="scm-action-item">
+          <div class="scm-action-lbl">Fair ML</div>
+          <div class="scm-action-val" style="color:#a5b4fc;font-size:28px">${fairML}</div>
+        </div>
+        <div class="scm-action-div"></div>
+        <div class="scm-action-item">
+          <div class="scm-action-lbl">Best Available</div>
+          <div class="scm-action-val book">${bestBook} · ${bestOdds}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer 282px -->
+    <div class="scm-ftr">
+      <div class="scm-driver">
+        <span class="scm-drv-kicker">Primary Driver</span>
+        ${driverBold ? `<strong>${driverBold}</strong>` : ''}${driverText ? (driverBold ? ' — ' + driverText : driverText) : (driverBold ? '' : 'Model edge vs. Pinnacle no-vig.')}
+      </div>
+      <div class="scm-ftr-url">fairlinemlb.com</div>
+      <div class="scm-ftr-record">${recordLine}</div>
+      <div class="scm-ftr-meta">
+        <div class="scm-pfi"><span class="scm-pfi-lbl">Posted</span><span class="scm-pfi-val">${postedAt}</span></div>
+        <div class="scm-pfi-dot"></div>
+        <div class="scm-pfi"><span class="scm-pfi-lbl">Lineups</span><span class="scm-pfi-val">${lineupStatus}</span></div>
+        <div class="scm-pfi-dot"></div>
+        <div class="scm-pfi"><span class="scm-pfi-lbl">Benchmark</span><span class="scm-pfi-val">Pinnacle no-vig</span></div>
+      </div>
+      <div class="scm-ftr-disc">Informational only — not financial advice. Verify current odds and lineup before betting. Past performance does not guarantee future results.</div>
+    </div>
+  </div>`;
+}
+
+// ── Show share modal ─────────────────────────────────────────────────────────
+function sharePickCard(id) {
+  const p = picksMap[id];
+  if (!p) return;
+  _shareCardPickId = id;
+
+  const modal   = document.getElementById('share-modal');
+  const preview = document.getElementById('share-modal-preview');
+  if (!modal || !preview) return;
+
+  // Build card HTML and inject
+  preview.innerHTML = _buildShareCardHTML(p);
+
+  // Scale the 1080px card to fit inside the modal preview area
+  const scaledEl = document.getElementById('share-card-el');
+  if (scaledEl) {
+    const maxW = Math.min(window.innerWidth - 96, 540);
+    const scale = maxW / 1080;
+    scaledEl.style.transform = `scale(${scale})`;
+    scaledEl.style.transformOrigin = 'top left';
+    preview.style.height = Math.round(1080 * scale) + 'px';
+    preview.style.alignItems = 'flex-start';
+    preview.style.overflow = 'hidden';
+  }
+
+  // Show native share button if available (mobile)
+  const nativeBtn = document.getElementById('share-native-btn');
+  if (nativeBtn) {
+    nativeBtn.style.display = (navigator.share && navigator.canShare) ? 'inline-flex' : 'none';
+  }
+
+  // Show modal
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+
+  // Escape key closes modal
+  document.addEventListener('keydown', _shareModalEscHandler);
+}
+
+function _shareModalEscHandler(e) {
+  if (e.key === 'Escape') closeShareModal();
+}
+
+function closeShareModal() {
+  const modal = document.getElementById('share-modal');
+  if (modal) modal.classList.add('hidden');
+  document.body.style.overflow = '';
+  document.removeEventListener('keydown', _shareModalEscHandler);
+  _shareCardPickId = null;
+}
+
+function closeShareModalOnBackdrop(e) {
+  // Only close if clicking the overlay itself, not the modal box
+  if (e.target === document.getElementById('share-modal')) closeShareModal();
+}
+
+// ── Download PNG via html2canvas ─────────────────────────────────────────────
+async function downloadShareCard() {
+  const el  = document.getElementById('share-card-el');
+  const btn = document.getElementById('share-dl-btn');
+  const hint = document.getElementById('share-modal-hint');
+  if (!el || !btn) return;
+
+  if (typeof html2canvas === 'undefined') {
+    alert('html2canvas not loaded — please refresh the page.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Rendering…';
+  if (hint) hint.textContent = 'Generating 1080×1080 PNG…';
+
+  try {
+    // Temporarily reset transform so html2canvas captures full 1080×1080
+    const savedTransform = el.style.transform;
+    const savedOrigin    = el.style.transformOrigin;
+    el.style.transform = 'none';
+    el.style.transformOrigin = 'top left';
+
+    const canvas = await html2canvas(el, {
+      width: 1080,
+      height: 1080,
+      scale: 1,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#06090f',
+      logging: false,
+    });
+
+    // Restore scale
+    el.style.transform = savedTransform;
+    el.style.transformOrigin = savedOrigin;
+
+    // Trigger download
+    const p   = picksMap[_shareCardPickId] || {};
+    const team = (p.pick || 'pick').replace(/\s/g, '-').toLowerCase();
+    const link = document.createElement('a');
+    link.download = `fairline-${team}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    btn.textContent = '✓ Downloaded';
+    if (hint) hint.textContent = '1080×1080 PNG saved';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = '⬇ Download PNG';
+      if (hint) hint.textContent = '1080×1080 · ready to post';
+    }, 2500);
+  } catch (err) {
+    console.error('[FairLine] html2canvas error:', err);
+    btn.disabled = false;
+    btn.textContent = '⬇ Download PNG';
+    if (hint) hint.textContent = 'Error — try again';
+  }
+}
+
+// ── Native Web Share (mobile) — share as image blob ──────────────────────────
+async function nativeShareCard() {
+  const el  = document.getElementById('share-card-el');
+  const btn = document.getElementById('share-native-btn');
+  if (!el || !btn) return;
+  if (typeof html2canvas === 'undefined') { alert('html2canvas not loaded.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Preparing…';
+
+  try {
+    const savedTransform = el.style.transform;
+    const savedOrigin    = el.style.transformOrigin;
+    el.style.transform = 'none';
+    el.style.transformOrigin = 'top left';
+
+    const canvas = await html2canvas(el, {
+      width: 1080, height: 1080, scale: 1,
+      useCORS: true, allowTaint: true,
+      backgroundColor: '#06090f', logging: false,
+    });
+
+    el.style.transform = savedTransform;
+    el.style.transformOrigin = savedOrigin;
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) { btn.disabled = false; btn.textContent = '⬆ Share Image'; return; }
+      const p    = picksMap[_shareCardPickId] || {};
+      const team = (p.pick || 'pick').replace(/\s/g, '-').toLowerCase();
+      const file = new File([blob], `fairline-${team}.png`, { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: `FairLine MLB — ${p.pick || 'Value Bet'}`,
+            text:  'Bet the number, not the noise. fairlinemlb.com',
+          });
+          btn.textContent = '✓ Shared';
+        } catch(e) {
+          if (e.name !== 'AbortError') btn.textContent = '⬆ Share Image';
+        }
+      } else {
+        // Fallback: download
+        const link = document.createElement('a');
+        link.download = `fairline-${team}.png`;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+        btn.textContent = '✓ Downloaded';
+      }
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = '⬆ Share Image';
+      }, 2500);
+    }, 'image/png');
+  } catch (err) {
+    console.error('[FairLine] nativeShareCard error:', err);
+    btn.disabled = false;
+    btn.textContent = '⬆ Share Image';
+  }
 }
 
 function shareAllPicks() {
@@ -4078,6 +4665,8 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   const actionRowHTML = `
     <div class="uc-action-row-v2">
       <button class="uav-btn primary details-toggle" onclick="toggleDetails('${cardId}', this)">Details ▾</button>
+      <span class="uav-sep">|</span>
+      <button class="uav-btn secondary" onclick="sharePickCard('${cardId}')">⬆ Share</button>
     </div>`;
 
   const topPickBannerHTML = isTopPick
