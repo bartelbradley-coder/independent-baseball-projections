@@ -33,6 +33,30 @@
 .page-subtitle { font-size: 12px; color: var(--text-3); }
 .page-subtitle span { color: var(--indigo-lt); font-weight: 500; }
 
+/* Value-prop hero — concise positioning above the daily status strip */
+.hero-vp { margin-bottom: 18px; }
+.hero-vp-title {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: #f1f5f9;
+  margin: 0 0 6px;
+}
+.hero-vp-sub {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+  max-width: 560px;
+  margin: 0;
+}
+@media (max-width: 700px) {
+  .hero-vp { margin-bottom: 14px; }
+  .hero-vp-title { font-size: 23px; }
+  .hero-vp-sub { font-size: 12.5px; }
+}
+
 .record-strip {
   display: flex;
   gap: 10px;
@@ -530,8 +554,10 @@
   font-family: var(--font-mono); font-size: 26px; font-weight: 700;
   line-height: 1; flex-shrink: 0;
 }
-.uph-odds.dog { color: var(--green); }
-.uph-odds.fav { color: var(--amber); }
+/* Raw price is neutral — green/amber previously implied "good/bad" on what is
+   just the line. The ROAD DOG / HOME DOG tag already conveys dog vs. favorite. */
+.uph-odds.dog { color: var(--text); }
+.uph-odds.fav { color: var(--text); }
 
 /* Edge + prob row — prominent badge with inline context */
 .uph-edge-row {
@@ -933,6 +959,13 @@
   background: linear-gradient(90deg, rgba(34,197,94,0.55), rgba(34,197,94,0.9));
   transition: left 0.4s, width 0.4s;
 }
+/* Vertical marker at the model's win probability — the "fair line" itself */
+.prob-track-tick {
+  position: absolute; top: -2px; bottom: -2px; width: 2px;
+  background: var(--indigo-lt); border-radius: 2px;
+  box-shadow: 0 0 5px rgba(129,140,248,0.9);
+  transition: left 0.4s;
+}
 .prob-track-labels {
   display: flex; justify-content: space-between; align-items: baseline;
 }
@@ -944,8 +977,8 @@
   letter-spacing: 0.04em;
 }
 .prob-track-subline {
-  font-size: 8px; color: var(--text-4); text-align: center;
-  margin-top: 3px; letter-spacing: 0.04em;
+  font-size: 9.5px; color: var(--text-4); text-align: center;
+  margin-top: 4px; letter-spacing: 0.03em;
 }
 
 /* Tier section headers */
@@ -1437,7 +1470,7 @@
 .md-hdr-sep { color:rgba(255,255,255,.12);user-select:none }
 .md-hdr-game { font-size:10px;color:var(--text-4) }
 /* Verdict badge in header */
-.md-vbadge { font-size:8.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:2px 8px;border-radius:4px }
+.md-vbadge { font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:4px }
 .md-vbadge.value  { background:rgba(34,197,94,.10);color:var(--green);border:1px solid rgba(34,197,94,.22) }
 .md-vbadge.strong { background:rgba(245,158,11,.10);color:var(--amber);border:1px solid rgba(245,158,11,.22) }
 .md-vbadge.conditional,.md-vbadge.reduced { background:rgba(245,158,11,.08);color:var(--amber);border:1px solid rgba(245,158,11,.18) }
@@ -1883,7 +1916,7 @@
 .pc-v8-num { flex:1;padding:6px 0;border-right:1px solid var(--border) }
 .pc-v8-num:last-child { border-right:none }
 .pc-v8-num:not(:first-child) { padding-left:8px }
-.pc-v8-num .nv-lbl { font-size:8px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;font-family:var(--font-ui) }
+.pc-v8-num .nv-lbl { font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;font-family:var(--font-ui) }
 .pc-v8-num .nv-val { font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--text) }
 .pc-v8-num .nv-val.edge  { color:var(--green) }
 .pc-v8-num .nv-val.model { color:#60a5fa }
@@ -1903,13 +1936,15 @@
 .pb8-mkt-fill { position:absolute;left:0;top:0;bottom:0;background:rgba(115,130,155,.45);border-radius:4px 0 0 4px }
 .pb8-edge-fill { position:absolute;top:0;bottom:0;background:rgba(34,197,94,.65);border-radius:0 4px 4px 0 }
 .pb8-edge-fill.wl { background:rgba(99,102,241,.45) }
+.pb8-tick { position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--indigo-lt);border-radius:2px;box-shadow:0 0 5px rgba(129,140,248,.9);transition:left .4s }
+.pc-v8-bar .pb8-legend { font-size:9.5px;color:var(--text-4);text-align:center;margin-top:5px;letter-spacing:.02em;font-family:var(--font-ui) }
 
 /* Stake + lineup row */
 .pc-v8-sl-row { display:flex;align-items:stretch;gap:8px;padding:8px 14px }
 .stake-v8 { background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:8px 10px;flex-shrink:0;min-width:106px }
 .stake-v8.reduced { border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04) }
 .stake-v8.muted   { border-color:rgba(255,255,255,.04);opacity:.60;border-style:dashed }
-.stake-v8 .sv-lbl { font-size:8px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;font-family:var(--font-ui) }
+.stake-v8 .sv-lbl { font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;font-family:var(--font-ui) }
 .stake-v8.reduced .sv-lbl { color:var(--amber) }
 .stake-v8 .sv-units  { font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--text);line-height:1 }
 .stake-v8 .sv-dollars { font-size:12px;font-weight:600;color:var(--text-2);font-family:var(--font-mono) }
@@ -1943,7 +1978,7 @@
 .qa-v8 { border:1px solid rgba(255,255,255,.055);border-radius:8px;overflow:hidden }
 .qa-v8-row { display:flex;align-items:baseline;gap:8px;padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.04) }
 .qa-v8-row:last-child { border-bottom:none }
-.qa-v8-lbl { font-size:8px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;flex-shrink:0;min-width:60px;font-family:var(--font-ui) }
+.qa-v8-lbl { font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;flex-shrink:0;min-width:60px;font-family:var(--font-ui) }
 .qa-v8-lbl.thesis { color:var(--text-3) }
 .qa-v8-lbl.driver { color:#60a5fa }
 .qa-v8-lbl.risk   { color:var(--amber) }
@@ -1966,7 +2001,7 @@
 .prob-v8-card { background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:8px;padding:12px 14px }
 .prob-v8-row  { display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:10px }
 .prob-v8-col  { text-align:center;flex:1 }
-.prob-v8-col .pv-lbl { font-size:8px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;margin-bottom:2px;color:var(--text-4);display:block;font-family:var(--font-ui) }
+.prob-v8-col .pv-lbl { font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:2px;color:var(--text-4);display:block;font-family:var(--font-ui) }
 .prob-v8-col .pv-val { font-family:var(--font-mono);font-size:18px;font-weight:700;line-height:1 }
 .pv-val.mkt   { color:var(--text-2) }
 .pv-val.edgev { color:var(--green);font-size:15px }
@@ -1985,7 +2020,7 @@
 .as-v8-row { display:flex;align-items:baseline;gap:10px;padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.045);flex-wrap:wrap }
 .as-v8-row:first-child { padding:9px 10px }
 .as-v8-row:last-child { border-bottom:none }
-.as-v8-lbl { font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-4);min-width:100px;flex-shrink:0;font-family:var(--font-ui) }
+.as-v8-lbl { font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-4);min-width:100px;flex-shrink:0;font-family:var(--font-ui) }
 .as-v8-val { font-size:11px;font-weight:600;font-family:var(--font-mono) }
 .as-v8-val.g { color:var(--green) } .as-v8-val.a { color:var(--amber) } .as-v8-val.r { color:var(--red) }
 .as-v8-val.m { color:var(--text-2) } .as-v8-val.d { color:var(--text-3) }
@@ -1997,7 +2032,7 @@
 
 /* Drivers table */
 .drv-v8 { width:100%;border-collapse:collapse }
-.drv-v8 th { font-size:8px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--text-4);padding:3px 6px;border-bottom:1px solid var(--border);font-family:var(--font-ui) }
+.drv-v8 th { font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-4);padding:3px 6px;border-bottom:1px solid var(--border);font-family:var(--font-ui) }
 .drv-v8 th:nth-child(2) { text-align:right }
 .drv-v8 th:nth-child(3) { text-align:center }
 .drv-v8 td { padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle }
@@ -2013,7 +2048,7 @@
 /* Best odds */
 .odds-v8-note { font-family:var(--font-mono);font-size:10.5px;color:var(--amber);font-weight:600;margin-bottom:8px }
 .odds-v8-group { margin-bottom:7px } .odds-v8-group:last-child { margin-bottom:0 }
-.odds-v8-glbl { font-size:8.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-4);margin-bottom:4px;font-family:var(--font-ui) }
+.odds-v8-glbl { font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-4);margin-bottom:4px;font-family:var(--font-ui) }
 .odds-v8-best { display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.22);border-radius:6px }
 .odds-v8-best .ov8-name { font-weight:600;color:var(--text);flex:1;font-size:11px;font-family:var(--font-ui) }
 .odds-v8-best .ov8-odds { font-family:var(--font-mono);font-weight:700;font-size:13px;color:var(--green) }
@@ -2068,6 +2103,12 @@
 
 <div class="page" id="picks">
 
+  <!-- VALUE PROP: one-line positioning for first-time visitors (also the page H1) -->
+  <header class="hero-vp">
+    <h1 class="hero-vp-title">Bet the number, not the noise.</h1>
+    <p class="hero-vp-sub">FairLine models a fair win probability for every MLB game, then flags the bets where our line beats the book — every pick logged before first pitch and tracked in full.</p>
+  </header>
+
   <!-- STATUS STRIP: always-visible daily state indicator -->
   <div id="status-strip" class="status-strip ss-pending" style="display:none">
     <span class="ss-badge ss-badge-pending">Loading…</span>
@@ -2076,14 +2117,8 @@
 
   <!-- Brand bar and differentiator line merged into phb-card above picks -->
 
-  <!-- CONTEXT BAR: today's slate — leads with outcome, not process -->
-  <div class="today-context">
-    <span id="signal-count">—</span> picks today
-    <span class="tc-sep">·</span>
-    <span id="games-scanned">—</span> games modeled
-    <span class="tc-sep">·</span>
-    Posted <span id="ctx-posted-time">—</span>
-  </div>
+  <!-- CONTEXT BAR removed — pick count, games modeled, and posted time now
+       live in the single LOCKED status strip above (deduped). -->
 
   <!-- PICKS HEADER BLOCK: performance stats + sizing controls -->
   <div id="picks-header-block"></div>
@@ -3629,7 +3664,7 @@ function buildDetailsV8(p, cardId) {
     }
     // Risk from flags or narrative
     if (p.downgrade_reasons && p.downgrade_reasons.length > 0) {
-      risk = `<strong>FLAG:</strong> ${p.downgrade_reasons}. Sizing reduced.`;
+      risk = `<strong>Stake reduced:</strong> ${humanizeFlags(p.downgrade_reasons)}.`;
     } else if (!p.home_lineup_confirmed || !p.away_lineup_confirmed) {
       risk = 'One or more lineups projected — model applies certainty shrinkage.';
     } else {
@@ -4337,13 +4372,14 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
            title="Both bars on the same 0–100% win-probability scale. Green gap = model edge over market.">
         <div class="prob-track-market" style="width:${mktW}%"></div>
         <div class="prob-track-edge"   style="left:${mktW}%;width:${edgeW}%"></div>
+        <div class="prob-track-tick"   style="left:calc(${(parseFloat(mktW)+parseFloat(edgeW)).toFixed(1)}% - 1px)" title="FairLine model probability"></div>
       </div>
       <div class="prob-track-labels">
         <span class="prob-track-lbl" title="Pinnacle no-vig implied win probability — sharpest market benchmark">Market <strong>${mktPct}%</strong></span>
         <span class="prob-track-edge-lbl">+${edgePct}% edge</span>
         <span class="prob-track-lbl model" title="Model win probability (Dual-Poisson + 33 log-odds adjustments + Platt calibration)">Model <strong>${modelPct}%</strong></span>
       </div>
-      <div class="prob-track-subline" style="opacity:0.5">Probability bar · market vs. model · same 0–100% scale</div>
+      <div class="prob-track-subline">Grey = book · gap = model edge · <span style="color:var(--indigo-lt)">▏</span> = FairLine</div>
     </div>` : '';
 
   // Model factors
@@ -4719,7 +4755,9 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       <div class="pb8-track">
         <div class="pb8-mkt-fill" style="width:${mktF}%"></div>
         <div class="${edgeFillCls}" style="left:${mktF}%;width:${edgeF}%"></div>
+        <div class="pb8-tick" style="left:calc(${(parseFloat(mktF)+parseFloat(edgeF)).toFixed(1)}% - 1px)" title="FairLine model probability"></div>
       </div>
+      <div class="pb8-legend">Grey = book · gap = model edge · <span style="color:var(--indigo-lt)">▏</span> = FairLine</div>
     </div>`;
   }
 
@@ -4777,7 +4815,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   // ── v8 collapsed: flag line ──────────────────────────────────────────────
   let flagV8HTML = '';
   if (isFlaggedCard && p.downgrade_reasons) {
-    flagV8HTML = `<div class="pc-v8-flag-line"><strong>Flag:</strong> ${p.downgrade_reasons} — stake reduced.</div>`;
+    flagV8HTML = `<div class="pc-v8-flag-line"><strong>Stake reduced:</strong> ${humanizeFlags(p.downgrade_reasons)}.</div>`;
   } else if (isFlaggedCard) {
     flagV8HTML = `<div class="pc-v8-flag-line"><strong>Reduced confidence</strong> — stake sizing reduced by model.</div>`;
   }
@@ -4814,12 +4852,27 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     </div>`;
 }
 
+// Map raw model downgrade codes → reader-friendly phrases for the UI.
+const FLAG_COPY = {
+  short_rest_sp:     'starter pitching on short rest',
+  away_worse_sp_fip: 'road pick — opposing starter has the projected xFIP edge',
+};
+function humanizeFlags(raw) {
+  if (!raw) return '';
+  return raw.split(/[;,]\s*/)
+    .map(c => FLAG_COPY[c.trim()] || c.trim().replace(/_/g, ' '))
+    .filter(Boolean)
+    .join('; ');
+}
+
 // ── Main render ───────────────────────────────────────────────────────────────
 // ── Status strip ──────────────────────────────────────────────────────────────
-function renderStatusStrip(picks, noPicksYet, generatedAt) {
+function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
   const strip = document.getElementById('status-strip');
   if (!strip) return;
   strip.style.display = 'flex';
+  const gamesStr = (gamesToday != null && gamesToday > 0)
+    ? ` · ${gamesToday} game${gamesToday !== 1 ? 's' : ''} modeled` : '';
 
   if (noPicksYet || !picks || picks.length === 0) {
     const nowCT  = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Chicago'}));
@@ -4827,7 +4880,7 @@ function renderStatusStrip(picks, noPicksYet, generatedAt) {
     strip.className = 'status-strip ss-pending';
     strip.innerHTML = `
       <span class="ss-badge ss-badge-pending">${pre9 ? '🕐 PENDING' : '📊 NO PICKS'}</span>
-      <span class="ss-text">${pre9 ? 'Picks post at 9:00 AM CT after lineup confirmation' : 'No picks clear the 4% edge threshold today'}</span>
+      <span class="ss-text">${pre9 ? 'Picks post at 9:00 AM CT after lineup confirmation' : 'No picks clear the 5% edge threshold today'}</span>
       <a class="ss-link" href="preview.html">Tomorrow's opening lines →</a>`;
     return;
   }
@@ -4859,7 +4912,7 @@ function renderStatusStrip(picks, noPicksYet, generatedAt) {
     strip.className = 'status-strip ss-locked';
     strip.innerHTML = `
       <span class="ss-badge ss-badge-locked">✓ LOCKED</span>
-      <span class="ss-text">${picks.length} pick${picks.length !== 1 ? 's' : ''} for today${fpStr}</span>
+      <span class="ss-text">${picks.length} pick${picks.length !== 1 ? 's' : ''} for today${gamesStr}${fpStr}</span>
       <span class="ss-time">${postedStr.replace(' · ','')}</span>`;
   }
 }
@@ -4868,7 +4921,7 @@ function render(data, hist, scores = {}, perf = null) {
   // Build historical context lookup and start countdown timer (both idempotent)
   _histContextFn = buildHistContextFn((hist && hist.rows) ? hist.rows : []);
   startCountdownTimer();
-  renderStatusStrip(data.picks, data.no_picks_yet, data.generated_at);
+  renderStatusStrip(data.picks, data.no_picks_yet, data.generated_at, data.games_today);
 
   // Date header — now used as the section label just above the picks
   if (data.date) {
@@ -4913,10 +4966,12 @@ function render(data, hist, scores = {}, perf = null) {
     }
   }
   if (data.signal_count != null) {
-    document.getElementById('signal-count').textContent = data.signal_count;
+    const _sc = document.getElementById('signal-count');
+    if (_sc) _sc.textContent = data.signal_count;
   }
   if (data.games_today != null) {
-    document.getElementById('games-scanned').textContent = data.games_today;
+    const _gs = document.getElementById('games-scanned');
+    if (_gs) _gs.textContent = data.games_today;
     // Also update the strip if games_today differs from signal_count
     const strip = document.getElementById('games-scanned-strip');
     if (strip && data.games_today > 0) {
