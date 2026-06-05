@@ -1811,7 +1811,7 @@
 .as-v8.cond    { border-color:rgba(245,158,11,.28);background:rgba(245,158,11,.04) }
 .as-v8.reduced { border-color:rgba(245,158,11,.30);background:rgba(245,158,11,.05) }
 .as-v8.wl      { border-color:rgba(99,102,241,.22);background:rgba(99,102,241,.04) }
-.as-v8-row { display:flex;align-items:center;gap:10px;padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.045) }
+.as-v8-row { display:flex;align-items:baseline;gap:10px;padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.045);flex-wrap:wrap }
 .as-v8-row:first-child { padding:9px 10px }
 .as-v8-row:last-child { border-bottom:none }
 .as-v8-lbl { font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-4);min-width:100px;flex-shrink:0;font-family:var(--font-ui) }
@@ -4436,13 +4436,12 @@ function render(data, hist, scores = {}, perf = null) {
             <span class="phb-stat-val ${roiCol}">${seasonRoi != null ? (seasonRoi >= 0 ? '+' : '') + (seasonRoi * 100).toFixed(1) + '%' : '—'}</span>
             <span class="phb-stat-sub">${flatSeason.bets || ''} bets · ${isKelly ? 'Kelly-sized' : 'flat'}</span>
           </div>
-          ${clvStr ? `
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
             <span class="phb-stat-label">Avg CLV<span class="tip" data-tip="Closing Line Value: how much better our posted price is vs. the final Pinnacle no-vig line. Positive CLV is the strongest signal the model finds real edge.">?</span></span>
-            <span class="phb-stat-val ${clvCol}">${clvStr}</span>
-            <span class="phb-stat-sub">${data.clv_count || ''} picks</span>
-          </div>` : ''}
+            <span class="phb-stat-val ${clvStr ? clvCol : 'muted'}">${clvStr || '—'}</span>
+            <span class="phb-stat-sub">${clvStr ? (data.clv_count || '') + ' picks' : 'pending'}</span>
+          </div>
           <div class="phb-right-group">
             ${todayChip}
           </div>
