@@ -3238,7 +3238,7 @@ function buildDetailsV8(p, cardId) {
   // ── CTA buttons ──
   const ctaHTML = isWl
     ? `<button class="cta-v8 mon">Monitor Only</button>`
-    : `<button class="cta-v8 trk" onclick="toggleBet('${cardId}')" title="Track this pick in your personal CLV monitoring record">Track Pick</button>`;
+    : '';
 
   // ── Assemble watchlist (short) ──
   if (isWl) {
@@ -4087,10 +4087,6 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   const actionRowHTML = `
     <div class="uc-action-row-v2">
       <button class="uav-btn primary details-toggle" onclick="toggleDetails('${cardId}', this)">Details ▾</button>
-      <span class="uav-sep">·</span>
-      <button class="uav-btn secondary bet-toggle" data-bet-id="${cardId}" onclick="toggleBet('${cardId}')">Track</button>
-      <span class="uav-sep">·</span>
-      <button class="uav-btn secondary share-btn" data-share-id="${cardId}" onclick="sharePickCard('${cardId}')">⬆ Share Card</button>
     </div>`;
 
   const topPickBannerHTML = isTopPick
