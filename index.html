@@ -3194,7 +3194,6 @@ function buildDetailsV8(p, cardId) {
     oddsHTML = `
       <div class="det-v8-sec">
         <div class="det-v8-hdr">Available Books — ${p.pick || '—'} ML</div>
-        <div class="odds-v8-note">Playable to ${playable_to} · ${playableLabel}</div>
         ${bestRow ? `<div class="odds-v8-group"><div class="odds-v8-glbl">Best Available</div>${bestRow}</div>` : ''}
         ${playableRow ? `<div class="odds-v8-group"><div class="odds-v8-glbl">Also Available</div>${playableRow}</div>` : ''}
         ${belowRow}
@@ -3203,7 +3202,6 @@ function buildDetailsV8(p, cardId) {
     oddsHTML = `
       <div class="det-v8-sec">
         <div class="det-v8-hdr">Available Books — ${p.pick || '—'} ML</div>
-        <div class="odds-v8-note">Playable to ${playable_to}</div>
         <div class="odds-v8-group"><div class="odds-v8-best"><span class="ov8-name">${bestBook}</span><span class="ov8-odds">${bestOdds}</span><span class="ov8-best-tag">BEST</span></div></div>
       </div>`;
   }
@@ -3221,16 +3219,12 @@ function buildDetailsV8(p, cardId) {
     : '—';
   const refreshTime = p.current_refresh_time || p.posted_at || '—';
 
-  // Starter rows removed — already shown on collapsed card SP line; no redundancy needed
-  const statusHTML = `
-    <div class="det-v8-sec">
-      <div class="det-v8-hdr">Lineup &amp; Data Status</div>
-      <table class="lu-tbl-v8">
-        <tr><td class="lt-lbl">${pickTeam} lineup</td><td class="lt-val ${pickConf ? 'conf' : 'proj'}">${pickConf ? '✓ Confirmed' : '⚠ Projected'}</td></tr>
-        <tr><td class="lt-lbl">${oppTeam} lineup</td><td class="lt-val ${oppConf ? 'conf' : 'proj'}">${oppConf ? '✓ Confirmed' : '⚠ Projected'}</td></tr>
-        <tr><td class="lt-lbl">Model refresh</td><td class="lt-val ok">${refreshTime}</td></tr>
-      </table>
-    </div>`;
+  // Lineup status shown on collapsed card; only new info here is model refresh time
+  const statusHTML = refreshTime ? `
+    <div class="det-v8-sec sec-secondary">
+      <div class="det-v8-hdr">Data</div>
+      <div style="font-size:11px;color:var(--text-3);font-family:var(--font-ui)">Model refresh: <span style="font-family:var(--font-mono);color:var(--text-2)">${refreshTime}</span></div>
+    </div>` : '';
 
   // Historical context note removed — generic and promotional, not actionable
   const histHTML = '';
@@ -3307,10 +3301,7 @@ function buildDetailsV8(p, cardId) {
       </div>
     </div>
 
-    <!-- 4. Drivers (secondary weight via driversHTML sec-secondary class) -->
-    ${driversHTML}
-
-    <!-- 5. Odds (full detail, best available moved here from action summary) -->
+    <!-- 4. Odds (full detail, best available moved here from action summary) -->
     ${oddsHTML}
 
     <!-- 6–7. Lineup + Historical (secondary) -->
