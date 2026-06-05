@@ -19,10 +19,10 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='9' y='21' font-family='system-ui,sans-serif' font-size='12' font-weight='900' fill='white'>F</text><text x='17' y='21' font-family='system-ui,sans-serif' font-size='12' font-weight='900' fill='%2360a5fa'>L</text><line x1='22' y1='22' x2='26' y2='17' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='26' cy='17' r='1.5' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=3">
 <style>
-.page-title { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+.page-title { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
 .page-subtitle { font-size: 12px; color: var(--text-3); margin-bottom: 24px; }
 
 .summary-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
@@ -32,7 +32,7 @@
 .analytics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 700px) { .analytics-row { grid-template-columns: 1fr; } }
 
-.card-title { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); margin-bottom: 4px; }
+.card-title { font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); margin-bottom: 4px; }
 .card-sub   { font-size: 10px; color: var(--text-4); margin-bottom: 14px; }
 
 /* Edge tier table — used by pitcher/team tables */
@@ -43,12 +43,12 @@
 
 /* Backtest */
 .roi-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.roi-year { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-2); width: 56px; flex-shrink: 0; }
+.roi-year { font-family: var(--font-display); font-size: 13px; font-weight: 600; color: var(--text-2); width: 56px; flex-shrink: 0; }
 .roi-bar-wrap { flex: 1; height: 8px; background: rgba(255,255,255,0.05); border-radius: 100px; overflow: hidden; }
 .roi-fill { height: 100%; border-radius: 100px; }
 .roi-fill.pos { background: linear-gradient(90deg,#22c55e,#4ade80); }
 .roi-fill.neg { background: linear-gradient(90deg,#ef4444,#f87171); }
-.roi-pct { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 700; width: 50px; text-align: right; flex-shrink: 0; }
+.roi-pct { font-family: var(--font-display); font-size: 13px; font-weight: 700; width: 50px; text-align: right; flex-shrink: 0; }
 .roi-pct.pos { color: var(--green); }
 .roi-pct.neg { color: var(--red); }
 .roi-meta { font-size: 10px; color: var(--text-4); }
@@ -97,7 +97,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 
 .no-history { text-align: center; padding: 56px 24px; color: var(--text-4); }
 .no-history .nh-icon  { font-size: 40px; margin-bottom: 14px; }
-.no-history .nh-title { font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--text-3); margin-bottom: 8px; }
+.no-history .nh-title { font-family: var(--font-display); font-size: 20px; color: var(--text-3); margin-bottom: 8px; }
 .no-history .nh-sub   { font-size: 12px; line-height: 1.7; }
 
 .backtest-note { font-size: 10px; color: var(--text-4); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); line-height: 1.5; }
@@ -126,7 +126,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 
 /* Streak + breakdown pills */
 .breakdown-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
-.streak-pill { padding: 10px 16px; border-radius: 10px; font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; display:flex; align-items:center; gap:8px; }
+.streak-pill { padding: 10px 16px; border-radius: 10px; font-family:var(--font-display); font-size:22px; font-weight:700; display:flex; align-items:center; gap:8px; }
 .streak-pill.W { background:rgba(34,197,94,0.1); color:var(--green); }
 .streak-pill.L { background:rgba(239,68,68,0.1); color:var(--red); }
 .streak-pill .sp-label { font-family:inherit; font-size:10px; font-weight:400; color:var(--text-4); margin-top:2px; }
@@ -151,7 +151,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 .threshold-lbl { font-weight: 600; font-size: 10px; color: var(--text-4); white-space: nowrap; }
 .threshold-input {
   width: 38px; background: none; border: none; outline: none;
-  color: var(--text-2); font-family: 'JetBrains Mono', monospace;
+  color: var(--text-2); font-family: var(--font-mono);
   font-size: 12px; font-weight: 600; text-align: right; padding: 0;
 }
 .threshold-pct { font-size: 10px; color: var(--text-4); }
@@ -166,7 +166,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 .tsb-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
              text-transform: uppercase; color: var(--indigo-lt); flex-shrink: 0; }
 .tsb-stat { display: inline-flex; flex-direction: column; align-items: center; }
-.tsb-val  { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700; line-height: 1; }
+.tsb-val  { font-family: var(--font-display); font-size: 16px; font-weight: 700; line-height: 1; }
 .tsb-sub  { font-size: 8px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
             color: var(--text-4); margin-top: 2px; }
 .tsb-divider { width: 1px; height: 24px; background: rgba(99,102,241,0.2); flex-shrink: 0; }
@@ -177,7 +177,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 /* Auto-refresh live indicator */
 .auto-refresh-pill {
   display: inline-flex; align-items: center; gap: 5px;
-  font-size: 9px; color: var(--green); font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--green); font-family: var(--font-mono);
   padding: 3px 9px; background: rgba(34,197,94,0.06);
   border: 1px solid rgba(34,197,94,0.2); border-radius: 6px; margin-left: 6px;
 }
@@ -515,7 +515,7 @@ function renderSummary(rows) {
 
   document.getElementById('summary-row').innerHTML = `
     <div class="stat-pill"><div class="stat-lbl">2026 Record</div><div class="stat-val white">${wins}W–${losses}L</div><div class="stat-sub">${settled.length} bets</div></div>
-    <div class="stat-pill"><div class="stat-lbl">Total P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${_fmtPnl(totalPnl)}</div><div class="stat-sub">${pnlMode==='kelly'?'half-Kelly sized':pnlMode==='dollars'&&_bankroll>0?`$${_bankroll} bankroll`:'flat $100/bet'}</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Season P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${_fmtPnl(totalPnl)}</div><div class="stat-sub">${pnlMode==='kelly'?'half-Kelly sized':pnlMode==='dollars'&&_bankroll>0?`$${_bankroll} bankroll`:'flat $100/bet'}</div></div>
     <div class="stat-pill"><div class="stat-lbl">ROI / Bet</div><div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${pct(roi)}</div><div class="stat-sub">per settled bet</div></div>
     <div class="stat-pill"><div class="stat-lbl">Win Rate</div><div class="stat-val white">${winRate != null ? (winRate*100).toFixed(1)+'%' : '—'}</div><div class="stat-sub">~52% break-even</div></div>
     ${avgClv != null ? `<div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${avgClv >= 0 ? 'green' : 'red'}">${pct(avgClv)}</div><div class="stat-sub">n=${clvRows.length}</div></div>` : ''}
@@ -613,6 +613,7 @@ function renderTable(rows) {
     { key: 'game',       label: 'Game',    cls: 'hide-sm' },
     { key: 'pick',       label: 'Pick',    cls: '' },
     { key: 'odds',       label: 'Odds',    cls: '' },
+    { key: 'tier',       label: 'Tier',    cls: 'hide-sm' },
     { key: 'edge',       label: 'Edge',    cls: 'hide-sm' },
     { key: 'model_prob', label: 'Model%',  cls: 'hide-sm' },
     { key: 'result',     label: 'Result',  cls: '' },
@@ -630,18 +631,29 @@ function renderTable(rows) {
     const resultCls = r.result === 'W' ? 'result-w' : r.result === 'L' ? 'result-l' : 'result-p';
     const pnlCls = (r.pnl_u || 0) >= 0 ? 'pnl-pos' : 'pnl-neg';
     const clvCls = r.clv == null ? 'clv-neu' : r.clv >= 0 ? 'clv-pos' : 'clv-neg';
-    const edgeStr = r.edge != null ? '+' + (r.edge * 100).toFixed(1) + '%' : '—';
+    const edgeStr = r.edge != null ? '+' + (r.edge * 100).toFixed(1) + 'pp' : '—';
     const probStr = r.model_prob != null ? (r.model_prob * 100).toFixed(1) + '%' : '—';
     const pnlStr  = r.pnl_u != null ? _fmtPnl(r.pnl_u, r) : '—';
     const clvStr  = r.clv != null ? pct(r.clv)
       : '<abbr title="CLV not captured — game may have been settled before the pre-game closing line snapshot" style="text-decoration:none;cursor:help">—</abbr>';
     const dateStr = r.date ? (() => { try { return new Date(r.date + 'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}); } catch(e){ return r.date; } })() : '—';
-    const rowClass = r.edge >= 0.08 ? 'row-strong' : r.edge >= 0.05 ? 'row-value' : '';
+    // Derive tier badge from edge — verdict not in history.json
+    const edgeVal = parseFloat(r.edge) || 0;
+    const tierLabel = edgeVal >= 0.08 ? 'Strong' : edgeVal >= 0.04 ? 'Value' : 'Below';
+    const tierStyle = edgeVal >= 0.08
+      ? 'background:rgba(245,158,11,.10);color:var(--amber);border:1px solid rgba(245,158,11,.22)'
+      : edgeVal >= 0.04
+      ? 'background:rgba(34,197,94,.08);color:var(--green);border:1px solid rgba(34,197,94,.20)'
+      : 'background:rgba(255,255,255,.04);color:var(--text-4);border:1px solid var(--border)';
+    const tierHTML = `<span style="font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:4px;${tierStyle}">${tierLabel}</span>`;
+    // Row tinting: Strong (≥8pp) or Value (≥4pp, current posting threshold)
+    const rowClass = edgeVal >= 0.08 ? 'row-strong' : edgeVal >= 0.04 ? 'row-value' : '';
     return `<tr class="${rowClass}">
-      <td style="color:var(--text-4);font-family:'JetBrains Mono',monospace;font-size:11px">${dateStr}</td>
+      <td style="color:var(--text-4);font-family:var(--font-mono);font-size:11px">${dateStr}</td>
       <td class="hide-sm" style="color:var(--text-2);font-weight:500">${r.game || '—'}</td>
       <td>${r.pick || '—'}</td>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${formatOdds(r.odds)}</td>
+      <td style="font-family:var(--font-mono);font-size:11px">${formatOdds(r.odds)}</td>
+      <td class="hide-sm">${tierHTML}</td>
       <td class="hide-sm" style="color:var(--amber)">${edgeStr}</td>
       <td class="hide-sm">${probStr}</td>
       <td><span class="${resultCls}">${r.result || '—'}</span></td>
