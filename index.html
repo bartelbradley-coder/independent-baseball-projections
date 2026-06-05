@@ -1924,7 +1924,6 @@
 
   <!-- MODEL INFO STRIP -->
   <div class="model-info-strip">
-    <strong>Picks post daily by 9:00 AM CT.</strong>
     Starting pitcher info and odds are captured at model run time — always verify current starters and lines before betting.
     <span id="games-scanned-strip"></span>
   </div>
@@ -1977,11 +1976,6 @@
     <div id="marginal-container"></div>
   </div>
 
-  <!-- TODAY'S PICKS — LIVE TRACKING (moved below picks) -->
-  <div class="section" id="idx-tracking-section" style="display:none">
-    <div class="sec-lbl">Today's Picks — Live Tracking</div>
-    <div class="card" style="padding:0;overflow:hidden" id="idx-tracking-card"></div>
-  </div>
 
   <!-- EVENING PREVIEW: tomorrow's opening-line picks -->
   <div id="preview-container"></div>
@@ -4551,9 +4545,7 @@ function render(data, hist, scores = {}, perf = null) {
 
   // renderCLVBanner removed — CLV is now in the picks header block (Row 1)
 
-  // Today's Picks — Live Tracking table (compact at-a-glance above pick cards)
   const _mainForTracking = (data.picks || []).filter(p => (p.edge || 0) >= 0.02);
-  renderTodayTrackingIndex(_mainForTracking, scores);
 
 
   // Correlated warning
