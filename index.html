@@ -3514,6 +3514,12 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     const currEdge = p.current_edge;
     if (currEdge == null || !p.current_refresh_time) return { panelHTML: '', warnHTML: '' };
 
+    // Before 10 AM CT the live-refresh workflow hasn't run yet — current_model.json
+    // data is from the previous day's session. Hide the panel until today's first
+    // refresh fires so we don't show yesterday's stale edge comparison.
+    const _nowCT = new Date(new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}));
+    if (_nowCT.getHours() < 10) return { panelHTML: '', warnHTML: '' };
+
     // Hide current state panel once game is live or over — not actionable
     if (isLiveGame(p) || isGameOver(p)) return { panelHTML: '', warnHTML: '' };
 
