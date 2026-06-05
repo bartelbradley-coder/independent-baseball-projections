@@ -4417,13 +4417,8 @@ function render(data, hist, scores = {}, perf = null) {
     container.innerHTML = `
       <div class="phb-card">
 
-        <!-- Brand identity (merged from brand bar) -->
-        <div class="phb-brand-row">
-          <div class="bb-name">FAIRLINE <em>MLB</em></div>
-          <div class="phb-brand-tagline">Bet the number, not the noise. · Model-driven MLB edges, tracked every day.</div>
-        </div>
-
-        <!-- Row 1: Performance stats -->
+        <!-- Stats row: W-L · Season P&L · ROI/Bet · Avg CLV -->
+        <!-- Brand row removed (nav carries it). Total $ removed (ambiguous by mode). -->
         <div class="phb-stats-row">
           <div class="phb-stat-group">
             <span class="phb-stat-label">2026 Season</span>
@@ -4431,15 +4426,9 @@ function render(data, hist, scores = {}, perf = null) {
           </div>
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
-            <span class="phb-stat-label">${pnlLabel}</span>
+            <span class="phb-stat-label">Season P&amp;L</span>
             <span class="phb-stat-val ${uCol}">${pnlDisplay}</span>
             <span class="phb-stat-sub">${pnlSublabel}</span>
-          </div>
-          <div class="phb-vdivider"></div>
-          <div class="phb-stat-group">
-            <span class="phb-stat-label">Total $</span>
-            <span class="phb-stat-val ${totalDollarCol}" id="phb-total-dollar-val">${totalDollarStr}</span>
-            <span class="phb-stat-sub" id="phb-total-dollar-sub">${totalDollarSub}</span>
           </div>
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
