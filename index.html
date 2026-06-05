@@ -685,6 +685,7 @@
 .det-v8-panel.pick-tier-cond   .deh-edge { color: var(--amber); }
 .det-v8-panel.pick-tier-other  .deh-edge { color: var(--indigo-lt); }
 .deh-label { font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--text-4); margin-left: auto; }
+.deh-game  { font-size: 10px; color: var(--text-4); font-family: var(--font-ui); margin-left: 8px; }
 
 /* ── Visual weight tiers for expanded sections ── */
 /* Primary sections: slightly stronger */
@@ -3151,7 +3152,6 @@ function buildDetailsV8(p, cardId) {
       <div class="det-v8-sec sec-secondary">
         <div class="det-v8-hdr">Drivers &amp; Risks</div>
         <table class="drv-v8">
-          <thead><tr><th>Factor</th><th style="text-align:right">Impact</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       </div>`;
@@ -3191,7 +3191,7 @@ function buildDetailsV8(p, cardId) {
 
     oddsHTML = `
       <div class="det-v8-sec">
-        <div class="det-v8-hdr">Best Available Odds — ${p.pick || '—'} ML</div>
+        <div class="det-v8-hdr">Available Books — ${p.pick || '—'} ML</div>
         <div class="odds-v8-note">Playable to ${playable_to} · ${playableLabel}</div>
         ${bestRow ? `<div class="odds-v8-group"><div class="odds-v8-glbl">Best Available</div>${bestRow}</div>` : ''}
         ${playableRow ? `<div class="odds-v8-group"><div class="odds-v8-glbl">Still Playable</div>${playableRow}</div>` : ''}
@@ -3200,7 +3200,7 @@ function buildDetailsV8(p, cardId) {
   } else if (bestOddsNum) {
     oddsHTML = `
       <div class="det-v8-sec">
-        <div class="det-v8-hdr">Best Available Odds — ${p.pick || '—'} ML</div>
+        <div class="det-v8-hdr">Available Books — ${p.pick || '—'} ML</div>
         <div class="odds-v8-note">Playable to ${playable_to}</div>
         <div class="odds-v8-group"><div class="odds-v8-best"><span class="ov8-name">${bestBook}</span><span class="ov8-odds">${bestOdds}</span><span class="ov8-best-tag">BEST</span></div></div>
       </div>`;
@@ -3230,10 +3230,8 @@ function buildDetailsV8(p, cardId) {
       </table>
     </div>`;
 
-  // ── Historical context ──
-  const histHTML = p.narrative && !isWl
-    ? `<div class="hist-v8"><strong>Historical context:</strong> ${tierLabel(p.edge, p.verdict)[0]} plays this season — see full CLV record in History tab. Supporting context only.</div>`
-    : '';
+  // Historical context note removed — generic and promotional, not actionable
+  const histHTML = '';
 
   // ── CTA buttons ──
   const ctaHTML = isWl
@@ -3271,11 +3269,10 @@ function buildDetailsV8(p, cardId) {
   return `
   <div id="${cardId}-det" class="det-v8-panel pick-tier-${epTier}">
 
-    <!-- Expansion header: clear "you're in detailed view" signal -->
+    <!-- Expansion header: section label only — pick identity visible on card above -->
     <div class="det-exp-hdr">
-      <span class="deh-pick">${p.pick || '—'} ML ${epOdds}</span>
-      <span class="deh-edge">+${edgePct}pp edge</span>
-      <span class="deh-label">Full Analysis</span>
+      <span class="deh-label" style="margin-left:0">Full Analysis</span>
+      <span class="deh-game">${p.game || ''}</span>
     </div>
 
     <!-- 1. ACTION SUMMARY — first thing visible, most actionable (primary) -->
