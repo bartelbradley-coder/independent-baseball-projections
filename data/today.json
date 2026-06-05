@@ -1,67 +1,75 @@
 {
-  "date": "2026-06-04",
-  "generated_at": "4:19 PM CT \u00b7 Jun 4",
+  "date": "2026-06-05",
+  "generated_at": "6:01 AM CT \u00b7 Jun 5",
   "no_picks_yet": false,
   "picks": [
     {
-      "game": "LAD @ ARI",
-      "pick": "LAD",
+      "game": "CHW @ PHI",
+      "pick": "CHW",
       "side": "AWAY",
       "pick_type": "MONEYLINE",
-      "meta": "SP: Justin Wrobleski",
-      "posted_at": "5:52 AM CT",
-      "game_time": "2026-06-05T01:40:00Z",
-      "temp_f": 72.0,
-      "wind_speed_mph": 0.0,
-      "wind_dir_degrees": 0.0,
-      "is_domed": true,
-      "model_prob": 0.6287,
-      "market_prob": 0.5586,
-      "edge": 0.0673,
-      "ev_per_100": 11.99,
-      "odds": -128,
-      "best_odds": -128,
-      "best_book": "Novig",
-      "fair_odds": "-169",
-      "playable_to": -156,
-      "break_even": 0.5614,
-      "kelly_units": 1.92,
-      "line_open": -134,
-      "line_current": -134,
+      "meta": "SP: Anthony Kay",
+      "posted_at": "6:00 AM CT",
+      "game_time": "2026-06-05T22:40:00Z",
+      "temp_f": 78.8,
+      "wind_speed_mph": 5.3,
+      "wind_dir_degrees": 213.0,
+      "is_domed": false,
+      "model_prob": 0.454,
+      "market_prob": 0.3776,
+      "edge": 0.0781,
+      "ev_per_100": 20.76,
+      "odds": 166,
+      "best_odds": 166,
+      "best_book": "ProphetX",
+      "fair_odds": "+120",
+      "playable_to": 130,
+      "break_even": 0.3759,
+      "kelly_units": 0.78,
+      "line_open": 158,
+      "line_current": 158,
       "sharp_movement": false,
       "steam_move": false,
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -138,
-        "LowVig": -133,
-        "BetOnline": -133,
-        "Bovada": -143,
-        "Novig": -129,
-        "ESPN Bet": -135,
-        "DraftKings": -144,
-        "BetMGM": -140,
-        "ProphetX": -130,
-        "BetRivers": -143,
-        "Pinnacle": -135,
-        "BetUS": -130,
-        "MyBookie": -140,
-        "Betway": -140,
-        "Hard Rock": -140
+        "FanDuel": 158,
+        "BetOnline": 161,
+        "LowVig": 161,
+        "Novig": 163,
+        "ESPN Bet": 155,
+        "Bovada": 153,
+        "Hard Rock": 155,
+        "DraftKings": 158,
+        "BetRivers": 160,
+        "MyBookie": 156,
+        "Betway": 160,
+        "BetUS": 158,
+        "Pinnacle": 158,
+        "ProphetX": 166,
+        "BetMGM": 155
       },
-      "pitcher": "Justin Wrobleski",
-      "opp_pitcher": "Ryne Nelson",
+      "pitcher": "Anthony Kay",
+      "opp_pitcher": "Jes\u00fas Luzardo",
       "factors": [
         {
           "label": "Pitcher Quality (xFIP)",
-          "value": 1.95
+          "value": -2.26
+        },
+        {
+          "label": "Home Field",
+          "value": -0.045
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": 0.0158
         }
       ],
       "raw_stats": {
-        "pick_xfip": 3.47,
-        "opp_xfip": 5.668,
-        "pick_oaa": 19,
-        "opp_oaa": 12,
+        "pick_xfip": 5.221,
+        "opp_xfip": 2.82,
+        "pick_oaa": 6,
+        "opp_oaa": -11,
         "pick_bp_pitches": 0,
         "opp_bp_pitches": 0,
         "pick_bp_xfip": 4.35,
@@ -90,7 +98,7 @@
         "ump_name": "",
         "pick_home_w": 0,
         "pick_home_l": 0,
-        "pinnacle_ml_open": -134.0,
+        "pinnacle_ml_open": 158.0,
         "pick_bullpen_recent_xfip": null,
         "opp_bullpen_recent_xfip": null,
         "opp_starter_hand": "R",
@@ -100,55 +108,225 @@
         "adjustments": [
           {
             "label": "Pitcher quality (xFIP)",
-            "pp": 1.95,
-            "positive": true,
+            "pp": -2.26,
+            "positive": false,
             "group": "pitcher"
           },
           {
             "label": "Home field",
-            "pp": -0.19,
+            "pp": -1.12,
             "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.39,
+            "positive": true,
             "group": "team"
           }
         ],
-        "total_adj_pp": 1.76,
+        "total_adj_pp": -2.99,
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "Starter quality differential drives this pick: Justin Wrobleski (3.47 xFIP) has a measurable edge over Ryne Nelson (5.67 xFIP) \u2014 model prices LAD at 62.9% to win; Pinnacle implies 55.9% (-128) \u2014 a 7.0-point gap. Note: LAD's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Note: unconfirmed lineup, unconfirmed opponent lineup \u2014 the model applies a modest shrinkage toward 50% under these conditions. Edge persists after adjustment.",
+      "narrative": "Jes\u00fas Luzardo (2.82 xFIP) has a quality edge over Anthony Kay (5.22), yet the market has over-discounted CHW: model prices CHW at 45.4% to win; Pinnacle implies 37.8% (+166) \u2014 a 7.6-point gap. Note: CHW's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Key risk: Jes\u00fas Luzardo (2.82 xFIP) is the sharper starter \u2014 a 2.40-point gap that has to be overcome by CHW's other model signals. This pick requires those signals to hold.",
       "run_line": {
-        "spread": "1.5",
-        "model_prob": 0.8442,
-        "fair_odds": "-542",
-        "book_odds": null,
-        "edge": null
+        "spread": "+1.5",
+        "model_prob": 0.6735,
+        "fair_odds": "-206",
+        "book_odds": -125,
+        "edge": 0.1179
       },
       "total": null,
-      "current_edge": 0.0435,
-      "current_model_prob": 0.6068,
-      "current_refresh_time": "9:17 PM CT",
+      "current_edge": 0.0781,
+      "current_model_prob": 0.454,
+      "current_refresh_time": "11:00 AM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Justin Wrobleski",
-      "current_fair_odds": "-154",
-      "current_playable_to": -142,
+      "current_pitcher": "Anthony Kay",
+      "current_fair_odds": "+120",
+      "current_playable_to": 130,
       "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": false,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": 2.0,
-          "positive": true
-        },
-        {
-          "label": "Lineup quality",
-          "pp": -0.95,
+          "pp": -2.26,
           "positive": false
         },
         {
           "label": "Home field",
-          "pp": -0.19,
+          "pp": -1.12,
+          "positive": false
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": 0.39,
+          "positive": true
+        }
+      ],
+      "verdict": "\u2b07\ufe0f REDUCED CONF.",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "away_worse_sp_fip",
+      "is_flagged": true
+    },
+    {
+      "game": "WSH @ ARI",
+      "pick": "WSH",
+      "side": "AWAY",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Foster Griffin",
+      "posted_at": "6:00 AM CT",
+      "game_time": "2026-06-06T01:40:00Z",
+      "temp_f": 72.0,
+      "wind_speed_mph": 0.0,
+      "wind_dir_degrees": 0.0,
+      "is_domed": true,
+      "model_prob": 0.5236,
+      "market_prob": 0.45,
+      "edge": 0.0691,
+      "ev_per_100": 15.19,
+      "odds": 120,
+      "best_odds": 120,
+      "best_book": "ProphetX",
+      "fair_odds": "-110",
+      "playable_to": -101,
+      "break_even": 0.4545,
+      "kelly_units": 1.58,
+      "line_open": 117,
+      "line_current": 117,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 116,
+        "Novig": 118,
+        "LowVig": 115,
+        "BetOnline": 115,
+        "Bovada": 113,
+        "ESPN Bet": 115,
+        "DraftKings": 113,
+        "Pinnacle": 117,
+        "ProphetX": 120,
+        "BetRivers": 114,
+        "BetMGM": 110,
+        "Betway": 115,
+        "MyBookie": 114,
+        "BetUS": 116,
+        "Hard Rock": 115
+      },
+      "pitcher": "Foster Griffin",
+      "opp_pitcher": "Merrill Kelly",
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 0.74
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": -0.0167
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 5.075,
+        "opp_xfip": 5.854,
+        "pick_oaa": -7,
+        "opp_oaa": 11,
+        "pick_bp_pitches": 0,
+        "opp_bp_pitches": 0,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": null,
+        "opp_whiff_pct": null,
+        "pick_kbb_pct": null,
+        "opp_kbb_pct": null,
+        "pick_bvp_shift": null,
+        "pick_arsenal_fit": null,
+        "opp_arsenal_fit": null,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": null,
+        "opp_proj_ip": null,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "pick_siera": null,
+        "opp_siera": null,
+        "ump_name": "",
+        "pick_home_w": 0,
+        "pick_home_l": 0,
+        "pinnacle_ml_open": 117.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 0.74,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.42,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Home field",
+            "pp": -0.2,
+            "positive": false,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 0.12,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Pitching matchup creates the primary edge: Foster Griffin (5.08 xFIP) has a measurable edge over Merrill Kelly (5.85 xFIP) \u2014 model prices WSH at 52.4% to win; Pinnacle implies 45.0% (+120) \u2014 a 7.4-point gap. Note: WSH's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Note: unconfirmed lineup, unconfirmed opponent lineup \u2014 the model applies a modest shrinkage toward 50% under these conditions. Edge persists after adjustment.",
+      "run_line": {
+        "spread": "+1.5",
+        "model_prob": 0.7359,
+        "fair_odds": "-279",
+        "book_odds": -168,
+        "edge": 0.109
+      },
+      "total": null,
+      "current_edge": 0.0691,
+      "current_model_prob": 0.5236,
+      "current_refresh_time": "11:00 AM CT",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Foster Griffin",
+      "current_fair_odds": "-110",
+      "current_playable_to": -101,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 0.74,
+          "positive": true
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": -0.42,
+          "positive": false
+        },
+        {
+          "label": "Home field",
+          "pp": -0.2,
           "positive": false
         }
       ],
@@ -158,230 +336,68 @@
       "is_flagged": false
     },
     {
-      "game": "TOR @ ATL",
-      "pick": "TOR",
-      "side": "AWAY",
+      "game": "MIL @ COL",
+      "pick": "COL",
+      "side": "HOME",
       "pick_type": "MONEYLINE",
-      "meta": "SP: Mason Fluharty",
-      "posted_at": "4:04 PM CT",
-      "game_time": "2026-06-04T23:15:00Z",
-      "temp_f": 72.0,
-      "wind_speed_mph": 5.0,
-      "wind_dir_degrees": 180.0,
+      "meta": "SP: Ryan Feltner",
+      "posted_at": "6:00 AM CT",
+      "game_time": "2026-06-06T00:40:00Z",
+      "temp_f": 73.6,
+      "wind_speed_mph": 4.0,
+      "wind_dir_degrees": 124.0,
       "is_domed": false,
-      "model_prob": 0.3645,
-      "market_prob": 0.3017,
-      "edge": 0.0624,
-      "ev_per_100": 20.65,
-      "odds": 231,
-      "best_odds": 231,
+      "model_prob": 0.4816,
+      "market_prob": 0.4133,
+      "edge": 0.0667,
+      "ev_per_100": 16.07,
+      "odds": 141,
+      "best_odds": 141,
       "best_book": "Novig",
-      "fair_odds": "+174",
-      "playable_to": 190,
-      "break_even": 0.3021,
-      "kelly_units": 0.56,
-      "line_open": 224,
-      "line_current": 224,
+      "fair_odds": "+108",
+      "playable_to": 117,
+      "break_even": 0.4149,
+      "kelly_units": 1.42,
+      "line_open": 136,
+      "line_current": 136,
       "sharp_movement": false,
       "steam_move": false,
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 205,
-        "Novig": 231,
-        "ESPN Bet": 210,
-        "MyBookie": 212,
-        "Betway": 200,
-        "Hard Rock": 210,
-        "Bovada": 220,
-        "ProphetX": 230,
-        "BetRivers": 210,
-        "DraftKings": 210,
-        "BetMGM": 220,
-        "BetUS": 218,
-        "Pinnacle": 224,
-        "BetOnline": 228,
-        "LowVig": 228
+        "FanDuel": 122,
+        "LowVig": 138,
+        "BetOnline": 138,
+        "Novig": 141,
+        "Bovada": 131,
+        "ESPN Bet": 130,
+        "DraftKings": 130,
+        "BetRivers": 130,
+        "BetUS": 136,
+        "Pinnacle": 136,
+        "ProphetX": 140,
+        "Betway": 125,
+        "MyBookie": 129,
+        "BetMGM": 125,
+        "Hard Rock": 125
       },
-      "pitcher": "Mason Fluharty",
-      "opp_pitcher": "Chris Sale",
+      "pitcher": "Ryan Feltner",
+      "opp_pitcher": "Brandon Sproat",
       "factors": [
         {
           "label": "Pitcher Quality (xFIP)",
-          "value": -1.12
+          "value": 0.45
+        },
+        {
+          "label": "Home Field",
+          "value": 0.045
         }
       ],
       "raw_stats": {
-        "pick_xfip": 3.964,
-        "opp_xfip": 2.689,
+        "pick_xfip": 4.951,
+        "opp_xfip": 5.423,
         "pick_oaa": -1,
-        "opp_oaa": 10,
-        "pick_bp_pitches": 0,
-        "opp_bp_pitches": 0,
-        "pick_bp_xfip": 4.35,
-        "opp_bp_xfip": 4.35,
-        "pick_xera": null,
-        "opp_xera": null,
-        "pick_xera_pct": null,
-        "opp_xera_pct": null,
-        "pick_whiff_pct": null,
-        "opp_whiff_pct": null,
-        "pick_kbb_pct": null,
-        "opp_kbb_pct": null,
-        "pick_bvp_shift": null,
-        "pick_arsenal_fit": null,
-        "opp_arsenal_fit": null,
-        "pick_lineup_confirmed": true,
-        "opp_lineup_confirmed": true,
-        "pick_proj_ip": null,
-        "opp_proj_ip": null,
-        "pick_era": null,
-        "opp_era": null,
-        "pick_k_pct": null,
-        "opp_k_pct": null,
-        "pick_siera": null,
-        "opp_siera": null,
-        "ump_name": "Carlos Torres",
-        "pick_home_w": 0,
-        "pick_home_l": 0,
-        "pinnacle_ml_open": 224.0,
-        "pick_bullpen_recent_xfip": null,
-        "opp_bullpen_recent_xfip": null,
-        "opp_starter_hand": "R",
-        "pick_ops_vs_hand": null
-      },
-      "adj_breakdown": {
-        "adjustments": [
-          {
-            "label": "Pitcher quality (xFIP)",
-            "pp": -1.12,
-            "positive": false,
-            "group": "pitcher"
-          },
-          {
-            "label": "Lineup quality",
-            "pp": 0.93,
-            "positive": true,
-            "group": "lineup"
-          },
-          {
-            "label": "Home field",
-            "pp": -0.25,
-            "positive": false,
-            "group": "team"
-          },
-          {
-            "label": "Defense (OAA)",
-            "pp": -0.24,
-            "positive": false,
-            "group": "team"
-          }
-        ],
-        "total_adj_pp": -0.68,
-        "shrink_note": null,
-        "note": "~"
-      },
-      "narrative": "Chris Sale (2.69 xFIP) has a quality edge over Mason Fluharty (3.96), yet the market has over-discounted TOR: model prices TOR at 36.4% to win; Pinnacle implies 30.2% (+231) \u2014 a 6.3-point gap. Both lineups are confirmed \u2014 all lineup-quality and handedness adjustments reflect the actual starting nine, not a projected estimate. Lineup confirmation typically improves model accuracy on those inputs. Key risk: Chris Sale (2.69 xFIP) is the sharper starter \u2014 a 1.27-point gap that has to be overcome by TOR's other model signals. This pick requires those signals to hold.",
-      "run_line": {
-        "spread": "1.5",
-        "model_prob": 0.5591,
-        "fair_odds": "-127",
-        "book_odds": 108,
-        "edge": 0.0783
-      },
-      "total": null,
-      "current_edge": 0.0624,
-      "current_model_prob": 0.3645,
-      "current_refresh_time": "9:17 PM CT",
-      "current_recommendation": "same",
-      "current_flipped_team": null,
-      "current_flipped_edge": null,
-      "current_pitcher": "Mason Fluharty",
-      "current_fair_odds": "+174",
-      "current_playable_to": 190,
-      "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": true,
-      "current_top_factors": [
-        {
-          "label": "Pitcher quality (xFIP)",
-          "pp": -1.12,
-          "positive": false
-        },
-        {
-          "label": "Lineup quality",
-          "pp": 0.93,
-          "positive": true
-        },
-        {
-          "label": "Home field",
-          "pp": -0.25,
-          "positive": false
-        }
-      ],
-      "verdict": "\u2b07\ufe0f REDUCED CONF.",
-      "kelly_multiplier": 1.0,
-      "downgrade_reasons": "away_worse_sp_fip",
-      "is_flagged": true
-    },
-    {
-      "game": "KC @ MIN",
-      "pick": "MIN",
-      "side": "HOME",
-      "pick_type": "MONEYLINE",
-      "meta": "SP: Andrew Morris",
-      "posted_at": "5:52 AM CT",
-      "game_time": "2026-06-04T23:40:00Z",
-      "temp_f": 72.0,
-      "wind_speed_mph": 0.0,
-      "wind_dir_degrees": 0.0,
-      "is_domed": true,
-      "model_prob": 0.5493,
-      "market_prob": 0.4884,
-      "edge": 0.0543,
-      "ev_per_100": 10.96,
-      "odds": 102,
-      "best_odds": 102,
-      "best_book": "ProphetX",
-      "fair_odds": "-122",
-      "playable_to": -112,
-      "break_even": 0.495,
-      "kelly_units": 1.34,
-      "line_open": 100,
-      "line_current": 100,
-      "sharp_movement": false,
-      "steam_move": false,
-      "model_total": null,
-      "market_total": null,
-      "book_odds": {
-        "FanDuel": -102,
-        "ESPN Bet": 100,
-        "Betway": 100,
-        "MyBookie": -103,
-        "Hard Rock": 100,
-        "Bovada": 101,
-        "ProphetX": 103,
-        "Novig": 105,
-        "BetRivers": -106,
-        "BetMGM": -105,
-        "LowVig": -102,
-        "BetOnline": -102,
-        "DraftKings": -102,
-        "BetUS": -102,
-        "Pinnacle": 103
-      },
-      "pitcher": "Andrew Morris",
-      "opp_pitcher": "Seth Lugo",
-      "factors": [
-        {
-          "label": "Defense (OAA)",
-          "value": -0.017
-        }
-      ],
-      "raw_stats": {
-        "pick_xfip": 4.08,
-        "opp_xfip": 4.017,
-        "pick_oaa": -12,
-        "opp_oaa": 6,
+        "opp_oaa": -5,
         "pick_bp_pitches": 0,
         "opp_bp_pitches": 0,
         "pick_bp_xfip": 4.35,
@@ -410,7 +426,7 @@
         "ump_name": "",
         "pick_home_w": 0,
         "pick_home_l": 0,
-        "pinnacle_ml_open": 100.0,
+        "pinnacle_ml_open": 136.0,
         "pick_bullpen_recent_xfip": null,
         "opp_bullpen_recent_xfip": null,
         "opp_starter_hand": "R",
@@ -419,111 +435,135 @@
       "adj_breakdown": {
         "adjustments": [
           {
-            "label": "Defense (OAA)",
-            "pp": -0.42,
-            "positive": false,
+            "label": "Home field",
+            "pp": 1.12,
+            "positive": true,
             "group": "team"
           },
           {
-            "label": "Home field",
-            "pp": 0.2,
+            "label": "Pitcher quality (xFIP)",
+            "pp": 0.45,
             "positive": true,
-            "group": "team"
+            "group": "pitcher"
           }
         ],
-        "total_adj_pp": -0.22,
+        "total_adj_pp": 1.57,
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "A multi-factor convergence edge: an even pitching matchup (Andrew Morris 4.08 vs. Seth Lugo 4.02 xFIP), with defense (oaa) adding to the baseline. No single signal dominates \u2014 the probability gap of 6.1pp reflects several independent inputs each pushing in the same direction. The model's fair price is -122 vs. the +102 available. Model prices MIN at 54.9% to win; Pinnacle implies 48.8% (+102) \u2014 a 6.1-point gap. Both lineups are confirmed \u2014 all lineup-quality and handedness adjustments reflect the actual starting nine, not a projected estimate. Lineup confirmation typically improves model accuracy on those inputs.",
+      "narrative": "Model identifies a clear starter quality gap: Ryan Feltner (4.95 xFIP) has a measurable edge over Brandon Sproat (5.42 xFIP) \u2014 model prices COL at 48.2% to win; Pinnacle implies 41.3% (+141) \u2014 a 6.8-point gap. Note: COL's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Note: unconfirmed lineup, unconfirmed opponent lineup \u2014 the model applies a modest shrinkage toward 50% under these conditions. Edge persists after adjustment.",
       "run_line": {
         "spread": "-1.5",
-        "model_prob": 0.3866,
-        "fair_odds": "+159",
+        "model_prob": 0.3216,
+        "fair_odds": "+211",
         "book_odds": null,
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0548,
-      "current_model_prob": 0.5426,
-      "current_refresh_time": "9:17 PM CT",
+      "current_edge": 0.0667,
+      "current_model_prob": 0.4816,
+      "current_refresh_time": "11:00 AM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Andrew Morris",
-      "current_fair_odds": "-119",
-      "current_playable_to": -109,
-      "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": true,
+      "current_pitcher": "Ryan Feltner",
+      "current_fair_odds": "+108",
+      "current_playable_to": 117,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
       "current_top_factors": [
         {
-          "label": "Defense (OAA)",
-          "pp": -0.42,
-          "positive": false
-        },
-        {
           "label": "Home field",
-          "pp": 0.2,
+          "pp": 1.12,
           "positive": true
         },
         {
-          "label": "Lineup quality",
-          "pp": 0.16,
+          "label": "Pitcher quality (xFIP)",
+          "pp": 0.45,
+          "positive": true
+        },
+        {
+          "label": "Starter rest",
+          "pp": 0.12,
           "positive": true
         }
       ],
-      "verdict": "\ud83d\udfe1 CONDITIONAL",
+      "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
       "is_flagged": false
     },
     {
-      "game": "BAL @ BOS",
-      "pick": "BAL",
+      "game": "MET @ SD",
+      "pick": "MET",
       "side": "AWAY",
       "pick_type": "MONEYLINE",
-      "meta": "SP: Trevor Rogers",
-      "posted_at": "5:52 AM CT",
-      "game_time": "2026-06-04T17:35:00Z",
-      "temp_f": 72.0,
-      "wind_speed_mph": 5.0,
-      "wind_dir_degrees": 180.0,
+      "meta": "SP: Christian Scott",
+      "posted_at": "6:00 AM CT",
+      "game_time": "2026-06-06T01:40:00Z",
+      "temp_f": 61.7,
+      "wind_speed_mph": 2.9,
+      "wind_dir_degrees": 184.0,
       "is_domed": false,
-      "model_prob": 0.5331,
-      "market_prob": 0.4782,
-      "edge": 0.0477,
-      "ev_per_100": 9.82,
-      "odds": 106,
-      "best_odds": 106,
-      "best_book": "ProphetX",
-      "fair_odds": "-114",
-      "playable_to": -105,
-      "break_even": 0.4854,
-      "kelly_units": 1.16,
-      "line_open": 104,
-      "line_current": 104,
+      "model_prob": 0.5144,
+      "market_prob": 0.4472,
+      "edge": 0.0639,
+      "ev_per_100": 14.2,
+      "odds": 122,
+      "best_odds": 122,
+      "best_book": "Novig",
+      "fair_odds": "-106",
+      "playable_to": 102,
+      "break_even": 0.4505,
+      "kelly_units": 1.45,
+      "line_open": 118,
+      "line_current": 118,
       "sharp_movement": false,
       "steam_move": false,
       "model_total": null,
       "market_total": null,
-      "book_odds": {},
-      "pitcher": "Trevor Rogers",
-      "opp_pitcher": "Brayan Bello",
+      "book_odds": {
+        "FanDuel": 112,
+        "Novig": 122,
+        "BetOnline": 113,
+        "LowVig": 113,
+        "ESPN Bet": 110,
+        "Bovada": 114,
+        "DraftKings": 109,
+        "BetRivers": 110,
+        "BetUS": 114,
+        "Pinnacle": 118,
+        "ProphetX": 118,
+        "BetMGM": 110,
+        "Betway": 110,
+        "MyBookie": 111,
+        "Hard Rock": 110
+      },
+      "pitcher": "Christian Scott",
+      "opp_pitcher": "Michael King",
       "factors": [
         {
           "label": "Pitcher Quality (xFIP)",
-          "value": 1.09
+          "value": 0.82
+        },
+        {
+          "label": "Travel / Rest",
+          "value": 0.024
         },
         {
           "label": "Defense (OAA)",
-          "value": -0.025
+          "value": -0.0201
+        },
+        {
+          "label": "Home Field",
+          "value": -0.017
         }
       ],
       "raw_stats": {
-        "pick_xfip": 5.028,
-        "opp_xfip": 6.176,
-        "pick_oaa": -11,
-        "opp_oaa": 17,
+        "pick_xfip": 3.141,
+        "opp_xfip": 4.003,
+        "pick_oaa": -9,
+        "opp_oaa": 13,
         "pick_bp_pitches": 0,
         "opp_bp_pitches": 0,
         "pick_bp_xfip": 4.35,
@@ -552,7 +592,7 @@
         "ump_name": "",
         "pick_home_w": 0,
         "pick_home_l": 0,
-        "pinnacle_ml_open": 104.0,
+        "pinnacle_ml_open": 118.0,
         "pick_bullpen_recent_xfip": null,
         "opp_bullpen_recent_xfip": null,
         "opp_starter_hand": "R",
@@ -562,55 +602,71 @@
         "adjustments": [
           {
             "label": "Pitcher quality (xFIP)",
-            "pp": 1.09,
+            "pp": 0.82,
             "positive": true,
             "group": "pitcher"
           },
           {
-            "label": "Defense (OAA)",
-            "pp": -0.62,
-            "positive": false,
-            "group": "team"
-          },
-          {
-            "label": "Day/night",
-            "pp": 0.37,
+            "label": "Travel/B2B",
+            "pp": 0.6,
             "positive": true,
             "group": "schedule"
           },
           {
+            "label": "Defense (OAA)",
+            "pp": -0.5,
+            "positive": false,
+            "group": "team"
+          },
+          {
             "label": "Home field",
-            "pp": -0.2,
+            "pp": -0.42,
             "positive": false,
             "group": "team"
           }
         ],
-        "total_adj_pp": 0.64,
+        "total_adj_pp": 0.5,
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "Model identifies a meaningful starter quality gap: Trevor Rogers (5.03 xFIP) has a measurable edge over Brayan Bello (6.18 xFIP) \u2014 model prices BAL at 53.3% to win; Pinnacle implies 47.8% (+106) \u2014 a 5.5-point gap. Both lineups are confirmed \u2014 all lineup-quality and handedness adjustments reflect the actual starting nine, not a projected estimate. Lineup confirmation typically improves model accuracy on those inputs.",
+      "narrative": "The market is mispricing a significant starter advantage: Christian Scott (3.14 xFIP) has a measurable edge over Michael King (4.00 xFIP) \u2014 model prices MET at 51.4% to win; Pinnacle implies 44.7% (+122) \u2014 a 6.7-point gap. Note: MET's lineup is projected, not confirmed \u2014 the lineup-quality adjustment uses a team-baseline blend. Verify the actual lineup before wagering; late roster changes could shift the edge. Note: unconfirmed lineup, unconfirmed opponent lineup \u2014 the model applies a modest shrinkage toward 50% under these conditions. Edge persists after adjustment.",
       "run_line": {
-        "spread": "1.5",
-        "model_prob": 0.7515,
-        "fair_odds": "-302",
-        "book_odds": -185,
-        "edge": 0.1024
+        "spread": "+1.5",
+        "model_prob": 0.761,
+        "fair_odds": "-318",
+        "book_odds": -186,
+        "edge": 0.1107
       },
       "total": null,
-      "current_edge": null,
-      "current_model_prob": null,
-      "current_refresh_time": "9:17 PM CT",
-      "current_recommendation": null,
+      "current_edge": 0.064,
+      "current_model_prob": 0.5144,
+      "current_refresh_time": "11:00 AM CT",
+      "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": null,
-      "current_fair_odds": null,
-      "current_playable_to": null,
-      "current_lineup_confirmed": null,
-      "current_opp_lineup_confirmed": null,
-      "current_top_factors": [],
-      "verdict": "\ud83d\udfe1 CONDITIONAL",
+      "current_pitcher": "Christian Scott",
+      "current_fair_odds": "-106",
+      "current_playable_to": 102,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 0.82,
+          "positive": true
+        },
+        {
+          "label": "Travel/schedule",
+          "pp": 0.6,
+          "positive": true
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": -0.5,
+          "positive": false
+        }
+      ],
+      "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
       "is_flagged": false
@@ -620,216 +676,62 @@
   "games_today": 4,
   "yesterday_picks": [
     {
-      "game": "MIA @ WSH",
-      "pick": "WSH",
-      "pitcher": "Andrew Alvarez",
-      "odds": -102,
-      "edge": 0.0353,
-      "result": "L",
-      "clv": -0.0023,
-      "pnl_u": -1.0
-    },
-    {
-      "game": "DET @ TB",
-      "pick": "TB",
-      "pitcher": "Nick Martinez",
-      "odds": -136,
-      "edge": 0.0057,
-      "result": "L",
-      "clv": -0.0,
-      "pnl_u": -1.0
-    },
-    {
-      "game": "CHW @ MIN",
-      "pick": "MIN",
-      "pitcher": "Taj Bradley",
-      "odds": -140,
-      "edge": 0.0412,
-      "result": "L",
-      "clv": -0.0088,
-      "pnl_u": -1.0
-    },
-    {
-      "game": "SD @ PHI",
-      "pick": "SD",
-      "pitcher": "Walker Buehler",
-      "odds": 198,
-      "edge": 0.0468,
-      "result": "L",
-      "clv": -0.0004,
-      "pnl_u": -1.0
-    },
-    {
       "game": "BAL @ BOS",
-      "pick": "BOS",
-      "pitcher": "Payton Tolle",
-      "odds": -141,
-      "edge": 0.0037,
+      "pick": "BAL",
+      "pitcher": "Trevor Rogers",
+      "odds": 106,
+      "edge": 0.0477,
       "result": "W",
-      "clv": 0.0,
-      "pnl_u": 0.71
+      "clv": -0.0024,
+      "pnl_u": 1.06
     },
     {
-      "game": "CLE @ NYY",
-      "pick": "NYY",
-      "pitcher": "Gerrit Cole",
-      "odds": -142,
-      "edge": 0.0245,
+      "game": "KC @ MIN",
+      "pick": "MIN",
+      "pitcher": "Andrew Morris",
+      "odds": 102,
+      "edge": 0.0543,
       "result": "L",
-      "clv": 0.0007,
+      "clv": -0.0025,
       "pnl_u": -1.0
-    },
-    {
-      "game": "KC @ CIN",
-      "pick": "CIN",
-      "pitcher": "Chase Burns",
-      "odds": -146,
-      "edge": 0.0049,
-      "result": "L",
-      "clv": -0.0016,
-      "pnl_u": -1.0
-    },
-    {
-      "game": "TOR @ ATL",
-      "pick": "ATL",
-      "pitcher": "Grant Holmes",
-      "odds": -134,
-      "edge": 0.0238,
-      "result": "W",
-      "clv": -0.0048,
-      "pnl_u": 0.75
-    },
-    {
-      "game": "SF @ MIL",
-      "pick": "SF",
-      "pitcher": "Logan Webb",
-      "odds": 136,
-      "edge": 0.0026,
-      "result": "W",
-      "clv": 0.0025,
-      "pnl_u": 1.36
-    },
-    {
-      "game": "TEX @ STL",
-      "pick": "TEX",
-      "pitcher": "MacKenzie Gore",
-      "odds": 107,
-      "edge": 0.0203,
-      "result": "L",
-      "clv": 0.0011,
-      "pnl_u": -1.0
-    },
-    {
-      "game": "OAK @ CHC",
-      "pick": "OAK",
-      "pitcher": "Jeffrey Springs",
-      "odds": 118,
-      "edge": 0.0073,
-      "result": "W",
-      "clv": -0.0,
-      "pnl_u": 1.18
-    },
-    {
-      "game": "PIT @ HOU",
-      "pick": "HOU",
-      "pitcher": "Spencer Arrighetti",
-      "odds": 144,
-      "edge": 0.0184,
-      "result": "W",
-      "clv": 0.0,
-      "pnl_u": 1.44
-    },
-    {
-      "game": "COL @ LAA",
-      "pick": "LAA",
-      "pitcher": "Walbert Ure\u00f1a",
-      "odds": -140,
-      "edge": 0.005,
-      "result": "W",
-      "clv": -0.0018,
-      "pnl_u": 0.71
     },
     {
       "game": "LAD @ ARI",
       "pick": "LAD",
-      "pitcher": "Shohei Ohtani",
-      "odds": -179,
-      "edge": 0.0404,
+      "pitcher": "Justin Wrobleski",
+      "odds": -128,
+      "edge": 0.0673,
+      "result": "L",
+      "clv": -0.0005,
+      "pnl_u": -1.0
+    },
+    {
+      "game": "TOR @ ATL",
+      "pick": "TOR",
+      "pitcher": "Mason Fluharty",
+      "odds": 231,
+      "edge": 0.0624,
       "result": "W",
-      "clv": 0.0009,
-      "pnl_u": 0.56
+      "clv": 0.0003,
+      "pnl_u": 2.31
     }
   ],
   "correlated_warning": null,
   "season": {
-    "wins": 215,
-    "losses": 190,
-    "units": 55.02,
-    "bets": 405,
-    "roi": 0.1359
+    "wins": 216,
+    "losses": 192,
+    "units": 55.33,
+    "bets": 408,
+    "roi": 0.1356
   },
   "last7": {
-    "wins": 39,
-    "losses": 38,
-    "units": 1.63,
-    "roi": 0.0212,
-    "bets": 77
+    "wins": 34,
+    "losses": 40,
+    "units": -4.5,
+    "roi": -0.0608,
+    "bets": 74
   },
   "week_picks": [
-    {
-      "date": "2026-05-28",
-      "pick": "HOU",
-      "game": "HOU @ TEX",
-      "odds": 124,
-      "edge": 0.004,
-      "result": "W",
-      "pnl_u": 1.24
-    },
-    {
-      "date": "2026-05-28",
-      "pick": "CHC",
-      "game": "CHC @ PIT",
-      "odds": 147,
-      "edge": 0.007,
-      "result": "W",
-      "pnl_u": 1.47
-    },
-    {
-      "date": "2026-05-28",
-      "pick": "TOR",
-      "game": "TOR @ BAL",
-      "odds": 114,
-      "edge": 0.013,
-      "result": "W",
-      "pnl_u": 1.14
-    },
-    {
-      "date": "2026-05-28",
-      "pick": "ATL",
-      "game": "ATL @ BOS",
-      "odds": -130,
-      "edge": 0.012,
-      "result": "W",
-      "pnl_u": 0.77
-    },
-    {
-      "date": "2026-05-28",
-      "pick": "CHW",
-      "game": "MIN @ CHW",
-      "odds": -148,
-      "edge": 0.025,
-      "result": "W",
-      "pnl_u": 0.68
-    },
-    {
-      "date": "2026-05-28",
-      "pick": "LAA",
-      "game": "LAA @ DET",
-      "odds": 114,
-      "edge": 0.051,
-      "result": "W",
-      "pnl_u": 1.14
-    },
     {
       "date": "2026-05-29",
       "pick": "CIN",
@@ -1360,14 +1262,23 @@
       "edge": 0.04,
       "result": "W",
       "pnl_u": 0.56
+    },
+    {
+      "date": "2026-06-04",
+      "pick": "LAD",
+      "game": "LAD @ ARI",
+      "odds": -128,
+      "edge": 0.067,
+      "result": "L",
+      "pnl_u": -1.0
     }
   ],
   "last30": {
-    "wins": 13,
-    "losses": 17,
-    "units": -4.08
+    "wins": 11,
+    "losses": 19,
+    "units": -5.96
   },
   "avg_clv": 0.0024,
-  "clv_count": 346,
-  "clv_positive_pct": 0.488
+  "clv_count": 349,
+  "clv_positive_pct": 0.487
 }
