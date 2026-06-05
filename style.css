@@ -20,6 +20,24 @@
   --nav-h:     56px;
 }
 
+/* Accessibility: honour the OS "reduce motion" setting — kills the pulsing
+   live dots, skeleton shimmer, and bar transitions for motion-sensitive users. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessibility: visible keyboard-focus ring (site had none) */
+:focus-visible {
+  outline: 2px solid var(--indigo-lt);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
 body {
   background: var(--bg);
   color: var(--text);
