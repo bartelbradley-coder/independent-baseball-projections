@@ -1234,8 +1234,8 @@
   border: 1px solid var(--border); border-radius: 12px;
 }
 .evidence-heading {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.18em;
-  text-transform: uppercase; color: var(--text-4); margin-bottom: 18px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--text-3); margin-bottom: 18px;
 }
 .evidence-grid {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
@@ -2156,13 +2156,11 @@
 
   <!-- CONTEXT BAR: today's slate — leads with outcome, not process -->
   <div class="today-context">
-    <span id="signal-count">—</span> picks posted today
+    <span id="signal-count">—</span> picks today
     <span class="tc-sep">·</span>
     <span id="games-scanned">—</span> games modeled
     <span class="tc-sep">·</span>
     Posted <span id="ctx-posted-time">—</span>
-    <span class="tc-sep">·</span>
-    edge vs. Pinnacle no-vig
   </div>
 
   <!-- PICKS HEADER BLOCK: performance stats + sizing controls -->
@@ -3187,7 +3185,7 @@ function renderEvidenceSection(data, perf) {
     <div class="evidence-claim">
       <div class="ec-stat">${clv || '—'}</div>
       <div class="ec-label">Average Closing Line Value</div>
-      <div class="ec-desc">The market consistently moves toward posted picks after 9:30 AM — confirming the model finds real edge before it's fully priced in.${posPct ? ' ' + posPct + ' of ' + clvCount + ' picks beat the close.' : ''} ${trendStr}</div>
+      <div class="ec-desc">On average, posted picks have closed better than the release price across the tracked sample — a signal that the model identifies edge before it's fully priced in.${posPct ? ' ' + posPct + ' of ' + clvCount + ' picks beat the close.' : ''} ${trendStr}</div>
     </div>
     <div class="evidence-claim">
       <div class="ec-stat">${roi || '—'}</div>
@@ -3195,7 +3193,7 @@ function renderEvidenceSection(data, perf) {
       <div class="ec-desc">Every pick is logged with a timestamp before first pitch. Results are never deleted or retroactively modified. Live season results reported separately from any historical backtesting.</div>
     </div>
     <div class="evidence-claim">
-      <div class="ec-stat amber">32</div>
+      <div class="ec-stat amber">33</div>
       <div class="ec-label">Model adjustments per game</div>
       <div class="ec-desc">Dual-Poisson base with 33 log-odds adjustments: pitcher quality (xFIP), lineup confirmation, park factors, weather, umpire tendencies, bullpen quality, BvP matchups, arsenal fit, line movement, and more. Platt-calibrated monthly on 2026 live data.</div>
     </div>`;
