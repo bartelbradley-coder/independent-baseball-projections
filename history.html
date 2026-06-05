@@ -249,11 +249,9 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
   <div class="live-metrics-note">
     <span>📊 Live results reflect posted picks only. Backtested validation is shown separately below.</span>
   </div>
-  <div class="live-metrics-row" id="live-metrics-row">
-    <div class="lm-card"><div class="lm-lbl">Record</div><div class="lm-val" id="lm-record">—</div></div>
-    <div class="lm-card"><div class="lm-lbl">Win Rate</div><div class="lm-val" id="lm-winrate">—</div></div>
-    <div class="lm-card"><div class="lm-lbl">Last Updated</div><div class="lm-val" id="lm-updated">—</div></div>
-  </div>
+  <!-- Mini Record/Win-Rate/Updated strip removed — Record & Win Rate are shown in
+       the richer summary pills below, and Last Updated is in the nav (deduped). -->
+
 
   <!-- Transparency Standards -->
   <section class="transparency-section">
@@ -464,12 +462,17 @@ async function loadAll() {
     const pAugmented = applyTodayToPerf(p, newSettled);
 
     // Populate live metrics row (augmented with today's settled picks)
+    // Mini live-metrics strip was removed (deduped); guard writes in case the
+    // markup is ever restored so this never throws on a missing element.
     const sAug = pAugmented && pAugmented.season;
     if (sAug) {
-      document.getElementById('lm-record').textContent = sAug.wins + 'W–' + sAug.losses + 'L';
+      const _lr = document.getElementById('lm-record');
+      if (_lr) _lr.textContent = sAug.wins + 'W–' + sAug.losses + 'L';
       const wr = (sAug.wins + sAug.losses) > 0 ? sAug.wins / (sAug.wins + sAug.losses) : 0;
-      document.getElementById('lm-winrate').textContent = (wr * 100).toFixed(1) + '%';
-      if (pAugmented.updated_at) document.getElementById('lm-updated').textContent = pAugmented.updated_at;
+      const _lw = document.getElementById('lm-winrate');
+      if (_lw) _lw.textContent = (wr * 100).toFixed(1) + '%';
+      const _lu = document.getElementById('lm-updated');
+      if (_lu && pAugmented.updated_at) _lu.textContent = pAugmented.updated_at;
     }
 
     renderSummary(allRows);
