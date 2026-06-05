@@ -1657,9 +1657,9 @@
 .share-modal-overlay.hidden { display: none; }
 .share-modal-box {
   background: #0f1829; border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 14px; max-width: 600px; width: 100%;
+  border-radius: 14px; width: min(92vw, 700px);
   overflow: hidden; display: flex; flex-direction: column;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.7);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.7); flex-shrink: 0;
 }
 .share-modal-hdr {
   display: flex; align-items: center; justify-content: space-between;
@@ -1676,8 +1676,8 @@
 }
 .share-modal-close:hover { color: var(--text-1); background: rgba(255,255,255,0.09); }
 .share-modal-preview {
-  padding: 24px; display: flex; justify-content: center; align-items: flex-start;
-  background: #06090f; overflow: auto;
+  padding: 0; display: flex; justify-content: center; align-items: flex-start;
+  background: #06090f; overflow: hidden; position: relative;
 }
 /* Scale wrapper: the .sc.sq card is 1080px wide; we scale it down to fit */
 .share-modal-scale {
@@ -2610,16 +2610,22 @@ function sharePickCard(id) {
   // Build card HTML and inject
   preview.innerHTML = _buildShareCardHTML(p);
 
-  // Scale the 1080px card to fit inside the modal preview area
+  // Scale the 1080×1080 card to fit the modal preview area
+  // Use top-center origin so the card stays horizontally centred when scaled
   const scaledEl = document.getElementById('share-card-el');
   if (scaledEl) {
-    const maxW = Math.min(window.innerWidth - 96, 540);
-    const scale = maxW / 1080;
-    scaledEl.style.transform = `scale(${scale})`;
-    scaledEl.style.transformOrigin = 'top left';
-    preview.style.height = Math.round(1080 * scale) + 'px';
-    preview.style.alignItems = 'flex-start';
-    preview.style.overflow = 'hidden';
+    const modalBox = document.querySelector('.share-modal-box');
+    const boxW     = modalBox ? modalBox.offsetWidth : Math.min(window.innerWidth * 0.92, 700);
+    const maxH     = window.innerHeight * 0.65; // leave room for toolbar + actions
+    const scaleByW = boxW / 1080;
+    const scaleByH = maxH / 1080;
+    const scale    = Math.min(scaleByW, scaleByH, 1); // never upscale
+    const scaledH  = Math.round(1080 * scale);
+    scaledEl.style.transform      = `scale(${scale})`;
+    scaledEl.style.transformOrigin = 'top center';
+    // Size the preview container to exactly the scaled height; card is centred by flex
+    preview.style.height   = scaledH + 'px';
+    preview.style.minHeight = scaledH + 'px';
   }
 
   // Show native share button if available (mobile)
