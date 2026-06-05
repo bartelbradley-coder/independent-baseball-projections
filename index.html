@@ -1709,191 +1709,113 @@
   font-size: 10px; color: var(--text-4); font-style: italic;
 }
 
-/* ── V5 share card styles — inside modal ── */
+/* ── Approved share card — 6-section design, 1080×1080 ── */
+/* Heights: 62+198+280+200+150+190 = 1080px */
 .sc-modal {
   font-family: "Inter", sans-serif;
   display: flex; flex-direction: column;
   position: relative; overflow: hidden; flex-shrink: 0;
-  background: #06090f;
-  width: 1080px; height: 1080px;
+  background: #060910; width: 1080px; height: 1080px;
 }
 .sc-modal::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; z-index: 10;
-  background: linear-gradient(90deg, #22c55e, rgba(34,197,94,.15));
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 4px; z-index: 2;
 }
-.sc-modal::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 52%;
-  background: radial-gradient(ellipse 100% 100% at 35% -20%, rgba(34,197,94,.065) 0%, transparent 100%);
+.sc-modal.val::before  { background: linear-gradient(175deg,#22c55e 0%,rgba(34,197,94,.08) 100%); }
+.sc-modal.cond::before { background: linear-gradient(175deg,#f59e0b 0%,rgba(245,158,11,.06) 100%); }
+.sc-modal.val::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 380px;
+  background: radial-gradient(ellipse 110% 380px at 45% -60px,rgba(34,197,94,.075) 0%,transparent 100%);
+  pointer-events: none; z-index: 0;
+}
+.sc-modal.cond::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 380px;
+  background: radial-gradient(ellipse 110% 380px at 45% -60px,rgba(245,158,11,.06) 0%,transparent 100%);
   pointer-events: none; z-index: 0;
 }
 .sc-modal > * { position: relative; z-index: 1; }
-
-/* Header 58px */
-.scm-hdr {
-  display: flex; align-items: center;
-  padding: 0 48px; height: 58px; flex-shrink: 0;
-  border-bottom: 1px solid rgba(255,255,255,.05);
-}
-.scm-brand { display: flex; align-items: center; gap: 9px; }
-.scm-logo {
-  width: 24px; height: 24px; background: rgba(99,102,241,.11);
-  border: 1px solid rgba(99,102,241,.24); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.scm-wm {
-  font-family: "Barlow Condensed", sans-serif; font-size: 16px; font-weight: 700;
-  letter-spacing: .05em; color: #c0d8ec; line-height: 1;
-}
-.scm-wm .f { color: rgba(192,216,236,.38); font-weight: 400; }
-.scm-sport {
-  font-size: 7px; font-weight: 700; letter-spacing: .18em;
-  text-transform: uppercase; color: #243848; margin-top: 1px;
-}
-.scm-badge {
-  font-size: 9px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
-  padding: 3px 10px; border-radius: 4px; margin: 0 auto;
-  background: rgba(34,197,94,.08); color: #2ecc71; border: 1px solid rgba(34,197,94,.20);
-}
-.scm-date {
-  font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
-  font-weight: 500; color: #4a6880; margin-left: auto;
-}
-
-/* Pick zone 442px */
-.scm-pick {
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 28px 48px 22px; height: 442px; flex-shrink: 0;
-  position: relative; overflow: hidden;
-}
-.scm-wm-bg {
-  position: absolute; right: -30px; bottom: -100px;
-  font-family: "Barlow Condensed", sans-serif;
-  font-size: 520px; font-weight: 900; line-height: 1; letter-spacing: -.02em;
-  pointer-events: none; user-select: none; z-index: 0;
-  color: rgba(255,255,255,.025);
-}
-.scm-pick-inner { position: relative; z-index: 1; }
-.scm-team {
-  font-family: "Barlow Condensed", sans-serif;
-  font-size: 200px; font-weight: 900;
-  color: #f0f8ff; letter-spacing: -.015em; line-height: .84;
-}
-.scm-odds-row { display: flex; align-items: baseline; gap: 14px; margin-top: 14px; }
-.scm-ml {
-  font-family: "Barlow Condensed", sans-serif; font-size: 46px;
-  font-weight: 500; color: #38526a; letter-spacing: .02em;
-}
-.scm-odds {
-  font-family: "Barlow Condensed", sans-serif; font-size: 120px;
-  font-weight: 800; line-height: .88; letter-spacing: -.01em;
-}
-.scm-odds.neg { color: #9da5f8; }
-.scm-odds.pos { color: #f5a523; }
-.scm-stake-row { display: flex; align-items: baseline; gap: 14px; margin-top: 16px; }
-.scm-stake-dollar {
-  font-family: "IBM Plex Mono", monospace; font-size: 48px;
-  font-weight: 700; color: #e8f4ff; line-height: 1;
-}
-.scm-stake-units {
-  font-size: 18px; font-weight: 500; color: #4a6880;
-  font-family: "IBM Plex Mono", monospace;
-}
-.scm-matchup {
-  font-family: "Barlow Condensed", sans-serif; font-size: 22px;
-  font-weight: 600; letter-spacing: .04em; color: #5a7890; margin-top: 14px;
-}
-
-/* Edge + bar zone 298px */
-.scm-edge {
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 26px 48px; height: 298px; flex-shrink: 0;
-  border-top: 1px solid rgba(255,255,255,.05);
-}
-.scm-edge-row { display: flex; align-items: baseline; gap: 14px; margin-bottom: 16px; }
-.scm-edge-num {
-  font-family: "IBM Plex Mono", monospace; font-size: 76px;
-  font-weight: 700; line-height: .92; color: #4ade80;
-}
-.scm-edge-lbl {
-  font-size: 12px; font-weight: 700; letter-spacing: .18em;
-  text-transform: uppercase; align-self: center; color: rgba(74,222,128,.72);
-}
-.scm-pb-labels { display: flex; justify-content: space-between; margin-bottom: 8px; }
-.scm-pb-lbl {
-  font-size: 13px; font-weight: 600; letter-spacing: .04em;
-  text-transform: uppercase; font-family: "Inter", sans-serif;
-}
-.scm-pb-lbl.mkt { color: #4a6880; }
-.scm-pb-lbl.mdl { color: #7dd3fc; }
-.scm-pb-lbl.mkt span, .scm-pb-lbl.mdl span {
-  font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 15px;
-}
-.scm-pb-lbl.mdl span { color: #4ade80; }
-.scm-pb-track {
-  height: 22px; background: rgba(255,255,255,.05); border-radius: 4px;
-  position: relative; overflow: hidden; margin-bottom: 16px;
-}
-.scm-pb-mkt {
-  position: absolute; left: 0; top: 0; bottom: 0;
-  background: rgba(80,110,140,.60); border-radius: 4px 0 0 4px;
-}
-.scm-pb-edge {
-  position: absolute; top: 0; bottom: 0; border-radius: 0 4px 4px 0;
-  background: rgba(74,222,128,.72);
-}
-.scm-action-row { display: flex; align-items: center; gap: 28px; }
-.scm-action-item { display: flex; flex-direction: column; gap: 4px; }
-.scm-action-lbl {
-  font-size: 8.5px; font-weight: 700; letter-spacing: .14em;
-  text-transform: uppercase; color: #2e4250;
-}
-.scm-action-lbl.play { color: #8a6820; }
-.scm-action-val {
-  font-family: "IBM Plex Mono", monospace; font-size: 28px; font-weight: 700;
-}
-.scm-action-val.play { color: #f5a523; }
-.scm-action-val.book { color: #6a90a8; font-size: 22px; }
-.scm-action-div { width: 1px; height: 40px; background: rgba(255,255,255,.06); flex-shrink: 0; }
-
-/* Footer 282px */
-.scm-ftr {
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 24px 48px; height: 282px; flex-shrink: 0;
-  border-top: 1px solid rgba(255,255,255,.055);
-  background: rgba(0,0,0,.22); gap: 10px;
-}
-.scm-driver {
-  font-size: 15px; font-weight: 500; color: #88a8c0;
-  font-family: "Inter", sans-serif; line-height: 1.4;
-}
-.scm-driver strong { color: #aec8dc; font-weight: 600; }
-.scm-drv-kicker {
-  font-size: 8px; font-weight: 700; letter-spacing: .14em;
-  text-transform: uppercase; color: #2e4050; display: block; margin-bottom: 5px;
-}
-.scm-ftr-url {
-  font-family: "Barlow Condensed", sans-serif; font-size: 26px;
-  font-weight: 700; letter-spacing: .06em; color: #486078;
-}
-.scm-ftr-record {
-  font-family: "IBM Plex Mono", monospace; font-size: 12px;
-  color: #3e5668; font-weight: 500;
-}
-.scm-ftr-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.scm-pfi { display: flex; align-items: center; gap: 5px; }
-.scm-pfi-lbl {
-  font-size: 7.5px; font-weight: 700; letter-spacing: .12em;
-  text-transform: uppercase; color: #1e2e3a;
-}
-.scm-pfi-val {
-  font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
-  color: #3e5868; font-weight: 500;
-}
-.scm-pfi-dot { width: 3px; height: 3px; border-radius: 50%; background: #101820; flex-shrink: 0; }
-.scm-ftr-disc {
-  font-size: 9px; color: #1e2e3c; letter-spacing: .02em;
-  font-family: "Inter", sans-serif; line-height: 1.55;
-}
+/* Header */
+.scm-hdr { display:flex;align-items:center;height:62px;flex-shrink:0;padding:0 48px 0 46px;border-bottom:1px solid rgba(255,255,255,.055); }
+.scm-brand { display:flex;align-items:center;gap:11px; }
+.scm-logo { width:34px;height:34px;flex-shrink:0;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.28);border-radius:50%;display:flex;align-items:center;justify-content:center; }
+.scm-wm { font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:700;letter-spacing:.05em;color:#c8dcf0;line-height:1; }
+.scm-wm .f { color:rgba(200,220,240,.42);font-weight:400; }
+.scm-sport { font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#283848;margin-top:1px; }
+.scm-badge { font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:5px;margin:0 auto; }
+.scm-badge.val  { background:rgba(34,197,94,.09);color:#2ecc71;border:1px solid rgba(34,197,94,.24); }
+.scm-badge.cond { background:rgba(245,158,11,.09);color:#f5a523;border:1px solid rgba(245,158,11,.22); }
+.scm-date { font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:500;color:#4a6880;margin-left:auto; }
+/* Lineup */
+.scm-lineup { display:flex;flex-direction:column;justify-content:center;height:198px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055);gap:14px; }
+.scm-matchup-row { display:flex;align-items:center;gap:16px; }
+.scm-matchup-name { font-family:"Barlow Condensed",sans-serif;font-size:24px;font-weight:700;letter-spacing:.04em;color:#7a9ab8; }
+.scm-matchup-sep { color:rgba(255,255,255,.15); }
+.scm-gametime { font-family:"IBM Plex Mono",monospace;font-size:13px;color:#445a6e; }
+.scm-pitchers { display:flex;align-items:baseline;gap:12px;font-family:"Inter",sans-serif;line-height:1.2; }
+.scm-pitcher-pick { font-size:21px;font-weight:700;color:#d4ecff; }
+.scm-pitcher-opp  { font-size:21px;font-weight:700;color:#4a6878; }
+.scm-pitcher-xfip { font-family:"IBM Plex Mono",monospace;font-size:15px;font-weight:600;color:#4a6a80; }
+.scm-pitcher-vs   { font-size:14px;font-weight:400;color:#2e4050;font-family:"Barlow Condensed",sans-serif;letter-spacing:.03em; }
+.scm-lineup-status { display:flex;align-items:center;gap:20px;font-size:14px;font-family:"Inter",sans-serif; }
+.scm-lu-item { display:flex;align-items:center;gap:7px; }
+.scm-lu-dot { width:7px;height:7px;border-radius:50%;flex-shrink:0; }
+.scm-lu-dot.proj { background:#f59e0b; } .scm-lu-dot.conf { background:#22c55e; }
+.scm-lu-team { font-size:14px;font-weight:600;color:#6a8ea8; }
+.scm-lu-stat.proj { color:#d4901a; } .scm-lu-stat.conf { color:#22c55e; }
+.scm-lu-warn { font-size:13px;color:#c08020;margin-left:6px; }
+/* Pick + Stats two-column */
+.scm-pick-stats { display:flex;align-items:stretch;height:280px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.055); }
+.scm-pick-left { flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:0 32px 0 46px;border-right:1px solid rgba(255,255,255,.055);gap:12px; }
+.scm-pick-headline { display:flex;align-items:baseline;gap:14px;line-height:1; }
+.scm-team { font-family:"Barlow Condensed",sans-serif;font-size:130px;font-weight:900;color:#f0f8ff;letter-spacing:-.015em;line-height:.84; }
+.scm-bet-type { font-family:"Barlow Condensed",sans-serif;font-size:52px;font-weight:500;color:#7090a8;letter-spacing:.02em;padding-bottom:8px; }
+.scm-odds { font-family:"Barlow Condensed",sans-serif;font-size:130px;font-weight:800;line-height:.84;letter-spacing:-.01em; }
+.scm-odds.neg { color:#9da5f8; } .scm-odds.pos { color:#f5a523; }
+.scm-stake-row { display:flex;align-items:baseline;gap:14px; }
+.scm-stake-lbl { font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#2e4050;flex-shrink:0; }
+.scm-stake-val { font-family:"IBM Plex Mono",monospace;font-size:36px;font-weight:700;color:#e0f0ff;line-height:1; }
+.scm-stake-note { font-size:12px;color:#334858;font-family:"Inter",sans-serif; }
+.scm-pick-right { width:320px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;padding:0 46px 0 32px;gap:22px; }
+.scm-stat-item { display:flex;flex-direction:column;gap:6px; }
+.scm-stat-lbl { font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#2e4050; }
+.scm-stat-lbl.play { color:#8a6820; }
+.scm-stat-val { font-family:"IBM Plex Mono",monospace;font-size:36px;font-weight:700;line-height:1; }
+.scm-stat-val.play { color:#f5a523; } .scm-stat-val.fair { color:#818cf8; } .scm-stat-val.book { color:#6a90a8;font-size:28px; }
+.scm-stat-sub { font-size:11px;color:#2a3e4e;font-family:"Inter",sans-serif; }
+/* Edge + bar */
+.scm-edge { display:flex;flex-direction:column;justify-content:center;height:200px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055);gap:18px; }
+.scm-edge-top { display:flex;align-items:baseline;gap:18px; }
+.scm-edge-num { font-family:"IBM Plex Mono",monospace;font-size:72px;font-weight:700;line-height:.92; }
+.sc-modal.val  .scm-edge-num { color:#4ade80; }
+.sc-modal.cond .scm-edge-num { color:#f5a523; }
+.scm-edge-kicker { font-size:18px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;align-self:center; }
+.sc-modal.val  .scm-edge-kicker { color:rgba(74,222,128,.88); }
+.sc-modal.cond .scm-edge-kicker { color:rgba(245,165,35,.85); }
+.scm-bar-hdr { display:flex;justify-content:space-between;margin-bottom:9px; }
+.scm-bar-lbl { font-size:14px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;font-family:"Inter",sans-serif; }
+.scm-bar-lbl.mkt { color:#3e5870; } .scm-bar-lbl.mdl { color:#5a80a0; }
+.scm-bar-track { height:20px;background:rgba(255,255,255,.05);border-radius:6px;position:relative;overflow:hidden; }
+.scm-bar-mkt { position:absolute;left:0;top:0;bottom:0;background:rgba(80,110,140,.55);border-radius:6px 0 0 6px; }
+.scm-bar-edg { position:absolute;top:0;bottom:0;border-radius:0 6px 6px 0; }
+.sc-modal.val  .scm-bar-edg { background:rgba(74,222,128,.70); }
+.sc-modal.cond .scm-bar-edg { background:rgba(245,165,35,.70); }
+/* Driver */
+.scm-driver-section { display:flex;align-items:center;height:150px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055); }
+.scm-driver-inner { border-left:3px solid;padding-left:20px; }
+.sc-modal.val  .scm-driver-inner { border-color:rgba(34,197,94,.50); }
+.sc-modal.cond .scm-driver-inner { border-color:rgba(245,158,11,.45); }
+.scm-driver-text { font-family:"Inter",sans-serif;font-size:18px;font-weight:500;color:#90b0c8;line-height:1.48; }
+.scm-driver-text strong { color:#c4dff0;font-weight:600; }
+/* Footer */
+.scm-ftr { display:flex;flex-direction:column;justify-content:space-between;height:190px;flex-shrink:0;padding:22px 46px 20px;background:rgba(0,0,0,.22); }
+.scm-ftr-url { font-family:"Barlow Condensed",sans-serif;font-size:30px;font-weight:700;letter-spacing:.06em;color:#527898; }
+.scm-ftr-record { font-family:"IBM Plex Mono",monospace;font-size:14px;color:#3a5262;font-weight:500;line-height:1.6; }
+.scm-ftr-meta { display:flex;align-items:center;gap:14px;flex-wrap:wrap; }
+.scm-fi { display:flex;align-items:center;gap:6px; }
+.scm-fi-lbl { font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1e2e3a; }
+.scm-fi-val { font-family:"IBM Plex Mono",monospace;font-size:12px;color:#3a5262;font-weight:500; }
+.scm-fi-dot { width:3px;height:3px;border-radius:50%;background:#101820;flex-shrink:0; }
+.scm-ftr-disc { font-size:11px;color:#1e2e3c;letter-spacing:.02em;font-family:"Inter",sans-serif;line-height:1.55; }
 
 /* ── Styled inline disclaimer box ── */
 .site-disclaimer-box {
@@ -2428,106 +2350,145 @@ let _shareCardPickId = null;
 
 // ── Build V5 square card HTML from real pick data ────────────────────────────
 function _buildShareCardHTML(p) {
-  const edgePct   = p.edge  ? (p.edge  * 100).toFixed(1) : '0.0';
-  const modelPct  = p.model_prob  ? (p.model_prob  * 100).toFixed(1) : null;
-  const mktPct    = p.market_prob ? (p.market_prob * 100).toFixed(1) : null;
-  const isDog     = (p.odds || 0) > 0;
+  // ── Data binding from pick object ──────────────────────────────────────────
+  const edgePct  = p.edge ? (p.edge * 100).toFixed(1) : '0.0';
+  const modelPct = p.model_prob  ? (p.model_prob  * 100).toFixed(1) : null;
+  const mktPct   = p.market_prob ? (p.market_prob * 100).toFixed(1) : null;
+  const isDog    = (p.odds || 0) > 0;
+  const team     = (p.pick || '???').toUpperCase();
+  const oddsCls  = isDog ? 'pos' : 'neg';
+  const oddsStr  = formatOdds(p.odds);
 
-  // Team abbreviation — use pick field
-  const team = (p.pick || '???').toUpperCase();
-
-  // Odds string
-  const oddsStr = formatOdds(p.odds);
-  const oddsCls = isDog ? 'pos' : 'neg';
+  // Verdict tier → card accent
+  const v = (p.verdict || '').toUpperCase();
+  const isCond = v.includes('CONDITIONAL') || v.includes('REDUCED');
+  const tierCls = isCond ? 'cond' : 'val';
+  const badgeText = isCond ? 'Conditional Value' : '✓ Official Value Bet';
 
   // Stake
-  const stakeUnits = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '';
+  const stakeUnits = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—';
   const stakeDollar = (_bankroll > 0 && p.kelly_units)
-    ? `<span class="scm-stake-dollar">$${Math.round(p.kelly_units * _bankroll / 100)}</span>` : '';
-  const stakeRow = (stakeUnits || stakeDollar) ? `
-    <div class="scm-stake-row">
-      ${stakeDollar}
-      ${stakeUnits ? `<span class="scm-stake-units">${stakeUnits}</span>` : ''}
-    </div>` : '';
+    ? '$' + Math.round(p.kelly_units * _bankroll / 100) : '';
+  const stakeDisplay = stakeDollar ? stakeUnits + ' / ' + stakeDollar : stakeUnits;
 
-  // Matchup
-  const matchupStr = p.game || '';
-
-  // Probability bar
-  let pbMktPct = mktPct || '—';
-  let pbMdlPct = modelPct || '—';
-  let pbMktW = 40, pbEdgeW = 15;
-  if (mktPct && modelPct) {
-    pbMktW  = parseFloat(mktPct);
-    pbEdgeW = parseFloat(modelPct) - parseFloat(mktPct);
-  }
-
-  // Playable To
-  const playableTo = p.playable_to != null
-    ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to))
-    : '—';
-
-  // Fair ML from playable_to (the field that represents the no-vig fair line)
-  const fairML = p.fair_odds != null
-    ? (p.fair_odds > 0 ? '+' + p.fair_odds : String(p.fair_odds))
-    : '—';
-
-  // Best available
-  const bestBook = p.best_book || '—';
-  const bestOdds = p.best_odds != null ? formatOdds(p.best_odds) : formatOdds(p.odds);
-
-  // Date header
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
-  // Driver: first sentence of narrative or top signal from adj_breakdown
-  let driverText = '';
-  let driverBold = '';
-  if (p.adj_breakdown && p.adj_breakdown.adjustments && p.adj_breakdown.adjustments.length) {
-    const top = p.adj_breakdown.adjustments[0];
-    driverBold = top.label || '';
-    driverText = p.narrative ? p.narrative.split('.')[0] + '.' : '';
-  } else if (p.narrative) {
-    const firstSentence = p.narrative.split('.')[0] + '.';
-    // Try to bold the first clause if short
-    const parts = firstSentence.split(' — ');
-    if (parts.length >= 2) {
-      driverBold = parts[0].trim();
-      driverText = parts.slice(1).join(' — ').trim();
-    } else {
-      driverText = firstSentence;
-    }
-  }
-
-  // Posted time
-  const postedAt = p.posted_at || '—';
+  // Pitchers and xFIP
+  const rs = p.raw_stats || {};
+  const pickPitcher = p.pitcher || '';
+  const oppPitcher  = p.opp_pitcher || '';
+  const pickXfip    = rs.pick_xfip != null ? rs.pick_xfip.toFixed(2) : null;
+  const oppXfip     = rs.opp_xfip  != null ? rs.opp_xfip.toFixed(2)  : null;
+  const pitcherHTML = (pickPitcher && oppPitcher)
+    ? `<span class="scm-pitcher-pick">${pickPitcher}</span>
+       ${pickXfip ? `<span class="scm-pitcher-xfip">(${pickXfip} xFIP)</span>` : ''}
+       <span class="scm-pitcher-vs">vs.</span>
+       <span class="scm-pitcher-opp">${oppPitcher}</span>
+       ${oppXfip  ? `<span class="scm-pitcher-xfip">(${oppXfip} xFIP)</span>` : ''}`
+    : '';
 
   // Lineup status
   const homeConf = p.home_lineup_confirmed;
   const awayConf = p.away_lineup_confirmed;
-  const bothConf = homeConf === true && awayConf === true;
-  const lineupStatus = bothConf ? 'Confirmed' : 'Projected — confirm before betting';
+  const isHome   = (p.side || '').toUpperCase() === 'HOME';
+  const pickConf = isHome ? homeConf : awayConf;
+  const oppConf  = isHome ? awayConf : homeConf;
+  const [homeTeam, awayTeam] = (p.game || '').includes(' @ ')
+    ? p.game.split(' @ ').map(s => s.trim()) : [p.pick, '—'];
+  const oppTeam  = isHome ? awayTeam : homeTeam;
+  const pickDot  = pickConf === true ? 'conf' : 'proj';
+  const oppDot   = oppConf  === true ? 'conf' : 'proj';
+  const pickStat = pickConf === true ? 'Confirmed' : 'Projected';
+  const oppStat  = oppConf  === true ? 'Confirmed' : 'Projected';
+  const lineupWarn = (pickConf !== true || oppConf !== true)
+    ? `<span class="scm-lu-warn">— confirm before betting</span>` : '';
 
-  // Season record from _todayDataRef
+  // Game time
+  let gameTimeStr = '';
+  if (p.game_time) {
+    try {
+      const d = new Date(p.game_time);
+      const ct = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago' });
+      gameTimeStr = 'Tonight, ' + ct + ' CT';
+    } catch(e) { gameTimeStr = ''; }
+  }
+
+  // Probability bar (zoomed ±12pp window)
+  let mktF = '40.0', edgeF = '20.0';
+  if (mktPct && modelPct) {
+    const mktV = parseFloat(mktPct);
+    const mdlV = parseFloat(modelPct);
+    const lo   = Math.max(0, mktV - 12);
+    const hi   = Math.min(100, mdlV + 12);
+    const range = hi - lo || 1;
+    mktF  = ((mktV - lo) / range * 100).toFixed(1);
+    edgeF = ((mdlV - mktV) / range * 100).toFixed(1);
+  }
+
+  // Key stats
+  const playableTo = p.playable_to != null
+    ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to)) : '—';
+  const fairML = p.fair_odds != null
+    ? (p.fair_odds > 0 ? '+' + p.fair_odds : String(p.fair_odds)) : '—';
+
+  // Best available — sorted book entries if available, fallback to p.best_book
+  const _bdn = {novig:'Novig',prophetx:'ProphetX',pinnacle:'Pinnacle',lowvig:'LowVig',
+    betonlineag:'BetOnline',draftkings:'DraftKings',fanduel:'FanDuel',
+    betmgm:'BetMGM',betrivers:'BetRivers',espnbet:'ESPN Bet'};
+  const rawBooksObj = (() => {
+    try { return typeof p.book_odds === 'object' && p.book_odds
+          ? p.book_odds : typeof p.books === 'object' && p.books ? p.books : {}; }
+    catch(e) { return {}; }
+  })();
+  const bookEntries = Object.entries(rawBooksObj)
+    .map(([k,v]) => ({ book: _bdn[k.toLowerCase()] || k, odds: typeof v==='number'?v:parseInt(v) }))
+    .filter(e => !isNaN(e.odds)).sort((a,b) => b.odds - a.odds);
+  const topEntry = bookEntries.length > 0 ? bookEntries[0] : null;
+  const bestBookName = topEntry ? topEntry.book : (_bdn[(p.best_book||'').toLowerCase()] || p.best_book || '—');
+  const bestOddsStr  = topEntry
+    ? (topEntry.odds > 0 ? '+' + topEntry.odds : String(topEntry.odds))
+    : (p.best_odds != null ? formatOdds(p.best_odds) : formatOdds(p.odds));
+
+  // Driver — 3-sentence SP narrative if xFIP available, else narrative fallback
+  let driverHTML = '';
+  if (pickPitcher && oppPitcher && pickXfip && oppXfip) {
+    const gap = Math.abs(parseFloat(pickXfip) - parseFloat(oppXfip)).toFixed(2);
+    driverHTML = `<strong>SP edge</strong> \u2014 ${pickPitcher} ${pickXfip} xFIP vs ${oppPitcher} ${oppXfip} xFIP. The ${gap}-point quality gap supports a model fair line of ${fairML}. At ${bestOddsStr} best available, +${edgePct}pp of uncaptured edge remains.`;
+  } else if (p.narrative) {
+    const sents = p.narrative.trim().split(/\.\s+(?=[A-Z])/);
+    const first3 = sents.slice(0, 3).join('. ').replace(/<[^>]+>/g, '');
+    // Bold the first clause if it has a dash separator
+    const parts = first3.split(' \u2014 ');
+    if (parts.length >= 2) {
+      driverHTML = `<strong>${parts[0].trim()}</strong> \u2014 ${parts.slice(1).join(' \u2014 ')}`;
+    } else {
+      driverHTML = first3;
+    }
+  } else {
+    driverHTML = `<strong>Model edge</strong> \u2014 Model projects ${modelPct || '—'}% vs market ${mktPct || '—'}%. Fair line ${fairML} vs best available ${bestOddsStr}. Edge: +${edgePct}pp vs Pinnacle no-vig.`;
+  }
+
+  // Date
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  // Season record
   const season = (_todayDataRef && _todayDataRef.season) || {};
-  const recStr = (season.wins != null && season.losses != null)
-    ? `${season.wins}W–${season.losses}L`
-    : '—';
-  const roiStr = (season.roi != null)
-    ? ((season.roi >= 0 ? '+' : '') + (season.roi * 100).toFixed(1) + '% ROI')
-    : '';
-  const betsStr = season.bets ? ` · ${season.bets} picks logged` : '';
-  const recordLine = [recStr, roiStr, '2026 Season' + betsStr].filter(Boolean).join(' · ');
+  const recLine1 = (season.wins != null && season.losses != null && season.roi != null)
+    ? `${season.wins}W\u2013${season.losses}L \u00b7 ${season.roi >= 0 ? '+' : ''}${(season.roi*100).toFixed(1)}% ROI` : '—';
+  const recLine2 = ['2026 Season', season.bets ? season.bets + ' picks logged' : ''].filter(Boolean).join(' \u00b7 ');
 
-  return `<div class="sc-modal" id="share-card-el">
-    <!-- Header 58px -->
+  // Posted at
+  const postedAt = p.posted_at || '—';
+
+  return `<div class="sc-modal ${tierCls}" id="share-card-el">
+
+    <!-- 1. Header 62px -->
     <div class="scm-hdr">
       <div class="scm-brand">
         <div class="scm-logo">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <circle cx="6" cy="6" r="5.3" stroke="rgba(255,255,255,.6)" stroke-width=".8"/>
-            <text x="1.3" y="8.7" font-family="system-ui" font-size="5.8" font-weight="900" fill="white">F</text>
-            <text x="6" y="8.7" font-family="system-ui" font-size="5.8" font-weight="900" fill="#818cf8">L</text>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <circle cx="9" cy="9" r="8" stroke="rgba(255,255,255,.65)" stroke-width="1.1"/>
+            <text x="2" y="13" font-family="system-ui" font-size="8.5" font-weight="900" fill="white">F</text>
+            <text x="9" y="13" font-family="system-ui" font-size="8.5" font-weight="900" fill="#818cf8">L</text>
           </svg>
         </div>
         <div>
@@ -2535,75 +2496,106 @@ function _buildShareCardHTML(p) {
           <div class="scm-sport">MLB · 2026 Season</div>
         </div>
       </div>
-      <div class="scm-badge">✓ Official Value Bet</div>
+      <div class="scm-badge ${tierCls}">${badgeText}</div>
       <div class="scm-date">${dateStr}</div>
     </div>
 
-    <!-- Pick zone 442px -->
-    <div class="scm-pick">
-      <div class="scm-wm-bg">${team}</div>
-      <div class="scm-pick-inner">
-        <div class="scm-team">${team}</div>
-        <div class="scm-odds-row">
-          <span class="scm-ml">ML</span>
+    <!-- 2. Matchup & Lineup 198px -->
+    <div class="scm-lineup">
+      <div class="scm-matchup-row">
+        <span class="scm-matchup-name">${p.game || '—'}</span>
+        ${gameTimeStr ? `<span class="scm-matchup-sep">·</span><span class="scm-gametime">${gameTimeStr}</span>` : ''}
+      </div>
+      ${pitcherHTML ? `<div class="scm-pitchers">${pitcherHTML}</div>` : ''}
+      <div class="scm-lineup-status">
+        <div class="scm-lu-item">
+          <div class="scm-lu-dot ${pickDot}"></div>
+          <span class="scm-lu-team">${team}</span>
+          <span class="scm-lu-stat ${pickDot}">${pickStat}</span>
+        </div>
+        <div class="scm-lu-item">
+          <div class="scm-lu-dot ${oppDot}"></div>
+          <span class="scm-lu-team">${oppTeam}</span>
+          <span class="scm-lu-stat ${oppDot}">${oppStat}</span>
+        </div>
+        ${lineupWarn}
+      </div>
+    </div>
+
+    <!-- 3. Pick + Stats two-column 280px -->
+    <div class="scm-pick-stats">
+      <div class="scm-pick-left">
+        <div class="scm-pick-headline">
+          <span class="scm-team">${team}</span>
+          <span class="scm-bet-type">ML</span>
           <span class="scm-odds ${oddsCls}">${oddsStr}</span>
         </div>
-        ${stakeRow}
-        <div class="scm-matchup">${matchupStr}</div>
+        <div class="scm-stake-row">
+          <span class="scm-stake-lbl">Stake</span>
+          <span class="scm-stake-val">${stakeDisplay}</span>
+          ${_bankroll > 0 ? `<span class="scm-stake-note">$${_bankroll.toLocaleString()} bankroll · Kelly</span>` : ''}
+        </div>
+      </div>
+      <div class="scm-pick-right">
+        <div class="scm-stat-item">
+          <div class="scm-stat-lbl play">Playable To</div>
+          <div class="scm-stat-val play">${playableTo}</div>
+          <div class="scm-stat-sub">do not bet worse</div>
+        </div>
+        <div class="scm-stat-item">
+          <div class="scm-stat-lbl">Fair ML</div>
+          <div class="scm-stat-val fair">${fairML}</div>
+        </div>
+        <div class="scm-stat-item">
+          <div class="scm-stat-lbl">Best Available</div>
+          <div class="scm-stat-val book">${bestBookName} ${bestOddsStr}</div>
+          <div class="scm-stat-sub">verify before betting</div>
+        </div>
       </div>
     </div>
 
-    <!-- Edge + prob bar 298px -->
+    <!-- 4. Edge + Prob Bar 200px -->
     <div class="scm-edge">
-      <div class="scm-edge-row">
+      <div class="scm-edge-top">
         <div class="scm-edge-num">+${edgePct}pp</div>
-        <div class="scm-edge-lbl">EDGE</div>
+        <div class="scm-edge-kicker">EDGE</div>
       </div>
-      <div class="scm-pb-labels">
-        <span class="scm-pb-lbl mkt">Market <span>${pbMktPct}%</span></span>
-        <span class="scm-pb-lbl mdl">Model <span>${pbMdlPct}%</span></span>
-      </div>
-      <div class="scm-pb-track">
-        <div class="scm-pb-mkt" style="width:${pbMktW.toFixed(1)}%"></div>
-        <div class="scm-pb-edge" style="left:${pbMktW.toFixed(1)}%;width:${Math.max(0,pbEdgeW).toFixed(1)}%"></div>
-      </div>
-      <div class="scm-action-row">
-        <div class="scm-action-item">
-          <div class="scm-action-lbl play">Playable To</div>
-          <div class="scm-action-val play">${playableTo}</div>
+      <div>
+        <div class="scm-bar-hdr">
+          <span class="scm-bar-lbl mkt">Market ${mktPct || '—'}%</span>
+          <span class="scm-bar-lbl mdl">Model ${modelPct || '—'}%</span>
         </div>
-        <div class="scm-action-div"></div>
-        <div class="scm-action-item">
-          <div class="scm-action-lbl">Fair ML</div>
-          <div class="scm-action-val" style="color:#a5b4fc;font-size:28px">${fairML}</div>
-        </div>
-        <div class="scm-action-div"></div>
-        <div class="scm-action-item">
-          <div class="scm-action-lbl">Best Available</div>
-          <div class="scm-action-val book">${bestBook} · ${bestOdds}</div>
+        <div class="scm-bar-track">
+          <div class="scm-bar-mkt" style="width:${mktF}%"></div>
+          <div class="scm-bar-edg" style="left:${mktF}%;width:${Math.max(0,parseFloat(edgeF)).toFixed(1)}%"></div>
         </div>
       </div>
     </div>
 
-    <!-- Footer 282px -->
-    <div class="scm-ftr">
-      <div class="scm-driver">
-        <span class="scm-drv-kicker">Primary Driver</span>
-        ${driverBold ? `<strong>${driverBold}</strong>` : ''}${driverText ? (driverBold ? ' — ' + driverText : driverText) : (driverBold ? '' : 'Model edge vs. Pinnacle no-vig.')}
+    <!-- 5. Driver 150px -->
+    <div class="scm-driver-section">
+      <div class="scm-driver-inner">
+        <div class="scm-driver-text">${driverHTML}</div>
       </div>
-      <div class="scm-ftr-url">fairlinemlb.com</div>
-      <div class="scm-ftr-record">${recordLine}</div>
-      <div class="scm-ftr-meta">
-        <div class="scm-pfi"><span class="scm-pfi-lbl">Posted</span><span class="scm-pfi-val">${postedAt}</span></div>
-        <div class="scm-pfi-dot"></div>
-        <div class="scm-pfi"><span class="scm-pfi-lbl">Lineups</span><span class="scm-pfi-val">${lineupStatus}</span></div>
-        <div class="scm-pfi-dot"></div>
-        <div class="scm-pfi"><span class="scm-pfi-lbl">Benchmark</span><span class="scm-pfi-val">Pinnacle no-vig</span></div>
-      </div>
-      <div class="scm-ftr-disc">Informational only — not financial advice. Verify current odds and lineup before betting. Past performance does not guarantee future results.</div>
     </div>
+
+    <!-- 6. Footer 190px -->
+    <div class="scm-ftr">
+      <div class="scm-ftr-url">fairlinemlb.com</div>
+      <div class="scm-ftr-record">${recLine1}<br>${recLine2}</div>
+      <div class="scm-ftr-meta">
+        <div class="scm-fi"><span class="scm-fi-lbl">Posted</span><span class="scm-fi-val">${postedAt}</span></div>
+        <div class="scm-fi-dot"></div>
+        <div class="scm-fi"><span class="scm-fi-lbl">Lineups</span><span class="scm-fi-val">${pickConf === true && oppConf === true ? 'Confirmed' : 'Projected — confirm before betting'}</span></div>
+        <div class="scm-fi-dot"></div>
+        <div class="scm-fi"><span class="scm-fi-lbl">Benchmark</span><span class="scm-fi-val">Pinnacle no-vig</span></div>
+      </div>
+      <div class="scm-ftr-disc">Informational only — not financial advice. Verify current odds and lineup before placing any bet. Past performance does not guarantee future results.</div>
+    </div>
+
   </div>`;
 }
+
 
 // ── Show share modal ─────────────────────────────────────────────────────────
 function sharePickCard(id) {
