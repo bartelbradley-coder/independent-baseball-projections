@@ -3238,7 +3238,7 @@ function buildDetailsV8(p, cardId) {
   // ── CTA buttons ──
   const ctaHTML = isWl
     ? `<button class="cta-v8 mon">Monitor Only</button>`
-    : `<button class="cta-v8 bet" onclick="window.open('https://www.fairlinemlb.com', '_blank')">Bet ${p.pick} ML</button><button class="cta-v8 trk" onclick="toggleBet('${cardId}')" title="Track this pick in your personal CLV monitoring record">Track Pick</button>`;
+    : `<button class="cta-v8 trk" onclick="toggleBet('${cardId}')" title="Track this pick in your personal CLV monitoring record">Track Pick</button>`;
 
   // ── Assemble watchlist (short) ──
   if (isWl) {
@@ -4158,7 +4158,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     ? `<div class="sv-dollars">$${Math.round(p.kelly_units * _bankroll / 100)}</div>` : '';
   const stakeV8Note  = isWlCard ? '<div class="sv-note">Monitor only</div>'
     : isFlaggedCard ? '<div class="sv-note">Reduced — do not increase</div>'
-    : '<div class="sv-note">Assumes $10k bankroll</div>';
+    : '';
 
   const homeConfV8 = p.home_lineup_confirmed;
   const awayConfV8 = p.away_lineup_confirmed;
