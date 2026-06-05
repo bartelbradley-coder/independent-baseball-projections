@@ -4167,7 +4167,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   // null (Python None) = morning pick, lineups not yet posted → treat as Projected, not Unknown
   const luPickCls  = pickConfV8 === true ? 'conf' : 'proj';
   const luOppCls   = oppConfV8  === true ? 'conf' : 'proj';
-  const luPickTxt  = pickConfV8 === true ? 'Lineup confirmed' : 'Lineup projected';
+  const luPickTxt  = pickConfV8 === true ? 'Confirmed' : 'Projected';
   const luOppTxt   = oppConfV8  === true ? 'Confirmed' : 'Projected';
 
   stakeV8HTML = `
