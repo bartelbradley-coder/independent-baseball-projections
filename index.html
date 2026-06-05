@@ -1722,7 +1722,7 @@
 /* Probability bar */
 .pc-v8-bar { padding:10px 14px 8px }
 .pc-v8-bar .pb8-hdr { display:flex;justify-content:space-between;align-items:center;margin-bottom:6px }
-.pc-v8-bar .pb8-lbl { font-size:8.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-family:var(--font-ui) }
+.pc-v8-bar .pb8-lbl { font-size:12px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;font-family:var(--font-ui) }
 .pc-v8-bar .pb8-lbl.mkt { color:var(--text-3) }
 .pc-v8-bar .pb8-lbl.mdl { color:#60a5fa }
 .pc-v8-bar .pb8-track { height:7px;background:rgba(255,255,255,.05);border-radius:4px;position:relative;overflow:hidden }
@@ -4085,7 +4085,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       <span class="uph-odds ${isDog ? 'dog' : 'fav'}">${formatOdds(p.odds)}</span>
     </div>
     <div class="uph-edge-row">
-      <span class="uph-edge-badge">+${edgePct}% edge${p.current_edge != null ? '<span style="font-size:8.5px;opacity:0.55;font-weight:500;margin-left:4px">· Posted</span>' : ''}</span>
+      <span class="uph-edge-badge">+${edgePct}pp edge${p.current_edge != null ? '<span style="font-size:8.5px;opacity:0.55;font-weight:500;margin-left:4px">· Posted</span>' : ''}</span>
       ${p.is_flagged ? `<span style="font-size:9.5px;font-weight:600;color:var(--amber);background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.28);border-radius:4px;padding:2px 7px;letter-spacing:0.04em">${p.kelly_multiplier < 0.6 ? '↘ REDUCED SIZING' : '⚠ FLAGGED'}</span>` : ''}
     </div>`;
 
