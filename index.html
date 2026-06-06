@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  /* Returning-visitor detection — runs before paint so the hero renders in its
+     compact form on repeat visits (full landing band on first visit). */
+  try {
+    if (localStorage.getItem('fairline_visited')) document.documentElement.classList.add('returning');
+    localStorage.setItem('fairline_visited', '1');
+  } catch (e) {}
+</script>
 <title>FairLine MLB — Today's Picks</title>
 <meta name="description" content="FairLine MLB is a quantitative win probability model that finds daily MLB betting edges using calibrated probabilities, no-vig market comparison, and transparent pick tracking. Every pick logged before first pitch. Full record auditable.">
 <link rel="canonical" href="https://fairlinemlb.com/">
@@ -166,6 +174,20 @@
   .hero-sub { font-size: 13.5px; }
   .hero-proof { font-size: 13px; }
   .hero-btn { font-size: 13px; padding: 10px 16px; }
+}
+
+/* Returning visitor — collapse the landing band to a slim header so picks
+   surface sooner. Full band only on first visit. */
+.returning .hero { padding: 20px 30px 22px; }
+.returning .hero-grid { grid-template-columns: 1fr; gap: 0; align-items: start; }
+.returning .hero-visual,
+.returning .hero-sub,
+.returning .hero-proof { display: none; }
+.returning .hero-eyebrow { margin-bottom: 8px; }
+.returning .hero-title { font-size: 28px; margin-bottom: 14px; }
+@media (max-width: 640px) {
+  .returning .hero { padding: 16px 18px 18px; }
+  .returning .hero-title { font-size: 24px; }
 }
 
 .record-strip {
@@ -514,6 +536,11 @@
   background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px;
 }
 .model-info-strip strong { color: var(--text-3); }
+/* Demoted, relocated under the picks header as fine print (no box) */
+.model-info-note {
+  font-size: 10px; color: var(--text-4); line-height: 1.5;
+  margin: -4px 0 12px;
+}
 
 /* ── Line-move callout banner ── */
 .line-move-callout {
@@ -1695,6 +1722,19 @@
   background: var(--bg-card); border: 1px solid var(--border);
   border-radius: 12px; padding: 14px 18px; margin-bottom: 14px;
 }
+/* Compact one-line exposure summary (replaces the 4-card exposure band) */
+.exposure-line {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 7px;
+  font-size: 11.5px; color: var(--text-3); font-family: var(--font-ui);
+  padding: 9px 14px; margin-bottom: 14px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px;
+}
+.exposure-line .exl-title { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); }
+.exposure-line .exl-item strong { font-family: var(--font-mono); color: var(--text-1); font-weight: 700; }
+.exposure-line .exl-item strong.g { color: var(--green); }
+.exposure-line .exl-sep { color: var(--text-4); }
+.exposure-line .exl-mode { margin-left: auto; font-size: 10px; color: var(--text-4); font-family: var(--font-mono); }
+@media (max-width: 600px) { .exposure-line .exl-mode { margin-left: 0; } }
 .eb-top {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 12px; flex-wrap: wrap; gap: 10px;
@@ -2317,12 +2357,6 @@
   <!-- Track record anchor — subtle link for curious new visitors -->
   <a href="#evidence-section" class="track-record-link">↓ View track record &amp; methodology</a>
 
-  <!-- MODEL INFO STRIP -->
-  <div class="model-info-strip">
-    Starting pitcher info and odds are captured at model run time — always verify current starters and lines before betting.
-    <span id="games-scanned-strip"></span>
-  </div>
-
   <!-- Correlated picks warning -->
   <div class="corr-warning" id="corr-warning" style="display:none">
     ⚠️ <span id="corr-text"></span>
@@ -2340,6 +2374,7 @@
     <div class="sec-lbl" id="page-date">Today's Value Bets</div>
     <div id="page-refresh-meta" style="display:none;font-size:10px;color:var(--text-4);margin-top:3px;margin-bottom:2px;font-family:var(--font-mono)"></div>
     <div class="picks-legend">Each bar — <span class="pl-grey">grey</span> = book implied probability · <span class="pl-green">green gap</span> = model edge · <span class="pl-tick">▏</span> = FairLine model</div>
+    <div class="model-info-note">Starting pitcher info and odds are captured at model run time — always verify current starters and lines before betting.<span id="games-scanned-strip"></span></div>
     <div id="picks-container">
       <div id="loading-placeholder" style="display:flex;flex-direction:column;gap:14px">
         <div class="skeleton-card">
@@ -5457,9 +5492,9 @@ function render(data, hist, scores = {}, perf = null) {
     // Streak removed from Row 1 per user request
 
     // Today's in-play results chip (preserved, hidden until picks settle)
-    const todayChip = `<div class="today-chip" id="today-score-tally" style="display:none">
-      <div class="tc-val">—</div><div class="tc-lbl">Today</div>
-    </div>`;
+    // Today's W-L chip removed from the stats band — the floating results pill
+    // and the LIVE status strip already cover today's status (deduped).
+    const todayChip = '';
 
     // Row 2 helper text
     const helperText = _indexPnlMode === 'flat'
@@ -5633,39 +5668,20 @@ function render(data, hist, scores = {}, perf = null) {
       ? ((_totalDol / _bankroll) * 100).toFixed(1)   // e.g. 442/10000*100 = 4.4
       : _totalKU.toFixed(1);                          // fallback: units ARE the %
     const _isKellyOn = _indexPnlMode === 'kelly';
+    // Compact one-line exposure summary (replaces the old 4-card band — it was a
+    // second metric band stacked under the season stats; this collapses it).
+    const _stakeStr = _totalDol != null ? '$' + _totalDol.toLocaleString() : _totalKU.toFixed(1) + 'u';
+    const _modeStr  = _isKellyOn ? 'Kelly sizing' : 'Flat $100';
     const actionStripHTML = _totalKU > 0 ? `
-      <div class="exposure-block">
-        <div class="eb-top">
-          <span class="eb-title">Today's Exposure</span>
-          <div class="eb-sizing">
-            ${_isKellyOn
-              ? '<span class="eb-kelly-pill"><span class="eb-ka-dot"></span>Kelly Sizing Active</span>'
-              : '<span class="eb-flat-lbl">Flat $100 mode</span>'}
-            ${_bankroll > 0 ? `<span class="eb-bankroll">Bankroll: $${_bankroll.toLocaleString()}</span>` : ''}
-          </div>
-        </div>
-        <div class="eb-grid">
-          <div class="eb-stat hi">
-            <div class="eb-lbl">Total Stake</div>
-            <div class="eb-val g">${_totalDol != null ? '$' + _totalDol.toLocaleString() : _totalKU.toFixed(1) + 'u'}</div>
-            <div class="eb-sub">${main.length} pick${main.length !== 1 ? 's' : ''} combined</div>
-          </div>
-          <div class="eb-stat">
-            <div class="eb-lbl">Bankroll Exposure</div>
-            <div class="eb-val">${_bPct}%</div>
-            <div class="eb-sub">${_bankroll > 0 ? 'of $' + _bankroll.toLocaleString() : 'Kelly units'}</div>
-          </div>
-          <div class="eb-stat">
-            <div class="eb-lbl">Avg Pick</div>
-            <div class="eb-val">${_avgKU.toFixed(1)}u</div>
-            <div class="eb-sub">${_totalDol != null ? '$' + Math.round(_avgKU * _bankroll / 100) + ' avg stake' : 'per pick'}</div>
-          </div>
-          <div class="eb-stat">
-            <div class="eb-lbl">Total Units</div>
-            <div class="eb-val">${_totalKU.toFixed(1)}u</div>
-            <div class="eb-sub">fractional Kelly</div>
-          </div>
-        </div>
+      <div class="exposure-line">
+        <span class="exl-title">Today's Exposure</span>
+        <span class="exl-sep">·</span>
+        <span class="exl-item"><strong class="g">${_stakeStr}</strong> stake · ${main.length} pick${main.length !== 1 ? 's' : ''}</span>
+        <span class="exl-sep">·</span>
+        <span class="exl-item"><strong>${_bPct}%</strong> bankroll</span>
+        <span class="exl-sep">·</span>
+        <span class="exl-item"><strong>${_avgKU.toFixed(1)}u</strong> avg</span>
+        <span class="exl-mode">${_modeStr}${_bankroll > 0 ? ' · $' + _bankroll.toLocaleString() : ''}</span>
       </div>` : '';
 
     // ── Group picks by live score status ─────────────────────────────────────
