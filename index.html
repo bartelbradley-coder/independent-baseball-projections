@@ -1946,6 +1946,7 @@
   pointer-events: none; z-index: 0;
 }
 .sc-modal > * { position: relative; z-index: 1; }
+.scm-topbar { position:absolute;top:0;left:0;right:0;height:6px;background:var(--team-accent,#3a4658);z-index:3; }
 /* Header */
 .scm-hdr { display:flex;align-items:center;height:62px;flex-shrink:0;padding:0 48px 0 46px;border-bottom:1px solid rgba(255,255,255,.055); }
 .scm-brand { display:flex;align-items:center;gap:11px; }
@@ -1958,7 +1959,7 @@
 .scm-badge.cond { background:rgba(245,158,11,.09);color:#f5a523;border:1px solid rgba(245,158,11,.22); }
 .scm-date { font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:500;color:#4a6880;margin-left:auto; }
 /* Lineup */
-.scm-lineup { display:flex;flex-direction:column;justify-content:center;height:198px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055);gap:14px; }
+.scm-lineup { display:flex;flex-direction:column;justify-content:center;height:170px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055);gap:12px; }
 .scm-matchup-row { display:flex;align-items:center;gap:16px; }
 .scm-matchup-name { font-family:"Barlow Condensed",sans-serif;font-size:24px;font-weight:700;letter-spacing:.04em;color:#7a9ab8; }
 .scm-matchup-sep { color:rgba(255,255,255,.15); }
@@ -1976,17 +1977,17 @@
 .scm-lu-stat.proj { color:#d4901a; } .scm-lu-stat.conf { color:#22c55e; }
 .scm-lu-warn { font-size:13px;color:#c08020;margin-left:6px; }
 /* Pick + Stats two-column */
-.scm-pick-stats { display:flex;align-items:stretch;height:280px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.055); }
+.scm-pick-stats { display:flex;align-items:stretch;height:256px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.055); }
 .scm-pick-left { flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:0 32px 0 46px;border-right:1px solid rgba(255,255,255,.055);gap:12px; }
 .scm-pick-headline { display:flex;align-items:baseline;gap:14px;line-height:1; }
 .scm-team { font-family:"Barlow Condensed",sans-serif;font-size:130px;font-weight:900;color:#f0f8ff;letter-spacing:-.015em;line-height:.84; }
 .scm-bet-type { font-family:"Barlow Condensed",sans-serif;font-size:52px;font-weight:500;color:#7090a8;letter-spacing:.02em;padding-bottom:8px; }
 .scm-odds { font-family:"Barlow Condensed",sans-serif;font-size:130px;font-weight:800;line-height:.84;letter-spacing:-.01em; }
-.scm-odds.neg { color:#9da5f8; } .scm-odds.pos { color:#f5a523; }
+.scm-odds.neg, .scm-odds.pos { color:#eef4fb; }
 .scm-stake-row { display:flex;align-items:baseline;gap:14px; }
 .scm-stake-lbl { font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#2e4050;flex-shrink:0; }
-.scm-stake-val { font-family:"IBM Plex Mono",monospace;font-size:36px;font-weight:700;color:#e0f0ff;line-height:1; }
-.scm-stake-note { font-size:12px;color:#334858;font-family:"Inter",sans-serif; }
+.scm-stake-val { font-family:"IBM Plex Mono",monospace;font-size:42px;font-weight:700;color:#eef4fb;line-height:1; }
+.scm-stake-note { font-size:13px;color:#56708a;font-family:"Inter",sans-serif; }
 .scm-pick-right { width:320px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;padding:0 46px 0 32px;gap:22px; }
 .scm-stat-item { display:flex;flex-direction:column;gap:6px; }
 .scm-stat-lbl { font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#2e4050; }
@@ -2015,9 +2016,9 @@
 .sc-modal.lost .scm-bar-edg { background:rgba(239,68,68,.55); }
 .sc-modal.lost .scm-driver-inner { border-color:rgba(239,68,68,.45); }
 /* Edge + bar */
-.scm-edge { display:flex;flex-direction:column;justify-content:center;height:200px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055);gap:18px; }
+.scm-edge { display:flex;flex-direction:column;justify-content:center;height:244px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055);gap:22px; }
 .scm-edge-top { display:flex;align-items:baseline;gap:18px; }
-.scm-edge-num { font-family:"IBM Plex Mono",monospace;font-size:72px;font-weight:700;line-height:.92; }
+.scm-edge-num { font-family:"IBM Plex Mono",monospace;font-size:84px;font-weight:700;line-height:.92; }
 .sc-modal.val  .scm-edge-num { color:#4ade80; }
 .sc-modal.cond .scm-edge-num { color:#f5a523; }
 .scm-edge-kicker { font-size:18px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;align-self:center; }
@@ -2026,20 +2027,20 @@
 .scm-bar-hdr { display:flex;justify-content:space-between;margin-bottom:9px; }
 .scm-bar-lbl { font-size:14px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;font-family:"Inter",sans-serif; }
 .scm-bar-lbl.mkt { color:#3e5870; } .scm-bar-lbl.mdl { color:#5a80a0; }
-.scm-bar-track { height:20px;background:rgba(255,255,255,.05);border-radius:6px;position:relative;overflow:hidden; }
+.scm-bar-track { height:26px;background:rgba(255,255,255,.05);border-radius:7px;position:relative;overflow:hidden; }
 .scm-bar-mkt { position:absolute;left:0;top:0;bottom:0;background:rgba(80,110,140,.55);border-radius:6px 0 0 6px; }
 .scm-bar-edg { position:absolute;top:0;bottom:0;border-radius:0 6px 6px 0; }
 .sc-modal.val  .scm-bar-edg { background:rgba(74,222,128,.70); }
 .sc-modal.cond .scm-bar-edg { background:rgba(245,165,35,.70); }
 /* Driver */
-.scm-driver-section { display:flex;align-items:center;height:150px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055); }
+.scm-driver-section { display:flex;align-items:center;height:128px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055); }
 .scm-driver-inner { border-left:3px solid;padding-left:20px; }
 .sc-modal.val  .scm-driver-inner { border-color:rgba(34,197,94,.50); }
 .sc-modal.cond .scm-driver-inner { border-color:rgba(245,158,11,.45); }
 .scm-driver-text { font-family:"Inter",sans-serif;font-size:18px;font-weight:500;color:#90b0c8;line-height:1.48; }
 .scm-driver-text strong { color:#c4dff0;font-weight:600; }
 /* Footer */
-.scm-ftr { display:flex;flex-direction:column;justify-content:space-between;height:190px;flex-shrink:0;padding:22px 46px 20px;background:rgba(0,0,0,.22); }
+.scm-ftr { display:flex;flex-direction:column;justify-content:space-between;height:220px;flex-shrink:0;padding:26px 46px 24px;background:rgba(0,0,0,.22); }
 .scm-ftr-url { font-family:"Barlow Condensed",sans-serif;font-size:30px;font-weight:700;letter-spacing:.06em;color:#527898; }
 .scm-ftr-record { font-family:"IBM Plex Mono",monospace;font-size:14px;color:#3a5262;font-weight:500;line-height:1.6; }
 .scm-ftr-meta { display:flex;align-items:center;gap:14px;flex-wrap:wrap; }
@@ -2633,6 +2634,17 @@ function shareOnX(id) {
 let _shareCardPickId = null;
 
 // ── Build V5 square card HTML from real pick data ────────────────────────────
+// MLB team accent colors (vivid primary; a few dark-primary teams use a brighter
+// secondary so the accent bar reads on the dark card).
+const TEAM_COLORS = {
+  ARI:'#A71930', ATL:'#CE1141', BAL:'#DF4601', BOS:'#BD3039', CHC:'#0E3386',
+  CHW:'#C4CED4', CIN:'#C6011F', CLE:'#0C2340', COL:'#5E3A98', DET:'#1f6feb',
+  HOU:'#EB6E1F', KC:'#1f6feb', LAA:'#BA0021', LAD:'#1f6feb', MIA:'#00A3E0',
+  MIL:'#FFC52F', MIN:'#D31145', MET:'#FF5910', NYY:'#1f6feb', OAK:'#EFB21E',
+  PHI:'#E81828', PIT:'#FDB827', SD:'#FFC425', SF:'#FD5A1E', SEA:'#005C5C',
+  STL:'#C41E3A', TB:'#8FBCE6', TEX:'#C0111F', TOR:'#1D78CE', WSH:'#AB0003',
+};
+
 function _buildShareCardHTML(p) {
   // ── Data binding from pick object ──────────────────────────────────────────
   const edgePct  = p.edge ? (p.edge * 100).toFixed(1) : '0.0';
@@ -2662,6 +2674,17 @@ function _buildShareCardHTML(p) {
   const _pnlU = won ? _stakeU * _mult : -_stakeU;
   const pnlStr = (_pnlU >= 0 ? '+' : '−') + Math.abs(_pnlU).toFixed(1) + 'u';
   const cardAccent = isSettled ? (won ? 'val' : 'lost') : tierCls;
+  const teamAccent = TEAM_COLORS[(p.pick || '').toUpperCase()] || '#3a4658';
+  // CLV for settled cards — only exists post-settlement in history.json (so it
+  // appears once the pick lands in history, not on a just-settled same-day share).
+  let clvPp = null;
+  if (isSettled && _histDataRef && Array.isArray(_histDataRef.rows)) {
+    const m = _histDataRef.rows.slice().reverse().find(r =>
+      (r.pick || '') === (p.pick || '') && (r.game || '') === (p.game || '') &&
+      r.clv != null && r.clv !== '');
+    if (m) clvPp = parseFloat(m.clv) * 100;
+  }
+  const showClv = isSettled && clvPp != null && !isNaN(clvPp);
 
   // Stake
   const stakeUnits = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—';
@@ -2777,7 +2800,8 @@ function _buildShareCardHTML(p) {
   // Posted at
   const postedAt = p.posted_at || '—';
 
-  return `<div class="sc-modal ${cardAccent}" id="share-card-el">
+  return `<div class="sc-modal ${cardAccent}" id="share-card-el" style="--team-accent:${teamAccent}">
+    <div class="scm-topbar"></div>
 
     <!-- 1. Header 62px -->
     <div class="scm-hdr">
@@ -2847,8 +2871,8 @@ function _buildShareCardHTML(p) {
     <!-- 4. Edge + Prob Bar 200px -->
     <div class="scm-edge">
       <div class="scm-edge-top">
-        <div class="scm-edge-num">+${edgePct}pp</div>
-        <div class="scm-edge-kicker">EDGE</div>
+        <div class="scm-edge-num">${showClv ? (clvPp >= 0 ? '+' : '−') + Math.abs(clvPp).toFixed(1) + 'pp' : '+' + edgePct + 'pp'}</div>
+        <div class="scm-edge-kicker">${showClv ? (clvPp >= 0 ? 'CLV · BEAT THE CLOSE' : 'CLV · CLOSED PAST') : (isSettled ? 'PRE-GAME EDGE' : 'EDGE')}</div>
       </div>
       <div>
         <div class="scm-bar-hdr">
