@@ -1977,7 +1977,7 @@
 .scm-lu-stat.proj { color:#d4901a; } .scm-lu-stat.conf { color:#22c55e; }
 .scm-lu-warn { font-size:13px;color:#c08020;margin-left:6px; }
 /* Pick + Stats two-column */
-.scm-pick-stats { display:flex;align-items:stretch;height:256px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.055); }
+.scm-pick-stats { display:flex;align-items:stretch;height:220px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.055); }
 .scm-pick-left { flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:0 32px 0 46px;border-right:1px solid rgba(255,255,255,.055);gap:12px; }
 .scm-pick-headline { display:flex;align-items:baseline;gap:14px;line-height:1; }
 .scm-team { font-family:"Barlow Condensed",sans-serif;font-size:130px;font-weight:900;color:#f0f8ff;letter-spacing:-.015em;line-height:.84; }
@@ -2033,12 +2033,22 @@
 .sc-modal.val  .scm-bar-edg { background:rgba(74,222,128,.70); }
 .sc-modal.cond .scm-bar-edg { background:rgba(245,165,35,.70); }
 /* Driver */
-.scm-driver-section { display:flex;align-items:center;height:128px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055); }
+.scm-driver-section { display:flex;align-items:center;height:164px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055); }
 .scm-driver-inner { border-left:3px solid;padding-left:20px; }
 .sc-modal.val  .scm-driver-inner { border-color:rgba(34,197,94,.50); }
 .sc-modal.cond .scm-driver-inner { border-color:rgba(245,158,11,.45); }
 .scm-driver-text { font-family:"Inter",sans-serif;font-size:18px;font-weight:500;color:#90b0c8;line-height:1.48; }
 .scm-driver-text strong { color:#c4dff0;font-weight:600; }
+/* Model factor decomposition (inputs) */
+.scm-factors { display:flex;flex-wrap:wrap;gap:7px 18px;margin-top:14px; }
+.scm-factor { display:flex;align-items:baseline;gap:6px;font-family:"Inter",sans-serif; }
+.scm-factor-lbl { font-size:13px;color:#5a7088; }
+.scm-factor-pp { font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:700; }
+.scm-factor-pp.pos { color:#4ade80; } .scm-factor-pp.neg { color:#f0726f; }
+/* Edge-tier track record (credibility) */
+.scm-tier-line { font-family:"Inter",sans-serif;font-size:13.5px;color:#5a7088;margin-top:6px;letter-spacing:.01em; }
+.scm-tier-tag { font-weight:600;color:#7e98b0; }
+.scm-tier-roi { font-family:"IBM Plex Mono",monospace;color:#4ade80;font-weight:700; }
 /* Footer */
 .scm-ftr { display:flex;flex-direction:column;justify-content:space-between;height:220px;flex-shrink:0;padding:26px 46px 24px;background:rgba(0,0,0,.22); }
 .scm-ftr-url { font-family:"Barlow Condensed",sans-serif;font-size:30px;font-weight:700;letter-spacing:.06em;color:#527898; }
@@ -2612,6 +2622,7 @@ let _unitSize = _bankroll / 100;  // kept for any legacy references; derived fro
 let _histRef  = null; // history data reference for tracker result lookup
 let _mainPicksRef = []; // today's main picks for share-all
 let _scoresRef = {};    // latest ESPN scores, for settled result share cards
+let _perfRef = null;    // performance.json (edge tiers) for share-card credibility
 let _mdActiveId = null; // card whose details are currently expanded inline
 let _histContextFn = null;      // set in render() — returns hist-context HTML for a pick
 let _countdownTimerStarted = false;
@@ -2685,6 +2696,35 @@ function _buildShareCardHTML(p) {
     if (m) clvPp = parseFloat(m.clv) * 100;
   }
   const showClv = isSettled && clvPp != null && !isNaN(clvPp);
+
+  // ── Model factor decomposition (top 3 adjustments) — shows the inputs ───────
+  const _adjs = (p.adj_breakdown && p.adj_breakdown.adjustments) ? p.adj_breakdown.adjustments : [];
+  const _topAdjs = _adjs.slice()
+    .sort((a, b) => Math.abs(b.pp || 0) - Math.abs(a.pp || 0))
+    .slice(0, 3);
+  const factorsHTML = _topAdjs.length ? `<div class="scm-factors">${_topAdjs.map(a => {
+    const pos = (a.positive !== false) && (a.pp || 0) >= 0;
+    const sign = pos ? '+' : '−';
+    return `<span class="scm-factor"><span class="scm-factor-lbl">${a.label}</span><span class="scm-factor-pp ${pos ? 'pos' : 'neg'}">${sign}${Math.abs(a.pp || 0).toFixed(1)}</span></span>`;
+  }).join('')}</div>` : '';
+
+  // ── Edge-tier track record — ties this pick to proven performance ───────────
+  let tierLineHTML = '';
+  const _tiers = (_perfRef && _perfRef.edge_tiers) || [];
+  if (_tiers.length) {
+    const _ePct = (p.edge || 0) * 100;
+    const _tm = _tiers.find(t => {
+      const lbl = t.label || '';
+      if (lbl.includes('8%+') || lbl.includes('8+')) return _ePct >= 8;
+      const m = lbl.match(/([\d.]+)\D+([\d.]+)/);
+      return m && _ePct >= parseFloat(m[1]) && _ePct < parseFloat(m[2]);
+    });
+    if (_tm && _tm.bets && _tm.win_rate != null && _tm.roi != null) {
+      const wr  = (_tm.win_rate * 100).toFixed(0);
+      const roi = (_tm.roi >= 0 ? '+' : '') + (_tm.roi * 100).toFixed(0) + '%';
+      tierLineHTML = `<div class="scm-tier-line"><span class="scm-tier-tag">${_tm.label} edge, 2026</span> ${wr}% win · <span class="scm-tier-roi">${roi} ROI</span> · ${_tm.bets} picks</div>`;
+    }
+  }
 
   // Stake
   const stakeUnits = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—';
@@ -2884,12 +2924,14 @@ function _buildShareCardHTML(p) {
           <div class="scm-bar-edg" style="left:${mktF}%;width:${Math.max(0,parseFloat(edgeF)).toFixed(1)}%"></div>
         </div>
       </div>
+      ${tierLineHTML}
     </div>
 
-    <!-- 5. Driver 150px -->
+    <!-- 5. Driver + model factors -->
     <div class="scm-driver-section">
       <div class="scm-driver-inner">
         <div class="scm-driver-text">${driverHTML}</div>
+        ${factorsHTML}
       </div>
     </div>
 
@@ -5363,6 +5405,7 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
 
 function render(data, hist, scores = {}, perf = null) {
   _scoresRef = scores;   // stash so the share card can render settled results
+  _perfRef = perf;       // stash edge-tier performance for share-card credibility
   // Build historical context lookup and start countdown timer (both idempotent)
   _histContextFn = buildHistContextFn((hist && hist.rows) ? hist.rows : []);
   startCountdownTimer();
