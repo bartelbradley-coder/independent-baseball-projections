@@ -1948,12 +1948,13 @@
 .sc-modal > * { position: relative; z-index: 1; }
 .scm-topbar { position:absolute;top:0;left:0;right:0;height:6px;background:var(--team-accent,#3a4658);z-index:3; }
 /* Header */
-.scm-hdr { display:flex;align-items:center;height:62px;flex-shrink:0;padding:0 48px 0 46px;border-bottom:1px solid rgba(255,255,255,.055); }
-.scm-brand { display:flex;align-items:center;gap:11px; }
-.scm-logo { width:34px;height:34px;flex-shrink:0;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.28);border-radius:50%;display:flex;align-items:center;justify-content:center; }
-.scm-wm { font-family:"Barlow Condensed",sans-serif;font-size:27px;font-weight:800;letter-spacing:.04em;color:#eaf2fb;line-height:1; }
+.scm-hdr { display:flex;align-items:center;height:78px;flex-shrink:0;padding:0 48px 0 46px;border-bottom:1px solid rgba(255,255,255,.055); }
+.scm-brand { display:flex;align-items:center;gap:14px; }
+.scm-logo { width:50px;height:50px;flex-shrink:0;background:rgba(99,102,241,.14);border:1px solid rgba(99,102,241,.34);border-radius:50%;display:flex;align-items:center;justify-content:center; }
+.scm-wm { font-family:"Barlow Condensed",sans-serif;font-size:29px;font-weight:800;letter-spacing:.04em;color:#eaf2fb;line-height:1; }
 .scm-wm .f { color:#8fa6bd;font-weight:600; }
-.scm-sport { font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#283848;margin-top:1px; }
+.scm-wm em { color:var(--indigo-lt);font-style:normal;font-weight:700;font-size:.74em;letter-spacing:.06em; }
+.scm-tagline { font-family:"Inter",sans-serif;font-size:13px;font-weight:500;color:#5f7c98;letter-spacing:.01em;margin-top:4px; }
 .scm-badge { font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:5px;margin:0 auto; }
 .scm-badge.val  { background:rgba(34,197,94,.09);color:#2ecc71;border:1px solid rgba(34,197,94,.24); }
 .scm-badge.cond { background:rgba(245,158,11,.09);color:#f5a523;border:1px solid rgba(245,158,11,.22); }
@@ -2016,7 +2017,7 @@
 .sc-modal.lost .scm-bar-edg { background:rgba(239,68,68,.55); }
 .sc-modal.lost .scm-driver-inner { border-color:rgba(239,68,68,.45); }
 /* Edge + bar */
-.scm-edge { display:flex;flex-direction:column;justify-content:center;height:244px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055);gap:22px; }
+.scm-edge { display:flex;flex-direction:column;justify-content:center;height:228px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055);gap:20px; }
 .scm-edge-top { display:flex;align-items:baseline;gap:18px; }
 .scm-edge-num { font-family:"IBM Plex Mono",monospace;font-size:84px;font-weight:700;line-height:.92; }
 .sc-modal.val  .scm-edge-num { color:#4ade80; }
@@ -2058,7 +2059,7 @@
 .scm-fi-lbl { font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1e2e3a; }
 .scm-fi-val { font-family:"IBM Plex Mono",monospace;font-size:12px;color:#3a5262;font-weight:500; }
 .scm-fi-dot { width:3px;height:3px;border-radius:50%;background:#101820;flex-shrink:0; }
-.scm-ftr-disc { font-size:11px;color:#1e2e3c;letter-spacing:.02em;font-family:"Inter",sans-serif;line-height:1.55; }
+.scm-ftr-disc { font-size:11px;color:#41566a;letter-spacing:.02em;font-family:"Inter",sans-serif;line-height:1.55; }
 
 /* ── Styled inline disclaimer box ── */
 .site-disclaimer-box {
@@ -2847,15 +2848,15 @@ function _buildShareCardHTML(p) {
     <div class="scm-hdr">
       <div class="scm-brand">
         <div class="scm-logo">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <circle cx="9" cy="9" r="8" stroke="rgba(255,255,255,.65)" stroke-width="1.1"/>
+          <svg width="28" height="28" viewBox="0 0 18 18" fill="none">
+            <circle cx="9" cy="9" r="8" stroke="rgba(255,255,255,.7)" stroke-width="1.1"/>
             <text x="2" y="13" font-family="system-ui" font-size="8.5" font-weight="900" fill="white">F</text>
             <text x="9" y="13" font-family="system-ui" font-size="8.5" font-weight="900" fill="#818cf8">L</text>
           </svg>
         </div>
         <div>
-          <div class="scm-wm"><span class="f">FAIR</span>LINE</div>
-          <div class="scm-sport">MLB · 2026 Season</div>
+          <div class="scm-wm"><span class="f">FAIR</span>LINE <em>MLB</em></div>
+          <div class="scm-tagline">Bet the number, not the noise.</div>
         </div>
       </div>
       <div class="scm-badge ${isSettled ? (won ? 'won' : 'lost') : tierCls}">${isSettled ? (won ? '✓ WON · ' + pnlStr : '✗ LOST · ' + pnlStr) : badgeText}</div>
