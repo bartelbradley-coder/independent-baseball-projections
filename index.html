@@ -2687,10 +2687,10 @@ function _buildShareCardHTML(p) {
   const pnlStr = (_pnlU >= 0 ? '+' : '−') + Math.abs(_pnlU).toFixed(1) + 'u';
   const cardAccent = isSettled ? (won ? 'val' : 'lost') : tierCls;
   const teamAccent = TEAM_COLORS[(p.pick || '').toUpperCase()] || '#3a4658';
-  // CLV for settled cards — only exists post-settlement in history.json (so it
-  // appears once the pick lands in history, not on a just-settled same-day share).
-  let clvPp = null;
-  if (isSettled && _histDataRef && Array.isArray(_histDataRef.rows)) {
+  // CLV — prefer the pick's own clv (now exported into today.json once the
+  // closing-line snapshot runs intraday); fall back to a history.json lookup.
+  let clvPp = (p.clv != null && !isNaN(parseFloat(p.clv))) ? parseFloat(p.clv) * 100 : null;
+  if (clvPp == null && _histDataRef && Array.isArray(_histDataRef.rows)) {
     const m = _histDataRef.rows.slice().reverse().find(r =>
       (r.pick || '') === (p.pick || '') && (r.game || '') === (p.game || '') &&
       r.clv != null && r.clv !== '');
@@ -4694,25 +4694,26 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   }
   const { panelHTML: _liveEdgePanelHTML, warnHTML: _liveEdgeWarnHTML } = buildLiveEdgePanel();
 
-  // Line movement indicator: compare opening Pinnacle (line_open) to current best odds
+  // Line movement: posted Pinnacle (line_open) → Pinnacle close (line_current,
+  // filled intraday by the closing-line snapshot). CLV sign decides direction —
+  // it's unambiguous across +/- odds (positive CLV = market moved to our side).
+  const _fmtO = o => (o > 0 ? '+' + o : String(o));
+  const _lineMoved = (p.line_open != null && p.line_current != null
+                      && p.line_open !== p.line_current && p.clv != null);
   function lineMovementHTML() {
-    if (!p.line_open || !p.odds) return '';
-    const diff = p.odds - p.line_open;
-    if (Math.abs(diff) < 5) return '';
-    const dir   = diff > 0 ? 'up' : 'down';
-    const label = diff > 0 ? `📈 +${Math.abs(diff)} pts` : `📉 ${diff} pts`;
-    const tip   = diff > 0 ? 'Line moved in our favor since posting' : 'Line moved against us since posting';
-    return `<span class="line-move ${dir}" title="${tip}">${label}</span>`;
+    if (!_lineMoved) return '';
+    const favor = p.clv > 0;
+    const tip = favor ? 'Pinnacle moved toward our side — we beat the close'
+                      : 'Pinnacle moved past our price by the close';
+    return `<span class="line-move ${favor ? 'up' : 'down'}" title="${tip}">${favor ? '📈' : '📉'} ${_fmtO(p.line_open)}→${_fmtO(p.line_current)}</span>`;
   }
 
-  // Strong line move callout — shown inside the card when market confirms our pick
+  // Strong callout — only when the close confirmed our edge (meaningful +CLV)
   function lineMoveBannerHTML() {
-    if (!p.line_open || !p.odds) return '';
-    const diff = p.odds - p.line_open;
-    if (diff < 10) return '';
+    if (!_lineMoved || p.clv <= 0.01) return '';
     return `<div class="line-move-callout">
-      📈 Line moved <strong>+${diff} pts</strong> in our favor since posting
-      — market is confirming this edge.
+      📈 Pinnacle moved <strong>${_fmtO(p.line_open)} → ${_fmtO(p.line_current)}</strong> by close
+      — market confirmed this edge (+${(p.clv * 100).toFixed(1)}pp CLV).
     </div>`;
   }
 
@@ -5318,6 +5319,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     <div class="pc-playable-line">
       <span class="ppl-item"><span class="ppl-lbl">Playable To</span>&nbsp;<span class="ppl-val play">${playableV8}</span></span>
       ${_pcBestBook ? `<span class="ppl-sep">·</span><span class="ppl-item"><span class="ppl-lbl">Best</span>&nbsp;<span class="ppl-val">${_pcBestBook} ${_pcBestOdds}</span></span>` : ''}
+      ${_lineMoved ? `<span class="ppl-sep">·</span>${lineMovementHTML()}` : ''}
     </div>` : '';
 
   // ── Assemble card ─────────────────────────────────────────────────────────
