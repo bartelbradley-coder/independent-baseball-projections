@@ -113,6 +113,7 @@ nav {
   align-items: center;
   gap: 14px;
   margin-left: auto;
+  flex-shrink: 0;
 }
 
 
@@ -120,6 +121,13 @@ nav {
   font-size: 11px;
   color: var(--text-4);
   font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+}
+
+/* Drop the timestamp in the tight tablet band so the cluster never wraps.
+   Below 700px the broader responsive block hides it anyway. */
+@media (max-width: 900px) {
+  .nav-updated { display: none; }
 }
 
 /* ── Mobile hamburger menu ── */
