@@ -55,6 +55,15 @@
 @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
 .card-title { font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); margin-bottom: 4px; }
 .card-sub { font-size: 10px; color: var(--text-4); margin-bottom: 14px; }
+/* Model validation cards */
+.val-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 720px) { .val-grid { grid-template-columns: 1fr; } }
+.val-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.val-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); margin-bottom: 8px; }
+.val-big { font-family: var(--font-display); font-size: 26px; font-weight: 800; line-height: 1; color: var(--text-1); margin-bottom: 8px; }
+.val-big.green { color: var(--green); } .val-big.red { color: var(--red); }
+.val-big .val-vs { font-size: 13px; font-weight: 600; color: var(--text-4); }
+.val-sub { font-size: 10.5px; line-height: 1.5; color: var(--text-4); }
 
 /* Two-col stats (team + pitcher grid) */
 .two-col-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
@@ -333,6 +342,23 @@
       <table class="compare-table" id="edge-table">
         <thead><tr><th>Tier</th><th>Bets</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
         <tbody id="edge-tbody"><tr><td colspan="6" style="color:var(--text-4);padding:14px 10px">Populates as picks settle.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Model Validation: skill vs variance, risk, significance, segments -->
+  <div class="section" id="validation-section" style="display:none">
+    <div class="sec-lbl">Model Validation — Skill, Risk & Significance</div>
+    <div class="card" style="padding:16px 20px">
+      <div class="card-sub" style="margin-bottom:14px">
+        Is the edge real, and is it skill or variance? These separate model accuracy from luck and quantify downside.
+      </div>
+      <div class="val-grid" id="validation-cards"></div>
+      <div class="card-title" style="margin:20px 0 4px">Performance by Segment</div>
+      <div class="card-sub" style="margin-bottom:12px">ROI holding up across bet types is a sign the edge is broad, not concentrated in one lucky bucket.</div>
+      <table class="compare-table" id="segment-table">
+        <thead><tr><th>Segment</th><th>Bets</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+        <tbody id="segment-tbody"></tbody>
       </table>
     </div>
   </div>
@@ -699,6 +725,7 @@ async function loadAll() {
     renderMonthly(pAugmented);
     renderRollingWinRate(hRows);
     renderEdgeTiers(pAugmented);
+    renderModelValidation(hRows);
     // renderRLPerformance removed — RL not displayed
     renderThresholdAnalysis(hAugmented ? (hAugmented.rows || []) : []);
     renderCalibration(hRows);
@@ -1196,6 +1223,106 @@ function renderEdgeTiers(p) {
       <td style="color:${(t.roi||0)>=0?'var(--green)':'var(--red)'}">${pct(t.roi)}</td>
       <td style="color:${(t.units||0)>=0?'var(--green)':'var(--red)'}">${fmtU(t.units)}</td>
     </tr>`).join('');
+}
+
+// ── Model validation: skill vs variance, risk, significance, segments ──────────
+function renderModelValidation(rows) {
+  const settled = (rows || []).filter(r => (r.result === 'W' || r.result === 'L'));
+  if (settled.length < 20) return;
+  const n = settled.length;
+  const actWins = settled.filter(r => r.result === 'W').length;
+
+  // Skill vs variance — expected wins from model probabilities
+  const wp = settled.filter(r => r.model_prob != null);
+  let expWins = 0, varSum = 0;
+  wp.forEach(r => { const pr = parseFloat(r.model_prob); expWins += pr; varSum += pr * (1 - pr); });
+  const sd = Math.sqrt(varSum) || 1;
+  const z  = (actWins - expWins) / sd;
+  const delta = actWins - expWins;
+  const skillTone = Math.abs(z) < 1 ? 'at' : z >= 1 ? 'above' : 'below';
+  const skillVerdict = skillTone === 'at' ? 'Running at model expectation — results reflect skill, not a hot streak.'
+    : skillTone === 'above' ? 'Running above expectation — some positive variance in the sample.'
+    : 'Running below expectation — some negative variance in the sample.';
+
+  // Risk — drawdown + streaks (chronological)
+  let cum = 0, peak = 0, maxDD = 0, runLoss = 0, longestLoss = 0;
+  settled.forEach(r => {
+    cum += (parseFloat(r.pnl_u) || 0);
+    peak = Math.max(peak, cum);
+    maxDD = Math.min(maxDD, cum - peak);
+    if (r.result === 'L') { runLoss++; longestLoss = Math.max(longestLoss, runLoss); } else runLoss = 0;
+  });
+  const curDD = cum - peak;
+  let curType = '', curStreak = 0;
+  for (let i = settled.length - 1; i >= 0; i--) {
+    if (!curType) { curType = settled[i].result; curStreak = 1; }
+    else if (settled[i].result === curType) curStreak++; else break;
+  }
+
+  // Significance — 95% CI on ROI/bet (mean of pnl_u = ROI fraction at flat stake)
+  const pnls = settled.map(r => parseFloat(r.pnl_u) || 0);
+  const mean = pnls.reduce((a, b) => a + b, 0) / n;
+  const sevar = pnls.reduce((a, b) => a + (b - mean) ** 2, 0) / (n - 1);
+  const se = Math.sqrt(sevar / n);
+  const ciLo = mean - 1.96 * se, ciHi = mean + 1.96 * se;
+  const roiSig = ciLo > 0;
+  // CLV significance
+  const clvs = settled.map(r => parseFloat(r.clv)).filter(v => !isNaN(v));
+  let clvLine = '';
+  if (clvs.length >= 20) {
+    const cm = clvs.reduce((a, b) => a + b, 0) / clvs.length;
+    const cv = clvs.reduce((a, b) => a + (b - cm) ** 2, 0) / (clvs.length - 1);
+    const cse = Math.sqrt(cv / clvs.length);
+    const csig = (cm - 1.96 * cse) > 0;
+    clvLine = `CLV ${pct(cm)} ± ${(1.96 * cse * 100).toFixed(1)}pp · ${csig ? 'beats close significantly' : 'not yet distinguishable from 0'}`;
+  }
+
+  const card = (label, big, bigCol, sub) => `
+    <div class="val-card">
+      <div class="val-label">${label}</div>
+      <div class="val-big ${bigCol || ''}">${big}</div>
+      <div class="val-sub">${sub}</div>
+    </div>`;
+
+  document.getElementById('validation-cards').innerHTML =
+    card('Skill vs. Variance',
+         `${actWins} <span class="val-vs">vs</span> ${expWins.toFixed(0)}`,
+         Math.abs(z) < 1 ? 'green' : '',
+         `Actual vs expected wins (${delta >= 0 ? '+' : ''}${delta.toFixed(1)}, z=${z.toFixed(1)}). ${skillVerdict}`) +
+    card('Edge Significance',
+         roiSig ? 'Significant' : 'Emerging',
+         roiSig ? 'green' : '',
+         `ROI/bet ${pct(mean)} · 95% CI ${pct(ciLo)}…${pct(ciHi)} over ${n} bets.${clvLine ? ' ' + clvLine + '.' : ''}`) +
+    card('Risk',
+         `${fmtU(maxDD)}`,
+         'red',
+         `Max drawdown. Longest losing streak ${longestLoss}. Current: ${curStreak}${curType} streak, ${fmtU(curDD)} off peak.`);
+
+  // Segment performance — favorite/underdog + home/away (fields present in history)
+  const seg = (label, filt) => {
+    const sub = settled.filter(filt);
+    if (sub.length < 5) return null;
+    const w = sub.filter(r => r.result === 'W').length;
+    const u = sub.reduce((s, r) => s + (parseFloat(r.pnl_u) || 0), 0);
+    return { label, n: sub.length, w, l: sub.length - w, roi: u / sub.length, u };
+  };
+  const segs = [
+    seg('Favorites (−odds)', r => parseFloat(r.odds) < 0),
+    seg('Underdogs (+odds)', r => parseFloat(r.odds) > 0),
+    seg('Home picks', r => String(r.side).toUpperCase() === 'HOME'),
+    seg('Away picks', r => String(r.side).toUpperCase() === 'AWAY'),
+  ].filter(Boolean);
+  document.getElementById('segment-tbody').innerHTML = segs.map(s => `
+    <tr>
+      <td style="font-weight:600;color:var(--text-2)">${s.label}</td>
+      <td>${s.n}</td>
+      <td>${s.w}–${s.l}</td>
+      <td>${(s.w / s.n * 100).toFixed(1)}%</td>
+      <td style="font-weight:700;color:${s.roi >= 0 ? 'var(--green)' : 'var(--red)'}">${pct(s.roi)}</td>
+      <td style="color:${s.u >= 0 ? 'var(--green)' : 'var(--red)'}">${fmtU(s.u)}</td>
+    </tr>`).join('');
+
+  document.getElementById('validation-section').style.display = 'block';
 }
 
 function renderBacktest() {

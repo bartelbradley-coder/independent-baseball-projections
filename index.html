@@ -2189,6 +2189,18 @@
 .dv-pill.pos  { background:rgba(34,197,94,.10);color:var(--green) }
 .dv-pill.risk { background:rgba(245,158,11,.10);color:var(--amber) }
 
+/* Matchup quality (pick vs opponent) */
+.mq-v8 { width:100%;border-collapse:collapse }
+.mq-v8 th { font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-4);padding:3px 6px 6px;border-bottom:1px solid var(--border);font-family:var(--font-ui) }
+.mq-v8 th.mq-team { text-align:right;width:26% }
+.mq-v8 th.mq-pick { color:var(--text-2) }
+.mq-v8 td { padding:6px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle }
+.mq-v8 tr:last-child td { border-bottom:none }
+.mq-v8 td.mq-lbl { color:var(--text-3);font-size:11px;font-family:var(--font-ui) }
+.mq-v8 td.mq-val { font-family:var(--font-mono);font-weight:700;font-size:13px;text-align:right;color:var(--text-3);white-space:nowrap }
+.mq-v8 td.mq-val.mq-win { color:var(--green) }
+.mq-note { font-size:9.5px;color:var(--text-4);margin-top:7px;font-family:var(--font-ui) }
+
 /* Best odds */
 .odds-v8-note { font-family:var(--font-mono);font-size:10.5px;color:var(--amber);font-weight:600;margin-bottom:8px }
 .odds-v8-group { margin-bottom:7px } .odds-v8-group:last-child { margin-bottom:0 }
@@ -4062,6 +4074,59 @@ function buildDetailsV8(p, cardId) {
     : '—';
   const refreshTime = p.current_refresh_time || p.posted_at || '—';
 
+  // ── Matchup quality snapshot (pick vs opponent) ──
+  // Starter xFIP / K% / SIERA (pitcher quality) + defensive OAA. Each row only
+  // renders when both sides' values are present. Bullpen xFIP is a league-average
+  // placeholder in the export (always 4.35), so it's omitted.
+  const _rs = p.raw_stats || {};
+  let matchupQualityHTML = '';
+  {
+    const mqRows = [];
+    const _num = v => typeof v === 'number';
+    // Starter — lower xFIP / SIERA better; higher K% better
+    if (_num(_rs.pick_xfip) && _num(_rs.opp_xfip)) {
+      const pB = _rs.pick_xfip < _rs.opp_xfip;
+      mqRows.push({ lbl: 'Starter (xFIP)', a: _rs.pick_xfip.toFixed(2), b: _rs.opp_xfip.toFixed(2), aWin: pB, bWin: !pB });
+    }
+    if (_num(_rs.pick_k_pct) && _num(_rs.opp_k_pct)) {
+      const pB = _rs.pick_k_pct > _rs.opp_k_pct;
+      const fk = v => (v * 100).toFixed(1) + '%';
+      mqRows.push({ lbl: 'Starter K%', a: fk(_rs.pick_k_pct), b: fk(_rs.opp_k_pct), aWin: pB, bWin: !pB });
+    }
+    if (_num(_rs.pick_siera) && _num(_rs.opp_siera)) {
+      const pB = _rs.pick_siera < _rs.opp_siera;
+      mqRows.push({ lbl: 'Starter (SIERA)', a: _rs.pick_siera.toFixed(2), b: _rs.opp_siera.toFixed(2), aWin: pB, bWin: !pB });
+    }
+    if (_num(_rs.pick_oaa) && _num(_rs.opp_oaa)) {
+      const pB = _rs.pick_oaa > _rs.opp_oaa;
+      const fo = v => v > 0 ? '+' + v : String(v);
+      mqRows.push({ lbl: 'Defense (OAA)', a: fo(_rs.pick_oaa), b: fo(_rs.opp_oaa), aWin: pB, bWin: !pB });
+    }
+    // Park factor — game-level context (run environment of the home park)
+    let parkNote = '';
+    if (_num(_rs.park_factor)) {
+      const pf = _rs.park_factor;
+      const tone = pf >= 1.03 ? 'hitter-friendly' : pf <= 0.97 ? 'pitcher-friendly' : 'neutral';
+      parkNote = ` · Park run factor ${pf.toFixed(2)} (${tone}).`;
+    }
+    if (mqRows.length) {
+      const body = mqRows.map(r => `<tr>
+        <td class="mq-lbl">${r.lbl}</td>
+        <td class="mq-val${r.aWin ? ' mq-win' : ''}">${r.a}</td>
+        <td class="mq-val${r.bWin ? ' mq-win' : ''}">${r.b}</td>
+      </tr>`).join('');
+      matchupQualityHTML = `
+        <div class="det-v8-sec sec-secondary">
+          <div class="det-v8-hdr">Matchup Quality</div>
+          <table class="mq-v8">
+            <thead><tr><th></th><th class="mq-team mq-pick">${pickTeam}</th><th class="mq-team">${oppTeam}</th></tr></thead>
+            <tbody>${body}</tbody>
+          </table>
+          <div class="mq-note">Green = the side the model rates better. Lower xFIP/SIERA, higher K% and OAA are better.${parkNote}</div>
+        </div>`;
+    }
+  }
+
   // Lineup status shown on collapsed card; only new info here is model refresh time
   const statusHTML = refreshTime ? `
     <div class="det-v8-sec sec-secondary">
@@ -4137,7 +4202,10 @@ function buildDetailsV8(p, cardId) {
       </div>
     </div>
 
-    <!-- 4. Available books (full detail) -->
+    <!-- 4. Matchup quality — starter + defense, pick vs opponent -->
+    ${matchupQualityHTML}
+
+    <!-- 5. Available books (full detail) -->
     ${oddsHTML}
 
     <!-- 6–7. Lineup + Historical (secondary) -->
