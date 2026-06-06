@@ -380,6 +380,17 @@
   padding: 2px 7px; border-radius: 4px;
   vertical-align: middle;
 }
+/* Weather chip — ambient game context in the card header */
+.wx-chip {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 9px; font-family: var(--font-mono);
+  color: var(--text-4); background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  padding: 1px 6px; border-radius: 4px;
+  vertical-align: middle; white-space: nowrap;
+}
+.wx-chip .wx-ico { font-size: 9px; filter: grayscale(0.2); }
+@media (max-width: 520px) { .wx-chip { display: none; } }
 
 /* Line movement */
 .line-posted { font-size: 9px; color: var(--text-4); margin-bottom: 10px; }
@@ -1385,6 +1396,22 @@
 .evidence-grid {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
 }
+/* Calibration (reliability) chart */
+.calib-block {
+  margin-top: 22px; padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.calib-hdr {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-3); margin-bottom: 6px;
+}
+.calib-sub {
+  font-size: 11.5px; line-height: 1.55; color: var(--text-4);
+  max-width: 560px; margin-bottom: 14px;
+}
+.calib-svg {
+  width: 100%; max-width: 380px; height: auto; display: block;
+}
 .evidence-claim { display: flex; flex-direction: column; gap: 5px; }
 .ec-stat {
   font-family: var(--font-display); font-size: 22px; font-weight: 700;
@@ -2050,6 +2077,11 @@
 .pb8-edge-fill.wl { background:rgba(99,102,241,.45) }
 .pb8-tick { position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--indigo-lt);border-radius:2px;box-shadow:0 0 5px rgba(129,140,248,.9);transition:left .4s }
 .pc-v8-bar .pb8-legend { font-size:9.5px;color:var(--text-4);text-align:center;margin-top:5px;letter-spacing:.02em;font-family:var(--font-ui) }
+/* Single shared bar legend above the pick list (replaces the per-card legend) */
+.picks-legend { font-size:10px;color:var(--text-4);font-family:var(--font-ui);margin:-2px 0 14px;letter-spacing:.01em }
+.picks-legend .pl-grey { color:var(--text-3);font-weight:600 }
+.picks-legend .pl-green { color:var(--green);font-weight:600 }
+.picks-legend .pl-tick { color:var(--indigo-lt);font-weight:700 }
 
 /* Stake + lineup row */
 .pc-v8-sl-row { display:flex;align-items:stretch;gap:8px;padding:8px 14px }
@@ -2295,6 +2327,7 @@
   <div class="section" id="picks-anchor" style="scroll-margin-top:72px">
     <div class="sec-lbl" id="page-date">Today's Value Bets</div>
     <div id="page-refresh-meta" style="display:none;font-size:10px;color:var(--text-4);margin-top:3px;margin-bottom:2px;font-family:var(--font-mono)"></div>
+    <div class="picks-legend">Each bar — <span class="pl-grey">grey</span> = book implied probability · <span class="pl-green">green gap</span> = model edge · <span class="pl-tick">▏</span> = FairLine model</div>
     <div id="picks-container">
       <div id="loading-placeholder" style="display:flex;flex-direction:column;gap:14px">
         <div class="skeleton-card">
@@ -2359,6 +2392,7 @@
   <section id="evidence-section" class="evidence-section" style="display:none">
     <div class="evidence-heading">Track Record</div>
     <div class="evidence-grid" id="evidence-grid"></div>
+    <div id="calibration-block"></div>
   </section>
 
   <!-- ABOUT THIS MODEL — collapsed single expandable replacing 4 sections -->
@@ -3335,7 +3369,62 @@ function renderTodayTrackingIndex(picks, scores) {
 // renderBrandBar removed — brand identity merged into renderPicksHeaderBlock
 
 // ── Evidence section: 3 data-backed claims for new visitors ──────────────────
-function renderEvidenceSection(data, perf) {
+// ── Calibration (reliability) chart ───────────────────────────────────────────
+// Bins settled picks by predicted win probability and plots the actual win rate
+// against the prediction. Points on the diagonal = the model's probabilities are
+// accurate. Sparse tail bins (n < 12) are dropped to avoid noise.
+function buildCalibrationChart(rows) {
+  if (!rows || !rows.length) return '';
+  const bins = {};
+  rows.forEach(r => {
+    const mp = r.model_prob, res = r.result;
+    if (mp == null || (res !== 'W' && res !== 'L')) return;
+    const b = Math.floor(mp * 100 / 5) * 5;
+    (bins[b] = bins[b] || { w: 0, n: 0 });
+    bins[b].n++; if (res === 'W') bins[b].w++;
+  });
+  const pts = Object.keys(bins).map(Number).sort((a, b) => a - b)
+    .filter(b => bins[b].n >= 12)
+    .map(b => ({ pred: b + 2.5, obs: bins[b].w / bins[b].n * 100, n: bins[b].n }));
+  if (pts.length < 3) return '';
+
+  const W = 320, H = 240, padL = 34, padB = 30, padT = 10, padR = 12;
+  const x0 = padL, x1 = W - padR, y0 = H - padB, y1 = padT;
+  const dmin = 35, dmax = 70;
+  const sx = v => x0 + (Math.max(dmin, Math.min(dmax, v)) - dmin) / (dmax - dmin) * (x1 - x0);
+  const sy = v => y0 - (Math.max(dmin, Math.min(dmax, v)) - dmin) / (dmax - dmin) * (y0 - y1);
+  const ticks = [40, 50, 60, 70];
+
+  const grid = ticks.map(t =>
+    `<line x1="${sx(t)}" y1="${y0}" x2="${sx(t)}" y2="${y1}" stroke="rgba(255,255,255,.05)"/>` +
+    `<line x1="${x0}" y1="${sy(t)}" x2="${x1}" y2="${sy(t)}" stroke="rgba(255,255,255,.05)"/>`).join('');
+  const diag = `<line x1="${sx(dmin)}" y1="${sy(dmin)}" x2="${sx(dmax)}" y2="${sy(dmax)}" stroke="rgba(255,255,255,.22)" stroke-dasharray="4 3" stroke-width="1"/>`;
+  const xlabels = ticks.map(t => `<text x="${sx(t)}" y="${y0 + 13}" fill="var(--text-4)" font-size="9" text-anchor="middle" font-family="var(--font-mono)">${t}%</text>`).join('');
+  const ylabels = ticks.map(t => `<text x="${x0 - 5}" y="${sy(t) + 3}" fill="var(--text-4)" font-size="9" text-anchor="end" font-family="var(--font-mono)">${t}%</text>`).join('');
+  const path = pts.map((p, i) => `${i ? 'L' : 'M'}${sx(p.pred).toFixed(1)} ${sy(p.obs).toFixed(1)}`).join(' ');
+  const line = `<path d="${path}" fill="none" stroke="var(--indigo-lt)" stroke-width="2"/>`;
+  const dots = pts.map(p => {
+    const r = Math.max(3, Math.min(7, Math.sqrt(p.n) / 1.7));
+    const dev = Math.abs(p.obs - p.pred);
+    const col = dev <= 2.5 ? 'var(--green)' : dev <= 5 ? 'var(--amber)' : 'var(--red)';
+    return `<circle cx="${sx(p.pred).toFixed(1)}" cy="${sy(p.obs).toFixed(1)}" r="${r.toFixed(1)}" fill="${col}" stroke="#0b0e16" stroke-width="1.5"><title>Predicted ~${p.pred}% · won ${p.obs.toFixed(0)}% (n=${p.n})</title></circle>`;
+  }).join('');
+  const axisTitles =
+    `<text x="${((x0 + x1) / 2).toFixed(0)}" y="${H - 1}" fill="var(--text-3)" font-size="9" text-anchor="middle">Model predicted win probability</text>` +
+    `<text x="9" y="${((y0 + y1) / 2).toFixed(0)}" fill="var(--text-3)" font-size="9" text-anchor="middle" transform="rotate(-90 9 ${((y0 + y1) / 2).toFixed(0)})">Actual win rate</text>`;
+  const totalN = pts.reduce((a, p) => a + p.n, 0);
+
+  return `
+    <div class="calib-block">
+      <div class="calib-hdr">Model Calibration</div>
+      <div class="calib-sub">Each dot is a group of picks at a given predicted win probability, plotted against how often they actually won. Dots on the dashed line mean the model's probabilities are accurate — not just profitable. Based on ${totalN} settled picks; dot size = sample size.</div>
+      <svg class="calib-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Model calibration: predicted vs actual win rate">
+        ${grid}${diag}${line}${dots}${xlabels}${ylabels}${axisTitles}
+      </svg>
+    </div>`;
+}
+
+function renderEvidenceSection(data, perf, hist) {
   const section = document.getElementById('evidence-section');
   const grid    = document.getElementById('evidence-grid');
   if (!section || !grid || !data.season) return;
@@ -3377,6 +3466,9 @@ function renderEvidenceSection(data, perf) {
       <div class="ec-label">Model adjustments per game</div>
       <div class="ec-desc">Dual-Poisson base with 33 log-odds adjustments: pitcher quality (xFIP), lineup confirmation, park factors, weather, umpire tendencies, bullpen quality, BvP matchups, arsenal fit, line movement, and more. Platt-calibrated monthly on 2026 live data.</div>
     </div>`;
+
+  const calibEl = document.getElementById('calibration-block');
+  if (calibEl) calibEl.innerHTML = buildCalibrationChart(hist && hist.rows ? hist.rows : null);
 }
 
 // ── Evening preview section ───────────────────────────────────────────────────
@@ -3885,17 +3977,15 @@ function buildDetailsV8(p, cardId) {
       <div class="as-v8-row"><span class="as-v8-lbl">Current Edge</span><span class="as-v8-val d">+${edgePct}pp</span></div>
       <div class="as-v8-row"><span class="as-v8-lbl">Action</span><span class="as-v8-val a">Monitor only — do not bet</span></div>`;
   } else {
+    // Slimmed: Bet / Best Available / Playable To / Stake already live on the
+    // collapsed card and the Available Books section — keep only net-new rows.
     actionBodyHTML = `
       <div class="as-v8-row"><span class="as-v8-lbl">Official Play</span>${officialStatus}</div>
-      <div class="as-v8-row"><span class="as-v8-lbl">Bet</span><span class="as-v8-val m">${p.pick || '—'} ML</span></div>
-      <div class="as-v8-row"><span class="as-v8-lbl">Best Available</span><span class="as-v8-val g">${bestOdds} · ${bestBook}</span></div>
-      <div class="as-v8-row"><span class="as-v8-lbl">Playable To</span><span class="as-v8-val a">${playable_to}</span></div>
-      <div class="as-v8-row"><span class="as-v8-lbl">Stake</span><span class="as-v8-val m">${stakeStr}${stakeUSD ? ' / ' + stakeUSD : ''}</span></div>
       <div class="as-v8-row"><span class="as-v8-lbl">Re-check</span>${recheck}</div>`;
   }
 
-  // ── Drivers & Risks table ──
-  let driversHTML = '';
+  // ── Model factor breakdown (table only — embedded in "Why This Pick") ──
+  let factorTableHTML = '';
   const adjs = (p.adj_breakdown && p.adj_breakdown.adjustments) ? p.adj_breakdown.adjustments : [];
   const topAdjs = adjs.slice(0, 5);
   if (topAdjs.length) {
@@ -3903,19 +3993,13 @@ function buildDetailsV8(p, cardId) {
       const val    = a.pp || 0;
       const pos    = a.positive !== false && val >= 0;
       const impCls = pos ? 'pos' : (Math.abs(val) > 0.5 ? 'neg' : 'risk');
-      const sign   = pos ? '+' : '';
+      const sign   = pos ? '+' : '−';
       return `<tr>
         <td class="dv-factor">${a.label || '—'}</td>
         <td class="dv-impact ${impCls}">${sign}${Math.abs(val).toFixed(1)}pp</td>
       </tr>`;
     }).join('');
-    driversHTML = `
-      <div class="det-v8-sec sec-secondary">
-        <div class="det-v8-hdr">Drivers &amp; Risks</div>
-        <table class="drv-v8">
-          <tbody>${rows}</tbody>
-        </table>
-      </div>`;
+    factorTableHTML = `<table class="drv-v8"><tbody>${rows}</tbody></table>`;
   }
 
   // ── Best odds section (reuses _bookEntries computed above — already sorted) ──
@@ -4030,37 +4114,30 @@ function buildDetailsV8(p, cardId) {
       <span class="deh-game">${p.game || ''}</span>
     </div>
 
-    <!-- 1. ACTION SUMMARY — first thing visible, most actionable (primary) -->
-    <div class="det-v8-sec sec-primary">
+    <!-- 1. ANALYSIS — the full narrative (moved here from the collapsed card) -->
+    ${p.narrative ? `<div class="det-v8-sec sec-primary">
+      <div class="det-v8-hdr">Analysis</div>
+      <div class="edge-narrative" style="margin-bottom:0">${p.narrative}</div>
+    </div>` : ''}
+
+    <!-- 2. ACTION SUMMARY — net-new only (verdict + lineup re-check) -->
+    <div class="det-v8-sec">
       <div class="det-v8-hdr">Action Summary</div>
       <div class="as-v8 ${actionClass}">${actionBodyHTML}</div>
       <div class="det-v8-cta">${ctaHTML}</div>
     </div>
 
-    <!-- 2. WIN PROBABILITY GAP — solo, numbers enlarged via CSS (primary) -->
-    <div class="det-v8-sec sec-primary">
-      <div class="det-v8-hdr">Win Probability Gap</div>
-      <div class="prob-v8-row">
-        <div class="prob-v8-col"><span class="pv-lbl">Market</span><div class="pv-val mkt">${mktPct || '—'}%</div></div>
-        <div class="prob-v8-div"></div>
-        <div class="prob-v8-col"><span class="pv-lbl">Edge</span><div class="pv-val edgev">+${edgePct}pp</div></div>
-        <div class="prob-v8-div"></div>
-        <div class="prob-v8-col"><span class="pv-lbl">Model</span><div class="pv-val mdl">${modelPct || '—'}%</div></div>
-      </div>
-      <div class="prob-v8-bar" style="margin-top:10px"><div class="pv-mkt" style="width:${mktFill}%"></div><div class="${edgeFillClass}" style="left:${mktFill}%;width:${edgeFill}%"></div></div>
-    </div>
-
-    <!-- 3. WHY THIS PICK — Driver, Risk, EV -->
+    <!-- 3. WHY THIS PICK — full model factor breakdown + Risk + EV -->
     <div class="det-v8-sec">
       <div class="det-v8-hdr">Why This Pick</div>
+      ${factorTableHTML}
       <div class="qa-v8">
-        <div class="qa-v8-row"><span class="qa-v8-lbl driver">Driver</span><span class="qa-v8-val">${driver}</span></div>
         <div class="qa-v8-row"><span class="qa-v8-lbl risk">Risk</span><span class="qa-v8-val" style="color:${isReduced ? 'var(--amber)' : 'var(--text-2)'}">${risk}</span></div>
         ${evVal != null ? `<div class="qa-v8-row"><span class="qa-v8-lbl ev">EV</span>${evHTML}</div>` : ''}
       </div>
     </div>
 
-    <!-- 4. Odds (full detail, best available moved here from action summary) -->
+    <!-- 4. Available books (full detail) -->
     ${oddsHTML}
 
     <!-- 6–7. Lineup + Historical (secondary) -->
@@ -4145,6 +4222,32 @@ function narrativePreview(text) {
   return s.slice(0, cut > 0 ? cut : 380) + '…';
 }
 
+// ── One-line driver for the collapsed card ────────────────────────────────────
+// The model's primary reason, stated concisely WITHOUT repeating the bar's
+// probability numbers (those already live in the edge bar above). Prefers the
+// starter xFIP matchup; falls back to the top model factor; then a trimmed
+// clause of the narrative. Full prose lives in the Details panel.
+function oneLineDriverV8(p) {
+  const rs = p.raw_stats || {};
+  const pPit = p.pitcher, oPit = p.opp_pitcher;
+  const pX = typeof rs.pick_xfip === 'number' ? rs.pick_xfip : null;
+  const oX = typeof rs.opp_xfip  === 'number' ? rs.opp_xfip  : null;
+  if (pPit && oPit && pX != null && oX != null) {
+    return `<strong>SP</strong> ${pPit} ${pX.toFixed(2)} xFIP · ${oPit} ${oX.toFixed(2)} xFIP`;
+  }
+  const adjs = p.adj_breakdown && p.adj_breakdown.adjustments;
+  if (adjs && adjs.length) {
+    const a = adjs[0];
+    const sign = (a.positive !== false && (a.pp || 0) >= 0) ? '+' : '';
+    return `<strong>${a.label}</strong> ${sign}${(a.pp || 0).toFixed(1)}pp`;
+  }
+  if (p.narrative) {
+    const clause = p.narrative.trim().replace(/<[^>]+>/g, '').split(/\s—\s|:\s|\.\s/)[0].trim();
+    return clause.length > 4 ? clause : '';
+  }
+  return '';
+}
+
 // ── Pick card HTML ────────────────────────────────────────────────────────────
 function pickCardHTML(p, isTopPick = false, gameResult = null) {
   const edgePct  = (p.edge * 100).toFixed(1);
@@ -4213,6 +4316,11 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
         ? `<div class="sp-line">⚾ <strong>${spText}</strong> <span style="color:var(--text-4);font-size:10px">vs.</span> <strong>${oppSP}</strong></div>`
         : `<div class="sp-line">⚾ <strong>${spText}</strong></div>`)
     : '';
+  // When the one-line driver already carries the starter matchup (with xFIP),
+  // this plain pitcher row would just repeat it — suppress it then.
+  const _rsX = p.raw_stats || {};
+  const _driverIsSP = !!(p.pitcher && p.opp_pitcher
+    && typeof _rsX.pick_xfip === 'number' && typeof _rsX.opp_xfip === 'number');
 
   // Historical context: how has this pick type (side × dog/fav × odds range) performed this season
   const histContextHTML = _histContextFn ? (_histContextFn(p) || '') : '';
@@ -4339,6 +4447,8 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
 
     // Compact single-line edge status — keeps collapsed card height tight
     const deltaStr = delta > 0.003 ? ` ↑ +${(delta*100).toFixed(1)}pp` : delta < -0.003 ? ` ↓ −${(Math.abs(delta)*100).toFixed(1)}pp` : '';
+    // Lineup status already shown in the stake row above — omitted here to avoid
+    // repeating it; this row carries only the live edge re-check + refresh time.
     const panelHTML = `
       <div class="lep-compact">
         <span class="lep-c-label">Current</span>
@@ -4346,7 +4456,6 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
         ${deltaStr ? `<span class="lep-c-delta" style="color:${statusColor}">${deltaStr}</span>` : ''}
         <span class="lep-c-sep">·</span>
         <span class="lep-c-time">${refreshLabel}</span>
-        ${lineupBadge ? `<span class="lep-c-sep">·</span>${lineupBadge}` : ''}
       </div>`;
 
     // Warning banners for significant changes
@@ -4743,10 +4852,12 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     ? `<div class="pick-flags">${flags.map(f => `<span class="pick-flag ${f.cls}">${f.text}</span>`).join('')}</div>`
     : '';
 
-  // Combined SP + flags on one line (replaces two separate rows)
-  const spFlagsRowHTML = (spHTML || flags.length > 0) ? `
+  // Combined SP + flags on one line (replaces two separate rows).
+  // Drop the SP line when the driver already shows the starter matchup.
+  const _spRowHTML = _driverIsSP ? '' : spHTML;
+  const spFlagsRowHTML = (_spRowHTML || flags.length > 0) ? `
     <div class="sp-flags-row">
-      ${spHTML}
+      ${_spRowHTML}
       ${flags.length > 0 ? `<div class="pick-flags">${flags.map(f => `<span class="pick-flag ${f.cls}">${f.text}</span>`).join('')}</div>` : ''}
     </div>` : '';
 
@@ -4786,31 +4897,41 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     : `<span class="uc-matchup">${p.game || '—'}</span>`;
   const valueBadgeHTML = `<span class="pick-badge ${tierClass}">✓ ${tierClass === 'marginal' ? 'MARGINAL' : 'VALUE'}</span>`;
 
-  // Result / status badge — ESPN-sourced when available, time-based fallback
+  // Single status badge (top-right) — the one element live-score JS updates.
+  // Pre-game it shows the start time/countdown; refreshScoreBadges() swaps it to
+  // ● LIVE in-play and to the W/L result when final. Replaces the old trio of
+  // LIVE tag + time chip + LOCKED badge.
   let resultBadgeHTML;
   if (gameResult && gameResult.status === 'final') {
     const rCls = gameResult.result === 'W' ? 'win' : 'loss';
     resultBadgeHTML = `<span class="result-badge result-badge-${rCls}" data-result-badge>${gameResult.result} ${gameResult.score}</span>`;
-  } else if (gameResult && gameResult.status === 'live') {
+  } else if ((gameResult && gameResult.status === 'live') || isLive) {
     resultBadgeHTML = `<span class="live-badge" data-result-badge><span class="live-dot"></span>LIVE</span>`;
   } else if (isOver) {
     resultBadgeHTML = `<span class="final-badge" data-result-badge>Final</span>`;
-  } else if (isLive) {
-    resultBadgeHTML = `<span class="live-badge" data-result-badge><span class="live-dot"></span>LIVE</span>`;
   } else {
-    resultBadgeHTML = `<span data-result-badge style="display:none"></span>`;
+    resultBadgeHTML = `<span class="${chipCls}" data-result-badge${timeAttr}>⏱ ${chipText}</span>`;
   }
 
   // v2: simplified header — no VALUE badge (redundant with tier label + accent bar)
   // no ⭐ star — tier communicated by left border color
   // Tier label text removed — accent bar color communicates verdict (green=value, amber=conditional)
+  // Weather chip — baseball-native game context. Dome for indoor; otherwise
+  // wind (speed + 8-point direction) and temperature when available.
+  const _wxDeg = p.wind_dir_degrees;
+  const _wxDir = (_wxDeg != null) ? ['N','NE','E','SE','S','SW','W','NW'][Math.round(_wxDeg / 45) % 8] : '';
+  const weatherChipHTML = p.is_domed
+    ? `<span class="wx-chip"><span class="wx-ico">🏟</span>Dome</span>`
+    : (p.temp_f != null || p.wind_speed_mph != null)
+      ? `<span class="wx-chip"><span class="wx-ico">💨</span>${p.wind_speed_mph != null ? Math.round(p.wind_speed_mph) + ' mph' + (_wxDir ? ' ' + _wxDir : '') : ''}${p.temp_f != null ? ' · ' + Math.round(p.temp_f) + '°' : ''}</span>`
+      : '';
+
   const headerRowHTML = `
     <div class="uc-header-row">
       ${headerMatchup}
       ${matchLabelHTML}
-      ${resultBadgeHTML}
-      ${headerTimeHTML ? `<span class="uc-tier-dot">·</span>${headerTimeHTML}` : ''}
-      <span style="margin-left:auto">${plcBadge}</span>
+      ${weatherChipHTML}
+      <span style="margin-left:auto">${resultBadgeHTML}</span>
     </div>`;
 
   // ── Pick headline — dominant: large team name + large odds + edge badge ────
@@ -4904,7 +5025,6 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
         <div class="${edgeFillCls}" style="left:${mktF}%;width:${edgeF}%"></div>
         <div class="pb8-tick" style="left:calc(${(parseFloat(mktF)+parseFloat(edgeF)).toFixed(1)}% - 1px)" title="FairLine model probability"></div>
       </div>
-      <div class="pb8-legend">Grey = book · gap = model edge · <span style="color:var(--indigo-lt)">▏</span> = FairLine</div>
     </div>`;
   }
 
@@ -4931,6 +5051,30 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   const luPickTxt  = pickConfV8 === true ? 'Confirmed' : 'Projected';
   const luOppTxt   = oppConfV8  === true ? 'Confirmed' : 'Projected';
 
+  // Condense to a single line when both sides share a status (the common case);
+  // split into per-team rows only when they actually differ.
+  const _luSame = luPickCls === luOppCls;
+  const _luClip = t => (t.length > 12 ? t.slice(0, 12) : t);
+  const luBlockHTML = _luSame
+    ? `<div class="lu-v8-block lu-v8-single">
+        <div class="lu-v8-item">
+          <div class="lu-v8-dot ${luPickCls}"></div>
+          <span class="lu-v8-status ${luPickCls}">Lineups ${luPickCls === 'conf' ? 'confirmed' : 'projected'}</span>
+        </div>
+      </div>`
+    : `<div class="lu-v8-block">
+        <div class="lu-v8-item">
+          <div class="lu-v8-dot ${luPickCls}"></div>
+          <span class="lu-v8-team">${_luClip(pickTeamV8)}</span>
+          <span class="lu-v8-status ${luPickCls}">${luPickTxt}</span>
+        </div>
+        <div class="lu-v8-item">
+          <div class="lu-v8-dot ${luOppCls}"></div>
+          <span class="lu-v8-team">${_luClip(oppTeamV8)}</span>
+          <span class="lu-v8-status ${luOppCls}">${luOppTxt}</span>
+        </div>
+      </div>`;
+
   stakeV8HTML = `
     <div class="pc-v8-sl-row">
       <div class="${stakeV8Cls}">
@@ -4939,25 +5083,13 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
         ${stakeV8USD}
         ${stakeV8Note}
       </div>
-      <div class="lu-v8-block">
-        <div class="lu-v8-item">
-          <div class="lu-v8-dot ${luPickCls}"></div>
-          <span class="lu-v8-team">${pickTeamV8.length > 12 ? pickTeamV8.slice(0,12) : pickTeamV8}</span>
-          <span class="lu-v8-status ${luPickCls}">${luPickTxt}</span>
-        </div>
-        <div class="lu-v8-item">
-          <div class="lu-v8-dot ${luOppCls}"></div>
-          <span class="lu-v8-team">${oppTeamV8.length > 12 ? oppTeamV8.slice(0,12) : oppTeamV8}</span>
-          <span class="lu-v8-status ${luOppCls}">${luOppTxt}</span>
-        </div>
-      </div>
+      ${luBlockHTML}
     </div>`;
 
-  // ── v8 collapsed: primary driver line ───────────────────────────────────
-  let driverV8HTML = '';
-  if (_narrativePreviewText && _narrativePreviewText.length > 20) {
-    driverV8HTML = `<div class="pc-v8-driver">${_narrativePreviewText}</div>`;
-  }
+  // ── v8 collapsed: one-line driver (full narrative lives in Details) ──────
+  const _driverLineV8 = oneLineDriverV8(p);
+  let driverV8HTML = _driverLineV8
+    ? `<div class="pc-v8-driver">${_driverLineV8}</div>` : '';
 
   // ── v8 collapsed: flag line ──────────────────────────────────────────────
   let flagV8HTML = '';
@@ -4968,11 +5100,25 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   }
 
   // ── Compact Playable To + Best Book line (appears below driver in collapsed card) ──
+  // Best is computed from the live book list (same as the Details "Available
+  // Books" section) so the two never disagree; falls back to the snapshot field.
   const _bdn_c = {novig:'Novig',prophetx:'ProphetX',pinnacle:'Pinnacle',lowvig:'LowVig',
     betonlineag:'BetOnline',draftkings:'DraftKings',fanduel:'FanDuel',
-    betmgm:'BetMGM',betrivers:'BetRivers',espnbet:'ESPN Bet'};
-  const _pcBestBook = _bdn_c[(p.best_book||'').toLowerCase()] || p.best_book || '';
-  const _pcBestOdds = p.best_odds ? formatOdds(p.best_odds) : formatOdds(p.odds);
+    betmgm:'BetMGM',betrivers:'BetRivers',espnbet:'ESPN Bet',
+    hardrockbet:'Hard Rock',betway:'Betway',bovada:'Bovada',mybookieag:'MyBookie',betus:'BetUS'};
+  const _pcBooksObj = (() => {
+    const src = (typeof p.book_odds === 'object' && p.book_odds) ? p.book_odds
+              : (typeof p.books === 'object' && p.books) ? p.books : null;
+    if (src) return src;
+    try { return JSON.parse(p.book_odds || p.books || '{}'); } catch(e) { return {}; }
+  })();
+  const _pcTopEntry = Object.entries(_pcBooksObj || {})
+    .map(([k, v]) => ({ book: _bdn_c[k.toLowerCase()] || k, odds: typeof v === 'number' ? v : parseInt(v) }))
+    .filter(e => !isNaN(e.odds))
+    .sort((a, b) => b.odds - a.odds)[0] || null;
+  const _pcBestBook = _pcTopEntry ? _pcTopEntry.book : (_bdn_c[(p.best_book||'').toLowerCase()] || p.best_book || '');
+  const _pcBestOdds = _pcTopEntry ? (_pcTopEntry.odds > 0 ? '+' + _pcTopEntry.odds : String(_pcTopEntry.odds))
+    : (p.best_odds ? formatOdds(p.best_odds) : formatOdds(p.odds));
   const playableLineHTML = (!isOver && !isWlCard && playableV8 !== '—') ? `
     <div class="pc-playable-line">
       <span class="ppl-item"><span class="ppl-lbl">Playable To</span>&nbsp;<span class="ppl-val play">${playableV8}</span></span>
@@ -4991,7 +5137,6 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       ${stakeV8HTML}
       ${driverV8HTML}
       ${playableLineHTML}
-      ${flagV8HTML}
       ${_liveEdgePanelHTML}
       ${_liveEdgeWarnHTML}
       ${spFlagsRowHTML}
@@ -5308,7 +5453,7 @@ function render(data, hist, scores = {}, perf = null) {
 
   renderPicksHeaderBlock(data, hist);
   renderHeroProof(data);
-  renderEvidenceSection(data, perf);
+  renderEvidenceSection(data, perf, hist);
 
   // ── CLV validation banner ────────────────────────────────────────────────
   // Rendered below the record strip. Only shown when avg_clv data is present.
