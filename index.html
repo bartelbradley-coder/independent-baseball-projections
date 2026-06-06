@@ -1950,8 +1950,8 @@
 .scm-hdr { display:flex;align-items:center;height:62px;flex-shrink:0;padding:0 48px 0 46px;border-bottom:1px solid rgba(255,255,255,.055); }
 .scm-brand { display:flex;align-items:center;gap:11px; }
 .scm-logo { width:34px;height:34px;flex-shrink:0;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.28);border-radius:50%;display:flex;align-items:center;justify-content:center; }
-.scm-wm { font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:700;letter-spacing:.05em;color:#c8dcf0;line-height:1; }
-.scm-wm .f { color:rgba(200,220,240,.42);font-weight:400; }
+.scm-wm { font-family:"Barlow Condensed",sans-serif;font-size:27px;font-weight:800;letter-spacing:.04em;color:#eaf2fb;line-height:1; }
+.scm-wm .f { color:#8fa6bd;font-weight:600; }
 .scm-sport { font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#283848;margin-top:1px; }
 .scm-badge { font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:5px;margin:0 auto; }
 .scm-badge.val  { background:rgba(34,197,94,.09);color:#2ecc71;border:1px solid rgba(34,197,94,.24); }
@@ -1994,6 +1994,26 @@
 .scm-stat-val { font-family:"IBM Plex Mono",monospace;font-size:36px;font-weight:700;line-height:1; }
 .scm-stat-val.play { color:#f5a523; } .scm-stat-val.fair { color:#818cf8; } .scm-stat-val.book { color:#6a90a8;font-size:28px; }
 .scm-stat-sub { font-size:11px;color:#2a3e4e;font-family:"Inter",sans-serif; }
+/* Best-price block (sole right-column stat — fair/playable removed) */
+.scm-best-block { display:flex;flex-direction:column;gap:4px;padding:20px 22px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.18);border-radius:14px; }
+.scm-best-odds { font-family:"Barlow Condensed",sans-serif;font-size:62px;font-weight:800;line-height:.9;color:#4ade80; }
+.scm-best-book { font-family:"IBM Plex Mono",monospace;font-size:20px;font-weight:600;color:#7fae90;line-height:1; }
+/* Result-card variant (settled picks) */
+.scm-badge.won  { background:rgba(34,197,94,.12);color:#34d36a;border:1px solid rgba(34,197,94,.30); }
+.scm-badge.lost { background:rgba(239,68,68,.10);color:#f0726f;border:1px solid rgba(239,68,68,.26); }
+.scm-result-block { display:flex;flex-direction:column;gap:5px;padding:20px 22px;border-radius:14px; }
+.scm-result-block.won  { background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.22); }
+.scm-result-block.lost { background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.20); }
+.scm-result-word { font-family:"Barlow Condensed",sans-serif;font-size:48px;font-weight:800;line-height:.9;letter-spacing:.01em; }
+.scm-result-word.won  { color:#34d36a; } .scm-result-word.lost { color:#f0726f; }
+.scm-result-pnl { font-family:"IBM Plex Mono",monospace;font-size:24px;font-weight:700;color:#9fb4c4;line-height:1; }
+/* Loss accent for the whole card */
+.sc-modal.lost::before { background:linear-gradient(175deg,#ef4444 0%,rgba(239,68,68,.08) 100%); }
+.sc-modal.lost::after  { content:'';position:absolute;top:0;left:0;right:0;height:380px;background:radial-gradient(ellipse 110% 380px at 45% -60px,rgba(239,68,68,.06) 0%,transparent 100%);pointer-events:none;z-index:0; }
+.sc-modal.lost .scm-edge-num { color:#f0726f; }
+.sc-modal.lost .scm-edge-kicker { color:rgba(240,114,111,.85); }
+.sc-modal.lost .scm-bar-edg { background:rgba(239,68,68,.55); }
+.sc-modal.lost .scm-driver-inner { border-color:rgba(239,68,68,.45); }
 /* Edge + bar */
 .scm-edge { display:flex;flex-direction:column;justify-content:center;height:200px;flex-shrink:0;padding:0 46px;border-bottom:1px solid rgba(255,255,255,.055);gap:18px; }
 .scm-edge-top { display:flex;align-items:baseline;gap:18px; }
@@ -2590,6 +2610,7 @@ if (!_bankroll && localStorage.getItem('fairline_unit_size')) {
 let _unitSize = _bankroll / 100;  // kept for any legacy references; derived from bankroll
 let _histRef  = null; // history data reference for tracker result lookup
 let _mainPicksRef = []; // today's main picks for share-all
+let _scoresRef = {};    // latest ESPN scores, for settled result share cards
 let _mdActiveId = null; // card whose details are currently expanded inline
 let _histContextFn = null;      // set in render() — returns hist-context HTML for a pick
 let _countdownTimerStarted = false;
@@ -2627,6 +2648,20 @@ function _buildShareCardHTML(p) {
   const isCond = v.includes('CONDITIONAL') || v.includes('REDUCED');
   const tierCls = isCond ? 'cond' : 'val';
   const badgeText = isCond ? 'Conditional Value' : '✓ Official Value Bet';
+
+  // ── Settled result (result-card variant) ───────────────────────────────────
+  // Result/score come from live ESPN scores, not the pick object. P&L is derived
+  // from the result + odds on the displayed stake. (CLV is post-settlement only,
+  // so it isn't shown here — it lives in history.json.)
+  const _gr = (typeof getPickResult === 'function') ? getPickResult(p, _scoresRef) : null;
+  const isSettled = !!(_gr && _gr.status === 'final');
+  const won = isSettled && _gr.result === 'W';
+  const finalScore = isSettled ? _gr.score : '';
+  const _stakeU = p.kelly_units || 1;
+  const _mult = (p.odds > 0) ? (p.odds / 100) : (100 / Math.abs(p.odds || 100));
+  const _pnlU = won ? _stakeU * _mult : -_stakeU;
+  const pnlStr = (_pnlU >= 0 ? '+' : '−') + Math.abs(_pnlU).toFixed(1) + 'u';
+  const cardAccent = isSettled ? (won ? 'val' : 'lost') : tierCls;
 
   // Stake
   const stakeUnits = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—';
@@ -2714,7 +2749,7 @@ function _buildShareCardHTML(p) {
   let driverHTML = '';
   if (pickPitcher && oppPitcher && pickXfip && oppXfip) {
     const gap = Math.abs(parseFloat(pickXfip) - parseFloat(oppXfip)).toFixed(2);
-    driverHTML = `<strong>SP edge</strong> \u2014 ${pickPitcher} ${pickXfip} xFIP vs ${oppPitcher} ${oppXfip} xFIP. The ${gap}-point quality gap supports a model fair line of ${fairML}. At ${bestOddsStr} best available, +${edgePct}pp of uncaptured edge remains.`;
+    driverHTML = `<strong>SP edge</strong> \u2014 ${pickPitcher} ${pickXfip} xFIP vs ${oppPitcher} ${oppXfip}: a ${gap}-point gap the market hasn't priced.`;
   } else if (p.narrative) {
     const sents = p.narrative.trim().split(/\.\s+(?=[A-Z])/);
     const first3 = sents.slice(0, 3).join('. ').replace(/<[^>]+>/g, '');
@@ -2742,7 +2777,7 @@ function _buildShareCardHTML(p) {
   // Posted at
   const postedAt = p.posted_at || '—';
 
-  return `<div class="sc-modal ${tierCls}" id="share-card-el">
+  return `<div class="sc-modal ${cardAccent}" id="share-card-el">
 
     <!-- 1. Header 62px -->
     <div class="scm-hdr">
@@ -2759,7 +2794,7 @@ function _buildShareCardHTML(p) {
           <div class="scm-sport">MLB · 2026 Season</div>
         </div>
       </div>
-      <div class="scm-badge ${tierCls}">${badgeText}</div>
+      <div class="scm-badge ${isSettled ? (won ? 'won' : 'lost') : tierCls}">${isSettled ? (won ? '✓ WON · ' + pnlStr : '✗ LOST · ' + pnlStr) : badgeText}</div>
       <div class="scm-date">${dateStr}</div>
     </div>
 
@@ -2767,21 +2802,15 @@ function _buildShareCardHTML(p) {
     <div class="scm-lineup">
       <div class="scm-matchup-row">
         <span class="scm-matchup-name">${p.game || '—'}</span>
-        ${gameTimeStr ? `<span class="scm-matchup-sep">·</span><span class="scm-gametime">${gameTimeStr}</span>` : ''}
+        ${isSettled ? `<span class="scm-matchup-sep">·</span><span class="scm-gametime">Final · ${finalScore}</span>`
+          : gameTimeStr ? `<span class="scm-matchup-sep">·</span><span class="scm-gametime">${gameTimeStr}</span>` : ''}
       </div>
       ${pitcherHTML ? `<div class="scm-pitchers">${pitcherHTML}</div>` : ''}
       <div class="scm-lineup-status">
         <div class="scm-lu-item">
-          <div class="scm-lu-dot ${pickDot}"></div>
-          <span class="scm-lu-team">${team}</span>
-          <span class="scm-lu-stat ${pickDot}">${pickStat}</span>
+          <div class="scm-lu-dot ${isSettled || (pickDot === 'conf' && oppDot === 'conf') ? 'conf' : 'proj'}"></div>
+          <span class="scm-lu-stat ${isSettled || (pickDot === 'conf' && oppDot === 'conf') ? 'conf' : 'proj'}">${isSettled ? 'Posted before first pitch · tracked in full' : (pickConf === true && oppConf === true ? 'Lineups confirmed' : 'Lineups projected — verify before betting')}</span>
         </div>
-        <div class="scm-lu-item">
-          <div class="scm-lu-dot ${oppDot}"></div>
-          <span class="scm-lu-team">${oppTeam}</span>
-          <span class="scm-lu-stat ${oppDot}">${oppStat}</span>
-        </div>
-        ${lineupWarn}
       </div>
     </div>
 
@@ -2800,20 +2829,18 @@ function _buildShareCardHTML(p) {
         </div>
       </div>
       <div class="scm-pick-right">
-        <div class="scm-stat-item">
-          <div class="scm-stat-lbl play">Playable To</div>
-          <div class="scm-stat-val play">${playableTo}</div>
-          <div class="scm-stat-sub">do not bet worse</div>
-        </div>
-        <div class="scm-stat-item">
-          <div class="scm-stat-lbl">Fair ML</div>
-          <div class="scm-stat-val fair">${fairML}</div>
-        </div>
-        <div class="scm-stat-item">
-          <div class="scm-stat-lbl">Best Available</div>
-          <div class="scm-stat-val book">${bestBookName} ${bestOddsStr}</div>
+        ${isSettled ? `
+        <div class="scm-result-block ${won ? 'won' : 'lost'}">
+          <div class="scm-stat-lbl">Result</div>
+          <div class="scm-result-word ${won ? 'won' : 'lost'}">${won ? 'WON' : 'LOST'}</div>
+          <div class="scm-result-pnl">${pnlStr}${stakeDollar ? ' · ' + (won ? '+' : '−') + '$' + Math.abs(Math.round(_pnlU * _bankroll / 100)).toLocaleString() : ''}</div>
+        </div>` : `
+        <div class="scm-best-block">
+          <div class="scm-stat-lbl">Best Price</div>
+          <div class="scm-best-odds">${bestOddsStr}</div>
+          <div class="scm-best-book">${bestBookName}</div>
           <div class="scm-stat-sub">verify before betting</div>
-        </div>
+        </div>`}
       </div>
     </div>
 
@@ -2847,9 +2874,7 @@ function _buildShareCardHTML(p) {
       <div class="scm-ftr-url">fairlinemlb.com</div>
       <div class="scm-ftr-record">${recLine1}<br>${recLine2}</div>
       <div class="scm-ftr-meta">
-        <div class="scm-fi"><span class="scm-fi-lbl">Posted</span><span class="scm-fi-val">${postedAt}</span></div>
-        <div class="scm-fi-dot"></div>
-        <div class="scm-fi"><span class="scm-fi-lbl">Lineups</span><span class="scm-fi-val">${pickConf === true && oppConf === true ? 'Confirmed' : 'Projected — confirm before betting'}</span></div>
+        <div class="scm-fi"><span class="scm-fi-lbl">Posted before first pitch</span><span class="scm-fi-val">${postedAt}</span></div>
         <div class="scm-fi-dot"></div>
         <div class="scm-fi"><span class="scm-fi-lbl">Benchmark</span><span class="scm-fi-val">Pinnacle no-vig</span></div>
       </div>
@@ -5313,6 +5338,7 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
 }
 
 function render(data, hist, scores = {}, perf = null) {
+  _scoresRef = scores;   // stash so the share card can render settled results
   // Build historical context lookup and start countdown timer (both idempotent)
   _histContextFn = buildHistContextFn((hist && hist.rows) ? hist.rows : []);
   startCountdownTimer();
