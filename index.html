@@ -2628,6 +2628,7 @@ let _perfRef = null;    // performance.json (edge tiers) for share-card credibil
 let _mdActiveId = null; // card whose details are currently expanded inline
 let _histContextFn = null;      // set in render() — returns hist-context HTML for a pick
 let _countdownTimerStarted = false;
+let _lastBucketSig = null;      // section-bucket signature; re-render when a game changes state
 
 // ── Share on X/Twitter ────────────────────────────────────────────────────────
 function shareOnX(id) {
@@ -5798,13 +5799,13 @@ function render(data, hist, scores = {}, perf = null) {
         <span class="exl-mode">${_modeStr}${_bankroll > 0 ? ' · $' + _bankroll.toLocaleString() : ''}</span>
       </div>` : '';
 
-    // ── Group picks by live score status ─────────────────────────────────────
-    const liveGroup      = main.filter(p => getPickResult(p, scores)?.status === 'live');
-    const completedGroup = main.filter(p => getPickResult(p, scores)?.status === 'final');
-    const upcomingGroup  = main.filter(p => {
-      const r = getPickResult(p, scores);
-      return !r || r.status === 'scheduled';
-    });
+    // ── Group picks by game state (time-based) ───────────────────────────────
+    // Bucket by start time (same source as the per-card Live/Final badge) so the
+    // sections always match the badges and never collapse to a flat mixed list
+    // when the ESPN scores feed is missing. Scores still enrich card content.
+    const liveGroup      = main.filter(p => isLiveGame(p));
+    const completedGroup = main.filter(p => isGameOver(p));
+    const upcomingGroup  = main.filter(p => !isLiveGame(p) && !isGameOver(p));
 
     const useGrouping = liveGroup.length > 0 || completedGroup.length > 0;
 
@@ -5842,12 +5843,14 @@ function render(data, hist, scores = {}, perf = null) {
 
     let picksHTML = '';
     if (useGrouping) {
-      if (liveGroup.length > 0)
-        picksHTML += sectionHeader('live', 'Live', liveGroup.length) +
-                     `<div class="${gridClass}">` + renderPickGroup(liveGroup) + '</div>';
+      // Upcoming first — the actionable, bettable picks lead; Live and Completed
+      // are informational and follow.
       if (upcomingGroup.length > 0)
         picksHTML += sectionHeader('upcoming', 'Upcoming', upcomingGroup.length) +
                      `<div class="${gridClass}">` + renderPickGroup(upcomingGroup) + '</div>';
+      if (liveGroup.length > 0)
+        picksHTML += sectionHeader('live', 'Live', liveGroup.length) +
+                     `<div class="${gridClass}">` + renderPickGroup(liveGroup) + '</div>';
       if (completedGroup.length > 0)
         picksHTML += sectionHeader('completed', 'Completed', completedGroup.length) +
                      `<div class="${gridClass}">` + renderPickGroup(completedGroup) + '</div>';
@@ -5909,6 +5912,19 @@ function startCountdownTimer() {
       }
       // > 5h away — leave as static time, don't touch
     });
+    // Re-bucket the sections when any game crosses a state boundary
+    // (upcoming→live→final), so a just-started game leaves "Upcoming" promptly
+    // instead of waiting for the 30-min reload. Only re-renders on an actual
+    // change (rare — a few times per slate) to avoid collapsing expanded cards.
+    if (_todayDataRef && Array.isArray(_todayDataRef.picks)) {
+      const sig = _todayDataRef.picks
+        .map(p => isGameOver(p) ? '2' : isLiveGame(p) ? '1' : '0').join('');
+      const changed = _lastBucketSig !== null && sig !== _lastBucketSig;
+      _lastBucketSig = sig;
+      if (changed && typeof render === 'function') {
+        render(_todayDataRef, _histRef, _scoresRef, _perfRef);
+      }
+    }
   }, 30 * 1000);
 }
 
@@ -5935,6 +5951,7 @@ function startAutoRefresh() {
   setInterval(async () => {
     if (!isLiveHour()) return;
     const scores = await fetchESPNScores();
+    _scoresRef = scores;   // keep fresh so a state-change re-render uses latest scores
     refreshScoreBadges(scores);
   }, 5 * 60 * 1000);
 }
