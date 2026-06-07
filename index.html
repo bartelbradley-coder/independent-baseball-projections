@@ -589,6 +589,9 @@
 .picks-state-summary .pss-live  { color: var(--green); font-weight: 600; }
 .picks-state-summary .pss-final { color: var(--text-3); }
 .picks-state-summary .pss-sep   { color: var(--text-4); }
+.picks-state-summary.results-lead { margin-bottom: 6px; }
+.picks-state-summary.results-lead .pss-up { color: var(--text-1, #fff); letter-spacing: 0.04em; }
+.picks-results-note { font-size: 11px; color: var(--text-4); margin: 0 0 16px; padding: 0 2px; }
 
 /* ── Result badge (W / L + score) ── */
 .result-badge {
@@ -5822,6 +5825,8 @@ function render(data, hist, scores = {}, perf = null) {
     // Only when the slate is mixed (some started) — leads with the actionable
     // Upcoming count, then Live, then Final + today's W-L (from ESPN scores).
     let stateSummaryHTML = '';
+    // All of today's games have started/finished → lead with results, not picks.
+    const allDone = main.length > 0 && upcomingGroup.length === 0 && liveGroup.length === 0;
     if (useGrouping) {
       let fw = 0, fl = 0;
       completedGroup.forEach(p => {
@@ -5831,12 +5836,23 @@ function render(data, hist, scores = {}, perf = null) {
           ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
         won ? fw++ : fl++;
       });
-      const parts = [];
-      if (upcomingGroup.length)  parts.push(`<span class="pss-up">${upcomingGroup.length} Upcoming</span>`);
-      if (liveGroup.length)      parts.push(`<span class="pss-live">${liveGroup.length} Live</span>`);
-      if (completedGroup.length) parts.push(`<span class="pss-final">${completedGroup.length} Final${(fw + fl) ? ` · ${fw}–${fl}` : ''}</span>`);
-      if (parts.length)
-        stateSummaryHTML = `<div class="picks-state-summary">${parts.join('<span class="pss-sep">·</span>')}</div>`;
+      const rec = (fw + fl) ? ` · ${fw}–${fl}` : '';
+      if (allDone) {
+        // Late-night / post-slate: reframe as a results recap, not actionable picks.
+        stateSummaryHTML = `<div class="picks-state-summary results-lead">
+            <span class="pss-up">Today's Results</span>
+            <span class="pss-sep">·</span>
+            <span class="pss-final">${completedGroup.length} game${completedGroup.length !== 1 ? 's' : ''}${rec}</span>
+          </div>
+          <div class="picks-results-note">All of today's games have started — new picks post tomorrow morning.</div>`;
+      } else {
+        const parts = [];
+        if (upcomingGroup.length)  parts.push(`<span class="pss-up">${upcomingGroup.length} Upcoming</span>`);
+        if (liveGroup.length)      parts.push(`<span class="pss-live">${liveGroup.length} Live</span>`);
+        if (completedGroup.length) parts.push(`<span class="pss-final">${completedGroup.length} Final${rec}</span>`);
+        if (parts.length)
+          stateSummaryHTML = `<div class="picks-state-summary">${parts.join('<span class="pss-sep">·</span>')}</div>`;
+      }
     }
 
     function sectionHeader(type, label, count) {
@@ -5872,7 +5888,10 @@ function render(data, hist, scores = {}, perf = null) {
     }
 
     let picksHTML = '';
-    if (useGrouping) {
+    if (allDone) {
+      // Single completed group — the "Today's Results" lead replaces the header.
+      picksHTML = `<div class="${gridClass}">` + renderPickGroup(completedGroup) + '</div>';
+    } else if (useGrouping) {
       // Upcoming first — the actionable, bettable picks lead; Live and Completed
       // are informational and follow.
       if (upcomingGroup.length > 0)
@@ -5891,7 +5910,7 @@ function render(data, hist, scores = {}, perf = null) {
 
     document.getElementById('picks-container').innerHTML =
       stateSummaryHTML +
-      actionStripHTML +
+      (allDone ? '' : actionStripHTML) +
       shareAllHTML +
       (useGrouping ? picksHTML : `<div class="${gridClass}">` + picksHTML + '</div>');
     refreshKellyUSD();
