@@ -2196,6 +2196,24 @@
 .pc-v8-flag-line { padding:7px 14px;font-size:10px;color:var(--amber);line-height:1.5;background:rgba(245,158,11,.06);border-top:1px solid rgba(245,158,11,.15) }
 .pc-v8-flag-line strong { font-weight:600 }
 
+/* Completed-pick result + CLV summary — replaces the stake row once a game is final.
+   Bet sizing is no longer actionable, so the focus shifts to outcome (P&L) + CLV. */
+.pc-result-row { display:flex;align-items:stretch;gap:8px;margin:8px 14px 2px;flex-wrap:wrap }
+.pcr-pnl, .pcr-clv { flex:1;min-width:106px;display:flex;flex-direction:column;justify-content:center;gap:3px;border-radius:8px;padding:8px 10px;border:1px solid var(--border);background:rgba(255,255,255,.03) }
+.pc-result-row.won  .pcr-pnl { border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.06) }
+.pc-result-row.lost .pcr-pnl { border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.05) }
+.pcr-pnl-lbl { font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;font-family:var(--font-ui) }
+.pc-result-row.won  .pcr-pnl-lbl { color:var(--green) }
+.pc-result-row.lost .pcr-pnl-lbl { color:var(--red) }
+.pcr-pnl-val { font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--text);line-height:1 }
+.pcr-clv.pos { border-color:rgba(34,197,94,.25) }
+.pcr-clv.neg { border-color:rgba(239,68,68,.2) }
+.pcr-clv-lbl { font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);font-family:var(--font-ui) }
+.pcr-clv-val { font-family:var(--font-mono);font-size:16px;font-weight:700;line-height:1;color:var(--text-2) }
+.pcr-clv.pos .pcr-clv-val { color:var(--green) }
+.pcr-clv.neg .pcr-clv-val { color:var(--red) }
+.pcr-clv-note { font-size:8.5px;color:var(--text-3) }
+
 /* ── v8 Expanded Details Panel ── */
 .det-v8-panel { background:rgba(255,255,255,.016);border-top:2px solid rgba(255,255,255,.055);display:none }
 .det-v8-panel.open { display:block }
@@ -5346,14 +5364,57 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   const _pcBestBook = _pcTopEntry ? _pcTopEntry.book : (_bdn_c[(p.best_book||'').toLowerCase()] || p.best_book || '');
   const _pcBestOdds = _pcTopEntry ? (_pcTopEntry.odds > 0 ? '+' + _pcTopEntry.odds : String(_pcTopEntry.odds))
     : (p.best_odds ? formatOdds(p.best_odds) : formatOdds(p.odds));
-  const playableLineHTML = (!isOver && !isWlCard && playableV8 !== '—') ? `
+  const playableLineHTML = (!isOver && !isLive && !isWlCard && playableV8 !== '—') ? `
     <div class="pc-playable-line">
       <span class="ppl-item"><span class="ppl-lbl">Playable To</span>&nbsp;<span class="ppl-val play">${playableV8}</span></span>
       ${_pcBestBook ? `<span class="ppl-sep">·</span><span class="ppl-item"><span class="ppl-lbl">Best</span>&nbsp;<span class="ppl-val">${_pcBestBook} ${_pcBestOdds}</span></span>` : ''}
       ${_lineMoved ? `<span class="ppl-sep">·</span>${lineMovementHTML()}` : ''}
     </div>` : '';
 
+  // ── Completed-pick result + CLV summary ──────────────────────────────────────
+  // Once a game is final the stake row (a bet CTA) is no longer actionable, so we
+  // swap it for the outcome: realised P&L on the displayed stake + closing-line
+  // value (did the market move to our side by close?). P&L derived the same way as
+  // the share-card result variant (result + odds on kelly_units).
+  let resultSummaryHTML = '';
+  if (isOver && gameResult && gameResult.status === 'final') {
+    const won     = gameResult.result === 'W';
+    const _stakeU = p.kelly_units || 1;
+    const _mult   = (p.odds > 0) ? (p.odds / 100) : (100 / Math.abs(p.odds || 100));
+    const _pnlU   = won ? _stakeU * _mult : -_stakeU;
+    const _sgn    = _pnlU >= 0 ? '+' : '−';
+    const pnlStr  = _sgn + Math.abs(_pnlU).toFixed(2) + 'u';
+    const pnlUSD  = (_bankroll > 0 && p.kelly_units)
+      ? ` · ${_sgn}$${Math.abs(Math.round(_pnlU * _bankroll / 100))}` : '';
+    const clvPp   = (p.clv != null && !isNaN(parseFloat(p.clv))) ? parseFloat(p.clv) * 100 : null;
+    const clvHTML = (clvPp != null) ? (() => {
+      // Sub-0.5pp moves are effectively flat — don't overclaim "beat the close".
+      const flat = Math.abs(clvPp) < 0.5;
+      const beat = clvPp >= 0;
+      const cls  = flat ? '' : (beat ? 'pos' : 'neg');
+      const note = flat ? 'matched the close' : (beat ? 'beat the close' : 'closed past us');
+      return `<div class="pcr-clv ${cls}" title="Closing line value — Pinnacle's move from our posted price to close. Positive = the market came to our side.">
+          <span class="pcr-clv-lbl">CLV</span>
+          <span class="pcr-clv-val">${clvPp >= 0 ? '+' : '−'}${Math.abs(clvPp).toFixed(1)}pp</span>
+          <span class="pcr-clv-note">${note}</span>
+        </div>`;
+    })() : '';
+    resultSummaryHTML = `
+      <div class="pc-result-row ${won ? 'won' : 'lost'}">
+        <div class="pcr-pnl">
+          <span class="pcr-pnl-lbl">${won ? 'Won' : 'Lost'}</span>
+          <span class="pcr-pnl-val">${pnlStr}${pnlUSD}</span>
+        </div>
+        ${clvHTML}
+      </div>`;
+  }
+
   // ── Assemble card ─────────────────────────────────────────────────────────
+  // Per-state body:
+  //   Upcoming  — full card (prob bar, stake/CTA, playable-to line, live-edge panel)
+  //   Live      — condensed: drop the stake row + playable-to line (no bet CTA in-play)
+  //   Completed — lead with result + CLV; stake row replaced by resultSummaryHTML
+  const showStake = !isOver && !isLive;
   const resultStateClass = gameResult && gameResult.status === 'final'
     ? (gameResult.result === 'W' ? ' card-win' : ' card-loss') : '';
   return `
@@ -5361,8 +5422,9 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       ${topPickBannerHTML}
       ${headerRowHTML}
       ${pickHeadlineHTML}
+      ${resultSummaryHTML}
       ${probBarHTML}
-      ${stakeV8HTML}
+      ${showStake ? stakeV8HTML : ''}
       ${driverV8HTML}
       ${playableLineHTML}
       ${_liveEdgePanelHTML}
