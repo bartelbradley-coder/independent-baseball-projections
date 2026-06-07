@@ -580,6 +580,15 @@
 .psh-label.completed { color: var(--text-4); }
 .psh-count { font-size: 10px; color: var(--text-4); background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; padding: 1px 8px; flex-shrink: 0; }
 .psh-line  { flex: 1; height: 1px; background: var(--border); }
+/* ── Today's-state summary strip (Upcoming · Live · Final W–L) ── */
+.picks-state-summary { display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-family: var(--font-display); font-size: 13px; color: var(--text-3);
+  margin: 0 0 14px; padding: 8px 12px; background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border); border-radius: 10px; }
+.picks-state-summary .pss-up    { color: var(--text-2); font-weight: 700; }
+.picks-state-summary .pss-live  { color: var(--green); font-weight: 600; }
+.picks-state-summary .pss-final { color: var(--text-3); }
+.picks-state-summary .pss-sep   { color: var(--text-4); }
 
 /* ── Result badge (W / L + score) ── */
 .result-badge {
@@ -5809,6 +5818,27 @@ function render(data, hist, scores = {}, perf = null) {
 
     const useGrouping = liveGroup.length > 0 || completedGroup.length > 0;
 
+    // ── Today's-state summary strip ──────────────────────────────────────────
+    // Only when the slate is mixed (some started) — leads with the actionable
+    // Upcoming count, then Live, then Final + today's W-L (from ESPN scores).
+    let stateSummaryHTML = '';
+    if (useGrouping) {
+      let fw = 0, fl = 0;
+      completedGroup.forEach(p => {
+        const g = scores[p.game];
+        if (!g || g.status !== 'final' || g.awayScore == null) return;
+        const won = (p.side || '').toUpperCase() === 'AWAY'
+          ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
+        won ? fw++ : fl++;
+      });
+      const parts = [];
+      if (upcomingGroup.length)  parts.push(`<span class="pss-up">${upcomingGroup.length} Upcoming</span>`);
+      if (liveGroup.length)      parts.push(`<span class="pss-live">${liveGroup.length} Live</span>`);
+      if (completedGroup.length) parts.push(`<span class="pss-final">${completedGroup.length} Final${(fw + fl) ? ` · ${fw}–${fl}` : ''}</span>`);
+      if (parts.length)
+        stateSummaryHTML = `<div class="picks-state-summary">${parts.join('<span class="pss-sep">·</span>')}</div>`;
+    }
+
     function sectionHeader(type, label, count) {
       return `<div class="picks-section-header">
         <span class="psh-dot ${type}"></span>
@@ -5860,6 +5890,7 @@ function render(data, hist, scores = {}, perf = null) {
     }
 
     document.getElementById('picks-container').innerHTML =
+      stateSummaryHTML +
       actionStripHTML +
       shareAllHTML +
       (useGrouping ? picksHTML : `<div class="${gridClass}">` + picksHTML + '</div>');
