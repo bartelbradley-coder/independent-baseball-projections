@@ -4202,7 +4202,7 @@ function buildDetailsV8(p, cardId) {
   const refreshTime = p.current_refresh_time || p.posted_at || '—';
 
   // ── Matchup quality snapshot (pick vs opponent) ──
-  // Starter xFIP / K% / SIERA (pitcher quality) + defensive OAA. Each row only
+  // Starter xFIP / K% (pitcher quality) + defensive OAA. Each row only
   // renders when both sides' values are present. Bullpen xFIP is a league-average
   // placeholder in the export (always 4.35), so it's omitted.
   const _rs = p.raw_stats || {};
@@ -4210,7 +4210,7 @@ function buildDetailsV8(p, cardId) {
   {
     const mqRows = [];
     const _num = v => typeof v === 'number';
-    // Starter — lower xFIP / SIERA better; higher K% better
+    // Starter — lower xFIP better; higher K% better
     if (_num(_rs.pick_xfip) && _num(_rs.opp_xfip)) {
       const pB = _rs.pick_xfip < _rs.opp_xfip;
       mqRows.push({ lbl: 'Starter (xFIP)', a: _rs.pick_xfip.toFixed(2), b: _rs.opp_xfip.toFixed(2), aWin: pB, bWin: !pB });
@@ -4219,10 +4219,6 @@ function buildDetailsV8(p, cardId) {
       const pB = _rs.pick_k_pct > _rs.opp_k_pct;
       const fk = v => (v * 100).toFixed(1) + '%';
       mqRows.push({ lbl: 'Starter K%', a: fk(_rs.pick_k_pct), b: fk(_rs.opp_k_pct), aWin: pB, bWin: !pB });
-    }
-    if (_num(_rs.pick_siera) && _num(_rs.opp_siera)) {
-      const pB = _rs.pick_siera < _rs.opp_siera;
-      mqRows.push({ lbl: 'Starter (SIERA)', a: _rs.pick_siera.toFixed(2), b: _rs.opp_siera.toFixed(2), aWin: pB, bWin: !pB });
     }
     if (_num(_rs.pick_oaa) && _num(_rs.opp_oaa)) {
       const pB = _rs.pick_oaa > _rs.opp_oaa;
@@ -4249,7 +4245,7 @@ function buildDetailsV8(p, cardId) {
             <thead><tr><th></th><th class="mq-team mq-pick">${pickTeam}</th><th class="mq-team">${oppTeam}</th></tr></thead>
             <tbody>${body}</tbody>
           </table>
-          <div class="mq-note">Green = the side the model rates better. Lower xFIP/SIERA, higher K% and OAA are better.${parkNote}</div>
+          <div class="mq-note">Green = the side the model rates better. Lower xFIP, higher K% and OAA are better.${parkNote}</div>
         </div>`;
     }
   }
