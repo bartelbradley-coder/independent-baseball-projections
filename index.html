@@ -1061,6 +1061,7 @@
 }
 .cs-lc-confirmed { background: rgba(34,197,94,0.12); color: var(--green); }
 .cs-lc-projected { background: rgba(245,158,11,0.12); color: var(--amber); }
+.cs-lc-final     { background: rgba(148,163,184,0.14); color: #94a3b8; }
 .cs-opp-lineup   { font-size: 9px; color: var(--text-4); }
 .cs-metrics {
   display: flex; gap: 0; margin-bottom: 10px;
@@ -4599,14 +4600,25 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     else if (delta <= -0.005) { statusText = `↓ −${(absDelta*100).toFixed(1)}pp`; }
     else if (delta >= 0.005)  { statusText = `↑ +${(delta*100).toFixed(1)}pp`; }
 
-    // Lineup badge
+    // Lineup badge. Once a game has started it leaves the live model snapshot,
+    // so current_lineup_confirmed reverts to null and the lineup claim is moot —
+    // show game status (Live / Final) instead of a stale "Projected" badge.
     const lc = p.current_lineup_confirmed;
     const olc = p.current_opp_lineup_confirmed;
     let lineupBadge = '';
-    // null (morning pick, pre-lineup) and false both → Projected
-    if (lc === true) lineupBadge = `<span class="cs-lineup-badge cs-lc-confirmed">✓ Lineup Confirmed</span>`;
-    else             lineupBadge = `<span class="cs-lineup-badge cs-lc-projected">⚠ Lineup Projected</span>`;
-    const oppLineupNote = (olc === true) ? ' · Opp confirmed' : ' · Opp projected';
+    let oppLineupNote = '';
+    if (isGameOver(p)) {
+      lineupBadge = `<span class="cs-lineup-badge cs-lc-final">● Final</span>`;
+    } else if (isLiveGame(p)) {
+      lineupBadge = `<span class="cs-lineup-badge cs-lc-final">● Live</span>`;
+    } else if (lc === true) {
+      lineupBadge = `<span class="cs-lineup-badge cs-lc-confirmed">✓ Lineup Confirmed</span>`;
+      oppLineupNote = (olc === true) ? ' · Opp confirmed' : ' · Opp projected';
+    } else {
+      // null (morning pick, pre-lineup) and false both → Projected
+      lineupBadge = `<span class="cs-lineup-badge cs-lc-projected">⚠ Lineup Projected</span>`;
+      oppLineupNote = (olc === true) ? ' · Opp confirmed' : ' · Opp projected';
+    }
 
     // Current derived values
     const currFair     = p.current_fair_odds    || p.fair_odds  || '—';
@@ -5235,9 +5247,11 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   const awayConfV8 = p.away_lineup_confirmed;
   const pickTeamV8 = isHomePick ? homeTeam || p.pick : awayTeam || p.pick;
   const oppTeamV8  = isHomePick ? awayTeam || '—' : homeTeam || '—';
-  const pickConfV8 = isHomePick ? homeConfV8 : awayConfV8;
-  const oppConfV8  = isHomePick ? awayConfV8 : homeConfV8;
-  // null (Python None) = morning pick, lineups not yet posted → treat as Projected, not Unknown
+  // Use the LIVE pick-oriented lineup flags (current_*), matching the collapsed
+  // badge — the morning home/away_lineup_confirmed are frozen null pre-lineup.
+  const pickConfV8 = p.current_lineup_confirmed;
+  const oppConfV8  = p.current_opp_lineup_confirmed;
+  // null (live snapshot pre-lineup, or game already started) → Projected
   const luPickCls  = pickConfV8 === true ? 'conf' : 'proj';
   const luOppCls   = oppConfV8  === true ? 'conf' : 'proj';
   const luPickTxt  = pickConfV8 === true ? 'Confirmed' : 'Projected';
@@ -5247,7 +5261,15 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   // split into per-team rows only when they actually differ.
   const _luSame = luPickCls === luOppCls;
   const _luClip = t => (t.length > 12 ? t.slice(0, 12) : t);
-  const luBlockHTML = _luSame
+  // Once a game starts, lineup status is moot — show game state instead.
+  const _luStartedV8 = isGameOver(p) ? 'Final' : isLiveGame(p) ? 'Live' : null;
+  const luBlockHTML = _luStartedV8
+    ? `<div class="lu-v8-block lu-v8-single">
+        <div class="lu-v8-item">
+          <span class="lu-v8-status">${_luStartedV8}</span>
+        </div>
+      </div>`
+    : _luSame
     ? `<div class="lu-v8-block lu-v8-single">
         <div class="lu-v8-item">
           <div class="lu-v8-dot ${luPickCls}"></div>
