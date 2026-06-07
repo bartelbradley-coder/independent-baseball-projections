@@ -2206,6 +2206,8 @@
 .pc-result-row.won  .pcr-pnl-lbl { color:var(--green) }
 .pc-result-row.lost .pcr-pnl-lbl { color:var(--red) }
 .pcr-pnl-val { font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--text);line-height:1 }
+.pcr-pnl-val.pending { font-family:var(--font-ui);font-size:12px;font-weight:600;color:var(--text-3) }
+.pc-result-row.pending .pcr-pnl-lbl { color:var(--text-3) }
 .pcr-clv.pos { border-color:rgba(34,197,94,.25) }
 .pcr-clv.neg { border-color:rgba(239,68,68,.2) }
 .pcr-clv-lbl { font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);font-family:var(--font-ui) }
@@ -2213,6 +2215,10 @@
 .pcr-clv.pos .pcr-clv-val { color:var(--green) }
 .pcr-clv.neg .pcr-clv-val { color:var(--red) }
 .pcr-clv-note { font-size:8.5px;color:var(--text-3) }
+/* Completed-card compact edge line (replaces the full prob bar) */
+.pc-edge-line { padding:6px 14px 2px;font-size:10.5px;color:var(--text-3);font-family:var(--font-ui) }
+.pc-edge-line .pel-edge { color:var(--green);font-weight:700;font-family:var(--font-mono) }
+.pc-edge-line .pel-sep { color:var(--text-4);margin:0 2px }
 
 /* ── v8 Expanded Details Panel ── */
 .det-v8-panel { background:rgba(255,255,255,.016);border-top:2px solid rgba(255,255,255,.055);display:none }
@@ -5141,7 +5147,8 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     const rCls = gameResult.result === 'W' ? 'win' : 'loss';
     resultBadgeHTML = `<span class="result-badge result-badge-${rCls}" data-result-badge>${gameResult.result} ${gameResult.score}</span>`;
   } else if ((gameResult && gameResult.status === 'live') || isLive) {
-    resultBadgeHTML = `<span class="live-badge" data-result-badge><span class="live-dot"></span>LIVE</span>`;
+    const _liveScore = (gameResult && gameResult.score) ? ` · ${gameResult.score}` : '';
+    resultBadgeHTML = `<span class="live-badge" data-result-badge><span class="live-dot"></span>LIVE${_liveScore}</span>`;
   } else if (isOver) {
     resultBadgeHTML = `<span class="final-badge" data-result-badge>Final</span>`;
   } else {
@@ -5172,12 +5179,8 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   // ── Pick headline — dominant: large team name + large odds + edge badge ────
   const fairOddsInline = p.fair_odds ? ` · Fair <span class="uph-fair">${p.fair_odds}</span>` : '';
 
-  // Final score line (shown on completed picks below team name)
-  let finalScoreHTML = '';
-  if (gameResult && gameResult.status === 'final') {
-    const won = gameResult.result === 'W';
-    finalScoreHTML = `<div class="uph-final-score ${won ? 'won' : 'lost'}">${won ? 'W' : 'L'} ${gameResult.score} — Final</div>`;
-  }
+  // Final score is shown in the top-right result badge + the result/CLV summary
+  // row; no separate headline score line (avoids showing the score three times).
 
   // Narrative preview — reuse narrativePreview() for consistent 2-sentence extraction
   const _narrativePreviewText = narrativePreview(fullNarrativeText || '');
@@ -5189,7 +5192,6 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     <div class="uc-pick-headline">
       <div>
         <span class="uph-team">${isHomePick ? homeTeam || p.pick : awayTeam || p.pick}</span>
-        ${finalScoreHTML}
       </div>
       <span class="uph-odds ${isDog ? 'dog' : 'fav'}">${formatOdds(p.odds)}</span>
     </div>
@@ -5205,7 +5207,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     </div>`;
 
   const topPickBannerHTML = isTopPick
-    ? `<div class="top-pick-banner">⭐ Best Bet Today · Highest Model Edge</div>`
+    ? `<div class="top-pick-banner">${isOver ? '⭐ Top Edge Today' : '⭐ Best Bet Today · Highest Model Edge'}</div>`
     : '';
 
   // ── v8 collapsed: key metric strip ──────────────────────────────────────
@@ -5262,6 +5264,12 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       </div>
     </div>`;
   }
+
+  // Completed cards demote the prob bar to a single retrospective edge line so
+  // the result + CLV summary stays the focus (the full bar is forward-looking).
+  const edgeLineCompactHTML = (modelPct && mktPct)
+    ? `<div class="pc-edge-line">Edge <strong class="pel-edge">+${edgePct}pp</strong> <span class="pel-sep">·</span> Model ${modelPct}% vs Market ${mktPct}%</div>`
+    : '';
 
   // ── v8 collapsed: stake + lineup row ────────────────────────────────────
   let stakeV8HTML = '';
@@ -5374,18 +5382,36 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   // ── Completed-pick result + CLV summary ──────────────────────────────────────
   // Once a game is final the stake row (a bet CTA) is no longer actionable, so we
   // swap it for the outcome: realised P&L on the displayed stake + closing-line
-  // value (did the market move to our side by close?). P&L derived the same way as
-  // the share-card result variant (result + odds on kelly_units).
+  // value. The two halves are independent:
+  //   • P&L needs the ESPN final score (gameResult). If the game is over by time
+  //     but ESPN hasn't posted the final yet, show "Result pending" instead.
+  //   • CLV is fixed at the closing-line snapshot, independent of who won, so it
+  //     shows as soon as it's available — even before the final lands.
+  // P&L derived the same way as the share-card result variant (result + odds on
+  // kelly_units).
   let resultSummaryHTML = '';
-  if (isOver && gameResult && gameResult.status === 'final') {
-    const won     = gameResult.result === 'W';
-    const _stakeU = p.kelly_units || 1;
-    const _mult   = (p.odds > 0) ? (p.odds / 100) : (100 / Math.abs(p.odds || 100));
-    const _pnlU   = won ? _stakeU * _mult : -_stakeU;
-    const _sgn    = _pnlU >= 0 ? '+' : '−';
-    const pnlStr  = _sgn + Math.abs(_pnlU).toFixed(2) + 'u';
-    const pnlUSD  = (_bankroll > 0 && p.kelly_units)
-      ? ` · ${_sgn}$${Math.abs(Math.round(_pnlU * _bankroll / 100))}` : '';
+  if (isOver) {
+    const isFinal = !!(gameResult && gameResult.status === 'final');
+    const won     = isFinal && gameResult.result === 'W';
+
+    // P&L half
+    let pnlHTML;
+    if (isFinal) {
+      const _stakeU = p.kelly_units || 1;
+      const _mult   = (p.odds > 0) ? (p.odds / 100) : (100 / Math.abs(p.odds || 100));
+      const _pnlU   = won ? _stakeU * _mult : -_stakeU;
+      const _sgn    = _pnlU >= 0 ? '+' : '−';
+      const pnlStr  = _sgn + Math.abs(_pnlU).toFixed(2) + 'u';
+      const pnlUSD  = (_bankroll > 0 && p.kelly_units)
+        ? ` · ${_sgn}$${Math.abs(Math.round(_pnlU * _bankroll / 100))}` : '';
+      pnlHTML = `<span class="pcr-pnl-lbl">${won ? 'Won' : 'Lost'}</span>
+          <span class="pcr-pnl-val">${pnlStr}${pnlUSD}</span>`;
+    } else {
+      pnlHTML = `<span class="pcr-pnl-lbl">Final</span>
+          <span class="pcr-pnl-val pending">Result pending</span>`;
+    }
+
+    // CLV half — independent of the final score
     const clvPp   = (p.clv != null && !isNaN(parseFloat(p.clv))) ? parseFloat(p.clv) * 100 : null;
     const clvHTML = (clvPp != null) ? (() => {
       // Sub-0.5pp moves are effectively flat — don't overclaim "beat the close".
@@ -5399,14 +5425,17 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
           <span class="pcr-clv-note">${note}</span>
         </div>`;
     })() : '';
-    resultSummaryHTML = `
-      <div class="pc-result-row ${won ? 'won' : 'lost'}">
-        <div class="pcr-pnl">
-          <span class="pcr-pnl-lbl">${won ? 'Won' : 'Lost'}</span>
-          <span class="pcr-pnl-val">${pnlStr}${pnlUSD}</span>
-        </div>
+
+    // Only render the row when there's something concrete to show — a final
+    // result, or CLV. A pending game with no CLV stays sparse (no empty box).
+    if (isFinal || clvHTML) {
+      const rowCls = isFinal ? (won ? 'won' : 'lost') : 'pending';
+      resultSummaryHTML = `
+      <div class="pc-result-row ${rowCls}">
+        <div class="pcr-pnl">${pnlHTML}</div>
         ${clvHTML}
       </div>`;
+    }
   }
 
   // ── Assemble card ─────────────────────────────────────────────────────────
@@ -5423,7 +5452,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       ${headerRowHTML}
       ${pickHeadlineHTML}
       ${resultSummaryHTML}
-      ${probBarHTML}
+      ${isOver ? edgeLineCompactHTML : probBarHTML}
       ${showStake ? stakeV8HTML : ''}
       ${driverV8HTML}
       ${playableLineHTML}
@@ -6086,14 +6115,16 @@ function updateRefreshUI() {
 function getPickResult(p, scores) {
   const g = scores[p.game];
   if (!g) return null;
-  if (g.status === 'live')      return { status: 'live' };
+  const side = (p.side || '').toUpperCase();
+  // Pick-oriented score: our pick's team first, opponent second.
+  const ps = side === 'AWAY' ? g.awayScore : g.homeScore;
+  const os = side === 'AWAY' ? g.homeScore : g.awayScore;
+  const score = (ps != null && os != null) ? `${ps}–${os}` : null;
+  if (g.status === 'live')      return { status: 'live', score };
   if (g.status === 'scheduled') return { status: 'scheduled' };
   // final
-  const side    = (p.side || '').toUpperCase();
   const pickWon = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
-  const ps      = side === 'AWAY' ? g.awayScore : g.homeScore;
-  const os      = side === 'AWAY' ? g.homeScore : g.awayScore;
-  return { status: 'final', result: pickWon ? 'W' : 'L', score: `${ps}–${os}` };
+  return { status: 'final', result: pickWon ? 'W' : 'L', score };
 }
 
 // ── Floating results indicator ────────────────────────────────────────────────
@@ -6143,7 +6174,7 @@ function refreshScoreBadges(scores) {
         badge.className = `result-badge result-badge-${gr.result === 'W' ? 'win' : 'loss'}`;
         badge.style.display = '';
       } else if (gr.status === 'live') {
-        badge.textContent = '● LIVE';
+        badge.textContent = gr.score ? `● LIVE · ${gr.score}` : '● LIVE';
         badge.className = 'live-badge';
         badge.style.display = '';
       }
