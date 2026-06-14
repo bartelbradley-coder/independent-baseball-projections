@@ -60,7 +60,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="style.css?v=8">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 :root {
@@ -5572,10 +5572,12 @@ function prRowCollapsed(p, isBest, gameResult) {
       `<div class="pr-bar model"><i style="width:${mpW}%"></i></div></div>` +
     `<div class="pr-pcell book"><div class="pr-pv">${bpPct}</div>` +
       `<div class="pr-bar book"><i style="width:${bpW}%"></i></div></div>` +
-    `<div class="pr-edge ${edgeCls}">${edgeStr}</div>` +
+    `<div class="pr-edge ${edgeCls}">${edgeStr}<span class="pr-edge-stake">${mstripStake}</span></div>` +
     `<div class="pr-bet"><div class="pr-bu">${units}</div>${betUSD}</div>` +
-    `<div class="pr-mstrip">Model <b>${mpPct}</b><span class="pr-msep">·</span>Book <b>${bpPct}</b>` +
-      `<span class="pr-msep">·</span>${mstripStake}</div>` +
+    `<div class="pr-mstrip"><div class="pr-mbar"><i class="pmb-mkt" style="width:${bpW}%"></i>` +
+      `<i class="pmb-edge" style="left:${bpW}%;width:${Math.max(0, mpW - bpW).toFixed(1)}%"></i></div>` +
+      `<div class="pr-mbar-lbl"><span>Model <b>${mpPct}</b></span><span class="pmb-sep">·</span>` +
+      `<span>Book <b>${bpPct}</b></span></div></div>` +
     `<div class="pr-vwrap">${prValuePill(p)}</div>` +
     `<div class="pr-chev" aria-hidden="true">›</div></div>`;
 }

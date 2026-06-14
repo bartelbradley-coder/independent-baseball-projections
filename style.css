@@ -1141,6 +1141,8 @@ details[open] .faq-q::after { content: '−'; }
 .pr-mstrip b { color:var(--text); font-weight:600; }
 .pr-msep { color:var(--text-4); margin:0 5px; }
 .pr-mstrip-usd:not(:empty)::before { content:'·'; color:var(--text-4); margin:0 5px; }
+/* mobile-only: stake-by-edge + the model/market bar (hidden on desktop) */
+.pr-edge-stake, .pr-mbar, .pr-mbar-lbl { display:none; }
 
 .pr-chev { justify-self:end; color:var(--text-4); font-size:16px; line-height:1; transition:transform .16s; }
 .pr-row.open .pr-chev { transform:rotate(90deg); color:var(--indigo-lt); }
@@ -1174,9 +1176,17 @@ details[open] .faq-q::after { content: '−'; }
   }
   .pr-mu { grid-area:mu; align-self:center; }
   .pr-edge { grid-area:edge; text-align:right; align-self:start; font-size:19px; }
-  .pr-edge::after { content:'Edge'; display:block; font-family:var(--font-ui); font-size:8px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--text-4); margin-top:2px; }
+  /* stake sits under the edge now (the two action numbers together) */
+  .pr-edge-stake { display:block; font-family:var(--font-mono); font-size:11px; font-weight:400; color:var(--text-3); margin-top:3px; }
   .pr-pcell, .pr-bet { display:none; }
-  .pr-mstrip { display:flex; grid-area:strip; }
+  /* model-vs-market bar + faint caption replace the busy text strip */
+  .pr-mstrip { display:flex; flex-direction:column; gap:4px; grid-area:strip; align-self:center; min-width:0; }
+  .pr-mbar { display:block; position:relative; height:7px; border-radius:4px; background:rgba(255,255,255,.08); }
+  .pr-mbar .pmb-mkt { position:absolute; left:0; top:0; bottom:0; border-radius:4px 0 0 4px; background:linear-gradient(90deg,var(--indigo),var(--indigo-lt)); }
+  .pr-mbar .pmb-edge { position:absolute; top:0; bottom:0; border-radius:0 4px 4px 0; background:var(--green); }
+  .pr-mbar-lbl { display:flex; gap:5px; font-family:var(--font-ui); font-size:9px; color:var(--text-4); white-space:nowrap; }
+  .pr-mbar-lbl b { font-family:var(--font-mono); font-weight:600; color:var(--text-3); }
+  .pr-mbar-lbl .pmb-sep { color:var(--border); }
   .pr-vwrap { grid-area:val; align-self:center; }
   .pr-chev { grid-area:chev; align-self:center; justify-self:end; }
   .pr-pill .pl-l { display:none; }
