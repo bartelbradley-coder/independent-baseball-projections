@@ -60,7 +60,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=11">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 :root {
@@ -2448,8 +2448,6 @@
     <h2 class="sec-lbl" id="page-date">Today's Value Bets</h2>
     <div id="page-refresh-meta" style="display:none;font-size:10px;color:var(--text-4);margin-top:3px;margin-bottom:2px;font-family:var(--font-mono)"></div>
     <div id="picks-summary"></div>
-    <div class="picks-legend">Each bar — <span class="pl-grey">grey</span> = book implied probability · <span class="pl-green">green gap</span> = model edge · <span class="pl-tick">▏</span> = Independent Baseball Projections model</div>
-    <div class="model-info-note">Starting pitcher info and odds are captured at model run time — always verify current starters and lines before betting.<span id="games-scanned-strip"></span></div>
     <div id="sizing-bar"></div>
     <div id="picks-container">
       <div id="loading-placeholder" style="display:flex;flex-direction:column;gap:14px">
@@ -5627,11 +5625,18 @@ function prRowHTML(p, isBest, gameResult) {
     `<div class="pr-details" hidden data-card-id="${cardId}" data-best="${isBest ? '1' : ''}"></div></div>`;
 }
 
-// A pr-table block (column header + rows) for an array of picks.
+// Just the rows (no column header / no table wrapper) — lets a single table
+// host one shared header with light tier dividers between groups.
+function prRows(picks, topPick, spotlightTop, scores) {
+  return picks.map(p => prRowHTML(p, spotlightTop && p === topPick, getPickResult(p, scores))).join('');
+}
+// A full pr-table block (column header + rows) — used where a group is rendered alone.
 function prTable(picks, topPick, spotlightTop, scores) {
-  return `<div class="pr-table">${prTableHead()}` +
-    picks.map(p => prRowHTML(p, spotlightTop && p === topPick, getPickResult(p, scores))).join('') +
-    '</div>';
+  return `<div class="pr-table">${prTableHead()}${prRows(picks, topPick, spotlightTop, scores)}</div>`;
+}
+// A lightweight in-table tier divider (replaces the repeated full column header).
+function prTierDivider(cls, label, tag) {
+  return `<div class="pr-tierdiv ${cls}"><span class="ptd-lbl">${label}</span><span class="ptd-tag">${tag}</span></div>`;
 }
 
 function prToggle(row) {
@@ -6073,11 +6078,11 @@ function render(data, hist, scores = {}, perf = null) {
 
     const useGrouping = liveGroup.length > 0 || completedGroup.length > 0;
 
-    // ── Today's-state summary strip ──────────────────────────────────────────
-    // Only when the slate is mixed (some started) — leads with the actionable
-    // Upcoming count, then Live, then Final + today's W-L (from ESPN scores).
-    let stateSummaryHTML = '';
-    // All of today's games have started/finished → lead with results, not picks.
+    // ── Today's-state summary (inline, folded into the Action Today strip) ─────
+    // Leads with the actionable Upcoming count, then Live, then Final + W-L.
+    let _stateInline = '';
+    let _atNote = 'Odds &amp; starters captured at model run time — re-check current prices and lineups before betting.';
+    // All of today's games have started/finished → reframe as a results recap.
     const allDone = main.length > 0 && upcomingGroup.length === 0 && liveGroup.length === 0;
     if (useGrouping) {
       let fw = 0, fl = 0;
@@ -6090,20 +6095,15 @@ function render(data, hist, scores = {}, perf = null) {
       });
       const rec = (fw + fl) ? ` · ${fw}–${fl}` : '';
       if (allDone) {
-        // Late-night / post-slate: reframe as a results recap, not actionable picks.
-        stateSummaryHTML = `<div class="picks-state-summary results-lead">
-            <span class="pss-up">Today's Results</span>
-            <span class="pss-sep">·</span>
-            <span class="pss-final">${completedGroup.length} game${completedGroup.length !== 1 ? 's' : ''}${rec}</span>
-          </div>
-          <div class="picks-results-note">All of today's games have started — new picks post tomorrow morning.</div>`;
+        _stateInline = `<span class="pss-up">Today's results</span><span class="pss-sep">·</span>`
+          + `<span class="pss-final">${completedGroup.length} game${completedGroup.length !== 1 ? 's' : ''}${rec}</span>`;
+        _atNote = 'All of today\'s games have started — new picks post tomorrow morning.';
       } else {
         const parts = [];
         if (upcomingGroup.length)  parts.push(`<span class="pss-up">${upcomingGroup.length} Upcoming</span>`);
         if (liveGroup.length)      parts.push(`<span class="pss-live">${liveGroup.length} Live</span>`);
         if (completedGroup.length) parts.push(`<span class="pss-final">${completedGroup.length} Final${rec}</span>`);
-        if (parts.length)
-          stateSummaryHTML = `<div class="picks-state-summary">${parts.join('<span class="pss-sep">·</span>')}</div>`;
+        _stateInline = parts.join('<span class="pss-sep">·</span>');
       }
     }
 
@@ -6124,19 +6124,14 @@ function render(data, hist, scores = {}, perf = null) {
       </div>`;
     }
 
+    // One table, one column header; Strong / Value split by a light in-table divider.
     function renderPickGroup(picks) {
       const strong = picks.filter(p => p.edge >= 0.08);
       const value  = picks.filter(p => p.edge  < 0.08);
-      let html = '';
-      if (strong.length > 0) {
-        html += tierHeader('strong-tier', '🔥', 'Strong Value', '8%+ Edge');
-        html += prTable(strong, topPick, spotlightTop, scores);
-      }
-      if (value.length > 0) {
-        if (strong.length > 0) html += tierHeader('value-tier', '✅', 'Value', '2–8% Edge');
-        html += prTable(value, topPick, spotlightTop, scores);
-      }
-      return html;
+      let inner = '';
+      if (strong.length > 0) inner += prTierDivider('strong', 'Strong', '8%+ edge') + prRows(strong, topPick, spotlightTop, scores);
+      if (value.length  > 0) inner += prTierDivider('value',  'Value',  '2–8% edge') + prRows(value, topPick, spotlightTop, scores);
+      return `<div class="pr-table">${prTableHead()}${inner}</div>`;
     }
 
     let picksHTML = '';
@@ -6161,16 +6156,27 @@ function render(data, hist, scores = {}, perf = null) {
       picksHTML = renderPickGroup(main);
     }
 
-    // Consolidated summary line — written to #picks-summary under the <h2> (which
-    // already reads "Today's Value Bets", so drop the duplicate title) and absorbs
-    // the Upcoming/Live/Final state summary. Exposure now lives in the sizing bar.
+    // ── Action Today strip — one consolidated band under the <h2> replacing the
+    // old summary line + legend + model-info-note + state strip. Counts, top
+    // edge, live state, and the model-run time in a single card. (Exposure +
+    // Flat/Kelly controls stay in the sizing bar just below.)
     const _strongN = main.filter(p => p.edge >= 0.08).length;
     const _best    = main[0];
-    const _summaryMeta = `${main.length} pick${main.length !== 1 ? 's' : ''}`
-      + `${_strongN ? ' · ' + _strongN + ' strong' : ''}`
-      + `${_best ? ' · top edge <strong class="g">+' + (_best.edge * 100).toFixed(1) + '%</strong> (' + _best.pick + ')' : ''}`;
+    const _metaBits = [`<strong>${main.length}</strong> pick${main.length !== 1 ? 's' : ''}`];
+    if (_strongN) _metaBits.push(`<strong class="at-strong">${_strongN}</strong> strong`);
+    if (_best) _metaBits.push(`top edge <strong class="g">+${(_best.edge * 100).toFixed(1)}%</strong> <span class="at-bt">${_best.pick}</span>`);
+    if (data.games_today) _metaBits.push(`<span class="at-dim">${data.games_today} games analyzed</span>`);
+    const _upd = data.generated_at ? `Updated ${String(data.generated_at).split(' · ')[0]}` : '';
     const _summaryEl = document.getElementById('picks-summary');
-    if (_summaryEl) _summaryEl.innerHTML = `<div class="pr-headline"><span class="prh-meta">${_summaryMeta}</span></div>` + stateSummaryHTML;
+    if (_summaryEl) _summaryEl.innerHTML =
+      `<div class="action-today">`
+      + `<div class="at-row">`
+        + `<span class="at-meta">${_metaBits.join('<span class="at-sep">·</span>')}</span>`
+        + (_stateInline ? `<span class="picks-state-summary at-state">${_stateInline}</span>` : '')
+        + (_upd ? `<span class="at-upd">${_upd}</span>` : '')
+      + `</div>`
+      + `<div class="at-note">${_atNote}</div>`
+      + `</div>`;
 
     document.getElementById('picks-container').innerHTML =
       shareAllHTML +
