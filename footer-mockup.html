@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Independent Baseball Projections Footer — v3 Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;800;900&family=Barlow:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #07091a; font-family: 'Barlow', system-ui, sans-serif; color: #e2e8f0; }
+.section { padding: 40px 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #3b82f6; border-bottom: 1px solid rgba(59,130,246,0.2);
+  padding-bottom: 10px; margin-bottom: 28px;
+}
+.note { font-size: 11px; color: #475569; margin-bottom: 20px; line-height: 1.7; }
+.fake-content { padding: 24px; background: #0b0f1a; font-size: 11px; color: #1e293b; text-align: center; }
+footer { background: #070912; padding: 22px 24px 18px; border-top: 1px solid rgba(255,255,255,0.07); text-align: center; }
+.footer-tagline { font-family: 'Barlow Condensed',sans-serif; font-size: 13px; font-weight: 700; color: #94a3b8; letter-spacing: 0.05em; margin-bottom: 10px; }
+.footer-links { font-size: 11px; color: #334155; margin-top: 10px; }
+.footer-links a { color: #475569; text-decoration: none; }
+.footer-disclaimer { font-size: 10px; color: #1e293b; margin-top: 8px; line-height: 1.6; }
+.sport-row { display: flex; align-items: flex-start; justify-content: center; gap: 6px; margin-bottom: 14px; }
+.sport-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.sport-sep { width: 1px; height: 44px; background: rgba(255,255,255,0.07); margin: 0 4px; align-self: center; }
+.sport-lbl { font-family: 'Barlow Condensed',sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.soon-badge { font-size: 8px; font-weight: 700; letter-spacing: 0.06em; background: rgba(99,102,241,0.15); color: #6366f1; padding: 1px 5px; border-radius: 3px; display: inline-block; }
+.shape-grid { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; padding: 20px 0; }
+.shape-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.shape-name { font-family: 'Barlow Condensed',sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #94a3b8; }
+.shape-desc { font-size: 10px; color: #334155; text-align: center; max-width: 130px; line-height: 1.5; }
+.change-note { font-size: 9px; color: #6366f1; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<!-- ══ FOOTER PREVIEW ══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">Footer Preview — Refined Shapes at Display Size</div>
+  <div class="note">
+    Changes: NFL tips sharper + laces simplified to centre line only ·
+    NBA vertical seam nearly straight · NHL switched to top-down puck view
+  </div>
+
+  <div class="fake-content">· · · page content above · · ·</div>
+
+  <footer>
+    <div class="sport-row">
+
+      <!-- MLB — unchanged -->
+      <div class="sport-item">
+        <svg width="36" height="36" viewBox="0 0 88 88">
+          <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.12)"/>
+          <circle cx="44" cy="44" r="33" stroke="rgba(255,255,255,0.82)" stroke-width="2" fill="none"/>
+          <path d="M16,24 Q25,33 18,44 Q11,55 18,64" stroke="rgba(255,255,255,0.32)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          <path d="M72,24 Q63,33 70,44 Q77,55 70,64" stroke="rgba(255,255,255,0.32)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          <text x="27" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#f1f5f9">F</text>
+          <text x="45" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#60a5fa">L</text>
+          <line x1="55" y1="58" x2="63" y2="48" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="63" cy="48" r="3.5" fill="#22c55e"/>
+        </svg>
+        <span class="sport-lbl" style="color:#94a3b8;">MLB</span>
+      </div>
+
+      <div class="sport-sep"></div>
+
+      <!-- NFL — sharper tips, centre line only -->
+      <div class="sport-item" style="opacity:0.28">
+        <svg width="36" height="36" viewBox="0 0 88 88">
+          <!--
+            Sharper tips: control points (48,5) and (40,5) are only 4px from the tip (44,5).
+            Cross-stitches removed — centre lace line only for clarity at small sizes.
+          -->
+          <path d="M44,5
+                   C48,5  76,22 76,44
+                   C76,66  48,83 44,83
+                   C40,83  12,66 12,44
+                   C12,22  40,5  44,5 Z"
+                stroke="rgba(255,255,255,0.85)" stroke-width="1.8" fill="rgba(99,102,241,0.1)"/>
+          <!-- Centre lace line only -->
+          <line x1="44" y1="18" x2="44" y2="70" stroke="rgba(255,255,255,0.3)" stroke-width="1.3"/>
+          <text x="27" y="52" font-family="system-ui,sans-serif" font-size="26" font-weight="900" fill="#f1f5f9">F</text>
+          <text x="44" y="52" font-family="system-ui,sans-serif" font-size="26" font-weight="900" fill="#60a5fa">L</text>
+        </svg>
+        <span class="sport-lbl" style="color:#334155;">NFL</span>
+        <span class="soon-badge">soon</span>
+      </div>
+
+      <div class="sport-sep"></div>
+
+      <!-- NBA — nearly straight vertical seam -->
+      <div class="sport-item" style="opacity:0.28">
+        <svg width="36" height="36" viewBox="0 0 88 88">
+          <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.10)"/>
+          <circle cx="44" cy="44" r="33" stroke="rgba(255,255,255,0.85)" stroke-width="2" fill="none"/>
+          <!-- Nearly straight vertical — very subtle rightward lean only -->
+          <path d="M44,11 Q46,30 46,44 Q46,58 44,77"
+                stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
+          <!-- Two horizontal arcs — unchanged, these are the recognisable basketball element -->
+          <path d="M11,44 Q25,16 44,12 Q63,16 77,44"
+                stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
+          <path d="M11,44 Q25,72 44,76 Q63,72 77,44"
+                stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
+          <text x="27" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#f1f5f9">F</text>
+          <text x="45" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#60a5fa">L</text>
+        </svg>
+        <span class="sport-lbl" style="color:#334155;">NBA</span>
+        <span class="soon-badge">soon</span>
+      </div>
+
+      <div class="sport-sep"></div>
+
+      <!-- NHL — top-down puck view -->
+      <div class="sport-item" style="opacity:0.28">
+        <svg width="36" height="36" viewBox="0 0 88 88">
+          <!--
+            Top-down puck: outer circle (puck body edge) + thick inner ring
+            (the bevelled edge / rubber band of the puck face).
+            Gap between rings reads as the puck's characteristic edge band.
+            FL text sits centred on the face.
+          -->
+          <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.12)" stroke="rgba(255,255,255,0.85)" stroke-width="2"/>
+          <!-- Thick inner ring — the puck edge/bevel band -->
+          <circle cx="44" cy="44" r="24" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="5"/>
+          <text x="27" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#f1f5f9">F</text>
+          <text x="45" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#60a5fa">L</text>
+          <line x1="55" y1="58" x2="62" y2="49" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="62" cy="49" r="3.5" fill="#22c55e"/>
+        </svg>
+        <span class="sport-lbl" style="color:#334155;">NHL</span>
+        <span class="soon-badge">soon</span>
+      </div>
+
+    </div>
+
+    <div class="footer-tagline">Bet the number, not the noise.</div>
+    <div class="footer-links">
+      <a href="#">Methodology</a> &nbsp;·&nbsp;
+      <a href="#">Pick History</a> &nbsp;·&nbsp;
+      <a href="#">Model Dashboard</a>
+    </div>
+    <div class="footer-disclaimer">
+      For informational purposes only. Not financial advice. Past performance does not guarantee future results.
+    </div>
+  </footer>
+</div>
+
+<!-- ══ SHAPE DETAIL — larger ══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">Shape Detail — 80px for Inspection</div>
+
+  <div class="shape-grid">
+
+    <!-- MLB -->
+    <div class="shape-item">
+      <svg width="80" height="80" viewBox="0 0 88 88">
+        <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.12)"/>
+        <circle cx="44" cy="44" r="33" stroke="rgba(255,255,255,0.82)" stroke-width="2" fill="none"/>
+        <path d="M16,24 Q25,33 18,44 Q11,55 18,64" stroke="rgba(255,255,255,0.32)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        <path d="M72,24 Q63,33 70,44 Q77,55 70,64" stroke="rgba(255,255,255,0.32)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        <text x="27" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#f1f5f9">F</text>
+        <text x="45" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#60a5fa">L</text>
+        <line x1="55" y1="58" x2="63" y2="48" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="63" cy="48" r="3.5" fill="#22c55e"/>
+      </svg>
+      <div class="shape-name">MLB — Baseball</div>
+      <div class="change-note">Unchanged ✓</div>
+      <div class="shape-desc">Circle with S-curve seams, analytics line + dot</div>
+    </div>
+
+    <!-- NFL -->
+    <div class="shape-item">
+      <svg width="80" height="80" viewBox="0 0 88 88">
+        <path d="M44,5 C48,5 76,22 76,44 C76,66 48,83 44,83 C40,83 12,66 12,44 C12,22 40,5 44,5 Z"
+              stroke="rgba(255,255,255,0.85)" stroke-width="1.8" fill="rgba(99,102,241,0.1)"/>
+        <line x1="44" y1="18" x2="44" y2="70" stroke="rgba(255,255,255,0.3)" stroke-width="1.3"/>
+        <text x="27" y="52" font-family="system-ui,sans-serif" font-size="26" font-weight="900" fill="#f1f5f9">F</text>
+        <text x="44" y="52" font-family="system-ui,sans-serif" font-size="26" font-weight="900" fill="#60a5fa">L</text>
+      </svg>
+      <div class="shape-name">NFL — Football</div>
+      <div class="change-note">↑ Sharper tips · simpler laces</div>
+      <div class="shape-desc">4px tip control offset vs 8px before. Cross-stitches removed, centre line only</div>
+    </div>
+
+    <!-- NBA -->
+    <div class="shape-item">
+      <svg width="80" height="80" viewBox="0 0 88 88">
+        <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.10)"/>
+        <circle cx="44" cy="44" r="33" stroke="rgba(255,255,255,0.85)" stroke-width="2" fill="none"/>
+        <path d="M44,11 Q46,30 46,44 Q46,58 44,77" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
+        <path d="M11,44 Q25,16 44,12 Q63,16 77,44" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
+        <path d="M11,44 Q25,72 44,76 Q63,72 77,44" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
+        <text x="27" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#f1f5f9">F</text>
+        <text x="45" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#60a5fa">L</text>
+      </svg>
+      <div class="shape-name">NBA — Basketball</div>
+      <div class="change-note">↑ Straighter vertical seam</div>
+      <div class="shape-desc">Seam offset reduced from Q55 to Q46 — reads cleaner without random-curve look</div>
+    </div>
+
+    <!-- NHL -->
+    <div class="shape-item">
+      <svg width="80" height="80" viewBox="0 0 88 88">
+        <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.12)" stroke="rgba(255,255,255,0.85)" stroke-width="2"/>
+        <circle cx="44" cy="44" r="24" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="5"/>
+        <text x="27" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#f1f5f9">F</text>
+        <text x="45" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#60a5fa">L</text>
+        <line x1="55" y1="58" x2="62" y2="49" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="62" cy="49" r="3.5" fill="#22c55e"/>
+      </svg>
+      <div class="shape-name">NHL — Hockey Puck</div>
+      <div class="change-note">↑ Top-down view (new)</div>
+      <div class="shape-desc">Outer circle + thick inner ring. The ring gap reads as the puck's rubber edge band</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ SIDE-BY-SIDE: BEFORE vs AFTER ═════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">Before vs. After — Same Scale</div>
+  <div style="display:flex;gap:48px;flex-wrap:wrap;padding:10px 0;">
+
+    <div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;color:#475569;text-transform:uppercase;margin-bottom:14px">Before</div>
+      <div style="display:flex;gap:16px;align-items:center;">
+        <!-- Old NFL -->
+        <svg width="56" height="56" viewBox="0 0 88 88">
+          <path d="M44,8 C68,14 70,30 68,44 C70,58 68,74 44,80 C20,74 18,58 20,44 C18,30 20,14 44,8 Z" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" fill="rgba(99,102,241,0.08)"/>
+          <line x1="44" y1="20" x2="44" y2="68" stroke="rgba(255,255,255,0.2)" stroke-width="1.2"/>
+          <line x1="39" y1="34" x2="49" y2="34" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+          <line x1="39" y1="44" x2="49" y2="44" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+          <line x1="39" y1="54" x2="49" y2="54" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+          <text x="27" y="52" font-family="system-ui,sans-serif" font-size="26" font-weight="900" fill="#f1f5f9">F</text>
+          <text x="44" y="52" font-family="system-ui,sans-serif" font-size="26" font-weight="900" fill="#60a5fa">L</text>
+        </svg>
+        <!-- Old NBA -->
+        <svg width="56" height="56" viewBox="0 0 88 88">
+          <circle cx="44" cy="44" r="33" stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="rgba(99,102,241,0.08)"/>
+          <path d="M44,11 Q55,28 55,44 Q55,60 44,77" stroke="rgba(255,255,255,0.25)" stroke-width="1.4" fill="none"/>
+          <path d="M11,44 Q25,16 44,12 Q63,16 77,44" stroke="rgba(255,255,255,0.25)" stroke-width="1.4" fill="none"/>
+          <path d="M11,44 Q25,72 44,76 Q63,72 77,44" stroke="rgba(255,255,255,0.25)" stroke-width="1.4" fill="none"/>
+          <text x="27" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#f1f5f9">F</text>
+          <text x="45" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#60a5fa">L</text>
+        </svg>
+        <!-- Old NHL -->
+        <svg width="56" height="56" viewBox="0 0 88 88">
+          <path d="M14,48 Q44,62 74,48 L74,54 Q44,68 14,54 Z" fill="rgba(99,102,241,0.08)" stroke="rgba(255,255,255,0.3)" stroke-width="1.2"/>
+          <line x1="14" y1="42" x2="14" y2="54" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+          <line x1="74" y1="42" x2="74" y2="54" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+          <ellipse cx="44" cy="42" rx="30" ry="12" fill="rgba(99,102,241,0.12)" stroke="rgba(255,255,255,0.6)" stroke-width="1.8"/>
+          <text x="25" y="48" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#f1f5f9">F</text>
+          <text x="42" y="48" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">L</text>
+        </svg>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:6px;">
+        <span style="font-size:9px;color:#334155;width:56px;text-align:center">NFL (rounded)</span>
+        <span style="font-size:9px;color:#334155;width:56px;text-align:center">NBA (curved seam)</span>
+        <span style="font-size:9px;color:#334155;width:56px;text-align:center">NHL (3D tilted)</span>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;color:#334155;font-size:20px">→</div>
+
+    <div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;color:#22c55e;text-transform:uppercase;margin-bottom:14px">After</div>
+      <div style="display:flex;gap:16px;align-items:center;">
+        <!-- New NFL -->
+        <svg width="56" height="56" viewBox="0 0 88 88">
+          <path d="M44,5 C48,5 76,22 76,44 C76,66 48,83 44,83 C40,83 12,66 12,44 C12,22 40,5 44,5 Z"
+                stroke="rgba(255,255,255,0.8)" stroke-width="1.8" fill="rgba(99,102,241,0.1)"/>
+          <line x1="44" y1="18" x2="44" y2="70" stroke="rgba(255,255,255,0.28)" stroke-width="1.3"/>
+          <text x="27" y="52" font-family="system-ui,sans-serif" font-size="26" font-weight="900" fill="#f1f5f9">F</text>
+          <text x="44" y="52" font-family="system-ui,sans-serif" font-size="26" font-weight="900" fill="#60a5fa">L</text>
+        </svg>
+        <!-- New NBA -->
+        <svg width="56" height="56" viewBox="0 0 88 88">
+          <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.10)"/>
+          <circle cx="44" cy="44" r="33" stroke="rgba(255,255,255,0.8)" stroke-width="2" fill="none"/>
+          <path d="M44,11 Q46,30 46,44 Q46,58 44,77" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
+          <path d="M11,44 Q25,16 44,12 Q63,16 77,44" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
+          <path d="M11,44 Q25,72 44,76 Q63,72 77,44" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
+          <text x="27" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#f1f5f9">F</text>
+          <text x="45" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#60a5fa">L</text>
+        </svg>
+        <!-- New NHL -->
+        <svg width="56" height="56" viewBox="0 0 88 88">
+          <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.12)" stroke="rgba(255,255,255,0.82)" stroke-width="2"/>
+          <circle cx="44" cy="44" r="24" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="5"/>
+          <text x="27" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#f1f5f9">F</text>
+          <text x="45" y="54" font-family="system-ui,sans-serif" font-size="28" font-weight="900" fill="#60a5fa">L</text>
+          <line x1="55" y1="58" x2="62" y2="49" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="62" cy="49" r="3.5" fill="#22c55e"/>
+        </svg>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:6px;">
+        <span style="font-size:9px;color:#22c55e;width:56px;text-align:center">NFL (sharp)</span>
+        <span style="font-size:9px;color:#22c55e;width:56px;text-align:center">NBA (cleaner)</span>
+        <span style="font-size:9px;color:#22c55e;width:56px;text-align:center">NHL (top-down)</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

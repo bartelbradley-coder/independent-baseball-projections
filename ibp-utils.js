@@ -1,6 +1,6 @@
-// ── FairLine MLB — Shared Utilities ──────────────────────────────────────────
+// ── Independent Baseball Projections — Shared Utilities ──────────────────────────────────────────
 // Loaded by index.html, history.html, and performance.html via:
-//   <script src="fairline-utils.js"></script>
+//   <script src="ibp-utils.js"></script>
 // Place that tag just before each page's own inline <script> block.
 
 // ── ESPN abbreviation map ─────────────────────────────────────────────────────
@@ -88,7 +88,7 @@ function computeTodaySettled(picks, scores, todayDateStr) {
         kelly_units: p.kelly_units || null,
       };
     } catch(e) {
-      console.error('[FairLine] computeTodaySettled pick error:', e, p);
+      console.error('[Independent Baseball Projections] computeTodaySettled pick error:', e, p);
       return null;
     }
   }).filter(Boolean);
@@ -169,7 +169,7 @@ function _showDebugBanner(msg) {
     d.onclick = () => d.remove();
     document.body.prepend(d);
   }
-  d.textContent = '[FairLine Error] ' + String(msg) + '  (click to dismiss)';
+  d.textContent = '[Independent Baseball Projections Error] ' + String(msg) + '  (click to dismiss)';
 }
 window.addEventListener('unhandledrejection', e => _showDebugBanner(e.reason));
 window.addEventListener('error', e => _showDebugBanner(

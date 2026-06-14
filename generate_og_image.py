@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 generate_og_image.py
-Generates og-image.png (1200×630) for FairLine MLB social sharing.
+Generates og-image.png (1200×630) for Independent Baseball Projections social sharing.
 Reads live stats from data/history.json so the card stays current.
 Called by export_site_data.py on every export.
 """
@@ -110,7 +110,7 @@ def generate(output_path=None):
         f_title = f_tagline = f_stat_lbl = f_stat_val = f_desc = f_url = ImageFont.load_default()
 
     # ── Title ────────────────────────────────────────────────────────────
-    draw.text((80, 90),  '⚾ FAIRLINE MLB', font=f_title,   fill=TEXT_PRI)
+    draw.text((80, 90),  '⚾ INDEPENDENT BASEBALL PROJECTIONS', font=f_title,   fill=TEXT_PRI)
     draw.text((80, 155), 'Quantitative Win Probability · Dual-Poisson Model',
               font=f_tagline, fill=TEXT_SEC)
 

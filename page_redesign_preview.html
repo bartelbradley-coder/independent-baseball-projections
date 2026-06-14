@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Independent Baseball Projections — Page Redesign Preview v4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS
+   ═══════════════════════════════════════════ */
+:root{
+  --bg:#0b0f1a;--bg-card:rgba(255,255,255,.028);--bg-2:rgba(255,255,255,.016);
+  --border:rgba(255,255,255,.07);--border-2:rgba(255,255,255,.04);
+  --indigo:#6366f1;--indigo-lt:#818cf8;--teal:#14b8a6;
+  --amber:#f59e0b;--green:#22c55e;--red:#ef4444;
+  --text:#e2e8f0;--text-2:#a8bbd0;--text-3:#8095b0;--text-4:#607080;
+  --font-display:"Barlow Condensed",sans-serif;
+  --font-ui:"Inter",sans-serif;
+  --font-mono:"IBM Plex Mono",monospace;
+  --max-w:1100px;--nav-h:52px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size:14px;line-height:1.5;min-height:100vh}
+
+/* ── PREVIEW RIBBON ── */
+.preview-ribbon{
+  background:#0e0520;border-bottom:2px solid rgba(99,102,241,.4);
+  padding:6px 20px;font-size:10.5px;font-weight:600;color:var(--indigo-lt);
+  letter-spacing:.05em;text-align:center;position:sticky;top:0;z-index:300;
+}
+.preview-ribbon em{color:rgba(129,140,248,.45);font-style:normal;font-weight:400}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:31px;z-index:200;height:var(--nav-h);
+  background:rgba(11,15,26,.97);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 24px;gap:24px;
+}
+.nav-brand{display:flex;align-items:center;gap:9px;text-decoration:none}
+.nav-logo{width:28px;height:28px;background:rgba(99,102,241,.16);border:1px solid rgba(99,102,241,.32);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-wm{font-family:var(--font-display);font-size:18px;font-weight:700;letter-spacing:.04em}
+.nav-wm .f{color:rgba(241,245,249,.6);font-weight:400}.nav-wm .l{color:var(--text)}
+.nav-sub{font-size:8px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-4);margin-top:1px}
+.nav-links{display:flex;gap:2px;margin-left:auto}
+.nav-link{font-size:12px;font-weight:500;color:var(--text-3);text-decoration:none;padding:6px 11px;border-radius:6px;transition:all .15s}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.nav-link.active{color:var(--indigo-lt);background:rgba(99,102,241,.08)}
+@media(max-width:600px){.nav-links{display:none}.nav-sub{display:none}}
+
+/* ── PAGE ── */
+.page{max-width:var(--max-w);margin:0 auto;padding:0 20px 56px}
+
+/* ═══════════════════════════════════════════
+   HERO — 4 stats, trust copy
+   ═══════════════════════════════════════════ */
+.hero{padding:24px 0 18px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.hero-wm{font-family:var(--font-display);font-size:34px;font-weight:800;letter-spacing:.01em;line-height:1}
+.hero-wm .szn{font-size:13px;font-weight:600;color:var(--text-4);margin-left:8px;vertical-align:middle;letter-spacing:.10em;text-transform:uppercase}
+.hero-tagline{font-size:13.5px;color:var(--text-2);margin-top:5px}
+.hero-trust{font-size:11px;color:var(--text-3);margin-top:4px;line-height:1.6}
+.hero-trust::before{content:"✓  ";color:var(--green);font-weight:700}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+@media(max-width:680px){.hero-stats{grid-template-columns:repeat(2,1fr)}}
+.hs{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.hs.rec{border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.03)}
+.hs-lbl{font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-4);margin-bottom:4px}
+.hs-val{font-family:var(--font-mono);font-size:21px;font-weight:700;line-height:1}
+.hs-val.g{color:var(--green)}.hs-val.b{color:#60a5fa}
+.hs-sub{font-size:9px;color:var(--text-3);margin-top:2px}
+
+/* ═══════════════════════════════════════════
+   PICKS HEADER
+   ═══════════════════════════════════════════ */
+.picks-hdr{display:flex;align-items:flex-start;justify-content:space-between;padding:4px 0 12px;gap:14px;flex-wrap:wrap}
+.ph-title{font-family:var(--font-display);font-size:20px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+.ph-meta{font-size:11px;color:var(--text-3);margin-top:3px}
+.ph-meta .hl{color:var(--text-2);font-weight:600}
+.ph-refresh{font-size:9.5px;color:var(--text-4);margin-top:3px;font-family:var(--font-mono)}
+.ph-refresh strong{color:var(--text-3);font-weight:500}
+.share-all-btn{
+  font-family:var(--font-ui);font-size:11.5px;font-weight:600;
+  padding:8px 18px;border-radius:7px;
+  background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.30);
+  color:var(--indigo-lt);cursor:pointer;white-space:nowrap;
+  transition:all .15s;align-self:flex-start;letter-spacing:.01em;
+}
+.share-all-btn:hover{background:rgba(99,102,241,.20);border-color:rgba(99,102,241,.44)}
+
+/* ═══════════════════════════════════════════
+   EXPOSURE BLOCK
+   ═══════════════════════════════════════════ */
+.exposure{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:22px}
+.exp-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.exp-title{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+.sizing-ctrl{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.kelly-active{
+  display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;
+  color:var(--green);background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.20);
+  border-radius:6px;padding:5px 11px;white-space:nowrap;
+}
+.ka-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.bankroll-display{
+  font-family:var(--font-mono);font-size:10.5px;color:var(--text-2);
+  padding:5px 11px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;white-space:nowrap;
+}
+.flat-link{font-size:9.5px;color:var(--text-4);cursor:pointer;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.exp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:520px){.exp-grid{grid-template-columns:repeat(2,1fr)}}
+.ec{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:8px;padding:10px 12px}
+.ec.hi{border-color:rgba(34,197,94,.15);background:rgba(34,197,94,.025)}
+.ec-lbl{font-size:7.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--text-4);margin-bottom:3px}
+.ec-val{font-family:var(--font-mono);font-size:18px;font-weight:700;line-height:1}
+.ec-val.g{color:var(--green)}
+.ec-sub{font-size:8.5px;color:var(--text-3);margin-top:2px}
+.exp-note{font-size:9.5px;color:var(--text-4);margin-top:10px;font-style:italic}
+
+/* ═══════════════════════════════════════════
+   SECTION HEADER
+   ═══════════════════════════════════════════ */
+.sec-hdr{margin-bottom:12px}
+.sec-row{display:flex;align-items:center;gap:10px}
+.sec-title{font-family:var(--font-display);font-size:17px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--text)}
+.sec-line{flex:1;height:1px;background:var(--border);min-width:16px}
+.sec-badge{font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:5px;background:rgba(34,197,94,.09);color:var(--green);border:1px solid rgba(34,197,94,.18);white-space:nowrap}
+.sec-sub{font-size:10px;color:var(--text-3);margin-top:3px;padding-left:1px}
+
+/* ═══════════════════════════════════════════
+   PICK GRID
+   ═══════════════════════════════════════════ */
+.pick-grid{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:720px){.pick-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1050px){.pick-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* ═══════════════════════════════════════════
+   PICK CARD — collapsed only (no details inside)
+   ═══════════════════════════════════════════ */
+.pick-card{background:var(--bg-card);border:1px solid var(--border);border-radius:11px;overflow:hidden;transition:border-color .18s}
+.pick-card.active-card{border-color:rgba(99,102,241,.4);box-shadow:0 0 0 1px rgba(99,102,241,.12)}
+.pick-card.v-value{border-left:3px solid rgba(34,197,94,.65)}
+.pick-card.v-cond {border-left:3px solid rgba(245,158,11,.55)}
+
+/* top badge row */
+.pc-top{display:flex;align-items:center;flex-wrap:wrap;gap:5px;padding:9px 13px 0}
+.vbadge{font-size:8.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.vbadge.value{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.28)}
+.vbadge.cond {background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.28)}
+.cbadge{font-size:7.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:4px;flex-shrink:0}
+.cbadge.fav  {background:rgba(99,102,241,.09);color:var(--indigo-lt);border:1px solid rgba(99,102,241,.18)}
+.cbadge.dog  {background:rgba(245,158,11,.09);color:var(--amber);border:1px solid rgba(245,158,11,.18)}
+.cbadge.mfav {background:rgba(34,197,94,.09);color:var(--green);border:1px solid rgba(34,197,94,.16);font-size:7px}
+.pc-matchup{font-size:10px;font-weight:600;color:var(--text-2)}
+.pc-time{font-size:9px;color:var(--text-3);margin-left:auto}
+
+/* team + odds */
+.pc-main{display:flex;align-items:flex-end;gap:10px;padding:7px 13px 3px}
+.pc-team{font-family:var(--font-display);font-size:32px;font-weight:800;color:var(--text);letter-spacing:.01em;line-height:1}
+.pc-odds-block{display:flex;flex-direction:column}
+.pc-odds{font-family:var(--font-mono);font-size:22px;font-weight:700;line-height:1}
+.pc-odds.neg{color:var(--indigo-lt)}.pc-odds.pos{color:var(--amber)}
+.pc-odds-sub{font-size:9px;color:var(--text-3);margin-top:3px}
+.pc-odds-sub strong{color:var(--text-2);font-weight:600}
+
+/* metric strip */
+.pc-nums{display:flex;padding:7px 13px 0;border-top:1px solid var(--border-2);margin-top:7px}
+.pc-num{flex:1;padding:5px 0;border-right:1px solid var(--border)}
+.pc-num:last-child{border-right:none}.pc-num:not(:first-child){padding-left:8px}
+.nv-l{font-size:7.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);margin-bottom:2px}
+.nv-v{font-family:var(--font-mono);font-size:12.5px;font-weight:600;color:var(--text)}
+.nv-v.edge{color:var(--green)}.nv-v.model{color:#60a5fa}.nv-v.fair{color:var(--indigo-lt)}.nv-v.play{color:var(--amber)}
+
+/* prob bar */
+.pc-bar{padding:9px 13px 7px}
+.pb-hdr{display:flex;justify-content:space-between;margin-bottom:5px}
+.pb-l{font-size:8px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.pb-l.mkt{color:var(--text-3)}.pb-l.mdl{color:#60a5fa}
+.pb-track{height:6px;background:rgba(255,255,255,.05);border-radius:3px;position:relative;overflow:hidden}
+.pb-mkt{position:absolute;left:0;top:0;bottom:0;background:rgba(115,130,155,.42);border-radius:3px 0 0 3px}
+.pb-edge{position:absolute;top:0;bottom:0;background:rgba(34,197,94,.62);border-radius:0 3px 3px 0}
+
+/* current edge row */
+.pc-live{display:flex;align-items:center;gap:8px;padding:5px 13px;background:rgba(255,255,255,.015);border-top:1px solid var(--border-2);flex-wrap:wrap}
+.live-chip{font-size:8.5px;font-weight:700;padding:2px 7px;border-radius:4px}
+.live-chip.same{background:rgba(34,197,94,.09);color:var(--green);border:1px solid rgba(34,197,94,.18)}
+.live-chip.down{background:rgba(245,158,11,.09);color:var(--amber);border:1px solid rgba(245,158,11,.18)}
+.live-meta{font-size:9px;color:var(--text-3);font-family:var(--font-mono)}
+.live-ts{font-size:8.5px;color:var(--text-4);margin-left:auto}
+
+/* stake + lineup */
+.pc-sl{display:flex;align-items:stretch;gap:8px;padding:7px 13px}
+.stake-box{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:8px 10px;flex-shrink:0;min-width:100px}
+.sb-lbl{font-size:7.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);margin-bottom:2px}
+.sb-units{font-family:var(--font-mono);font-size:19px;font-weight:700;color:var(--text);line-height:1}
+.sb-dollars{font-size:12px;font-weight:600;color:var(--text-2);font-family:var(--font-mono)}
+.sb-note{font-size:8px;color:var(--text-3);margin-top:3px}
+.lu-block{flex:1;display:flex;flex-direction:column;justify-content:center;gap:5px}
+.lu-item{display:flex;align-items:center;gap:5px}
+.lu-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.lu-dot.conf{background:var(--green)}.lu-dot.proj{background:var(--amber)}.lu-dot.unk{background:var(--text-4)}
+.lu-team{font-size:9.5px;font-weight:600;color:var(--text-2);min-width:26px}
+.lu-stat{font-size:9px}
+.lu-stat.conf{color:var(--green)}.lu-stat.proj{color:var(--amber)}.lu-stat.unk{color:var(--text-3)}
+
+/* primary driver — ONE line, no duplication */
+.pc-driver{
+  padding:8px 13px 9px;font-size:10px;color:#b0c4d8;
+  line-height:1.5;border-top:1px solid var(--border-2);
+  font-family:var(--font-ui);
+}
+.pc-driver strong{color:var(--text-2);font-weight:600}
+
+/* action row */
+.pc-actions{display:flex;align-items:center;gap:5px;padding:7px 13px;border-top:1px solid var(--border)}
+.pc-btn{font-size:10.5px;font-weight:600;padding:5px 13px;border-radius:6px;border:1px solid;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:var(--font-ui)}
+.pc-btn.details{background:rgba(34,197,94,.09);border-color:rgba(34,197,94,.26);color:var(--green)}
+.pc-btn.details:hover,.pc-btn.details.open{background:rgba(34,197,94,.18)}
+.pc-btn.track{background:rgba(99,102,241,.07);border-color:rgba(99,102,241,.20);color:var(--indigo-lt)}
+.pc-btn.track:hover{background:rgba(99,102,241,.14)}
+.pc-btn.share{background:transparent;border-color:rgba(255,255,255,.10);color:var(--text-3)}
+.pc-btn.share:hover{color:var(--text-2);background:rgba(255,255,255,.04)}
+
+/* ═══════════════════════════════════════════
+   FULL-WIDTH EXPAND PANEL — below grid, not inside card
+   ═══════════════════════════════════════════ */
+.expand-wrap{margin-top:4px;display:none}
+.expand-wrap.open{display:block;animation:slideIn .18s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+.expand-panel{
+  background:rgba(10,14,24,.94);border:1px solid rgba(255,255,255,.10);
+  border-radius:12px;overflow:hidden;
+}
+/* Colour-coded top accent that matches verdict tier */
+.expand-panel.ep-value{border-top:2px solid rgba(34,197,94,.55)}
+.expand-panel.ep-cond {border-top:2px solid rgba(245,158,11,.45)}
+
+/* Panel header: pick identity + close */
+.ep-hdr{
+  display:flex;align-items:center;gap:12px;padding:11px 18px;
+  border-bottom:1px solid rgba(255,255,255,.07);flex-wrap:wrap;
+}
+.ep-pick-name{font-family:var(--font-display);font-size:20px;font-weight:800;color:var(--text);letter-spacing:.02em}
+.ep-pick-odds{font-family:var(--font-mono);font-size:16px;font-weight:700}
+.ep-pick-odds.neg{color:var(--indigo-lt)}.ep-pick-odds.pos{color:var(--amber)}
+.ep-edge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;background:rgba(34,197,94,.10);color:var(--green);border:1px solid rgba(34,197,94,.20)}
+.ep-close{margin-left:auto;font-size:11px;font-weight:600;color:var(--text-4);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:5px 12px;cursor:pointer;transition:all .15s}
+.ep-close:hover{color:var(--text-2)}
+
+/* Two-column body (desktop) → single column (mobile) */
+.ep-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:760px){.ep-body{grid-template-columns:1fr}}
+
+.ep-col{padding:16px 18px}
+.ep-col.left{border-right:1px solid rgba(255,255,255,.06)}
+@media(max-width:760px){.ep-col.left{border-right:none;border-bottom:1px solid rgba(255,255,255,.06)}}
+
+.ep-sec-hdr{font-size:8px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
+
+/* Quick audit block */
+.qa-block{border:1px solid rgba(255,255,255,.06);border-radius:8px;overflow:hidden;margin-bottom:16px}
+.qa-row{display:flex;align-items:baseline;gap:8px;padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.04)}
+.qa-row:last-child{border-bottom:none}
+.qa-lbl{font-size:7.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;flex-shrink:0;min-width:52px}
+.qa-lbl.thesis{color:var(--text-3)}.qa-lbl.driver{color:#60a5fa}.qa-lbl.risk{color:var(--amber)}.qa-lbl.ev{color:var(--green)}
+.qa-val{font-size:10.5px;color:var(--text-2);line-height:1.45}
+.qa-val strong{color:var(--text);font-weight:600}
+.qa-val.ev{color:var(--green);font-family:var(--font-mono);font-weight:700;font-size:12px}
+
+/* Full narrative (expanded only) */
+.ep-narrative{font-size:11px;color:var(--text-3);line-height:1.65;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.05);border-radius:8px;padding:11px 13px;margin-bottom:16px}
+.ep-narrative strong{color:var(--text-2);font-weight:600}
+
+/* Prob gap */
+.prob-gap-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:8px;padding:11px 13px;margin-bottom:14px}
+.pg-row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:9px}
+.pg-col{text-align:center;flex:1}
+.pg-lbl{font-size:7.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-4);display:block;margin-bottom:2px}
+.pg-val{font-family:var(--font-mono);font-size:17px;font-weight:700;line-height:1}
+.pg-val.mkt{color:var(--text-2)}.pg-val.edg{color:var(--green);font-size:14px}.pg-val.mdl{color:#60a5fa}
+.pg-div{width:1px;height:30px;background:var(--border);flex-shrink:0}
+.pg-bar{height:7px;background:rgba(255,255,255,.05);border-radius:3px;position:relative;overflow:hidden}
+.pg-mkt{position:absolute;left:0;top:0;bottom:0;background:rgba(115,130,155,.42);border-radius:3px 0 0 3px}
+.pg-edg{position:absolute;top:0;bottom:0;background:rgba(34,197,94,.60);border-radius:0 3px 3px 0}
+
+/* Action summary */
+.as-box{border-radius:8px;overflow:hidden;margin-bottom:14px}
+.as-box.v{border:1px solid rgba(34,197,94,.26);background:rgba(34,197,94,.03)}
+.as-box.c{border:1px solid rgba(245,158,11,.26);background:rgba(245,158,11,.03)}
+.as-row{display:flex;align-items:baseline;gap:10px;padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.04)}
+.as-row:first-child{padding:9px 10px}.as-row:last-child{border-bottom:none}
+.as-lbl{font-size:7.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-4);min-width:96px;flex-shrink:0}
+.as-val{font-size:10.5px;font-weight:600;font-family:var(--font-mono)}
+.as-val.g{color:var(--green)}.as-val.a{color:var(--amber)}.as-val.m{color:var(--text-2)}.as-val.d{color:var(--text-3)}
+.ep-cta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.ep-cta-btn{font-size:11px;font-weight:700;padding:8px 16px;border-radius:7px;border:1px solid;cursor:pointer;font-family:var(--font-ui)}
+.ep-cta-btn.bet{background:rgba(34,197,94,.11);border-color:rgba(34,197,94,.30);color:var(--green)}
+.ep-cta-btn.trk{background:rgba(99,102,241,.09);border-color:rgba(99,102,241,.24);color:var(--indigo-lt)}
+
+/* Lineup & data status table */
+.lu-tbl{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:14px}
+.lu-tbl td{padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.04)}
+.lu-tbl tr:last-child td{border-bottom:none}
+.lu-tbl td.lt-l{font-size:8.5px;color:var(--text-4);font-weight:600;width:44%;letter-spacing:.03em}
+.lu-tbl td.lt-v{font-weight:600}
+.lt-v.conf{color:var(--green)}.lt-v.proj{color:var(--amber)}.lt-v.ok{color:var(--text-2)}
+
+/* Odds display — best + collapsible rest */
+.odds-best{display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.20);border-radius:7px;margin-bottom:8px}
+.ob-book{font-weight:600;color:var(--text);flex:1;font-size:11px}
+.ob-odds{font-family:var(--font-mono);font-weight:700;font-size:13px;color:var(--green)}
+.ob-tag{font-size:8px;font-weight:700;padding:2px 6px;border-radius:3px;background:rgba(34,197,94,.14);color:var(--green)}
+.odds-playable{font-family:var(--font-mono);font-size:10px;color:var(--amber);margin-bottom:6px}
+.hist-note{font-size:9.5px;color:var(--text-4);font-style:italic;line-height:1.5}
+.hist-note strong{color:var(--text-3);font-style:normal}
+
+/* ═══════════════════════════════════════════
+   LIVE TRACKING
+   ═══════════════════════════════════════════ */
+.track-sec{margin-top:28px}
+.track-hdr{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);margin-bottom:9px;display:flex;align-items:center;gap:10px}
+.track-hdr::after{content:'';flex:1;height:1px;background:var(--border)}
+.track-table{width:100%;border-collapse:collapse;font-size:11px}
+.track-table th{font-size:7px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--text-4);padding:6px 10px;border-bottom:1px solid var(--border);text-align:left}
+.track-table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.03)}
+.track-table tr:last-child td{border-bottom:none}
+.sp-pend{font-size:8.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:rgba(245,158,11,.09);color:var(--amber);border:1px solid rgba(245,158,11,.18)}
+.td-team{font-family:var(--font-display);font-size:13px;font-weight:800;color:var(--text)}
+.td-edge{font-family:var(--font-mono);font-weight:600;color:var(--green)}
+.td-odds{font-family:var(--font-mono);font-weight:600}
+.td-stake{font-family:var(--font-mono);color:var(--text-3);font-size:10px}
+
+/* ═══════════════════════════════════════════
+   EMAIL
+   ═══════════════════════════════════════════ */
+.email-sec{
+  margin-top:40px;text-align:center;
+  background:linear-gradient(135deg,rgba(99,102,241,.06) 0%,rgba(14,165,233,.04) 100%);
+  border:1px solid rgba(99,102,241,.14);border-radius:13px;padding:30px 24px;
+}
+.em-eye{font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--indigo-lt);margin-bottom:7px}
+.em-title{font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--text);margin-bottom:7px}
+.em-body{font-size:12.5px;color:var(--text-2);max-width:520px;margin:0 auto 16px;line-height:1.65}
+.em-form{display:flex;gap:8px;max-width:380px;margin:0 auto}
+.em-input{flex:1;font-family:var(--font-ui);font-size:12px;padding:9px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:7px;color:var(--text)}
+.em-input::placeholder{color:var(--text-4)}
+.em-cta{font-family:var(--font-ui);font-size:12.5px;font-weight:700;padding:9px 17px;border-radius:7px;background:var(--indigo);border:none;color:#fff;cursor:pointer}
+.em-cta:hover{background:#5155e8}
+@media(max-width:440px){.em-form{flex-direction:column}}
+.em-note{font-size:9.5px;color:var(--text-4);margin-top:7px}
+
+/* ═══════════════════════════════════════════
+   METHODOLOGY CARDS
+   ═══════════════════════════════════════════ */
+.method-sec{margin-top:40px}
+.method-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.method-title{font-family:var(--font-display);font-size:19px;font-weight:800;letter-spacing:.02em;color:var(--text)}
+.method-link{font-size:11.5px;font-weight:600;color:var(--indigo-lt);text-decoration:none;padding:6px 13px;border-radius:6px;border:1px solid rgba(99,102,241,.22);background:rgba(99,102,241,.07);transition:background .15s}
+.method-link:hover{background:rgba(99,102,241,.13)}
+.method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:600px){.method-grid{grid-template-columns:1fr}}
+.mcard{background:var(--bg-card);border:1px solid var(--border);border-radius:11px;padding:18px}
+.mc-ico{font-size:18px;margin-bottom:9px;display:block}
+.mc-val{font-family:var(--font-mono);font-size:28px;font-weight:700;line-height:1;margin-bottom:2px}
+.mc-val.g{color:var(--green)}.mc-val.b{color:#60a5fa}
+.mc-lbl{font-size:10.5px;font-weight:600;color:var(--text-3);margin-bottom:7px}
+.mc-sep{height:1px;background:var(--border);margin:9px 0}
+.mc-desc{font-size:10.5px;color:var(--text-3);line-height:1.6}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════ */
+footer{margin-top:44px;padding:20px 20px 28px;border-top:1px solid var(--border);max-width:var(--max-w);margin-left:auto;margin-right:auto}
+.ft-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.ft-brand{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--text-2)}
+.ft-sports{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.ft-sport-lbl{font-size:8px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--text-4);margin-right:4px}
+.sc{font-size:9.5px;font-weight:600;padding:3px 9px;border-radius:5px;border:1px solid rgba(255,255,255,.06);color:var(--text-4)}
+.sc.on{color:var(--green);border-color:rgba(34,197,94,.16);background:rgba(34,197,94,.04)}
+.ft-disc{font-size:9.5px;color:var(--text-4);line-height:1.65;max-width:680px}
+.ft-disc a{color:var(--text-4)}
+</style>
+</head>
+<body>
+
+<!-- Preview banner -->
+<div class="preview-ribbon">
+  ⚠ PAGE REDESIGN PREVIEW v4 — Preview only · Not live · today.json data bound
+  <em> · page_redesign_preview.html · Full-width expand panel · No duplicated narrative · Do not deploy until approved</em>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-logo">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="6" stroke="rgba(255,255,255,.75)" stroke-width="1"/>
+        <text x="2.5" y="10.5" font-family="system-ui" font-size="7" font-weight="900" fill="white">F</text>
+        <text x="7" y="10.5" font-family="system-ui" font-size="7" font-weight="900" fill="#818cf8">L</text>
+      </svg>
+    </div>
+    <div>
+      <div class="nav-wm"><span class="f">FAIR</span><span class="l">LINE</span></div>
+      <div class="nav-sub">MLB · Model-Driven Edge</div>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active" href="#">Today</a>
+    <a class="nav-link" href="#">History</a>
+    <a class="nav-link" href="#">Performance</a>
+    <a class="nav-link" href="#">Tomorrow</a>
+    <a class="nav-link" href="#">Model</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ══════════════════════════════════
+  1. HERO
+  ══════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-wm">Independent Baseball Projections <span class="szn">2026 Season</span></div>
+  <div class="hero-tagline">Model-driven MLB edges, timestamped and tracked every day.</div>
+  <div class="hero-trust">Every pick is timestamped before first pitch, tracked against the closing line, and never edited after posting.</div>
+  <div class="hero-stats">
+    <div class="hs rec">
+      <div class="hs-lbl">2026 Record</div>
+      <div class="hs-val g">214–190</div>
+      <div class="hs-sub">404 picks tracked</div>
+    </div>
+    <div class="hs">
+      <div class="hs-lbl">ROI / Bet</div>
+      <div class="hs-val g">+13.4%</div>
+      <div class="hs-sub">odds-adjusted</div>
+    </div>
+    <div class="hs">
+      <div class="hs-lbl">Flat-Bet P&amp;L</div>
+      <div class="hs-val g">+54.0u</div>
+      <div class="hs-sub">$100 / pick baseline</div>
+    </div>
+    <div class="hs">
+      <div class="hs-lbl">Avg CLV</div>
+      <div class="hs-val b">+0.25pp</div>
+      <div class="hs-sub">vs Pinnacle close</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+  2. TODAY'S PICKS HEADER
+  ══════════════════════════════════ -->
+<div class="picks-hdr">
+  <div>
+    <div class="ph-title">Today's Value Bets · June 4</div>
+    <div class="ph-meta">
+      <span class="hl">3 official value bets</span> · 15 games modeled ·
+      Posted <span class="hl">5:52 AM CT</span> · Edge vs Pinnacle no-vig
+    </div>
+    <div class="ph-refresh"><strong>Model refresh:</strong> 9:05 AM CT · Jun 4, 2026 · Lineup window open</div>
+  </div>
+  <button class="share-all-btn">⬆ Share All 3 Picks</button>
+</div>
+
+<!-- ══════════════════════════════════
+  3. TODAY'S EXPOSURE
+     $442 / $10,000 = 4.4% (not 44.2%)
+  ══════════════════════════════════ -->
+<div class="exposure">
+  <div class="exp-top">
+    <div class="exp-title">Today's Exposure</div>
+    <div class="sizing-ctrl">
+      <div class="kelly-active"><span class="ka-dot"></span>Kelly Sizing Active</div>
+      <div class="bankroll-display">Bankroll: $10,000</div>
+      <span class="flat-link">flat view</span>
+    </div>
+  </div>
+  <div class="exp-grid">
+    <div class="ec hi">
+      <div class="ec-lbl">Total Stake</div>
+      <div class="ec-val g">$442</div>
+      <div class="ec-sub">3 picks combined</div>
+    </div>
+    <div class="ec">
+      <div class="ec-lbl">Bankroll Exposure</div>
+      <!-- $442 / $10,000 = 4.42% → displayed as 4.4% -->
+      <div class="ec-val">4.4%</div>
+      <div class="ec-sub">of $10,000 bankroll</div>
+    </div>
+    <div class="ec">
+      <div class="ec-lbl">Avg Pick</div>
+      <div class="ec-val">1.5u</div>
+      <div class="ec-sub">$147 avg stake</div>
+    </div>
+    <div class="ec">
+      <div class="ec-lbl">Total Units</div>
+      <div class="ec-val">4.4u</div>
+      <div class="ec-sub">1.9 + 1.3 + 1.2u</div>
+    </div>
+  </div>
+  <div class="exp-note">Kelly sizing reflects fractional half-Kelly at current bankroll. Confirm lines before betting.</div>
+</div>
+
+<!-- ══════════════════════════════════
+  4. OFFICIAL VALUE BETS
+  ══════════════════════════════════ -->
+<div class="sec-hdr">
+  <div class="sec-row">
+    <div class="sec-title">Official Value Bets</div>
+    <div class="sec-line"></div>
+    <span class="sec-badge">3 plays</span>
+  </div>
+  <div class="sec-sub">Clearing 4pp model edge filter vs Pinnacle no-vig · Posted 5:52 AM CT · Locked before first pitch</div>
+</div>
+
+<div class="pick-grid" id="pick-grid">
+
+  <!-- ─── CARD 1: LAD @ ARI — Away Fav ─── -->
+  <div class="pick-card v-value" id="card-LAD">
+    <div class="pc-top">
+      <span class="vbadge value">✅ Value</span>
+      <span class="cbadge fav">Away Fav</span>
+      <span class="pc-matchup">LAD @ ARI</span>
+      <span class="pc-time">Locked · 5:52 AM CT</span>
+    </div>
+    <div class="pc-main">
+      <span class="pc-team">LAD</span>
+      <div class="pc-odds-block">
+        <span class="pc-odds neg">−128</span>
+        <span class="pc-odds-sub">ML · <strong>Best: Novig</strong> · verify before betting</span>
+      </div>
+    </div>
+    <div class="pc-nums">
+      <div class="pc-num"><div class="nv-l">Edge</div><div class="nv-v edge">+6.7pp</div></div>
+      <div class="pc-num"><div class="nv-l">Model</div><div class="nv-v model">62.9%</div></div>
+      <div class="pc-num"><div class="nv-l">Market</div><div class="nv-v">55.9%</div></div>
+      <div class="pc-num"><div class="nv-l">Fair ML</div><div class="nv-v fair">−169</div></div>
+      <div class="pc-num"><div class="nv-l">Playable To</div><div class="nv-v play">−156</div></div>
+    </div>
+    <div class="pc-bar">
+      <div class="pb-hdr"><span class="pb-l mkt">Market 55.9%</span><span class="pb-l mdl">Model 62.9%</span></div>
+      <div class="pb-track"><div class="pb-mkt" style="width:55.9%"></div><div class="pb-edge" style="left:55.9%;width:7%"></div></div>
+    </div>
+    <div class="pc-live">
+      <span class="live-chip same">Current: Same</span>
+      <span class="live-meta">Posted +6.7pp · Now +6.7pp</span>
+      <span class="live-ts">Refresh 1:34 PM CT</span>
+    </div>
+    <div class="pc-sl">
+      <div class="stake-box">
+        <div class="sb-lbl">Stake</div>
+        <div class="sb-units">1.9u</div>
+        <div class="sb-dollars">$192</div>
+        <div class="sb-note">at $10k bankroll</div>
+      </div>
+      <div class="lu-block">
+        <!-- lineup_confirmed = null (morning pick) → Projected, not Unknown -->
+        <div class="lu-item"><div class="lu-dot proj"></div><span class="lu-team">LAD</span><span class="lu-stat proj">Lineup projected</span></div>
+        <div class="lu-item"><div class="lu-dot proj"></div><span class="lu-team">ARI</span><span class="lu-stat proj">Projected</span></div>
+      </div>
+    </div>
+    <!-- PRIMARY DRIVER — one concise line, no full narrative paragraph -->
+    <div class="pc-driver">
+      <strong>Primary driver:</strong> Wrobleski 3.47 xFIP vs Nelson 5.67 xFIP — significant starter quality advantage supports the model edge.
+    </div>
+    <div class="pc-actions">
+      <button class="pc-btn details" onclick="openDet('LAD',this)">Details ▾</button>
+      <button class="pc-btn track">Track</button>
+      <button class="pc-btn share">⬆ Share</button>
+    </div>
+  </div>
+
+  <!-- ─── CARD 2: KC @ MIN — Home Dog + Model Fav ─── -->
+  <div class="pick-card v-cond" id="card-MIN">
+    <div class="pc-top">
+      <span class="vbadge cond">🟡 Conditional</span>
+      <span class="cbadge dog">Home Dog</span>
+      <span class="cbadge mfav">Model Fav</span>
+      <span class="pc-matchup">KC @ MIN</span>
+      <span class="pc-time">Locked · 5:52 AM CT</span>
+    </div>
+    <div class="pc-main">
+      <span class="pc-team">MIN</span>
+      <div class="pc-odds-block">
+        <span class="pc-odds pos">+102</span>
+        <span class="pc-odds-sub">ML · <strong>Best: ProphetX</strong> · verify before betting</span>
+      </div>
+    </div>
+    <div class="pc-nums">
+      <div class="pc-num"><div class="nv-l">Edge</div><div class="nv-v edge">+5.4pp</div></div>
+      <div class="pc-num"><div class="nv-l">Model</div><div class="nv-v model">54.9%</div></div>
+      <div class="pc-num"><div class="nv-l">Market</div><div class="nv-v">48.8%</div></div>
+      <div class="pc-num"><div class="nv-l">Fair ML</div><div class="nv-v fair">−122</div></div>
+      <div class="pc-num"><div class="nv-l">Playable To</div><div class="nv-v play">−112</div></div>
+    </div>
+    <div class="pc-bar">
+      <div class="pb-hdr"><span class="pb-l mkt">Market 48.8%</span><span class="pb-l mdl">Model 54.9%</span></div>
+      <div class="pb-track"><div class="pb-mkt" style="width:48.8%"></div><div class="pb-edge" style="left:48.8%;width:6.1%"></div></div>
+    </div>
+    <div class="pc-live">
+      <span class="live-chip same">Current: Same</span>
+      <span class="live-meta">Posted +5.4pp · Now +5.9pp</span>
+      <span class="live-ts">Refresh 1:34 PM CT</span>
+    </div>
+    <div class="pc-sl">
+      <div class="stake-box">
+        <div class="sb-lbl">Stake</div>
+        <div class="sb-units">1.3u</div>
+        <div class="sb-dollars">$134</div>
+        <div class="sb-note">at $10k bankroll</div>
+      </div>
+      <div class="lu-block">
+        <div class="lu-item"><div class="lu-dot proj"></div><span class="lu-team">MIN</span><span class="lu-stat proj">Lineup projected</span></div>
+        <div class="lu-item"><div class="lu-dot proj"></div><span class="lu-team">KC</span><span class="lu-stat proj">Projected</span></div>
+      </div>
+    </div>
+    <!-- Single concise driver line -->
+    <div class="pc-driver">
+      <strong>Primary driver:</strong> Multi-factor edge — Morris 4.08 vs Lugo 4.02 xFIP (even SP), home field, and lineup delta converge.
+    </div>
+    <div class="pc-actions">
+      <button class="pc-btn details" onclick="openDet('MIN',this)">Details ▾</button>
+      <button class="pc-btn track">Track</button>
+      <button class="pc-btn share">⬆ Share</button>
+    </div>
+  </div>
+
+  <!-- ─── CARD 3: BAL @ BOS — Away Dog + Model Fav ─── -->
+  <div class="pick-card v-cond" id="card-BAL">
+    <div class="pc-top">
+      <span class="vbadge cond">🟡 Conditional</span>
+      <span class="cbadge dog">Away Dog</span>
+      <span class="cbadge mfav">Model Fav</span>
+      <span class="pc-matchup">BAL @ BOS</span>
+      <span class="pc-time">Locked · 5:52 AM CT</span>
+    </div>
+    <div class="pc-main">
+      <span class="pc-team">BAL</span>
+      <div class="pc-odds-block">
+        <span class="pc-odds pos">+106</span>
+        <span class="pc-odds-sub">ML · <strong>Best: ProphetX</strong> · verify before betting</span>
+      </div>
+    </div>
+    <div class="pc-nums">
+      <div class="pc-num"><div class="nv-l">Edge</div><div class="nv-v edge">+4.8pp</div></div>
+      <div class="pc-num"><div class="nv-l">Model</div><div class="nv-v model">53.3%</div></div>
+      <div class="pc-num"><div class="nv-l">Market</div><div class="nv-v">47.8%</div></div>
+      <div class="pc-num"><div class="nv-l">Fair ML</div><div class="nv-v fair">−114</div></div>
+      <div class="pc-num"><div class="nv-l">Playable To</div><div class="nv-v play">−105</div></div>
+    </div>
+    <div class="pc-bar">
+      <div class="pb-hdr"><span class="pb-l mkt">Market 47.8%</span><span class="pb-l mdl">Model 53.3%</span></div>
+      <div class="pb-track"><div class="pb-mkt" style="width:47.8%"></div><div class="pb-edge" style="left:47.8%;width:5.5%"></div></div>
+    </div>
+    <div class="pc-live">
+      <span class="live-chip same">Current: Same</span>
+      <span class="live-meta">Posted +4.8pp · Now +4.9pp</span>
+      <span class="live-ts">Refresh 1:34 PM CT</span>
+    </div>
+    <div class="pc-sl">
+      <div class="stake-box">
+        <div class="sb-lbl">Stake</div>
+        <div class="sb-units">1.2u</div>
+        <div class="sb-dollars">$116</div>
+        <div class="sb-note">at $10k bankroll</div>
+      </div>
+      <div class="lu-block">
+        <div class="lu-item"><div class="lu-dot proj"></div><span class="lu-team">BAL</span><span class="lu-stat proj">Lineup projected</span></div>
+        <div class="lu-item"><div class="lu-dot proj"></div><span class="lu-team">BOS</span><span class="lu-stat proj">Projected</span></div>
+      </div>
+    </div>
+    <!-- Single concise driver line -->
+    <div class="pc-driver">
+      <strong>Primary driver:</strong> Rogers 5.03 vs Bello 6.18 xFIP — starter quality gap supports BAL against market price.
+    </div>
+    <div class="pc-actions">
+      <button class="pc-btn details" onclick="openDet('BAL',this)">Details ▾</button>
+      <button class="pc-btn track">Track</button>
+      <button class="pc-btn share">⬆ Share</button>
+    </div>
+  </div>
+
+</div><!-- /pick-grid -->
+
+<!-- ══════════════════════════════════
+  FULL-WIDTH EXPAND PANEL — below grid, not inside any card
+  Avoids card-height imbalance entirely
+  ══════════════════════════════════ -->
+<div class="expand-wrap" id="expand-wrap">
+  <div class="expand-panel" id="expand-panel">
+    <div class="ep-hdr" id="ep-hdr"><!-- header injected by JS --></div>
+    <div class="ep-body" id="ep-body"><!-- body injected by JS --></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  5. LIVE TRACKING
+  ══════════════════════════════════ -->
+<div class="track-sec">
+  <div class="track-hdr">Today's Picks — Live Tracking</div>
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+    <table class="track-table">
+      <thead><tr><th>Status</th><th>Pick</th><th>Matchup</th><th>Edge</th><th>Odds</th><th>Stake</th><th>Game</th></tr></thead>
+      <tbody>
+        <tr><td><span class="sp-pend">Pending</span></td><td class="td-team">LAD</td><td style="color:var(--text-3);font-size:10px">LAD @ ARI</td><td class="td-edge">+6.7pp</td><td class="td-odds" style="color:var(--indigo-lt)">−128</td><td class="td-stake">1.9u / $192</td><td style="color:var(--text-3);font-size:10px">9:40 PM CT</td></tr>
+        <tr><td><span class="sp-pend">Pending</span></td><td class="td-team">MIN</td><td style="color:var(--text-3);font-size:10px">KC @ MIN</td><td class="td-edge">+5.4pp</td><td class="td-odds" style="color:var(--amber)">+102</td><td class="td-stake">1.3u / $134</td><td style="color:var(--text-3);font-size:10px">8:10 PM CT</td></tr>
+        <tr><td><span class="sp-pend">Pending</span></td><td class="td-team">BAL</td><td style="color:var(--text-3);font-size:10px">BAL @ BOS</td><td class="td-edge">+4.8pp</td><td class="td-odds" style="color:var(--amber)">+106</td><td class="td-stake">1.2u / $116</td><td style="color:var(--text-3);font-size:10px">7:05 PM CT</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  6. EMAIL CAPTURE
+  ══════════════════════════════════ -->
+<div class="email-sec">
+  <div class="em-eye">Free Access — 2026 Season</div>
+  <div class="em-title">Get the daily picks recap in your inbox</div>
+  <div class="em-body">Full access is free during the 2026 season track-record build. Picks are <strong>timestamped</strong>, <strong>CLV-tracked</strong>, and <strong>auditable</strong>. Paid tiers launch before 2027.</div>
+  <div class="em-form">
+    <input class="em-input" type="email" placeholder="your@email.com">
+    <button class="em-cta">Get Daily Recap</button>
+  </div>
+  <div class="em-note">No spam. Unsubscribe anytime.</div>
+</div>
+
+<!-- ══════════════════════════════════
+  7. TRACK RECORD & MODEL TRANSPARENCY
+  ══════════════════════════════════ -->
+<div class="method-sec">
+  <div class="method-hdr">
+    <div class="method-title">Track Record &amp; Model Transparency</div>
+    <a class="method-link" href="model.html">Full methodology →</a>
+  </div>
+  <div class="method-grid">
+    <div class="mcard">
+      <span class="mc-ico">📈</span>
+      <div class="mc-val g">+0.25pp</div>
+      <div class="mc-lbl">Average Closing Line Value</div>
+      <div class="mc-sep"></div>
+      <!-- Conservative CLV language — no overclaims -->
+      <div class="mc-desc">On average, posted picks have closed better than the release price across the tracked sample. Positive CLV is a key signal that the model is identifying edge before it is fully priced in.</div>
+    </div>
+    <div class="mcard">
+      <span class="mc-ico">📊</span>
+      <div class="mc-val g">+13.4%</div>
+      <div class="mc-lbl">ROI on 404 tracked picks, 2026 season</div>
+      <div class="mc-sep"></div>
+      <div class="mc-desc">Every pick is logged with a timestamp before first pitch. Results are never deleted or retroactively modified. Full pick history is visible in the History tab.</div>
+    </div>
+    <div class="mcard">
+      <span class="mc-ico">⚙️</span>
+      <div class="mc-val b">33+</div>
+      <div class="mc-lbl">Log-odds adjustments per game</div>
+      <div class="mc-sep"></div>
+      <!-- Approved conservative methodology copy -->
+      <div class="mc-desc">Pitcher quality, lineup status, park factors, weather, bullpen quality, BvP career matchup, arsenal fit, market audit, and more — applied as model adjustments before the market edge comparison.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-top">
+    <div class="ft-brand">Independent Baseball Projections</div>
+    <div class="ft-sports">
+      <span class="ft-sport-lbl">Sports</span>
+      <span class="sc on">MLB ✓</span>
+      <span class="sc">NFL <em style="font-size:8px;color:var(--text-4);font-style:normal">soon</em></span>
+      <span class="sc">NBA <em style="font-size:8px;color:var(--text-4);font-style:normal">soon</em></span>
+    </div>
+  </div>
+  <div class="ft-disc">Independent Baseball Projections is an informational, analytical service. Nothing constitutes financial or wagering advice. All picks are logged for analytical purposes only. Sports betting may be illegal in your jurisdiction — verify local laws. Past performance does not guarantee future results. Bet responsibly. · <a href="#">Privacy</a> · <a href="#">Terms</a></div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+  EXPAND PANEL CONTENT — pre-rendered per pick, injected on open
+  Shown in full-width panel BELOW the card grid, not inside the card.
+  ═══════════════════════════════════════════════════════════════════ -->
+<script>
+// ── Per-pick details content ──────────────────────────────────────────
+const DETAILS = {
+
+LAD: {
+  tier: 'value',
+  header: `
+    <span class="ep-pick-name">LAD</span>
+    <span class="ep-pick-odds neg">−128</span>
+    <span class="ep-edge">+6.7pp edge · VALUE</span>
+  `,
+  left: `
+    <!-- Quick Audit -->
+    <div class="ep-sec-hdr">Quick Audit</div>
+    <div class="qa-block">
+      <div class="qa-row">
+        <span class="qa-lbl thesis">Thesis</span>
+        <span class="qa-val"><strong>+6.7pp edge:</strong> model 62.9% vs market 55.9%. Significant starter quality advantage — Wrobleski 3.47 xFIP has a measurable edge over Nelson 5.67 xFIP.</span>
+      </div>
+      <div class="qa-row">
+        <span class="qa-lbl driver">Driver</span>
+        <span class="qa-val"><strong>Wrobleski 3.47 vs Nelson 5.67 xFIP:</strong> +2.20-run gap. Market underprices LAD at −128 vs model fair line −169. Bullpen quality and park factors are also net supportive.</span>
+      </div>
+      <div class="qa-row">
+        <span class="qa-lbl risk">Risk</span>
+        <span class="qa-val" style="color:var(--amber)">Both lineups projected — model applies pre-lineup certainty shrinkage. Confirm starters post-lineup before betting.</span>
+      </div>
+      <div class="qa-row">
+        <span class="qa-lbl ev">EV</span>
+        <span class="qa-val ev">+$5.23 per $100 wagered</span>
+      </div>
+    </div>
+
+    <!-- Full narrative (expanded only — not shown in collapsed card) -->
+    <div class="ep-sec-hdr" style="margin-top:16px">Model Narrative</div>
+    <div class="ep-narrative">
+      The market is mispricing a significant starter advantage: <strong>Justin Wrobleski (3.47 xFIP)</strong> has a measurable edge over <strong>Ryne Nelson (5.67 xFIP)</strong> — model prices LAD at 62.9% to win; Pinnacle implies 55.9% (−128). Bullpen quality, park factors, and lineup composition all support LAD. The +6.7pp edge clears the posting threshold with room above the minimum. Playable to −156; current best available −128 at Novig leaves solid margin.
+    </div>
+
+    <!-- Action Summary -->
+    <div class="ep-sec-hdr">Action Summary</div>
+    <div class="as-box v">
+      <div class="as-row"><span class="as-lbl">Official Play</span><span class="as-val g">Yes — VALUE</span></div>
+      <div class="as-row"><span class="as-lbl">Bet</span><span class="as-val m">LAD ML</span></div>
+      <div class="as-row"><span class="as-lbl">Best Available</span><span class="as-val g">−128 · Novig</span></div>
+      <div class="as-row"><span class="as-lbl">Playable To</span><span class="as-val a">−156 or better</span></div>
+      <div class="as-row"><span class="as-lbl">Stake</span><span class="as-val m">1.9u / $192</span></div>
+      <div class="as-row"><span class="as-lbl">Re-check</span><span class="as-val a">Confirm lineups before first pitch</span></div>
+    </div>
+    <div class="ep-cta">
+      <button class="ep-cta-btn bet">Bet LAD ML</button>
+      <button class="ep-cta-btn trk">Track Pick</button>
+    </div>
+  `,
+  right: `
+    <!-- Win Probability Gap -->
+    <div class="ep-sec-hdr">Win Probability Gap</div>
+    <div class="prob-gap-card">
+      <div class="pg-row">
+        <div class="pg-col"><span class="pg-lbl">Market</span><span class="pg-val mkt">55.9%</span></div>
+        <div class="pg-div"></div>
+        <div class="pg-col"><span class="pg-lbl">Edge</span><span class="pg-val edg">+6.7pp</span></div>
+        <div class="pg-div"></div>
+        <div class="pg-col"><span class="pg-lbl">Model</span><span class="pg-val mdl">62.9%</span></div>
+      </div>
+      <div class="pg-bar"><div class="pg-mkt" style="width:55.9%"></div><div class="pg-edg" style="left:55.9%;width:7%"></div></div>
+    </div>
+
+    <!-- Best Available Odds -->
+    <div class="ep-sec-hdr">Best Available Odds — LAD ML</div>
+    <div class="odds-playable">Playable to −156 · Best available −128</div>
+    <div class="odds-best">
+      <span class="ob-book">Novig</span>
+      <span class="ob-odds">−128</span>
+      <span class="ob-tag">BEST</span>
+    </div>
+    <div style="font-size:9.5px;color:var(--text-4);margin-bottom:14px">ProphetX −130 · Pinnacle −132 · DraftKings −135 · FanDuel −136</div>
+
+    <!-- Lineup & Data Status -->
+    <div class="ep-sec-hdr">Lineup &amp; Data Status</div>
+    <table class="lu-tbl">
+      <tr><td class="lt-l">LAD lineup</td><td class="lt-v proj">⚠ Projected</td></tr>
+      <tr><td class="lt-l">ARI lineup</td><td class="lt-v proj">⚠ Projected</td></tr>
+      <tr><td class="lt-l">LAD starter</td><td class="lt-v ok">✓ Justin Wrobleski</td></tr>
+      <tr><td class="lt-l">ARI starter</td><td class="lt-v ok">✓ Ryne Nelson</td></tr>
+      <tr><td class="lt-l">Model refresh</td><td class="lt-v ok">9:05 AM CT · Jun 4</td></tr>
+      <tr><td class="lt-l">Current refresh</td><td class="lt-v ok">1:34 PM CT</td></tr>
+    </table>
+
+    <!-- Historical context note -->
+    <div class="hist-note"><strong>Historical context:</strong> Away favorites in this edge tier (6–8pp) this season — supporting context only. Current model edge drives the pick; past pattern is directional, not predictive.</div>
+  `
+},
+
+MIN: {
+  tier: 'cond',
+  header: `
+    <span class="ep-pick-name">MIN</span>
+    <span class="ep-pick-odds pos">+102</span>
+    <span class="ep-edge" style="background:rgba(245,158,11,.09);color:var(--amber);border-color:rgba(245,158,11,.22)">+5.4pp edge · CONDITIONAL</span>
+  `,
+  left: `
+    <div class="ep-sec-hdr">Quick Audit</div>
+    <div class="qa-block">
+      <div class="qa-row">
+        <span class="qa-lbl thesis">Thesis</span>
+        <span class="qa-val"><strong>+5.4pp edge — CONDITIONAL.</strong> Market prices MIN as a dog (+102) but model has them as slight favorites (54.9%). Multi-factor convergence; no single dominant signal.</span>
+      </div>
+      <div class="qa-row">
+        <span class="qa-lbl driver">Driver</span>
+        <span class="qa-val"><strong>Morris 4.08 vs Lugo 4.02 xFIP</strong> — even SP matchup, with home field (+0.8pp), lineup quality delta, and market mispricing at +102 vs fair −122 stacking.</span>
+      </div>
+      <div class="qa-row">
+        <span class="qa-lbl risk">Risk</span>
+        <span class="qa-val" style="color:var(--amber)">Both lineups projected. Edge near lower tier (5.4pp). Confirm actual KC lineup — edge is more lineup-sensitive than LAD.</span>
+      </div>
+      <div class="qa-row">
+        <span class="qa-lbl ev">EV</span>
+        <span class="qa-val ev">+$5.90 per $100 wagered</span>
+      </div>
+    </div>
+
+    <div class="ep-sec-hdr" style="margin-top:16px">Model Narrative</div>
+    <div class="ep-narrative">
+      A multi-factor convergence edge: an even pitching matchup (<strong>Andrew Morris 4.08 vs Seth Lugo 4.02 xFIP</strong>), home field advantage, lineup quality delta, and market mispricing at +102 vs fair line −122. The model prices MIN at 54.9% to win; Pinnacle implies 48.8%. No single dominant driver — this is a stack of small supporting factors. Edge conditional on lineup confirmation.
+    </div>
+
+    <div class="ep-sec-hdr">Action Summary</div>
+    <div class="as-box c">
+      <div class="as-row"><span class="as-lbl">Official Play</span><span class="as-val" style="color:var(--amber)">Yes — CONDITIONAL</span></div>
+      <div class="as-row"><span class="as-lbl">Bet</span><span class="as-val m">MIN ML</span></div>
+      <div class="as-row"><span class="as-lbl">Best Available</span><span class="as-val g">+102 · ProphetX</span></div>
+      <div class="as-row"><span class="as-lbl">Playable To</span><span class="as-val a">−112 or better</span></div>
+      <div class="as-row"><span class="as-lbl">Stake</span><span class="as-val m">1.3u / $134</span></div>
+      <div class="as-row"><span class="as-lbl">Re-check</span><span class="as-val a">Confirm KC actual lineup</span></div>
+    </div>
+    <div class="ep-cta">
+      <button class="ep-cta-btn bet" style="border-color:rgba(245,158,11,.28);color:var(--amber);background:rgba(245,158,11,.10)">Bet MIN ML</button>
+      <button class="ep-cta-btn trk">Track Pick</button>
+    </div>
+  `,
+  right: `
+    <div class="ep-sec-hdr">Win Probability Gap</div>
+    <div class="prob-gap-card">
+      <div class="pg-row">
+        <div class="pg-col"><span class="pg-lbl">Market</span><span class="pg-val mkt">48.8%</span></div>
+        <div class="pg-div"></div>
+        <div class="pg-col"><span class="pg-lbl">Edge</span><span class="pg-val edg">+5.4pp</span></div>
+        <div class="pg-div"></div>
+        <div class="pg-col"><span class="pg-lbl">Model</span><span class="pg-val mdl">54.9%</span></div>
+      </div>
+      <div class="pg-bar"><div class="pg-mkt" style="width:48.8%"></div><div class="pg-edg" style="left:48.8%;width:6.1%"></div></div>
+    </div>
+
+    <div class="ep-sec-hdr">Best Available Odds — MIN ML</div>
+    <div class="odds-playable">Playable to −112 · Best available +102</div>
+    <div class="odds-best" style="border-color:rgba(245,158,11,.20);background:rgba(245,158,11,.06)">
+      <span class="ob-book">ProphetX</span>
+      <span class="ob-odds" style="color:var(--amber)">+102</span>
+      <span class="ob-tag" style="background:rgba(245,158,11,.14);color:var(--amber)">BEST</span>
+    </div>
+    <div style="font-size:9.5px;color:var(--text-4);margin-bottom:14px">Novig +100 · LowVig +100 · DraftKings −105 · FanDuel −108 · Pinnacle −112</div>
+
+    <div class="ep-sec-hdr">Lineup &amp; Data Status</div>
+    <table class="lu-tbl">
+      <tr><td class="lt-l">MIN lineup</td><td class="lt-v proj">⚠ Projected</td></tr>
+      <tr><td class="lt-l">KC lineup</td><td class="lt-v proj">⚠ Projected</td></tr>
+      <tr><td class="lt-l">MIN starter</td><td class="lt-v ok">✓ Andrew Morris</td></tr>
+      <tr><td class="lt-l">KC starter</td><td class="lt-v ok">✓ Seth Lugo</td></tr>
+      <tr><td class="lt-l">Model refresh</td><td class="lt-v ok">9:05 AM CT · Jun 4</td></tr>
+      <tr><td class="lt-l">Current refresh</td><td class="lt-v ok">1:34 PM CT</td></tr>
+    </table>
+
+    <div class="hist-note"><strong>Historical context:</strong> Home underdogs with model edge (4–6pp) this season — supporting context only. Current model edge drives the pick.</div>
+  `
+},
+
+BAL: {
+  tier: 'cond',
+  header: `
+    <span class="ep-pick-name">BAL</span>
+    <span class="ep-pick-odds pos">+106</span>
+    <span class="ep-edge" style="background:rgba(245,158,11,.09);color:var(--amber);border-color:rgba(245,158,11,.22)">+4.8pp edge · CONDITIONAL</span>
+  `,
+  left: `
+    <div class="ep-sec-hdr">Quick Audit</div>
+    <div class="qa-block">
+      <div class="qa-row">
+        <span class="qa-lbl thesis">Thesis</span>
+        <span class="qa-val"><strong>+4.8pp edge — CONDITIONAL.</strong> BAL away dog priced +106 but model projects them as slight favorites (53.3%). Starter quality gap plus market mispricing.</span>
+      </div>
+      <div class="qa-row">
+        <span class="qa-lbl driver">Driver</span>
+        <span class="qa-val"><strong>Rogers 5.03 vs Bello 6.18 xFIP</strong> — measurable starter quality gap supports BAL. Fair line −114 vs best available +106 leaves a wide market gap.</span>
+      </div>
+      <div class="qa-row">
+        <span class="qa-lbl risk">Risk</span>
+        <span class="qa-val" style="color:var(--amber)">Both lineups projected. Away conditional pick near minimum threshold — edge most sensitive to lineup and starter confirmation.</span>
+      </div>
+      <div class="qa-row">
+        <span class="qa-lbl ev">EV</span>
+        <span class="qa-val ev">+$4.86 per $100 wagered</span>
+      </div>
+    </div>
+
+    <div class="ep-sec-hdr" style="margin-top:16px">Model Narrative</div>
+    <div class="ep-narrative">
+      Model identifies a meaningful starter quality gap: <strong>Trevor Rogers (5.03 xFIP)</strong> has a measurable edge over <strong>Brayan Bello (6.18 xFIP)</strong> — model prices BAL at 53.3% to win; Pinnacle implies 47.8% (+106). The market is pricing BAL as an away dog despite the model seeing them as slight favorites. Conditional on lineup confirmation; edge is near the minimum posting threshold.
+    </div>
+
+    <div class="ep-sec-hdr">Action Summary</div>
+    <div class="as-box c">
+      <div class="as-row"><span class="as-lbl">Official Play</span><span class="as-val" style="color:var(--amber)">Yes — CONDITIONAL</span></div>
+      <div class="as-row"><span class="as-lbl">Bet</span><span class="as-val m">BAL ML</span></div>
+      <div class="as-row"><span class="as-lbl">Best Available</span><span class="as-val g">+106 · ProphetX</span></div>
+      <div class="as-row"><span class="as-lbl">Playable To</span><span class="as-val a">−105 or better</span></div>
+      <div class="as-row"><span class="as-lbl">Stake</span><span class="as-val m">1.2u / $116</span></div>
+      <div class="as-row"><span class="as-lbl">Re-check</span><span class="as-val a">Confirm BOS actual lineup</span></div>
+    </div>
+    <div class="ep-cta">
+      <button class="ep-cta-btn bet" style="border-color:rgba(245,158,11,.28);color:var(--amber);background:rgba(245,158,11,.10)">Bet BAL ML</button>
+      <button class="ep-cta-btn trk">Track Pick</button>
+    </div>
+  `,
+  right: `
+    <div class="ep-sec-hdr">Win Probability Gap</div>
+    <div class="prob-gap-card">
+      <div class="pg-row">
+        <div class="pg-col"><span class="pg-lbl">Market</span><span class="pg-val mkt">47.8%</span></div>
+        <div class="pg-div"></div>
+        <div class="pg-col"><span class="pg-lbl">Edge</span><span class="pg-val edg">+4.8pp</span></div>
+        <div class="pg-div"></div>
+        <div class="pg-col"><span class="pg-lbl">Model</span><span class="pg-val mdl">53.3%</span></div>
+      </div>
+      <div class="pg-bar"><div class="pg-mkt" style="width:47.8%"></div><div class="pg-edg" style="left:47.8%;width:5.5%"></div></div>
+    </div>
+
+    <div class="ep-sec-hdr">Best Available Odds — BAL ML</div>
+    <div class="odds-playable">Playable to −105 · Best available +106</div>
+    <div class="odds-best" style="border-color:rgba(245,158,11,.20);background:rgba(245,158,11,.06)">
+      <span class="ob-book">ProphetX</span>
+      <span class="ob-odds" style="color:var(--amber)">+106</span>
+      <span class="ob-tag" style="background:rgba(245,158,11,.14);color:var(--amber)">BEST</span>
+    </div>
+    <div style="font-size:9.5px;color:var(--text-4);margin-bottom:14px">Novig +104 · LowVig +103 · DraftKings −102 · FanDuel −104 · Pinnacle −105</div>
+
+    <div class="ep-sec-hdr">Lineup &amp; Data Status</div>
+    <table class="lu-tbl">
+      <tr><td class="lt-l">BAL lineup</td><td class="lt-v proj">⚠ Projected</td></tr>
+      <tr><td class="lt-l">BOS lineup</td><td class="lt-v proj">⚠ Projected</td></tr>
+      <tr><td class="lt-l">BAL starter</td><td class="lt-v ok">✓ Trevor Rogers</td></tr>
+      <tr><td class="lt-l">BOS starter</td><td class="lt-v ok">✓ Brayan Bello</td></tr>
+      <tr><td class="lt-l">Model refresh</td><td class="lt-v ok">9:05 AM CT · Jun 4</td></tr>
+      <tr><td class="lt-l">Current refresh</td><td class="lt-v ok">1:34 PM CT</td></tr>
+    </table>
+
+    <div class="hist-note"><strong>Historical context:</strong> Away underdogs with model edge (4–6pp) this season — supporting context only. Current model edge drives the pick.</div>
+  `
+}
+
+}; // end DETAILS
+
+// ── Expand panel logic ────────────────────────────────────────────────
+let activeCard = null;
+
+function openDet(id, btn) {
+  const wrap  = document.getElementById('expand-wrap');
+  const panel = document.getElementById('expand-panel');
+  const hdr   = document.getElementById('ep-hdr');
+  const body  = document.getElementById('ep-body');
+  const d     = DETAILS[id];
+
+  // All detail buttons reset
+  document.querySelectorAll('.pc-btn.details').forEach(b => {
+    b.textContent = 'Details ▾';
+    b.classList.remove('open');
+  });
+  // All cards lose active highlight
+  document.querySelectorAll('.pick-card').forEach(c => c.classList.remove('active-card'));
+
+  // Close if clicking same card again
+  if (activeCard === id) {
+    activeCard = null;
+    wrap.classList.remove('open');
+    return;
+  }
+
+  activeCard = id;
+  btn.textContent = 'Details ▲';
+  btn.classList.add('open');
+
+  // Highlight the active card
+  document.getElementById('card-' + id).classList.add('active-card');
+
+  // Set tier accent colour
+  panel.className = 'expand-panel ep-' + d.tier;
+
+  // Inject header + body
+  hdr.innerHTML = d.header + `<button class="ep-close" onclick="closeDet()">✕ Close</button>`;
+  body.innerHTML = `
+    <div class="ep-col left">${d.left}</div>
+    <div class="ep-col">${d.right}</div>
+  `;
+
+  // Show panel
+  wrap.classList.remove('open');
+  void wrap.offsetWidth; // force reflow for animation replay
+  wrap.classList.add('open');
+
+  // Scroll so panel is visible
+  setTimeout(() => wrap.scrollIntoView({ behavior:'smooth', block:'nearest' }), 60);
+}
+
+function closeDet() {
+  activeCard = null;
+  document.getElementById('expand-wrap').classList.remove('open');
+  document.querySelectorAll('.pc-btn.details').forEach(b => {
+    b.textContent = 'Details ▾';
+    b.classList.remove('open');
+  });
+  document.querySelectorAll('.pick-card').forEach(c => c.classList.remove('active-card'));
+}
+</script>
+</body>
+</html>

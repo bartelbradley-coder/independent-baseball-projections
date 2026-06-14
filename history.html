@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FairLine MLB — Pick History</title>
-<link rel="canonical" href="https://fairlinemlb.com/history.html">
-<meta name="description" content="Complete pick log for FairLine MLB. Every posted pick with result, CLV, units, and ROI. Filterable by month, result, edge, and side.">
-<meta property="og:title" content="FairLine MLB — Pick History">
+<title>Independent Baseball Projections — Pick History</title>
+<link rel="canonical" href="https://independentbaseballprojections.com/history.html">
+<meta name="description" content="Complete pick log for Independent Baseball Projections. Every posted pick with result, CLV, units, and ROI. Filterable by month, result, edge, and side.">
+<meta property="og:title" content="Independent Baseball Projections — Pick History">
 <meta property="og:description" content="Every posted pick logged with result, CLV, units, and ROI. Filterable pick table, P&L curve, calibration chart, and daily breakdown.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://www.fairlinemlb.com/og-image.png">
+<meta property="og:image" content="https://www.independentbaseballprojections.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:url" content="https://www.fairlinemlb.com/history.html">
+<meta property="og:url" content="https://www.independentbaseballprojections.com/history.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="FairLine MLB — Results & Track Record">
+<meta name="twitter:title" content="Independent Baseball Projections — Results & Track Record">
 <meta name="twitter:description" content="Live 2026 MLB betting results with CLV tracking and full pick history.">
-<meta name="twitter:image" content="https://www.fairlinemlb.com/og-image.png">
+<meta name="twitter:image" content="https://www.independentbaseballprojections.com/og-image.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='9' y='21' font-family='system-ui,sans-serif' font-size='12' font-weight='900' fill='white'>F</text><text x='17' y='21' font-family='system-ui,sans-serif' font-size='12' font-weight='900' fill='%2360a5fa'>L</text><line x1='22' y1='22' x2='26' y2='17' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='26' cy='17' r='1.5' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -388,12 +388,12 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
       <span class="fsm-badge">soon</span>
     </div>
   </div>
-  <div class="footer-brand" style="display:none">FairLine MLB · Quantitative Win Probability Model · Dual-Poisson + 33 Log-Odds Adjustments + Platt Calibration</div>
+  <div class="footer-brand" style="display:none">Independent Baseball Projections · Quantitative Win Probability Model · Dual-Poisson + 33 Log-Odds Adjustments + Platt Calibration</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
   <div class="footer-links"><a href="model.html">Methodology</a> · <a href="index.html">Today's Picks</a> · <a href="performance.html">Model Dashboard</a></div>
 </footer>
 
-<script src="fairline-utils.js"></script>
+<script src="ibp-utils.js"></script>
 <script>
 let allRows = [];
 let sortCol = 'date';
@@ -414,13 +414,13 @@ const _bankroll = (() => {
 })();
 const _unitSize = _bankroll / 100;  // 1 unit = 1% of bankroll (100-unit convention)
 
-// formatOdds, pct → fairline-utils.js
+// formatOdds, pct → ibp-utils.js
 
 // toggleRL and renderRLPicks removed — RL tracked in rl_picks_log.csv but not displayed
 
-// fetchESPNScores, ESPN_ABBR_MAP → fairline-utils.js
+// fetchESPNScores, ESPN_ABBR_MAP → ibp-utils.js
 
-// computeTodaySettled, extendPnlCurve, applyTodayToPerf → fairline-utils.js
+// computeTodaySettled, extendPnlCurve, applyTodayToPerf → ibp-utils.js
 
 async function loadAll() {
   try {
@@ -482,7 +482,7 @@ async function loadAll() {
     renderTable(allRows);
     // renderRLPicks removed — RL not displayed
   } catch (e) {
-    console.error('[FairLine] loadAll error:', e);
+    console.error('[Independent Baseball Projections] loadAll error:', e);
     _showDebugBanner(e.message || String(e));
     renderEmpty();
   }
@@ -897,7 +897,7 @@ document.getElementById('threshold-input').addEventListener('change', e => {
   }
 });
 
-// _showDebugBanner, event listeners → fairline-utils.js
+// _showDebugBanner, event listeners → ibp-utils.js
 
 // ── Auto-refresh every 5 minutes — picks settle every 30 min via cron ─────────
 let _lastRefreshAt = Date.now();
