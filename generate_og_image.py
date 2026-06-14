@@ -160,7 +160,7 @@ def generate(output_path=None):
 
     # ── URL ──────────────────────────────────────────────────────────────
     draw.text((80, 575),
-              'bartelbradley-coder.github.io/fairline-mlb',
+              'independentbaseballprojections.net',
               font=f_url, fill=INDIGO)
 
     # ── Baseball decoration (right side) ─────────────────────────────────

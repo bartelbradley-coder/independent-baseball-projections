@@ -7,8 +7,8 @@
   /* Returning-visitor detection — runs before paint so the hero renders in its
      compact form on repeat visits (full landing band on first visit). */
   try {
-    if (localStorage.getItem('fairline_visited')) document.documentElement.classList.add('returning');
-    localStorage.setItem('fairline_visited', '1');
+    if (localStorage.getItem('ibp_visited')) document.documentElement.classList.add('returning');
+    localStorage.setItem('ibp_visited', '1');
   } catch (e) {}
 </script>
 <title>Independent Baseball Projections — Today's Picks</title>
@@ -2650,11 +2650,11 @@
 const picksMap = {};
 // _bankroll: user's total betting bankroll in dollars. Kelly dollar amounts are
 // calculated as kelly_units × bankroll / 100  (since 1 unit = bankroll / 100 = 1% of bankroll).
-let _bankroll = parseFloat(localStorage.getItem('fairline_bankroll') || '0');
+let _bankroll = parseFloat(localStorage.getItem('ibp_bankroll') || '0');
 // Legacy migration: if old unit-size key exists, convert it to bankroll (×10)
-if (!_bankroll && localStorage.getItem('fairline_unit_size')) {
-  _bankroll = parseFloat(localStorage.getItem('fairline_unit_size') || '0') * 10;
-  if (_bankroll > 0) localStorage.setItem('fairline_bankroll', String(_bankroll));
+if (!_bankroll && localStorage.getItem('ibp_unit_size')) {
+  _bankroll = parseFloat(localStorage.getItem('ibp_unit_size') || '0') * 10;
+  if (_bankroll > 0) localStorage.setItem('ibp_bankroll', String(_bankroll));
 }
 let _unitSize = _bankroll / 100;  // kept for any legacy references; derived from bankroll
 let _histRef  = null; // history data reference for tracker result lookup
@@ -3093,7 +3093,7 @@ async function downloadShareCard() {
     const p   = picksMap[_shareCardPickId] || {};
     const team = (p.pick || 'pick').replace(/\s/g, '-').toLowerCase();
     const link = document.createElement('a');
-    link.download = `fairline-${team}.png`;
+    link.download = `ibp-${team}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
 
@@ -3141,7 +3141,7 @@ async function nativeShareCard() {
       if (!blob) { btn.disabled = false; btn.textContent = '⬆ Share Image'; return; }
       const p    = picksMap[_shareCardPickId] || {};
       const team = (p.pick || 'pick').replace(/\s/g, '-').toLowerCase();
-      const file = new File([blob], `fairline-${team}.png`, { type: 'image/png' });
+      const file = new File([blob], `ibp-${team}.png`, { type: 'image/png' });
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
@@ -3156,7 +3156,7 @@ async function nativeShareCard() {
       } else {
         // Fallback: download
         const link = document.createElement('a');
-        link.download = `fairline-${team}.png`;
+        link.download = `ibp-${team}.png`;
         link.href = URL.createObjectURL(blob);
         link.click();
         btn.textContent = '✓ Downloaded';
@@ -3189,7 +3189,7 @@ function shareAllPicks() {
 function _onBankrollChange(val) {
   _bankroll = parseFloat(val) || 0;
   _unitSize = _bankroll / 100;
-  localStorage.setItem('fairline_bankroll', String(_bankroll));
+  localStorage.setItem('ibp_bankroll', String(_bankroll));
   refreshKellyUSD();
   refreshPersonalTracker();
   _updateTotalDollarStat();   // update Total $ value in place
@@ -3382,7 +3382,7 @@ function computeStreak(hist) {
 }
 
 // ── "I bet this" personal tracker ────────────────────────────────────────────
-let _myBets = JSON.parse(localStorage.getItem('fairline_my_bets') || '{}');
+let _myBets = JSON.parse(localStorage.getItem('ibp_my_bets') || '{}');
 const _TODAY_KEY = new Date().toISOString().slice(0, 10);
 
 function toggleBet(id) {
@@ -3404,7 +3404,7 @@ function toggleBet(id) {
       delete _myBets[k];
     }
   }
-  localStorage.setItem('fairline_my_bets', JSON.stringify(_myBets));
+  localStorage.setItem('ibp_my_bets', JSON.stringify(_myBets));
   refreshBetButtons();
   refreshPersonalTracker();
 }

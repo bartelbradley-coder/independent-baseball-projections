@@ -404,12 +404,12 @@ let activeSearch = '';
 let activeThreshold = 0;   // minimum edge (0 = no filter)
 let activeSideFilter = 'all';  // 'all' | 'dog' | 'fav' | 'home' | 'away'
 let pnlMode = 'units';     // 'units' | 'kelly' | 'dollars'
-// Use fairline_bankroll (set on the Picks page). Legacy migration: if the old
-// fairline_unit_size key exists, convert it (unit_size × 10 = bankroll).
+// Use ibp_bankroll (set on the Picks page). Legacy migration: if the old
+// ibp_unit_size key exists, convert it (unit_size × 10 = bankroll).
 const _bankroll = (() => {
-  const b = parseFloat(localStorage.getItem('fairline_bankroll') || '0');
+  const b = parseFloat(localStorage.getItem('ibp_bankroll') || '0');
   if (b > 0) return b;
-  const u = parseFloat(localStorage.getItem('fairline_unit_size') || '0');
+  const u = parseFloat(localStorage.getItem('ibp_unit_size') || '0');
   return u > 0 ? u * 10 : 0;
 })();
 const _unitSize = _bankroll / 100;  // 1 unit = 1% of bankroll (100-unit convention)
@@ -792,7 +792,7 @@ function exportCSV() {
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href     = url;
-  a.download = `fairline-picks-${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `ibp-picks-${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
