@@ -60,7 +60,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 :root {
@@ -2344,6 +2344,7 @@
 </script>
 </head>
 <body>
+<a class="skip-link" href="#picks">Skip to picks</a>
 
 <nav>
   <a class="nav-brand" href="index.html">
@@ -2366,7 +2367,7 @@
   </div>
 </nav>
 
-<div class="page" id="picks">
+<div class="page" id="picks" role="main" tabindex="-1">
 
   <!-- VALUE PROP: one-line positioning for first-time visitors (also the page H1) -->
   <header class="hero">
@@ -2440,7 +2441,7 @@
 
   <!-- TODAY'S PICKS — inline expansion below each card -->
   <div class="section" id="picks-anchor" style="scroll-margin-top:72px">
-    <div class="sec-lbl" id="page-date">Today's Value Bets</div>
+    <h2 class="sec-lbl" id="page-date">Today's Value Bets</h2>
     <div id="page-refresh-meta" style="display:none;font-size:10px;color:var(--text-4);margin-top:3px;margin-bottom:2px;font-family:var(--font-mono)"></div>
     <div class="picks-legend">Each bar — <span class="pl-grey">grey</span> = book implied probability · <span class="pl-green">green gap</span> = model edge · <span class="pl-tick">▏</span> = Independent Baseball Projections model</div>
     <div class="model-info-note">Starting pitcher info and odds are captured at model run time — always verify current starters and lines before betting.<span id="games-scanned-strip"></span></div>
@@ -2469,7 +2470,7 @@
 
   <!-- MARGINAL PICKS -->
   <div class="section" id="marginal-section" style="display:none">
-    <div class="sec-lbl">Near-Miss Signals — Below 2% Threshold</div>
+    <h2 class="sec-lbl">Near-Miss Signals — Below 2% Threshold</h2>
     <div style="font-size:10px;color:var(--text-4);margin-bottom:12px;margin-top:-4px">
       Model found edge below the posting threshold. Tracked for transparency — not recommended bets.
     </div>
@@ -2489,7 +2490,7 @@
         <div class="ec-badge">⚾ Free Access — 2026 Season</div>
       </div>
       <div>
-        <h3 class="ec-headline">Get the daily picks recap in your inbox</h3>
+        <h2 class="ec-headline">Get the daily picks recap in your inbox</h2>
         <p class="ec-sub">Full access is free during our 2026 season track record build. Picks are timestamped, CLV-tracked, and auditable. Paid tiers with real-time alerts and expanded analytics launch before the 2027 season.</p>
       </div>
       <form class="ec-form" id="ec-form" onsubmit="handleEmailSubmit(event)">
@@ -5525,7 +5526,7 @@ function prRowCollapsed(p, isBest, gameResult) {
   const isHomePick = home.toUpperCase() === pickAbbr;
   // Pick side gets a filled "PICK" chip; the opponent is muted (text + logo).
   const teamSpan = (abbr, isPick) => isPick
-    ? `<span class="pr-pickchip"><span class="pr-ck">✓</span>${abbr}</span><span class="pr-pick-tag">Pick</span>`
+    ? `<span class="pr-pickchip"><span class="pr-ck" aria-hidden="true">✓</span>${abbr}</span><span class="pr-pick-tag" aria-hidden="true">Pick</span>`
     : `<span class="pr-team-opp">${abbr}</span>`;
 
   const oddsStr = p.odds != null ? (p.odds > 0 ? '+' + p.odds : String(p.odds)) : '';
@@ -5555,8 +5556,19 @@ function prRowCollapsed(p, isBest, gameResult) {
   const edgeCls = ev >= 0 ? 'pos' : 'neg';
   const units = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—';
 
+  // Accessible name — the visual pick cue (chip + color + dimmed opponent) is
+  // invisible to assistive tech, so state the pick + key numbers explicitly.
+  const valLabel = (p.is_flagged === true || p.current_lineup_confirmed === false) ? 'Conditional'
+    : (p.edge || 0) >= 0.08 ? 'Strong Value'
+    : (p.edge || 0) >= 0.02 ? 'Value' : 'Marginal';
+  const stateA11y = isGameOver(p) ? ('final' + (gameResult && gameResult.score ? ' ' + gameResult.score : ''))
+    : isLiveGame(p) ? ('live' + (gameResult && gameResult.score ? ' ' + gameResult.score : '')) : '';
+  const ariaLabel = `Pick ${pickAbbr}${oddsStr ? ' ' + oddsStr : ''}, ${away} at ${home}`
+    + `${timeStr ? ', ' + timeStr : ''}${isBest ? ', best bet' : ''}${stateA11y ? ', ' + stateA11y : ''}. `
+    + `Model ${mpPct}, market ${bpPct}, edge ${edgeStr}, ${valLabel}.`;
+
   return `<div class="pr-cols pr-row${isBest ? ' best' : ''}" role="button" tabindex="0" ` +
-    `aria-expanded="false" onclick="prToggle(this)" onkeydown="prKey(event,this)">` +
+    `aria-expanded="false" aria-label="${ariaLabel}" onclick="prToggle(this)" onkeydown="prKey(event,this)">` +
     `<div class="pr-mu">${prLogoImg(away, !isAwayPick)}${prLogoImg(home, !isHomePick)}<div class="pr-mu-tx">` +
       `<div class="pr-teams">${teamSpan(away, isAwayPick)}<span class="pr-at">@</span>${teamSpan(home, isHomePick)}</div>` +
       `<div class="pr-sub">${subBits.join(' · ')}</div></div></div>` +
