@@ -537,10 +537,6 @@
 }
 .model-info-strip strong { color: var(--text-3); }
 /* Demoted, relocated under the picks header as fine print (no box) */
-.model-info-note {
-  font-size: 10px; color: var(--text-4); line-height: 1.5;
-  margin: -4px 0 12px;
-}
 
 /* ── Line-move callout banner ── */
 .line-move-callout {
@@ -2167,10 +2163,6 @@
 .pb8-tick { position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--indigo-lt);border-radius:2px;box-shadow:0 0 5px rgba(129,140,248,.9);transition:left .4s }
 .pc-v8-bar .pb8-legend { font-size:9.5px;color:var(--text-4);text-align:center;margin-top:5px;letter-spacing:.02em;font-family:var(--font-ui) }
 /* Single shared bar legend above the pick list (replaces the per-card legend) */
-.picks-legend { font-size:10px;color:var(--text-4);font-family:var(--font-ui);margin:-2px 0 14px;letter-spacing:.01em }
-.picks-legend .pl-grey { color:var(--text-3);font-weight:600 }
-.picks-legend .pl-green { color:var(--green);font-weight:600 }
-.picks-legend .pl-tick { color:var(--indigo-lt);font-weight:700 }
 
 /* Stake + lineup row */
 .pc-v8-sl-row { display:flex;align-items:stretch;gap:8px;padding:8px 14px }
@@ -5679,10 +5671,12 @@ function prRowCollapsed(p, isBest, gameResult) {
   const timeStr = prGameTime(p.game_time);
 
   // Sub-line: matchup, then (pregame only) time + the playable-to floor.
+  // Playable-to before time: on a narrow sub-line the (less critical) game time
+  // truncates first, keeping the betting-critical "good to +X" visible.
   const subBits = [`${away} @ ${home}`];
   if (!live && !over) {
-    if (timeStr) subBits.push(timeStr);
     if (ptStr) subBits.push(`<span class="pr-good">good to ${ptStr}</span>`);
+    if (timeStr) subBits.push(timeStr);
   }
   const star = isBest ? '<span class="pr-star" aria-hidden="true">★</span>' : '';
 
