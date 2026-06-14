@@ -5523,6 +5523,149 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
   }
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+//  Compact pick ROWS (slim analytics-table layout). FRONT-END ONLY — these reuse
+//  the SAME pick fields + the existing pickCardHTML() (rendered verbatim as the
+//  expandable details body). No model / data / filtering / classification change.
+//    · prRowCollapsed       → the slim at-a-glance row
+//    · prRowHTML            → row wrapper = collapsed + hidden pickCardHTML details
+//    · prTable / prTableHead→ the table container + column header
+//    · prToggle / prKey     → expand-collapse a row
+//    · prCollapsible        → default-collapsed section wrapper (Marginal/Completed)
+// ════════════════════════════════════════════════════════════════════════════
+
+// ESPN team-logo CDN. 29/30 model abbrevs map directly to lowercase; only the
+// model's "MET" differs (ESPN uses "nym"). A failed load falls back to a
+// team-abbreviation monogram chip (prLogoFail) so a row never breaks.
+const _PR_LOGO_MAP = { MET: 'nym' };
+function prLogoSrc(ab) {
+  const k = String(ab || '').toUpperCase();
+  return 'https://a.espncdn.com/i/teamlogos/mlb/500/' + (_PR_LOGO_MAP[k] || k.toLowerCase()) + '.png';
+}
+function prLogoFail(img) {
+  const s = document.createElement('span');
+  s.className = 'pr-logo pr-logo-fb';
+  s.textContent = (img.getAttribute('alt') || '').slice(0, 3);
+  img.replaceWith(s);
+}
+function prLogoImg(ab) {
+  const k = String(ab || '').toUpperCase();
+  return `<img class="pr-logo" src="${prLogoSrc(k)}" alt="${k}" loading="lazy" onerror="prLogoFail(this)">`;
+}
+
+// CT clock for the matchup subline (matches the card's game-time format).
+function prGameTime(iso) {
+  if (!iso) return '';
+  try {
+    return new Date(iso).toLocaleTimeString('en-US',
+      { hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago' }) + ' CT';
+  } catch (e) { return ''; }
+}
+
+// Value pill — DISPLAY ONLY; mirrors the existing edge tiers (does not change
+// classification). A flagged pick or unconfirmed pick-side lineup → "Conditional".
+function prValuePill(p) {
+  if (p.is_flagged === true || p.current_lineup_confirmed === false)
+    return '<span class="pr-pill cond">Conditional</span>';
+  if ((p.edge || 0) >= 0.08) return '<span class="pr-pill strong">Strong Value</span>';
+  if ((p.edge || 0) >= 0.02) return '<span class="pr-pill value">Value</span>';
+  return '<span class="pr-pill marg">Marginal</span>';
+}
+
+function prTableHead() {
+  return `<div class="pr-cols pr-head">` +
+    `<span>Matchup</span><span>Model</span><span>Book</span>` +
+    `<span class="r">Edge</span><span class="r">Bet</span><span class="r">Value</span><span></span></div>`;
+}
+
+// One slim collapsed row.
+function prRowCollapsed(p, isBest, gameResult) {
+  const parts = String(p.game || '').split('@').map(s => s.trim());
+  const away = parts[0] || '', home = parts[1] || '';
+  const pickAbbr = (p.pick || '').toUpperCase();
+  const awayCls = away.toUpperCase() === pickAbbr ? 'pr-pick' : '';
+  const homeCls = home.toUpperCase() === pickAbbr ? 'pr-pick' : '';
+
+  const oddsStr = p.odds != null ? (p.odds > 0 ? '+' + p.odds : String(p.odds)) : '';
+  const timeStr = prGameTime(p.game_time);
+  let stateStr = '';
+  if (isGameOver(p)) {
+    const sc = gameResult && gameResult.score ? ' ' + gameResult.score : '';
+    stateStr = `<span class="pr-state final">● Final${sc}</span>`;
+  } else if (isLiveGame(p)) {
+    const sc = gameResult && gameResult.score ? ' ' + gameResult.score : '';
+    stateStr = `<span class="pr-state live">● Live${sc}</span>`;
+  }
+  const flagStr = (p.current_lineup_confirmed === false && !isGameOver(p) && !isLiveGame(p))
+    ? '<span class="pr-flag">lineup pending</span>' : '';
+  const subBits = [timeStr, oddsStr ? `${pickAbbr} ${oddsStr}` : '', stateStr, flagStr].filter(Boolean);
+
+  const mp = p.model_prob, bp = p.market_prob;
+  const mpPct = mp != null ? (mp * 100).toFixed(1) + '%' : '—';
+  const bpPct = bp != null ? (bp * 100).toFixed(1) + '%' : '—';
+  const mpW = mp != null ? Math.max(2, Math.min(100, mp * 100)) : 0;
+  const bpW = bp != null ? Math.max(2, Math.min(100, bp * 100)) : 0;
+
+  const ev = p.edge || 0;
+  const edgeStr = (ev >= 0 ? '+' : '') + (ev * 100).toFixed(1) + '%';
+  const edgeCls = ev >= 0 ? 'pos' : 'neg';
+  const units = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—';
+  const bestTag = isBest ? '<span class="pr-best-tag">★ Best Bet</span>' : '';
+
+  return `<div class="pr-cols pr-row${isBest ? ' best' : ''}" role="button" tabindex="0" ` +
+    `aria-expanded="false" onclick="prToggle(this)" onkeydown="prKey(event,this)">` +
+    `<div class="pr-mu">${prLogoImg(away)}${prLogoImg(home)}<div class="pr-mu-tx">` +
+      `<div class="pr-teams"><span class="${awayCls}">${away}</span><span class="pr-at">@</span>` +
+      `<span class="${homeCls}">${home}</span>${bestTag}</div>` +
+      `<div class="pr-sub">${subBits.join(' · ')}</div></div></div>` +
+    `<div class="pr-pcell"><div class="pr-pv">${mpPct}</div>` +
+      `<div class="pr-bar model"><i style="width:${mpW}%"></i></div></div>` +
+    `<div class="pr-pcell book"><div class="pr-pv">${bpPct}</div>` +
+      `<div class="pr-bar book"><i style="width:${bpW}%"></i></div></div>` +
+    `<div class="pr-edge ${edgeCls}">${edgeStr}</div>` +
+    `<div class="pr-bet"><div class="pr-bu">${units}</div>` +
+      `<div class="pr-bd kelly-usd" data-units="${p.kelly_units || 0}"></div></div>` +
+    `<div class="pr-vwrap">${prValuePill(p)}</div>` +
+    `<div class="pr-chev" aria-hidden="true">›</div></div>`;
+}
+
+// Row = collapsed summary + the existing full card as hidden expandable details.
+function prRowHTML(p, isBest, gameResult) {
+  return `<div class="pr-wrap">${prRowCollapsed(p, isBest, gameResult)}` +
+    `<div class="pr-details" hidden>${pickCardHTML(p, isBest, gameResult)}</div></div>`;
+}
+
+// A pr-table block (column header + rows) for an array of picks.
+function prTable(picks, topPick, spotlightTop, scores) {
+  return `<div class="pr-table">${prTableHead()}` +
+    picks.map(p => prRowHTML(p, spotlightTop && p === topPick, getPickResult(p, scores))).join('') +
+    '</div>';
+}
+
+function prToggle(row) {
+  const det = row.parentElement && row.parentElement.querySelector('.pr-details');
+  if (!det) return;
+  if (det.hasAttribute('hidden')) { det.removeAttribute('hidden'); row.classList.add('open'); row.setAttribute('aria-expanded', 'true'); }
+  else { det.setAttribute('hidden', ''); row.classList.remove('open'); row.setAttribute('aria-expanded', 'false'); }
+}
+function prKey(e, row) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prToggle(row); }
+}
+
+// Default-collapsed section wrapper (Marginal + Completed).
+function prCollapsible(headerHTML, bodyHTML, defaultOpen) {
+  return `<div class="pr-collapse${defaultOpen ? ' open' : ''}">` +
+    `<button class="pr-collapse-hd" aria-expanded="${defaultOpen ? 'true' : 'false'}" onclick="prToggleSection(this)">` +
+    `${headerHTML}<span class="pr-collapse-chev" aria-hidden="true">›</span></button>` +
+    `<div class="pr-collapse-body"${defaultOpen ? '' : ' hidden'}>${bodyHTML}</div></div>`;
+}
+function prToggleSection(btn) {
+  const body = btn.parentElement.querySelector('.pr-collapse-body');
+  if (!body) return;
+  if (body.hasAttribute('hidden')) { body.removeAttribute('hidden'); btn.parentElement.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+  else { body.setAttribute('hidden', ''); btn.parentElement.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+}
+
 function render(data, hist, scores = {}, perf = null) {
   _scoresRef = scores;   // stash so the share card can render settled results
   _perfRef = perf;       // stash edge-tier performance for share-card credibility
@@ -5858,8 +6001,10 @@ function render(data, hist, scores = {}, perf = null) {
   }
 
   // Main picks
-  const main     = (data.picks || []).filter(p => p.edge >= 0.02);
-  const marginal = (data.picks || []).filter(p => p.edge < 0.02);
+  // Sorted best-first (edge desc) so the strongest plays lead and main[0] is the
+  // genuine top pick / Best Bet. Display ordering only — no filtering change.
+  const main     = (data.picks || []).filter(p => p.edge >= 0.02).sort((a, b) => (b.edge || 0) - (a.edge || 0));
+  const marginal = (data.picks || []).filter(p => p.edge < 0.02).sort((a, b) => (b.edge || 0) - (a.edge || 0));
 
   if (main.length === 0) {
     renderEmptyState(data, hist, marginal);
@@ -5867,7 +6012,7 @@ function render(data, hist, scores = {}, perf = null) {
     _mainPicksRef = main;
     const topPick = main[0];
     const spotlightTop = main.length >= 2 && topPick.edge >= 0.08;
-    const gridClass = main.length === 1 ? 'pick-grid single-pick' : 'pick-grid';
+    const gridClass = 'pr-stack';  // rows now provide their own .pr-table container
     const shareAllHTML = main.length >= 2
       ? `<div class="share-all-row"><button class="share-all-btn" onclick="shareAllPicks()">𝕏 Share All ${main.length} Picks</button></div>`
       : '';
@@ -5964,11 +6109,11 @@ function render(data, hist, scores = {}, perf = null) {
       let html = '';
       if (strong.length > 0) {
         html += tierHeader('strong-tier', '🔥', 'Strong Value', '8%+ Edge');
-        html += strong.map(p => pickCardHTML(p, spotlightTop && p === topPick, getPickResult(p, scores))).join('');
+        html += prTable(strong, topPick, spotlightTop, scores);
       }
       if (value.length > 0) {
         if (strong.length > 0) html += tierHeader('value-tier', '✅', 'Value', '2–8% Edge');
-        html += value.map(p => pickCardHTML(p, false, getPickResult(p, scores))).join('');
+        html += prTable(value, topPick, spotlightTop, scores);
       }
       return html;
     }
@@ -5987,14 +6132,26 @@ function render(data, hist, scores = {}, perf = null) {
         picksHTML += sectionHeader('live', 'Live', liveGroup.length) +
                      `<div class="${gridClass}">` + renderPickGroup(liveGroup) + '</div>';
       if (completedGroup.length > 0)
-        picksHTML += sectionHeader('completed', 'Completed', completedGroup.length) +
-                     `<div class="${gridClass}">` + renderPickGroup(completedGroup) + '</div>';
+        picksHTML += prCollapsible(
+                     sectionHeader('completed', 'Completed', completedGroup.length),
+                     `<div class="${gridClass}">` + renderPickGroup(completedGroup) + '</div>', false);
     } else {
       // No live data yet — render flat with tier headers as before
       picksHTML = renderPickGroup(main);
     }
 
+    // Headline summary — instant takeaway above the table (main is edge-sorted).
+    const _strongN = main.filter(p => p.edge >= 0.08).length;
+    const _best    = main[0];
+    const headlineHTML = `<div class="pr-headline">` +
+      `<span class="prh-title">Today's Value Bets</span>` +
+      `<span class="prh-meta">${main.length} pick${main.length !== 1 ? 's' : ''}` +
+        `${_strongN ? ' · ' + _strongN + ' strong' : ''}` +
+        `${_best ? ' · top edge <strong class="g">+' + (_best.edge * 100).toFixed(1) + '%</strong> (' + _best.pick + ')' : ''}` +
+      `</span></div>`;
+
     document.getElementById('picks-container').innerHTML =
+      headlineHTML +
       stateSummaryHTML +
       (allDone ? '' : actionStripHTML) +
       shareAllHTML +
@@ -6009,13 +6166,13 @@ function render(data, hist, scores = {}, perf = null) {
   if (marginal.length > 0) {
     document.getElementById('marginal-section').style.display = 'block';
     // Tier header for marginal section
-    document.getElementById('marginal-container').innerHTML =
-      `<div class="tier-header marginal-tier" style="margin-top:0">
+    const _marHd = `<div class="tier-header marginal-tier" style="margin:0;flex:1">
         <span class="tier-label">⚠️ Marginal</span>
-        <span class="tier-edge-tag">Below 2% Threshold</span>
+        <span class="tier-edge-tag">Below 2% Threshold · ${marginal.length}</span>
         <span class="tier-divider"></span>
-      </div>` +
-      '<div class="pick-grid">' + marginal.map(p => pickCardHTML(p, false)).join('') + '</div>';
+      </div>`;
+    document.getElementById('marginal-container').innerHTML =
+      prCollapsible(_marHd, '<div class="pr-stack">' + prTable(marginal, null, false, scores) + '</div>', false);
     refreshKellyUSD();
   }
 
