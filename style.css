@@ -1175,6 +1175,58 @@ details[open] .faq-q::after { content: '−'; }
 .pr-wrap:last-child > .pr-details { border-bottom:none; }
 .pr-details .pick-card-v8, .pr-details .pick-card { margin:0 !important; border:none !important; background:transparent !important; box-shadow:none !important; }
 
+/* ── Phase 3: card-based decision drawer ─────────────────────────────────── */
+.dw { display:flex; flex-direction:column; gap:10px; padding:4px 2px 8px; }
+.dw-card { background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:10px; padding:12px 13px; }
+.dw-card.dw-action { border-color:rgba(245,158,11,.28); }
+.dw-h { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-4); margin-bottom:9px; }
+.dw-action-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.dw-k { display:block; font-size:10px; text-transform:uppercase; letter-spacing:.4px; color:var(--text-4); }
+.dw-v { display:block; font-family:var(--font-mono); font-size:15px; font-weight:600; color:var(--text); margin-top:2px; }
+.dw-v.dw-bet { font-family:var(--font-display); font-size:16px; font-weight:700; }
+.dw-v.g { color:var(--green); } .dw-v.a { color:var(--amber); }
+.dw-usd { color:var(--text-4); font-size:12px; font-weight:400; }
+.dw-status { font-size:11px; margin-top:10px; padding-top:9px; border-top:1px solid var(--border); display:flex; align-items:center; gap:6px; }
+.dw-status .dw-sdot { width:6px; height:6px; border-radius:50%; flex-shrink:0; background:var(--text-4); }
+.dw-status.ok { color:var(--green); }    .dw-status.ok .dw-sdot { background:var(--green); }
+.dw-status.warn { color:var(--amber); }  .dw-status.warn .dw-sdot { background:var(--amber); }
+.dw-status.live { color:var(--text-2); } .dw-status.live .dw-sdot { background:var(--text-2); }
+.dw-status.final { color:var(--text-3); }.dw-status.final .dw-sdot { background:var(--text-4); }
+.dw-status.stale { color:var(--red); }   .dw-status.stale .dw-sdot { background:var(--red); }
+
+.dw-meter { position:relative; height:8px; border-radius:4px; background:rgba(255,255,255,.07); }
+.dw-meter > i { position:absolute; top:0; height:100%; display:block; }
+.dw-meter .m-mkt { left:0; border-radius:4px 0 0 4px; background:rgba(148,163,184,.45); }
+.dw-meter .m-gap { background:var(--green); }
+.dw-meter .m-tick { top:-2px; width:2px; height:12px; border-radius:1px; background:var(--indigo-lt); }
+.dw-meter-cap { display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:11px; margin-top:7px; color:var(--text-3); }
+.dw-meter-cap .mdl { color:var(--indigo-lt); } .dw-meter-cap .g { color:var(--green); }
+
+.dw-chips { display:flex; flex-wrap:wrap; gap:6px; }
+.dw-chip { display:inline-flex; align-items:center; gap:4px; font-size:11px; padding:4px 9px; border-radius:6px; }
+.dw-chip b { font-family:var(--font-mono); font-weight:600; }
+.dw-chip.pos { background:rgba(34,197,94,.12); color:#86efac; }
+.dw-chip.neg { background:rgba(239,68,68,.11); color:#fca5a5; }
+
+.dw-2col { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.dw-rc { display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:12px; padding:5px 0; border-bottom:1px solid rgba(255,255,255,.05); }
+.dw-rc:last-child { border-bottom:none; }
+.dw-rk { color:var(--text-3); } .dw-rv { font-weight:500; text-align:right; }
+.dw-rv.ok { color:var(--green); } .dw-rv.warn { color:var(--amber); } .dw-rv.neu { color:var(--text-2); }
+.dw-pr { display:flex; justify-content:space-between; gap:10px; font-size:12px; padding:4px 0; }
+.dw-pr .dw-pl { color:var(--text-3); } .dw-pr .dw-pv { font-family:var(--font-mono); } .dw-pr .dw-pv.g { color:var(--green); }
+.dw-pr-note { font-size:10px; color:var(--text-4); margin-top:6px; }
+
+.dw-summary { font-size:13px; line-height:1.55; color:var(--text-2); }
+.dw-summary b { color:var(--indigo-lt); font-weight:700; }
+.dw-details { margin-top:10px; }
+.dw-details > summary { cursor:pointer; font-size:12px; color:var(--indigo-lt); list-style:none; padding:6px 0; }
+.dw-details > summary::-webkit-details-marker { display:none; }
+.dw-details > summary::before { content:'▸ '; }
+.dw-details[open] > summary::before { content:'▾ '; }
+.dw-full { margin-top:6px; }
+@media (max-width:640px) { .dw-action-grid { grid-template-columns:repeat(2,1fr); } .dw-2col { grid-template-columns:1fr; } }
+
 /* collapsible sections (Marginal / Completed) */
 .pr-collapse { margin-bottom:14px; }
 .pr-collapse-hd { display:flex; align-items:center; width:100%; min-height:44px; background:transparent; border:0; padding:6px 0; cursor:pointer; color:inherit; font:inherit; text-align:left; }

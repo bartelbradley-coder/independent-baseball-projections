@@ -60,7 +60,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=11">
+<link rel="stylesheet" href="style.css?v=12">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 :root {
@@ -2649,10 +2649,14 @@ function _impliedFromAmerican(ml) {
   return n > 0 ? 100 / (n + 100) : (-n) / ((-n) + 100);
 }
 // Returns { entries:[{book,odds,implied}], best:{...}|null, dropped:N }, entries
-// ranked best-payout-first. opts.outlierPp (default 0.15) = max allowed deviation
-// of a book's implied prob from the field median before it's treated as off-market.
+// ranked best-payout-first. Two filters: (1) ANCHOR — drop books whose implied
+// prob is far from the pick's OWN posted price (opts.anchorPp, default 0.22);
+// catches a whole field quoting the wrong side / corrupted values (e.g. -1275
+// books on a +183 underdog). (2) MEDIAN — drop a lone outlier within an
+// otherwise-consistent field (opts.outlierPp, default 0.15).
 function sanitizeBookOdds(p, opts) {
   const outlierPp = (opts && opts.outlierPp != null) ? opts.outlierPp : 0.15;
+  const anchorPp  = (opts && opts.anchorPp  != null) ? opts.anchorPp  : 0.22;
   const raw = (() => {
     const src = (typeof p.book_odds === 'object' && p.book_odds) ? p.book_odds
               : (typeof p.books === 'object' && p.books) ? p.books : null;
@@ -2665,17 +2669,22 @@ function sanitizeBookOdds(p, opts) {
       return { book: _BOOK_NAMES[k.toLowerCase()] || k, odds: odds, implied: _impliedFromAmerican(odds) };
     })
     .filter(e => !isNaN(e.odds) && e.implied != null);
-  let dropped = 0;
+  const total = entries.length;
+  // (1) anchor against the pick's own posted price; if the whole field is wrong-
+  //     side/corrupted, this leaves entries empty → no (bad) current price shown.
+  const anchor = _impliedFromAmerican(p.odds);
+  if (anchor != null && entries.length) {
+    entries = entries.filter(e => Math.abs(e.implied - anchor) <= anchorPp);
+  }
+  // (2) median filter for a lone outlier within an otherwise-consistent field.
   if (entries.length >= 3) {
     const imp = entries.map(e => e.implied).slice().sort((a, b) => a - b);
     const mid = Math.floor(imp.length / 2);
     const median = imp.length % 2 ? imp[mid] : (imp[mid - 1] + imp[mid]) / 2;
-    const kept = entries.filter(e => Math.abs(e.implied - median) <= outlierPp);
-    dropped = entries.length - kept.length;
-    if (kept.length) entries = kept;   // never drop the whole field
+    entries = entries.filter(e => Math.abs(e.implied - median) <= outlierPp);
   }
   entries.sort((a, b) => a.implied - b.implied);   // best payout first
-  return { entries: entries, best: entries.length ? entries[0] : null, dropped: dropped };
+  return { entries: entries, best: entries.length ? entries[0] : null, dropped: total - entries.length };
 }
 
 // ── Share on X/Twitter ────────────────────────────────────────────────────────
@@ -4418,6 +4427,120 @@ function oneLineDriverV8(p) {
   return '';
 }
 
+// ── Expanded decision drawer (Phase 3) ────────────────────────────────────────
+// Card-based decision view: Official play → Edge → Why it rates → Risk checks +
+// Best price → short summary, with the FULL existing card tucked behind a
+// "View full model rationale" toggle (preserves all its hooks: kelly-$, bet
+// buttons, share/copy — refreshKellyUSD/refreshBetButtons use querySelectorAll).
+function prDrawerHTML(p, isBest, gameResult) {
+  const pickAbbr = (p.pick || '').toUpperCase();
+  const typeLabel = p.pick_type === 'MONEYLINE' ? 'ML' : p.pick_type === 'RUN_LINE' ? 'RL' : (p.pick_type || '').replace(/_/g, ' ');
+  const oddsStr = p.odds != null ? (p.odds > 0 ? '+' + p.odds : String(p.odds)) : '';
+  const isDog = (p.odds || 0) > 0;
+  const live = isLiveGame(p), over = isGameOver(p);
+  const scoreStr = gameResult && gameResult.score ? ' ' + gameResult.score : '';
+
+  const mp = p.model_prob, bp = p.market_prob;
+  const mpPct = mp != null ? (mp * 100).toFixed(1) + '%' : '—';
+  const bpPct = bp != null ? (bp * 100).toFixed(1) + '%' : '—';
+  const mpW = mp != null ? Math.max(2, Math.min(100, mp * 100)) : 0;
+  const bpW = bp != null ? Math.max(2, Math.min(100, bp * 100)) : 0;
+  const gapW = Math.max(0, mpW - bpW);
+  const ev = p.edge || 0;
+  const edgeStr = (ev >= 0 ? '+' : '') + (ev * 100).toFixed(1);
+  const ptStr = p.playable_to != null ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to)) : '—';
+
+  const isKelly = _indexPnlMode === 'kelly';
+  const stakeStr = isKelly
+    ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') + ' <span class="dw-usd kelly-usd" data-units="' + (p.kelly_units || 0) + '"></span>'
+    : '1.0u <span class="dw-usd">· $100</span>';
+
+  const st = pickStatus(p, gameResult);
+  let statusDetail;
+  if (over) statusDetail = 'Final' + scoreStr;
+  else if (live) statusDetail = 'Pregame pick — now live' + scoreStr + '. Line captured ' + oddsStr + (p.posted_at ? ' at ' + p.posted_at : '');
+  else statusDetail = 'Line captured ' + oddsStr + (p.posted_at ? ' at ' + p.posted_at : '') + ' — re-check current price before betting';
+
+  const meterHTML = (mp != null && bp != null)
+    ? '<div class="dw-meter"><i class="m-mkt" style="width:' + bpW.toFixed(1) + '%"></i><i class="m-gap" style="left:' + bpW.toFixed(1) + '%;width:' + gapW.toFixed(1) + '%"></i><i class="m-tick" style="left:calc(' + mpW.toFixed(1) + '% - 1px)"></i></div>'
+      + '<div class="dw-meter-cap"><span>Market ' + bpPct + '</span><span class="g">' + edgeStr + 'pp</span><span class="mdl">Model ' + mpPct + '</span></div>'
+    : '';
+
+  const adjs = (p.adj_breakdown && p.adj_breakdown.adjustments) || [];
+  const chips = adjs.slice().sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 8)
+    .map(a => '<span class="dw-chip ' + (a.positive ? 'pos' : 'neg') + '">' + a.label + ' <b>' + (a.pp >= 0 ? '+' : '') + a.pp.toFixed(1) + '</b></span>').join('');
+  const whyHTML = chips ? '<div class="dw-card"><div class="dw-h">Why it rates</div><div class="dw-chips">' + chips + '</div></div>' : '';
+
+  const rs = p.raw_stats || {};
+  const lc = p.current_lineup_confirmed != null ? p.current_lineup_confirmed : rs.pick_lineup_confirmed;
+  const lineup = lc === true ? ['Confirmed', 'ok'] : ['Projected', 'warn'];
+  const starter = p.pitcher ? [p.pitcher, 'neu'] : ['—', 'neu'];
+  let weather;
+  if (p.is_domed) { weather = ['Roof closed', 'ok']; }
+  else {
+    const t = p.temp_f != null ? Math.round(p.temp_f) + '°F' : '';
+    const w = p.wind_speed_mph != null ? ', wind ' + Math.round(p.wind_speed_mph) + ' mph' : '';
+    const d = p.wind_dir_degrees != null ? ' ' + windCompass(p.wind_dir_degrees) : '';
+    weather = [((t + w + d).trim() || '—'), 'neu'];
+  }
+  const riskHTML = '<div class="dw-card"><div class="dw-h">Risk checks</div>'
+    + '<div class="dw-rc"><span class="dw-rk">Lineup</span><span class="dw-rv ' + lineup[1] + '">' + lineup[0] + '</span></div>'
+    + '<div class="dw-rc"><span class="dw-rk">Starter</span><span class="dw-rv ' + starter[1] + '">' + starter[0] + '</span></div>'
+    + '<div class="dw-rc"><span class="dw-rk">Weather</span><span class="dw-rv ' + weather[1] + '">' + weather[0] + '</span></div>'
+    + '<div class="dw-rc"><span class="dw-rk">Market</span><span class="dw-rv ' + (over ? 'neu">Settled' : live ? 'neu">Line moved (live)' : 'warn">Re-check price') + '</span></div>'
+    + '</div>';
+
+  // Price section is game-state-aware. Pregame: the live-updating book_odds are
+  // the actionable current price → show best available. Live/Final: book_odds is
+  // in-game odds that have moved off the posted line and is NOT a bet you can make
+  // at this pick → show the logged price + a state note instead.
+  let priceHTML;
+  if (live || over) {
+    priceHTML = '<div class="dw-card"><div class="dw-h">Posted price</div>'
+      + '<div class="dw-pr"><span class="dw-pl">Logged at</span><span class="dw-pv">' + oddsStr + (p.best_book ? ' ' + p.best_book : '') + '</span></div>'
+      + '<div class="dw-pr-note">' + (over ? 'Game final' : 'Game in progress') + ' — live odds have moved off the posted line and no longer reflect this pick.</div>'
+      + '</div>';
+  } else {
+    const sb = sanitizeBookOdds(p);
+    const capImp = _impliedFromAmerican(p.odds);
+    const better = sb.best && capImp != null && sb.best.implied < capImp - 0.005;
+    let priceRows = '<div class="dw-pr"><span class="dw-pl">Captured</span><span class="dw-pv">' + oddsStr + (p.best_book ? ' ' + p.best_book : '') + '</span></div>';
+    if (sb.best) {
+      priceRows += '<div class="dw-pr"><span class="dw-pl">Current best</span><span class="dw-pv' + (better ? ' g' : '') + '">' + (sb.best.odds > 0 ? '+' + sb.best.odds : String(sb.best.odds)) + ' ' + sb.best.book + '</span></div>';
+      sb.entries.slice(1, 3).forEach(e => { priceRows += '<div class="dw-pr"><span class="dw-pl">' + e.book + '</span><span class="dw-pv">' + (e.odds > 0 ? '+' + e.odds : String(e.odds)) + '</span></div>'; });
+      if (sb.dropped > 0) priceRows += '<div class="dw-pr-note">' + sb.dropped + ' book' + (sb.dropped > 1 ? 's' : '') + ' hidden — off-market vs consensus</div>';
+    } else {
+      priceRows += '<div class="dw-pr-note">Live book prices unavailable right now — verify the current line before betting.</div>';
+    }
+    priceHTML = '<div class="dw-card"><div class="dw-h">Best available price</div>' + priceRows + '</div>';
+  }
+
+  const topPos = adjs.filter(a => a.positive).sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 3).map(a => a.label.toLowerCase());
+  let drivers = topPos.length ? topPos.join(', ') : 'a multi-factor model edge';
+  if (topPos.length > 1) drivers = drivers.replace(/, ([^,]*)$/, ', and $1');
+  const summaryHTML = (mp != null && bp != null)
+    ? '<div class="dw-summary">' + pickAbbr + ' is priced like a <b>' + bpPct + '</b> ' + (isDog ? 'underdog' : 'favorite') + ', but the model makes them <b>' + mpPct + '</b> — edge from ' + drivers + '.</div>'
+    : '';
+
+  const fullHTML = '<details class="dw-details"><summary>View full model rationale</summary><div class="dw-full">' + pickCardHTML(p, isBest, gameResult) + '</div></details>';
+
+  return '<div class="dw">'
+    + '<div class="dw-card dw-action"><div class="dw-h">Official play</div>'
+      + '<div class="dw-action-grid">'
+        + '<div><span class="dw-k">Bet</span><span class="dw-v dw-bet">' + pickAbbr + ' ' + typeLabel + ' ' + oddsStr + '</span></div>'
+        + '<div><span class="dw-k">Stake</span><span class="dw-v">' + stakeStr + '</span></div>'
+        + '<div><span class="dw-k">Edge</span><span class="dw-v g">' + edgeStr + 'pp</span></div>'
+        + '<div><span class="dw-k">Playable to</span><span class="dw-v a">' + ((live || over) ? '—' : ptStr) + '</span></div>'
+      + '</div>'
+      + '<div class="dw-status ' + st.cls + '"><span class="dw-sdot"></span>' + statusDetail + '</div>'
+    + '</div>'
+    + (meterHTML ? '<div class="dw-card"><div class="dw-h">Edge</div>' + meterHTML + '</div>' : '')
+    + whyHTML
+    + '<div class="dw-2col">' + riskHTML + priceHTML + '</div>'
+    + '<div class="dw-card">' + summaryHTML + fullHTML + '</div>'
+  + '</div>';
+}
+
 // ── Pick card HTML ────────────────────────────────────────────────────────────
 function pickCardHTML(p, isTopPick = false, gameResult = null) {
   const edgePct  = (p.edge * 100).toFixed(1);
@@ -5646,7 +5769,7 @@ function prToggle(row) {
     if (!det.dataset.built) {                 // lazy-build the full card on first expand
       const p = picksMap[det.dataset.cardId];
       if (p) {
-        det.innerHTML = pickCardHTML(p, det.dataset.best === '1', getPickResult(p, _scoresRef || {}));
+        det.innerHTML = prDrawerHTML(p, det.dataset.best === '1', getPickResult(p, _scoresRef || {}));
         det.dataset.built = '1';
         refreshKellyUSD();                    // wire up the newly-injected card's $ + bet state
         refreshBetButtons();
