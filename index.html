@@ -830,6 +830,10 @@
 }
 .uav-btn.primary:hover { background: rgba(34,197,94,.16) !important; color: #4ade80 !important; }
 .uav-btn.primary.open  { background: rgba(34,197,94,.18) !important; }
+/* Details toggle is the row's prominent primary affordance — wide + centered so
+   the deeper matchup analysis is clearly discoverable. */
+.uc-action-row-v2 .details-toggle { flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px !important; padding: 7px 14px !important; }
+.uc-action-row-v2 .uav-btn.secondary { flex: 0 0 auto; }
 
 /* ── Compact Playable To + Best Book line on collapsed card ── */
 .pc-playable-line {
@@ -4285,7 +4289,7 @@ function buildDetailsV8(p, cardId) {
 function toggleDetails(id, btn) {
   // Reset all buttons
   document.querySelectorAll('.details-toggle').forEach(b => {
-    b.textContent = 'Details ▾'; b.classList.remove('open');
+    b.textContent = 'Full matchup breakdown ▾'; b.classList.remove('open');
   });
 
   // Close any previously open panel
@@ -4306,7 +4310,7 @@ function toggleDetails(id, btn) {
   if (!p) return;
 
   _mdActiveId = id;
-  btn.textContent = 'Details ▲';
+  btn.textContent = 'Full matchup breakdown ▲';
   btn.classList.add('open');
 
   // Build panel if it doesn't exist yet, append inside the card
@@ -4332,7 +4336,7 @@ function closeExpandPanel() {
   }
   _mdActiveId = null;
   document.querySelectorAll('.details-toggle').forEach(b => {
-    b.textContent = 'Details ▾'; b.classList.remove('open');
+    b.textContent = 'Full matchup breakdown ▾'; b.classList.remove('open');
   });
 }
 
@@ -5107,7 +5111,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   // Note: passing cardId (not detailsId) so toggleDetails can build the v8 panel as cardId+'-det'
   const actionRowHTML = `
     <div class="uc-action-row-v2">
-      <button class="uav-btn primary details-toggle" onclick="toggleDetails('${cardId}', this)">Details ▾</button>
+      <button class="uav-btn primary details-toggle" onclick="toggleDetails('${cardId}', this)">Full matchup breakdown ▾</button>
       <span class="uav-sep">|</span>
       <button class="uav-btn secondary" onclick="sharePickCard('${cardId}')">⬆ Share</button>
     </div>`;
