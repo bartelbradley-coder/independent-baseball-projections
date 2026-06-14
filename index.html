@@ -2633,6 +2633,53 @@ let _histContextFn = null;      // set in render() — returns hist-context HTML
 let _countdownTimerStarted = false;
 let _lastBucketSig = null;      // section-bucket signature; re-render when a game changes state
 
+// ── Book-odds sanitizer (trust fix) ───────────────────────────────────────────
+// Shared by every place that renders per-book lines. Fixes two long-standing
+// display bugs: (1) raw book_odds were shown unfiltered, so a stale / wrong-signed
+// line (e.g. a MyBookie -833 on a +183 underdog) rendered verbatim and looked like
+// a data error; (2) "best price" was picked with a raw descending-American sort /
+// Math.max, which is only valid when every line has the same sign. Here we convert
+// to implied probability, drop books that are off-market vs the field median
+// (robust to a single bad book), and rank by payout (lowest implied prob = best).
+const _BOOK_NAMES = {novig:'Novig',prophetx:'ProphetX',pinnacle:'Pinnacle',lowvig:'LowVig',
+  betonlineag:'BetOnline',draftkings:'DraftKings',fanduel:'FanDuel',betmgm:'BetMGM',
+  betrivers:'BetRivers',espnbet:'ESPN Bet',hardrockbet:'Hard Rock',betway:'Betway',
+  bovada:'Bovada',mybookieag:'MyBookie',betus:'BetUS'};
+function _impliedFromAmerican(ml) {
+  const n = typeof ml === 'number' ? ml : parseInt(ml);
+  if (!isFinite(n) || n === 0) return null;
+  return n > 0 ? 100 / (n + 100) : (-n) / ((-n) + 100);
+}
+// Returns { entries:[{book,odds,implied}], best:{...}|null, dropped:N }, entries
+// ranked best-payout-first. opts.outlierPp (default 0.15) = max allowed deviation
+// of a book's implied prob from the field median before it's treated as off-market.
+function sanitizeBookOdds(p, opts) {
+  const outlierPp = (opts && opts.outlierPp != null) ? opts.outlierPp : 0.15;
+  const raw = (() => {
+    const src = (typeof p.book_odds === 'object' && p.book_odds) ? p.book_odds
+              : (typeof p.books === 'object' && p.books) ? p.books : null;
+    if (src) return src;
+    try { return JSON.parse(p.book_odds || p.books || '{}'); } catch (e) { return {}; }
+  })();
+  let entries = Object.entries(raw || {})
+    .map(([k, v]) => {
+      const odds = typeof v === 'number' ? v : parseInt(v);
+      return { book: _BOOK_NAMES[k.toLowerCase()] || k, odds: odds, implied: _impliedFromAmerican(odds) };
+    })
+    .filter(e => !isNaN(e.odds) && e.implied != null);
+  let dropped = 0;
+  if (entries.length >= 3) {
+    const imp = entries.map(e => e.implied).slice().sort((a, b) => a - b);
+    const mid = Math.floor(imp.length / 2);
+    const median = imp.length % 2 ? imp[mid] : (imp[mid - 1] + imp[mid]) / 2;
+    const kept = entries.filter(e => Math.abs(e.implied - median) <= outlierPp);
+    dropped = entries.length - kept.length;
+    if (kept.length) entries = kept;   // never drop the whole field
+  }
+  entries.sort((a, b) => a.implied - b.implied);   // best payout first
+  return { entries: entries, best: entries.length ? entries[0] : null, dropped: dropped };
+}
+
 // ── Share on X/Twitter ────────────────────────────────────────────────────────
 function shareOnX(id) {
   const p = picksMap[id];
@@ -2800,15 +2847,7 @@ function _buildShareCardHTML(p) {
   const _bdn = {novig:'Novig',prophetx:'ProphetX',pinnacle:'Pinnacle',lowvig:'LowVig',
     betonlineag:'BetOnline',draftkings:'DraftKings',fanduel:'FanDuel',
     betmgm:'BetMGM',betrivers:'BetRivers',espnbet:'ESPN Bet'};
-  const rawBooksObj = (() => {
-    try { return typeof p.book_odds === 'object' && p.book_odds
-          ? p.book_odds : typeof p.books === 'object' && p.books ? p.books : {}; }
-    catch(e) { return {}; }
-  })();
-  const bookEntries = Object.entries(rawBooksObj)
-    .map(([k,v]) => ({ book: _bdn[k.toLowerCase()] || k, odds: typeof v==='number'?v:parseInt(v) }))
-    .filter(e => !isNaN(e.odds)).sort((a,b) => b.odds - a.odds);
-  const topEntry = bookEntries.length > 0 ? bookEntries[0] : null;
+  const topEntry = sanitizeBookOdds(p).best;
   const bestBookName = topEntry ? topEntry.book : (_bdn[(p.best_book||'').toLowerCase()] || p.best_book || '—');
   const bestOddsStr  = topEntry
     ? (topEntry.odds > 0 ? '+' + topEntry.odds : String(topEntry.odds))
@@ -4027,14 +4066,8 @@ function buildDetailsV8(p, cardId) {
     if (src) return src;
     try { return JSON.parse(p.book_odds || p.books || '{}'); } catch(e) { return {}; }
   })();
-  const _bookEntries = Object.entries(_rawBooksObj || {})
-    .map(([k, v]) => ({
-      book: _bdn[k.toLowerCase()] || k,
-      odds: typeof v === 'number' ? v : parseInt(v),
-    }))
-    .filter(e => !isNaN(e.odds))
-    // Descending: highest number = best for bettor (−129 > −148; +155 > +120)
-    .sort((a, b) => b.odds - a.odds);
+  // Outlier-filtered + ranked best-payout-first by the shared sanitizer.
+  const _bookEntries = sanitizeBookOdds(p).entries;
   const _topEntry = _bookEntries.length > 0 ? _bookEntries[0] : null;
 
   // ── Action Summary ──
@@ -4706,20 +4739,13 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
   const pinnacleOdds = p.line_open ? formatOdds(p.line_open) : null;
 
   function buildBookOddsHTML() {
-    const rawBookOdds = p.book_odds || {};
-    // Normalise any legacy raw API keys
-    const bookOdds = {};
-    for (const [k, v] of Object.entries(rawBookOdds)) {
-      const displayKey = BOOK_DISPLAY_NAMES[k.toLowerCase()] || k;
-      bookOdds[displayKey] = v;
+    const _sb = sanitizeBookOdds(p);
+    // [name, odds] pairs — already outlier-filtered and ranked best-payout-first.
+    const entries = _sb.entries.map(e => [e.book, e.odds]);
+    // Add Pinnacle from line_open if the sanitized field didn't include it.
+    if (p.line_open && !entries.some(([b]) => b === 'Pinnacle')) {
+      entries.push(['Pinnacle', p.line_open]);
     }
-
-    // Also add Pinnacle from line_open if not already present
-    if (p.line_open && !bookOdds['Pinnacle']) {
-      bookOdds['Pinnacle'] = p.line_open;
-    }
-
-    const entries = Object.entries(bookOdds);
     if (entries.length === 0) {
       // Fallback for picks before book_odds was added
       const _rawBook = p.best_book || '';
@@ -4735,15 +4761,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
         </div>`;
     }
 
-    // Sort: exchanges first (best price), then by descending odds (best = highest)
-    entries.sort(([aName, aOdds], [bName, bOdds]) => {
-      const aEx = EXCHANGE_BOOKS.has(aName) ? 1 : 0;
-      const bEx = EXCHANGE_BOOKS.has(bName) ? 1 : 0;
-      if (aEx !== bEx) return bEx - aEx;   // exchanges first
-      return bOdds - aOdds;                // then best odds
-    });
-
-    const bestOddsVal = Math.max(...entries.map(([,v]) => v));
+    const bestOddsVal = _sb.best ? _sb.best.odds : Math.max(...entries.map(([, v]) => v));
 
     const chips = entries.map(([book, ml]) => {
       const isBest     = ml === bestOddsVal;
@@ -5277,10 +5295,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     if (src) return src;
     try { return JSON.parse(p.book_odds || p.books || '{}'); } catch(e) { return {}; }
   })();
-  const _pcTopEntry = Object.entries(_pcBooksObj || {})
-    .map(([k, v]) => ({ book: _bdn_c[k.toLowerCase()] || k, odds: typeof v === 'number' ? v : parseInt(v) }))
-    .filter(e => !isNaN(e.odds))
-    .sort((a, b) => b.odds - a.odds)[0] || null;
+  const _pcTopEntry = sanitizeBookOdds(p).best;
   const _pcBestBook = _pcTopEntry ? _pcTopEntry.book : (_bdn_c[(p.best_book||'').toLowerCase()] || p.best_book || '');
   const _pcBestOdds = _pcTopEntry ? (_pcTopEntry.odds > 0 ? '+' + _pcTopEntry.odds : String(_pcTopEntry.odds))
     : (p.best_odds ? formatOdds(p.best_odds) : formatOdds(p.odds));
