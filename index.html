@@ -24,7 +24,7 @@
       "name": "Independent Baseball Projections",
       "url": "https://independentbaseballprojections.net/",
       "logo": "https://independentbaseballprojections.net/og-image.png",
-      "description": "Quantitative MLB win-probability model that finds value bets by comparing calibrated fair probabilities to sportsbook moneylines."
+      "description": "Quantitative MLB win-probability model that finds value bets by comparing calibrated model probabilities to sportsbook moneylines."
     },
     {
       "@type": "WebSite",
@@ -1126,7 +1126,7 @@
   background: linear-gradient(90deg, rgba(34,197,94,0.55), rgba(34,197,94,0.9));
   transition: left 0.4s, width 0.4s;
 }
-/* Vertical marker at the model's win probability — the "fair line" itself */
+/* Vertical marker at the model's win probability — the model price itself */
 .prob-track-tick {
   position: absolute; top: -2px; bottom: -2px; width: 2px;
   background: var(--indigo-lt); border-radius: 2px;
@@ -2377,7 +2377,7 @@
   <header class="hero">
     <div class="hero-grid">
       <div class="hero-copy">
-        <div class="hero-eyebrow">Fair-Value MLB Model · 2026 Season</div>
+        <div class="hero-eyebrow">Quantitative MLB Model · 2026 Season</div>
         <h1 class="hero-title">Bet the number,<br>not the noise.</h1>
         <p class="hero-sub">Independent Baseball Projections models a fair win probability for every MLB game, then flags the bets where our line beats the book — every pick logged before first pitch and tracked in full.</p>
         <p class="hero-proof" id="hero-proof">Every pick graded and tracked — the full record is public, win or loss.</p>
@@ -2545,8 +2545,8 @@
         <li>Past performance does not guarantee future results</li>
       </ul>
       <details class="faq-item" style="margin-bottom:6px">
-        <summary class="faq-q">What is a fair line?</summary>
-        <div class="faq-a">The theoretical price at which neither side has an edge — the true implied probability converted to American odds with no margin. Independent Baseball Projections computes this from its model probability.</div>
+        <summary class="faq-q">How does the model price each game?</summary>
+        <div class="faq-a">It converts the model's win probability into American odds with no margin — the theoretical price at which neither side has an edge. Edge is the gap between that model price and the market.</div>
       </details>
       <details class="faq-item" style="margin-bottom:6px">
         <summary class="faq-q">How is edge calculated?</summary>
@@ -2830,7 +2830,7 @@ function _buildShareCardHTML(p) {
       driverHTML = first3;
     }
   } else {
-    driverHTML = `<strong>Model edge</strong> \u2014 Model projects ${modelPct || '—'}% vs market ${mktPct || '—'}%. Fair line ${fairML} vs best available ${bestOddsStr}. Edge: +${edgePct}pp vs Pinnacle no-vig.`;
+    driverHTML = `<strong>Model edge</strong> \u2014 Model projects ${modelPct || '—'}% vs market ${mktPct || '—'}%. Model price ${fairML} vs best available ${bestOddsStr}. Edge: +${edgePct}pp vs Pinnacle no-vig.`;
   }
 
   // Date
@@ -4865,7 +4865,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     <div class="pick-stats-row">
       <div class="ps-box"><div class="ps-lbl">Model Prob</div><div class="ps-val">${modelPct ? modelPct + '%' : '—'}</div><div class="ps-sub">true win %</div></div>
       <div class="ps-box"><div class="ps-lbl">Best Odds</div><div class="ps-val amber">${formatOdds(p.best_odds || p.odds)}</div><div class="ps-sub">at bet time</div></div>
-      <div class="ps-box"><div class="ps-lbl">Fair Odds</div><div class="ps-val">${p.fair_odds || '—'}</div><div class="ps-sub">model price</div></div>
+      <div class="ps-box"><div class="ps-lbl">Model price</div><div class="ps-val">${p.fair_odds || '—'}</div><div class="ps-sub">no margin</div></div>
       <div class="ps-box">
         <div class="ps-lbl">Stake Size<span class="tip" data-tip="Fractional Kelly sizing on a 10-unit bankroll. Enter your bankroll above to see dollar amounts.">?</span></div>
         <div class="ps-val">${kellyStr}</div>
@@ -5025,7 +5025,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       <span class="pki-sep">·</span>
       <span class="pki-item"><span class="pki-lbl">Market</span>&nbsp;<span class="pki-val">${mktProbStr}</span></span>
       <span class="pki-sep">·</span>
-      <span class="pki-item"><span class="pki-lbl">Fair odds</span>&nbsp;<span class="pki-val pki-threshold">${fairOddsStr}</span></span>
+      <span class="pki-item"><span class="pki-lbl">Model price</span>&nbsp;<span class="pki-val pki-threshold">${fairOddsStr}</span></span>
       ${playableStr ? `<span class="pki-sep">·</span>
       <span class="pki-item"><span class="pki-lbl">Playable to</span>&nbsp;<span class="pki-val pki-playable">${playableStr}</span></span>` : ''}
     </div>`;
@@ -5087,7 +5087,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     </div>`;
 
   // ── Pick headline — dominant: large team name + large odds + edge badge ────
-  const fairOddsInline = p.fair_odds ? ` · Fair <span class="uph-fair">${p.fair_odds}</span>` : '';
+  const fairOddsInline = p.fair_odds ? ` · Model price <span class="uph-fair">${p.fair_odds}</span>` : '';
 
   // Final score is shown in the top-right result badge + the result/CLV summary
   // row; no separate headline score line (avoids showing the score three times).
@@ -5128,7 +5128,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
     ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to))
     : '—';
 
-  // Collapsed strip: Edge · Model · Market only — Fair ML + Playable To live in expanded view
+  // Collapsed strip: Edge · Model · Market only — Model price + Playable To live in expanded view
   const metricsStripHTML = `
     <div class="pc-v8-nums">
       <div class="pc-v8-num">
