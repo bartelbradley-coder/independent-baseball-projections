@@ -2375,9 +2375,9 @@
         <div class="hero-eyebrow">Fair-Value MLB Model · 2026 Season</div>
         <h1 class="hero-title">Bet the number,<br>not the noise.</h1>
         <p class="hero-sub">Independent Baseball Projections models a fair win probability for every MLB game, then flags the bets where our line beats the book — every pick logged before first pitch and tracked in full.</p>
-        <p class="hero-proof" id="hero-proof" hidden></p>
+        <p class="hero-proof" id="hero-proof">Every pick graded and tracked — the full record is public, win or loss.</p>
         <div class="hero-cta">
-          <a class="hero-btn hero-btn-primary" href="#picks-anchor">See today's <span id="hero-pick-count">value</span> picks <span class="hero-arrow">↓</span></a>
+          <a class="hero-btn hero-btn-primary" href="#picks-anchor">See today's <span id="hero-pick-count"></span> picks <span class="hero-arrow">↓</span></a>
           <a class="hero-btn hero-btn-secondary" href="#email-capture">Get the daily recap →</a>
         </div>
       </div>
@@ -2522,7 +2522,7 @@
       <p style="font-size:12px;color:var(--text-3);line-height:1.7;margin-bottom:14px">
         Pitcher quality, lineup status, park factors, weather, bullpen quality, BvP career matchup, arsenal fit, market audit, and more — applied as model adjustments before the market edge comparison.
         The final Independent Baseball Projections probability is compared against the no-vig Pinnacle probability to identify pricing gaps.
-        Only picks with ≥4% edge vs. Pinnacle are posted.
+        Only picks with ≥2% edge vs. Pinnacle are posted.
       </p>
       <div class="trust-strip" style="margin-bottom:14px">
         <div class="trust-card"><div class="trust-label">Model</div><div class="trust-val">Dual-Poisson + log-odds</div></div>
@@ -2543,7 +2543,7 @@
       </details>
       <details class="faq-item" style="margin-bottom:6px">
         <summary class="faq-q">How is edge calculated?</summary>
-        <div class="faq-a">Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). Independent Baseball Projections only posts picks with at least 4% edge vs. Pinnacle's no-vig line.</div>
+        <div class="faq-a">Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). Independent Baseball Projections only posts picks with at least 2% edge vs. Pinnacle's no-vig line.</div>
       </details>
       <details class="faq-item">
         <summary class="faq-q">Does past performance guarantee future results?</summary>
@@ -2634,7 +2634,7 @@
   </div>
 </div>
 
-<div id="floating-results" onclick="document.getElementById('idx-tracking-section')?.scrollIntoView({behavior:'smooth'})">
+<div id="floating-results" onclick="document.getElementById('picks-anchor')?.scrollIntoView({behavior:'smooth'})">
   <span class="fr-dot" id="fr-dot"></span>
   <span id="fr-text">—</span>
 </div>
@@ -3468,75 +3468,9 @@ function refreshPersonalTracker() {
   }).join('');
 }
 
-// ── Today's Picks — Live Tracking table ──────────────────────────────────────
-// Compact at-a-glance table above the pick cards: all today's VALUE picks with
-// their live status (pending / live score / final W-L). Mirrors the version on
-// the Pick History page but uses index-specific DOM IDs.
-function renderTodayTrackingIndex(picks, scores) {
-  const section = document.getElementById('idx-tracking-section');
-  const card    = document.getElementById('idx-tracking-card');
-  if (!section || !card || !picks || picks.length === 0) return;
-  section.style.display = 'block';
-
-  const rows = picks.map(p => {
-    const g    = scores[p.game];
-    const side = (p.side || '').toUpperCase();
-    let statusHTML, borderCls = '';
-
-    if (!g || g.status === 'scheduled') {
-      const cd = countdownText(p.game_time);
-      statusHTML = `<span style="color:var(--text-4);font-size:10px">${cd ? '⏱ ' + cd : '⏳ Upcoming'}</span>`;
-    } else if (g.status === 'live') {
-      statusHTML = `<span style="color:var(--green);font-size:10px;font-weight:700">● LIVE&nbsp;${g.awayScore}–${g.homeScore}</span>`;
-    } else {
-      const won = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
-      const ps  = side === 'AWAY' ? g.awayScore : g.homeScore;
-      const os  = side === 'AWAY' ? g.homeScore : g.awayScore;
-      const col = won ? 'var(--green)' : 'var(--red)';
-      borderCls = won
-        ? 'border-left:3px solid rgba(34,197,94,0.5);'
-        : 'border-left:3px solid rgba(239,68,68,0.4);';
-      statusHTML = `<span style="color:${col};font-family:var(--font-display);font-size:14px;font-weight:700">${won?'W':'L'}&nbsp;${ps}–${os}</span>`;
-    }
-
-    const oddsStr  = p.odds > 0 ? `+${p.odds}` : String(p.odds);
-    const edgeStr  = p.edge ? `+${(p.edge * 100).toFixed(1)}%` : '';
-    const kellyStr = p.kelly_units ? `${p.kelly_units.toFixed(1)}u` : '';
-    const kellyDol = (_bankroll > 0 && p.kelly_units)
-      ? ` · $${Math.round(p.kelly_units * _bankroll / 100)}`
-      : '';
-
-    return `<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.04);${borderCls}">
-      <div style="flex:1;min-width:0;overflow:hidden">
-        <div style="font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-          ${p.pick} <span style="color:var(--amber);font-family:var(--font-mono);font-size:12px">${oddsStr}</span>
-        </div>
-        <div style="font-size:10px;color:var(--text-4);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-          ${p.game}${edgeStr ? ' · ' + edgeStr + ' edge' : ''}${kellyStr ? ' · ' + kellyStr + kellyDol : ''}
-        </div>
-      </div>
-      <div style="flex-shrink:0">${statusHTML}</div>
-    </div>`;
-  }).join('');
-
-  // Tally header
-  const done    = picks.filter(p => { const g = scores[p.game]; return g && g.status === 'final'; });
-  const wins    = done.filter(p => {
-    const g = scores[p.game]; const s = (p.side||'').toUpperCase();
-    return s === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
-  }).length;
-  const losses  = done.length - wins;
-  const pending = picks.length - done.length;
-  const live    = picks.filter(p => { const g = scores[p.game]; return g && g.status === 'live'; }).length;
-
-  const tallyHTML = `<div style="padding:9px 14px 6px;font-size:11px;color:var(--text-4);border-bottom:1px solid rgba(255,255,255,0.04)">
-    ${done.length > 0 ? `<strong style="color:var(--text-2)">${wins}W–${losses}L</strong> settled · ` : ''}
-    ${live > 0 ? `<span style="color:var(--green)">${live} live</span> · ` : ''}
-    ${pending} pick${pending !== 1 ? 's' : ''} pending
-  </div>`;
-
-  card.innerHTML = tallyHTML + rows;
-}
+// (Removed: renderTodayTrackingIndex — dead code. Its target DOM nodes
+// (#idx-tracking-section / #idx-tracking-card) never existed in the page, so it
+// always early-returned. The compact pick rows now serve this live-status role.)
 
 // renderBrandBar removed — brand identity merged into renderPicksHeaderBlock
 
@@ -3856,7 +3790,7 @@ function renderEmptyState(data, hist, marginal = []) {
           ⚠️ ${marginal.length} Signal${marginal.length > 1 ? 's' : ''} Below 2% Threshold
         </div>
         ${rows}
-        <div style="font-size:10px;color:var(--text-4);margin-top:8px">Model found signals — none cleared the 4% minimum edge for a recommended bet.</div>
+        <div style="font-size:10px;color:var(--text-4);margin-top:8px">Model found signals — none cleared the 2% minimum edge for a recommended bet.</div>
       </div>`;
   }
 
@@ -5486,7 +5420,7 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
     strip.className = 'status-strip ss-pending';
     strip.innerHTML = `
       <span class="ss-badge ss-badge-pending">${pre9 ? '🕐 PENDING' : '📊 NO PICKS'}</span>
-      <span class="ss-text">${pre9 ? 'Picks post at 9:00 AM CT after lineup confirmation' : 'No picks clear the 5% edge threshold today'}</span>
+      <span class="ss-text">${pre9 ? 'Picks post at 9:00 AM CT after lineup confirmation' : 'No picks clear the 2% edge threshold today'}</span>
       <a class="ss-link" href="preview.html">Tomorrow's opening lines →</a>`;
     return;
   }
@@ -6347,12 +6281,6 @@ function refreshScoreBadges(scores) {
 
   // Refresh the today tally chip
   _updateTodayTally(scores);
-
-  // Refresh the live tracking table above the picks
-  if (_todayDataRef) {
-    const _tp = (_todayDataRef.picks || []).filter(p => (p.edge || 0) >= 0.02);
-    renderTodayTrackingIndex(_tp, scores);
-  }
 
   // Update floating results pill
   updateFloatingResults(scores);
