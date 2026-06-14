@@ -1143,6 +1143,8 @@ details[open] .faq-q::after { content: '−'; }
 .pr-status.stale { color:var(--red); }    .pr-status.stale .pr-sdot { background:var(--red); }
 .pr-status.live  { color:var(--text-2); } .pr-status.live .pr-sdot  { background:var(--text-2); }
 .pr-status.final { color:var(--text-3); } .pr-status.final .pr-sdot { background:var(--text-4); }
+.pr-status.won   { color:var(--green); }  .pr-status.won .pr-sdot   { background:var(--green); }
+.pr-status.lost  { color:var(--red); }    .pr-status.lost .pr-sdot  { background:var(--red); }
 
 .pr-chev { justify-self:end; color:var(--text-4); font-size:16px; line-height:1; transition:transform .16s; }
 .pr-row.open .pr-chev { transform:rotate(90deg); color:var(--indigo-lt); }

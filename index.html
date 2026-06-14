@@ -60,7 +60,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=12">
+<link rel="stylesheet" href="style.css?v=13">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 :root {
@@ -3734,13 +3734,43 @@ function _kellyStatsFromHist(histRows) {
 }
 
 // setPicksPnlMode: called by the header block toggle buttons.
+// Re-render the picks list while preserving which drawers are open + keyboard
+// focus. A bare render() rebuilds #picks-container, which otherwise collapses
+// every expanded drawer mid-read and drops focus to <body> — bad for keyboard/SR
+// users. Used by the Flat/Kelly toggle and the bucket-change countdown re-render.
+function rerenderPicks() {
+  if (!_todayDataRef) return;
+  const openIds = Array.from(document.querySelectorAll('.pr-details'))
+    .filter(d => !d.hasAttribute('hidden'))
+    .map(d => d.dataset.cardId).filter(Boolean);
+  let focusId = null;
+  const a = document.activeElement;
+  if (a && a.classList && a.classList.contains('pr-row') && a.parentElement) {
+    const d = a.parentElement.querySelector('.pr-details');
+    if (d) focusId = d.dataset.cardId;
+  }
+  render(_todayDataRef, _histRef, _scoresRef, _perfRef);
+  openIds.forEach(id => {
+    const det = document.querySelector('.pr-details[data-card-id="' + id + '"]');
+    if (det && det.hasAttribute('hidden')) {
+      const row = det.parentElement.querySelector('.pr-row');
+      if (row) prToggle(row);
+    }
+  });
+  if (focusId) {
+    const det = document.querySelector('.pr-details[data-card-id="' + focusId + '"]');
+    const row = det && det.parentElement.querySelector('.pr-row');
+    if (row) row.focus();
+  }
+}
+
 function setPicksPnlMode(mode) {
   _indexPnlMode = mode;
-  // Full re-render so the per-pick stakes AND exposure recompute for the new
-  // mode — not just the stats card. (Flat = $100/pick; Kelly = bankroll-sized.)
+  // Re-render so per-pick stakes AND exposure recompute for the new mode
+  // (Flat = $100/pick; Kelly = bankroll-sized), preserving open drawers + focus.
   // Falls back to a header-only refresh if data hasn't loaded yet.
   if (_todayDataRef) {
-    render(_todayDataRef, _histRef, _scoresRef, _perfRef);
+    rerenderPicks();
   } else {
     const flatBtn  = document.getElementById('phb-flat-btn');
     const kellyBtn = document.getElementById('phb-kelly-btn');
@@ -4167,6 +4197,9 @@ function buildDetailsV8(p, cardId) {
         <div class="odds-v8-group"><div class="odds-v8-best"><span class="ov8-name">${bestBook}</span><span class="ov8-odds">${bestOdds}</span><span class="ov8-best-tag">BEST</span></div></div>
       </div>`;
   }
+  // book_odds is live-updating; once a game starts those prices are in-game odds
+  // off the posted line (the drawer's price card covers the captured line instead).
+  if (isLiveGame(p) || isGameOver(p)) oddsHTML = '';
 
   // ── Lineup & Data Status ──
   const homeConf = p.home_lineup_confirmed;
@@ -4898,7 +4931,7 @@ function pickCardHTML(p, isTopPick = false, gameResult = null) {
       </div>`;
   }
 
-  const oddsRowHTML = buildBookOddsHTML();
+  const oddsRowHTML = (isLive || isOver) ? '' : buildBookOddsHTML();
 
   // Probability single-track: Market → edge gap → Model, all on 0–100% win-probability axis
   // Edge = Model − Market, shown as the highlighted gap between the two fills
@@ -5647,7 +5680,12 @@ function prTierBadge(p) { const t = prTier(p); return `<span class="pr-tier ${t.
 // Live & Final are NEUTRAL (we don't make live-betting recommendations). The
 // price-moved states light up only once the backend fills the current_* fields.
 function pickStatus(p, gameResult) {
-  if (isGameOver(p)) { const sc = gameResult && gameResult.score ? ' ' + gameResult.score : ''; return { cls: 'final', label: 'Final' + sc }; }
+  if (isGameOver(p)) {
+    const sc = gameResult && gameResult.score ? ' ' + gameResult.score : '';
+    if (gameResult && gameResult.result === 'W') return { cls: 'won', label: 'Won' + sc };
+    if (gameResult && gameResult.result === 'L') return { cls: 'lost', label: 'Lost' + sc };
+    return { cls: 'final', label: 'Final' + sc };
+  }
   if (isLiveGame(p)) { const sc = gameResult && gameResult.score ? ' ' + gameResult.score : ''; return { cls: 'live', label: 'Live' + sc }; }
   if (p.current_edge != null && p.current_edge < 0.02) return { cls: 'stale', label: 'No longer playable' };
   if (p.current_lineup_confirmed === false) return { cls: 'warn', label: 'Lineup pending' };
@@ -5714,7 +5752,7 @@ function prRowCollapsed(p, isBest, gameResult) {
     + `${timeStr && !live && !over ? ', ' + timeStr : ''}${isBest ? ', top edge' : ''}, ${st.label}. `
     + `Model ${mpPct}, market ${bpPct}, edge ${edgeStr} points, ${prTier(p).lbl}.`;
 
-  return `<div class="pr-cols pr-row${isBest ? ' best' : ''}" role="button" tabindex="0" ` +
+  return `<div class="pr-cols pr-row${isBest ? ' best' : ''}" role="button" tabindex="0" data-pr-card="${prCardId(p)}" ` +
     `aria-expanded="false" aria-label="${ariaLabel}" onclick="prToggle(this)" onkeydown="prKey(event,this)">` +
     `<div class="pr-mu">${prLogoImg(away, !isAwayPick)}${prLogoImg(home, !isHomePick)}<div class="pr-mu-tx">` +
       `<div class="pr-betname">${star}${pickAbbr}<span class="pr-bt">${typeLabel}</span><span class="pr-bo">${oddsStr}</span></div>` +
@@ -6357,7 +6395,7 @@ function startCountdownTimer() {
       const changed = _lastBucketSig !== null && sig !== _lastBucketSig;
       _lastBucketSig = sig;
       if (changed && typeof render === 'function') {
-        render(_todayDataRef, _histRef, _scoresRef, _perfRef);
+        rerenderPicks();   // preserve open drawers + focus across the re-bucket
       }
     }
   }, 30 * 1000);
@@ -6455,10 +6493,20 @@ function updateFloatingResults(scores) {
 // Lightweight DOM update — refreshes result badges and card classes without re-rendering
 function refreshScoreBadges(scores) {
   for (const [cardId, p] of Object.entries(picksMap)) {
-    const cardEl = document.getElementById(cardId);
-    if (!cardEl) continue;
     const gr = getPickResult(p, scores);
     if (!gr) continue;
+
+    // Update the collapsed row's status chip — the DEFAULT surface, present even
+    // when the drawer was never expanded (its card id only exists once built).
+    const rowStatus = document.querySelector('.pr-row[data-pr-card="' + cardId + '"] .pr-status');
+    if (rowStatus) {
+      const st = pickStatus(p, gr);
+      rowStatus.className = 'pr-status ' + st.cls;
+      rowStatus.innerHTML = '<span class="pr-sdot"></span>' + st.label;
+    }
+
+    const cardEl = document.getElementById(cardId);
+    if (!cardEl) continue;
 
     // Update result badge (injected with data-result-badge attr)
     const badge = cardEl.querySelector('[data-result-badge]');
