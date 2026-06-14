@@ -3265,7 +3265,7 @@ function handleEmailSubmit(e) {
 
   if (btn) { btn.disabled = true; btn.textContent = 'Subscribing…'; }
 
-  fetch('https://fairline-subscribe.bartel-bradley.workers.dev/', {
+  fetch('https://ibp-subscribe.ibprojections.workers.dev/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),
