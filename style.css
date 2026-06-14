@@ -1226,7 +1226,18 @@ details[open] .faq-q::after { content: '−'; }
 .dw-details > summary::-webkit-details-marker { display:none; }
 .dw-details > summary::before { content:'▸ '; }
 .dw-details[open] > summary::before { content:'▾ '; }
-.dw-full { margin-top:6px; }
+.dw-full { margin-top:6px; display:flex; flex-direction:column; gap:10px; }
+/* full-rationale: matchup-quality pairs, line-move, prose, actions */
+.dw-hsub { font-weight:400; color:var(--text-4); text-transform:none; letter-spacing:0; font-size:9.5px; }
+.dw-mq { font-family:var(--font-mono); font-size:12px; display:inline-flex; align-items:baseline; gap:7px; }
+.dw-mq b { font-weight:600; color:var(--text-2); }
+.dw-mq b.dw-mq-good { color:var(--green); }
+.dw-mq .dw-mq-sep { color:var(--text-4); font-size:10px; font-family:var(--font-ui); }
+.dw-pr .dw-pv.r { color:var(--red); }
+.dw-prose { font-size:12.5px; line-height:1.6; color:var(--text-2); }
+.dw-actions { display:flex; gap:8px; }
+.dw-act { font-family:var(--font-ui); font-size:12px; color:var(--text-3); background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:8px; padding:7px 12px; cursor:pointer; }
+.dw-act:hover { color:var(--text); background:rgba(255,255,255,.06); }
 @media (max-width:640px) { .dw-action-grid { grid-template-columns:repeat(2,1fr); } .dw-2col { grid-template-columns:1fr; } }
 
 /* collapsible sections (Marginal / Completed) */

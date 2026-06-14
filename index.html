@@ -60,7 +60,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=13">
+<link rel="stylesheet" href="style.css?v=14">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 :root {
@@ -4457,7 +4457,59 @@ function oneLineDriverV8(p) {
 // Best price → short summary, with the FULL existing card tucked behind a
 // "View full model rationale" toggle (preserves all its hooks: kelly-$, bet
 // buttons, share/copy — refreshKellyUSD/refreshBetButtons use querySelectorAll).
+// Lean "full model rationale" for the drawer — ONLY net-new content vs the
+// drawer's own cards: full narrative prose, Matchup Quality (raw starter/defense
+// metrics, distinct from the model adjustments in "Why it rates"), and line
+// movement + CLV. Replaces embedding the entire legacy pickCardHTML (which
+// re-rendered the edge/books/stake/factors a 2nd–3rd time in the old styling).
+function prFullRationaleHTML(p) {
+  const rs = p.raw_stats || {};
+  const pickAbbr = (p.pick || '').toUpperCase();
+  const fmtO = (o) => o == null ? '—' : (o > 0 ? '+' + o : String(o));
+
+  // Matchup Quality — only metrics present on BOTH sides; better side greened.
+  let mqRows = '';
+  function mqRow(label, pv, ov, betterHigh, fmt) {
+    if (pv == null || ov == null || isNaN(pv) || isNaN(ov)) return;
+    const pBetter = betterHigh ? pv > ov : pv < ov;
+    mqRows += '<div class="dw-rc"><span class="dw-rk">' + label + '</span>'
+      + '<span class="dw-mq"><b class="' + (pBetter ? 'dw-mq-good' : '') + '">' + fmt(pv) + '</b>'
+      + '<span class="dw-mq-sep">vs</span><b class="' + (!pBetter ? 'dw-mq-good' : '') + '">' + fmt(ov) + '</b></span></div>';
+  }
+  mqRow('Starter xFIP', rs.pick_xfip, rs.opp_xfip, false, x => x.toFixed(2));
+  mqRow('K-BB%', rs.pick_kbb_pct != null ? rs.pick_kbb_pct * 100 : null, rs.opp_kbb_pct != null ? rs.opp_kbb_pct * 100 : null, true, x => x.toFixed(1) + '%');
+  mqRow('Defense (OAA)', rs.pick_oaa, rs.opp_oaa, true, x => (x > 0 ? '+' : '') + x);
+  mqRow('Arsenal fit', rs.pick_arsenal_fit, rs.opp_arsenal_fit, true, x => (x > 0 ? '+' : '') + x.toFixed(2));
+  mqRow('Proj. IP', rs.pick_proj_ip, rs.opp_proj_ip, true, x => x.toFixed(1));
+  const conds = [];
+  if (rs.park_factor != null) conds.push('Park ' + rs.park_factor.toFixed(2));
+  if (rs.ump_name) conds.push('HP ump ' + rs.ump_name);
+  const condLine = conds.length ? '<div class="dw-pr-note">' + conds.join(' · ') + '</div>' : '';
+  const mqHTML = mqRows
+    ? '<div class="dw-card"><div class="dw-h">Matchup quality <span class="dw-hsub">' + pickAbbr + ' vs opp · better side green</span></div>' + mqRows + condLine + '</div>'
+    : '';
+
+  // Line movement + CLV (open→posted are fixed; CLV is fixed at the close).
+  let lmRows = '';
+  if (p.line_open != null) lmRows += '<div class="dw-pr"><span class="dw-pl">Opened</span><span class="dw-pv">' + fmtO(p.line_open) + '</span></div>';
+  lmRows += '<div class="dw-pr"><span class="dw-pl">Posted</span><span class="dw-pv">' + fmtO(p.odds) + '</span></div>';
+  if (p.clv != null) {
+    const clvpp = p.clv * 100;
+    const clvCls = clvpp >= 0.5 ? 'g' : clvpp <= -0.5 ? 'r' : '';
+    const clvNote = clvpp >= 0.5 ? ' · beat the close' : clvpp <= -0.5 ? ' · closed past us' : ' · matched close';
+    lmRows += '<div class="dw-pr"><span class="dw-pl">CLV</span><span class="dw-pv ' + clvCls + '">' + (clvpp >= 0 ? '+' : '') + clvpp.toFixed(1) + 'pp' + clvNote + '</span></div>';
+  }
+  const lmHTML = '<div class="dw-card"><div class="dw-h">Line movement</div>' + lmRows + '</div>';
+
+  const narrHTML = (p.narrative && p.narrative.trim())
+    ? '<div class="dw-card"><div class="dw-h">Model rationale</div><div class="dw-prose">' + p.narrative + '</div></div>'
+    : '';
+
+  return narrHTML + mqHTML + lmHTML;
+}
+
 function prDrawerHTML(p, isBest, gameResult) {
+  const cardId = prCardId(p);
   const pickAbbr = (p.pick || '').toUpperCase();
   const typeLabel = p.pick_type === 'MONEYLINE' ? 'ML' : p.pick_type === 'RUN_LINE' ? 'RL' : (p.pick_type || '').replace(/_/g, ' ');
   const oddsStr = p.odds != null ? (p.odds > 0 ? '+' + p.odds : String(p.odds)) : '';
@@ -4482,7 +4534,7 @@ function prDrawerHTML(p, isBest, gameResult) {
 
   const st = pickStatus(p, gameResult);
   let statusDetail;
-  if (over) statusDetail = 'Final' + scoreStr;
+  if (over) statusDetail = st.label + ' · pregame pick logged at ' + oddsStr + (p.posted_at ? ' (' + p.posted_at + ')' : '');
   else if (live) statusDetail = 'Pregame pick — now live' + scoreStr + '. Line captured ' + oddsStr + (p.posted_at ? ' at ' + p.posted_at : '');
   else statusDetail = 'Line captured ' + oddsStr + (p.posted_at ? ' at ' + p.posted_at : '') + ' — re-check current price before betting';
 
@@ -4547,7 +4599,11 @@ function prDrawerHTML(p, isBest, gameResult) {
     ? '<div class="dw-summary">' + pickAbbr + ' is priced like a <b>' + bpPct + '</b> ' + (isDog ? 'underdog' : 'favorite') + ', but the model makes them <b>' + mpPct + '</b> — edge from ' + drivers + '.</div>'
     : '';
 
-  const fullHTML = '<details class="dw-details"><summary>View full model rationale</summary><div class="dw-full">' + pickCardHTML(p, isBest, gameResult) + '</div></details>';
+  const fullHTML = '<details class="dw-details"><summary>View full model rationale</summary><div class="dw-full">' + prFullRationaleHTML(p) + '</div></details>';
+  const actionsHTML = '<div class="dw-actions">'
+    + '<button type="button" class="dw-act" onclick="sharePickCard(\'' + cardId + '\')">⬆ Share</button>'
+    + '<button type="button" class="dw-act" onclick="copyPick(\'' + cardId + '\')">⧉ Copy</button>'
+    + '</div>';
 
   return '<div class="dw">'
     + '<div class="dw-card dw-action"><div class="dw-h">Official play</div>'
@@ -4563,6 +4619,7 @@ function prDrawerHTML(p, isBest, gameResult) {
     + whyHTML
     + '<div class="dw-2col">' + riskHTML + priceHTML + '</div>'
     + '<div class="dw-card">' + summaryHTML + fullHTML + '</div>'
+    + actionsHTML
   + '</div>';
 }
 
