@@ -61,7 +61,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=5">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 :root {
   --font-display: "Barlow Condensed", sans-serif;
@@ -5474,7 +5474,10 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
 const _PR_LOGO_MAP = { MET: 'nym' };
 function prLogoSrc(ab) {
   const k = String(ab || '').toUpperCase();
-  return 'https://a.espncdn.com/i/teamlogos/mlb/500/' + (_PR_LOGO_MAP[k] || k.toLowerCase()) + '.png';
+  const slug = _PR_LOGO_MAP[k] || k.toLowerCase();
+  // ESPN combiner resizes the logo to ~2× the 22px display (44px) instead of
+  // shipping the 500px source: ~1.4 KB vs ~20 KB each, with a longer cache.
+  return 'https://a.espncdn.com/combiner/i?img=/i/teamlogos/mlb/500/' + slug + '.png&w=44&h=44';
 }
 function prLogoFail(img) {
   const s = document.createElement('span');
@@ -5484,7 +5487,7 @@ function prLogoFail(img) {
 }
 function prLogoImg(ab, dim) {
   const k = String(ab || '').toUpperCase();
-  return `<img class="pr-logo${dim ? ' dim' : ''}" src="${prLogoSrc(k)}" alt="${k}" loading="lazy" onerror="prLogoFail(this)">`;
+  return `<img class="pr-logo${dim ? ' dim' : ''}" src="${prLogoSrc(k)}" alt="${k}" width="22" height="22" loading="lazy" onerror="prLogoFail(this)">`;
 }
 
 // CT clock for the matchup subline (matches the card's game-time format).
@@ -5571,10 +5574,20 @@ function prRowCollapsed(p, isBest, gameResult) {
     `<div class="pr-chev" aria-hidden="true">›</div></div>`;
 }
 
-// Row = collapsed summary + the existing full card as hidden expandable details.
+// cardId mirrors pickCardHTML's own formula so picksMap stays populated WITHOUT
+// eagerly building every (expensive, ~1000-line) card up front. We register the
+// pick here so global consumers of picksMap (floating pill, score refresh, copy/
+// share lookups) keep working; the heavy card HTML is built lazily on first
+// expand in prToggle.
+function prCardId(p) {
+  return 'card-' + (p.pick || '').replace(/\s/g, '') + (p.game || '').replace(/\s/g, '');
+}
+// Row = collapsed summary + an EMPTY details slot the full card fills on expand.
 function prRowHTML(p, isBest, gameResult) {
+  const cardId = prCardId(p);
+  picksMap[cardId] = p;
   return `<div class="pr-wrap">${prRowCollapsed(p, isBest, gameResult)}` +
-    `<div class="pr-details" hidden>${pickCardHTML(p, isBest, gameResult)}</div></div>`;
+    `<div class="pr-details" hidden data-card-id="${cardId}" data-best="${isBest ? '1' : ''}"></div></div>`;
 }
 
 // A pr-table block (column header + rows) for an array of picks.
@@ -5587,8 +5600,20 @@ function prTable(picks, topPick, spotlightTop, scores) {
 function prToggle(row) {
   const det = row.parentElement && row.parentElement.querySelector('.pr-details');
   if (!det) return;
-  if (det.hasAttribute('hidden')) { det.removeAttribute('hidden'); row.classList.add('open'); row.setAttribute('aria-expanded', 'true'); }
-  else { det.setAttribute('hidden', ''); row.classList.remove('open'); row.setAttribute('aria-expanded', 'false'); }
+  if (det.hasAttribute('hidden')) {
+    if (!det.dataset.built) {                 // lazy-build the full card on first expand
+      const p = picksMap[det.dataset.cardId];
+      if (p) {
+        det.innerHTML = pickCardHTML(p, det.dataset.best === '1', getPickResult(p, _scoresRef || {}));
+        det.dataset.built = '1';
+        refreshKellyUSD();                    // wire up the newly-injected card's $ + bet state
+        refreshBetButtons();
+      }
+    }
+    det.removeAttribute('hidden'); row.classList.add('open'); row.setAttribute('aria-expanded', 'true');
+  } else {
+    det.setAttribute('hidden', ''); row.classList.remove('open'); row.setAttribute('aria-expanded', 'false');
+  }
 }
 function prKey(e, row) {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prToggle(row); }
