@@ -60,7 +60,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 :root {
@@ -2443,8 +2443,10 @@
   <div class="section" id="picks-anchor" style="scroll-margin-top:72px">
     <h2 class="sec-lbl" id="page-date">Today's Value Bets</h2>
     <div id="page-refresh-meta" style="display:none;font-size:10px;color:var(--text-4);margin-top:3px;margin-bottom:2px;font-family:var(--font-mono)"></div>
+    <div id="picks-summary"></div>
     <div class="picks-legend">Each bar — <span class="pl-grey">grey</span> = book implied probability · <span class="pl-green">green gap</span> = model edge · <span class="pl-tick">▏</span> = Independent Baseball Projections model</div>
     <div class="model-info-note">Starting pitcher info and odds are captured at model run time — always verify current starters and lines before betting.<span id="games-scanned-strip"></span></div>
+    <div id="sizing-bar"></div>
     <div id="picks-container">
       <div id="loading-placeholder" style="display:flex;flex-direction:column;gap:14px">
         <div class="skeleton-card">
@@ -2491,7 +2493,7 @@
       </div>
       <div>
         <h2 class="ec-headline">Get the daily picks recap in your inbox</h2>
-        <p class="ec-sub">Full access is free during our 2026 season track record build. Picks are timestamped, CLV-tracked, and auditable. Paid tiers with real-time alerts and expanded analytics launch before the 2027 season.</p>
+        <p class="ec-sub"><strong style="color:var(--text-2)">One email a day, only on days with picks.</strong> Free during our 2026 track-record build — every pick timestamped, CLV-tracked, and auditable. <span style="color:var(--text-4)">Paid tiers with real-time alerts launch before the 2027 season.</span></p>
       </div>
       <form class="ec-form" id="ec-form" onsubmit="handleEmailSubmit(event)">
         <input class="ec-input" type="email" name="email_address"
@@ -2574,43 +2576,7 @@
       <span class="fsm-lbl fsm-active">MLB</span>
     </div>
     <div class="fsm-sep"></div>
-    <!-- NFL — coming soon -->
-    <div class="fsm-item fsm-soon">
-      <svg width="28" height="28" viewBox="0 0 88 88">
-        <path d="M44,5 C48,5 76,22 76,44 C76,66 48,83 44,83 C40,83 12,66 12,44 C12,22 40,5 44,5 Z" stroke="rgba(255,255,255,0.85)" stroke-width="1.8" fill="rgba(99,102,241,0.1)"/>
-        <line x1="44" y1="18" x2="44" y2="70" stroke="rgba(255,255,255,0.3)" stroke-width="1.3"/>
-        <text x="19" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#f1f5f9">IB</text><text x="44" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text>
-      </svg>
-      <span class="fsm-lbl">NFL</span>
-      <span class="fsm-badge">soon</span>
-    </div>
-    <div class="fsm-sep"></div>
-    <!-- NBA — coming soon -->
-    <div class="fsm-item fsm-soon">
-      <svg width="28" height="28" viewBox="0 0 88 88">
-        <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.10)"/>
-        <circle cx="44" cy="44" r="33" stroke="rgba(255,255,255,0.85)" stroke-width="2" fill="none"/>
-        <path d="M44,11 Q46,30 46,44 Q46,58 44,77" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
-        <path d="M11,44 Q25,16 44,12 Q63,16 77,44" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
-        <path d="M11,44 Q25,72 44,76 Q63,72 77,44" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
-        <text x="19" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#f1f5f9">IB</text><text x="44" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text>
-      </svg>
-      <span class="fsm-lbl">NBA</span>
-      <span class="fsm-badge">soon</span>
-    </div>
-    <div class="fsm-sep"></div>
-    <!-- NHL — coming soon -->
-    <div class="fsm-item fsm-soon">
-      <svg width="28" height="28" viewBox="0 0 88 88">
-        <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.12)" stroke="rgba(255,255,255,0.85)" stroke-width="2"/>
-        <circle cx="44" cy="44" r="24" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="5"/>
-        <text x="19" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#f1f5f9">IB</text><text x="44" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text>
-        <line x1="55" y1="58" x2="62" y2="49" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
-        <circle cx="62" cy="49" r="3.5" fill="#22c55e"/>
-      </svg>
-      <span class="fsm-lbl">NHL</span>
-      <span class="fsm-badge">soon</span>
-    </div>
+    <span class="fsm-lbl" style="opacity:.55;font-weight:600">More sports coming for 2027</span>
   </div>
   <div class="footer-brand" style="display:none">Independent Baseball Projections · Bet the number, not the noise. · Every pick logged before first pitch.</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
@@ -3557,11 +3523,18 @@ function renderEvidenceSection(data, perf, hist) {
   if (!roi && !clv) return;  // no settled data yet
   section.style.display = 'block';
 
+  // CLV claim is gated by sample size: only make the causal "identifies edge
+  // before it's priced in" claim once the sample is meaningful (>=100 picks).
+  // Below that, lead with the honest hit-rate + a "still building sample" caveat.
+  const _clvDesc = clvCount >= 100
+    ? `On average, posted picks have closed better than the release price across the tracked sample — a signal that the model identifies edge before it's fully priced in.${posPct ? ' ' + posPct + ' of ' + clvCount + ' picks beat the close.' : ''} ${trendStr}`
+    : `${posPct ? posPct + ' of ' + clvCount + ' picks have beaten the close so far' : 'Tracking whether our posted price beats the close'} — still building a sample before drawing conclusions about edge.${trendStr ? ' ' + trendStr : ''}`;
+
   grid.innerHTML = `
     <div class="evidence-claim">
       <div class="ec-stat">${clv || '—'}</div>
       <div class="ec-label">Average Closing Line Value</div>
-      <div class="ec-desc">On average, posted picks have closed better than the release price across the tracked sample — a signal that the model identifies edge before it's fully priced in.${posPct ? ' ' + posPct + ' of ' + clvCount + ' picks beat the close.' : ''} ${trendStr}</div>
+      <div class="ec-desc">${_clvDesc}</div>
     </div>
     <div class="evidence-claim">
       <div class="ec-stat">${roi || '—'}</div>
@@ -5437,6 +5410,11 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
     : '';
   const postedStr = picks[0]?.posted_at ? ' · Posted ' + picks[0].posted_at : '';
 
+  // Active days (locked / live / partial) are now covered by the consolidated
+  // summary line under the picks heading — only surface the strip for the
+  // all-complete recap (pending / no-picks are handled above).
+  if (doneCount !== picks.length) { strip.style.display = 'none'; return; }
+
   if (liveCount > 0) {
     strip.className = 'status-strip ss-active';
     strip.innerHTML = `
@@ -5513,7 +5491,7 @@ function prValuePill(p) {
 
 function prTableHead() {
   return `<div class="pr-cols pr-head">` +
-    `<span>Matchup</span><span>Model</span><span>Book</span>` +
+    `<span>Matchup</span><span>Model</span><span>Book<span class="tip" data-tip="No-vig market probability: Pinnacle's implied odds with the bookmaker margin (the vig) removed — the fairest benchmark of the true price.">?</span></span>` +
     `<span class="r">Edge</span><span class="r">Bet</span><span class="r">Value</span><span></span></div>`;
 }
 
@@ -5840,9 +5818,7 @@ function render(data, hist, scores = {}, perf = null) {
 
     container.innerHTML = `
       <div class="phb-card">
-
-        <!-- Stats row: W-L · Season P&L · ROI/Bet · Avg CLV -->
-        <!-- Brand row removed (nav carries it). Total $ removed (ambiguous by mode). -->
+        <!-- Stats only — sizing controls moved down to #sizing-bar by the picks. -->
         <div class="phb-stats-row">
           <div class="phb-stat-group">
             <span class="phb-stat-label">2026 Season</span>
@@ -5864,29 +5840,39 @@ function render(data, hist, scores = {}, perf = null) {
             ${todayChip}
           </div>
         </div>
+      </div>`;
 
-        <!-- Row 2: Sizing controls -->
-        <div class="phb-sizing-row">
+    // Sizing + exposure bar — moved out of the stats card to sit just above the
+    // picks. Re-rendered by setPicksPnlMode (which calls this fn), so the toggle,
+    // helper, bankroll mode, and exposure stay in sync on mode change.
+    const sizingEl = document.getElementById('sizing-bar');
+    if (sizingEl) {
+      const _smain   = (data.picks || []).filter(p => (p.edge || 0) >= 0.02);
+      const _stotKU  = _smain.reduce((s, p) => s + (p.kelly_units || 0), 0);
+      const _savgKU  = _smain.length ? _stotKU / _smain.length : 0;
+      const _stotDol = _bankroll > 0 ? Math.round(_stotKU * _bankroll / 100) : null;
+      const _sstake  = _stotDol != null ? '$' + _stotDol.toLocaleString() : _stotKU.toFixed(1) + 'u';
+      const _expoHTML = _stotKU > 0
+        ? `<span class="sizing-expo"><span class="se-lbl">Exposure</span><strong>${_sstake}</strong> · <strong>${_savgKU.toFixed(1)}u</strong> avg</span>`
+        : '';
+      sizingEl.innerHTML = `
+        <div class="sizing-bar">
           <div class="phb-toggle">
-            <button class="phb-tog${!isKelly ? ' active' : ''}" id="phb-flat-btn"
-              onclick="setPicksPnlMode('flat')">Flat $100</button>
-            <button class="phb-tog${isKelly ? ' active' : ''}" id="phb-kelly-btn"
-              onclick="setPicksPnlMode('kelly')">Kelly</button>
+            <button class="phb-tog${!isKelly ? ' active' : ''}" id="phb-flat-btn" onclick="setPicksPnlMode('flat')">Flat $100</button>
+            <button class="phb-tog${isKelly ? ' active' : ''}" id="phb-kelly-btn" onclick="setPicksPnlMode('kelly')">Kelly<span class="tip" data-tip="Kelly criterion: sizes each bet by its edge and your bankroll. We use half-Kelly (more conservative). 1 unit = 1% of bankroll.">?</span></button>
           </div>
           ${isKelly ? '<span class="phb-kelly-active"><span class="phb-ka-dot"></span>Kelly Sizing Active</span>' : ''}
           <div class="phb-bankroll${isKelly ? '' : ' flat-mode'}" id="phb-bankroll-wrap">
             <span class="phb-bk-label">Bankroll</span>
             <div class="phb-bk-input-wrap">
               <span class="phb-bk-dollar">$</span>
-              <input class="phb-bk-input" id="phb-bankroll-input" type="number"
-                min="0" step="100" placeholder="5,000"
-                value="${_bankroll > 0 ? _bankroll : ''}">
+              <input class="phb-bk-input" id="phb-bankroll-input" type="number" min="0" step="100" placeholder="5,000" value="${_bankroll > 0 ? _bankroll : ''}">
             </div>
           </div>
           <span class="phb-helper" id="phb-helper-text">${helperText}</span>
-        </div>
-
-      </div>`;
+          ${_expoHTML}
+        </div>`;
+    }
   }
 
   renderPicksHeaderBlock(data, hist);
@@ -6119,20 +6105,18 @@ function render(data, hist, scores = {}, perf = null) {
       picksHTML = renderPickGroup(main);
     }
 
-    // Headline summary — instant takeaway above the table (main is edge-sorted).
+    // Consolidated summary line — written to #picks-summary under the <h2> (which
+    // already reads "Today's Value Bets", so drop the duplicate title) and absorbs
+    // the Upcoming/Live/Final state summary. Exposure now lives in the sizing bar.
     const _strongN = main.filter(p => p.edge >= 0.08).length;
     const _best    = main[0];
-    const headlineHTML = `<div class="pr-headline">` +
-      `<span class="prh-title">Today's Value Bets</span>` +
-      `<span class="prh-meta">${main.length} pick${main.length !== 1 ? 's' : ''}` +
-        `${_strongN ? ' · ' + _strongN + ' strong' : ''}` +
-        `${_best ? ' · top edge <strong class="g">+' + (_best.edge * 100).toFixed(1) + '%</strong> (' + _best.pick + ')' : ''}` +
-      `</span></div>`;
+    const _summaryMeta = `${main.length} pick${main.length !== 1 ? 's' : ''}`
+      + `${_strongN ? ' · ' + _strongN + ' strong' : ''}`
+      + `${_best ? ' · top edge <strong class="g">+' + (_best.edge * 100).toFixed(1) + '%</strong> (' + _best.pick + ')' : ''}`;
+    const _summaryEl = document.getElementById('picks-summary');
+    if (_summaryEl) _summaryEl.innerHTML = `<div class="pr-headline"><span class="prh-meta">${_summaryMeta}</span></div>` + stateSummaryHTML;
 
     document.getElementById('picks-container').innerHTML =
-      headlineHTML +
-      stateSummaryHTML +
-      (allDone ? '' : actionStripHTML) +
       shareAllHTML +
       (useGrouping ? picksHTML : `<div class="${gridClass}">` + picksHTML + '</div>');
     refreshKellyUSD();

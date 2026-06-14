@@ -1071,6 +1071,13 @@ details[open] .faq-q::after { content: '−'; }
 .pr-headline .prh-meta { font-size:13px; color:var(--text-3); }
 .pr-headline .g { color:var(--green); font-weight:700; }
 
+/* Sizing + exposure bar (moved below the picks heading from the stats card) */
+.sizing-bar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; border:1px solid var(--border); border-radius:10px; background:rgba(255,255,255,.022); padding:9px 14px; margin-bottom:14px; }
+.sizing-bar .sizing-expo { margin-left:auto; font-family:var(--font-mono); font-size:12px; color:var(--text-3); display:inline-flex; align-items:center; gap:6px; }
+.sizing-bar .sizing-expo strong { color:var(--text); font-weight:700; }
+.sizing-bar .se-lbl { font-family:var(--font-ui); font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-4); }
+@media (max-width:640px) { .sizing-bar .sizing-expo { margin-left:0; width:100%; } }
+
 .pr-stack { display:block; }
 .pr-table { border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.022); overflow:hidden; margin-bottom:16px; }
 
