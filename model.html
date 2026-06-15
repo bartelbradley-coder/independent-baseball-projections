@@ -88,7 +88,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 .fbox { background: rgba(0,0,0,0.35); border: 1px solid rgba(99,102,241,0.13); border-radius: 7px; padding: 11px 13px; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.85; color: #c7d2fe; white-space: pre; }
 .v  { color: #34d399; } .fn { color: #a78bfa; } .n { color: #fbbf24; }
 .op { color: #e2e8f0; } .cm { color: #3f4f65; font-style: italic; font-size: 10px; } .hl { color: #f1f5f9; font-weight: 600; }
-.math-note { font-size: 9.5px; color: #475569; margin-top: 8px; line-height: 1.5; }
+.math-note { font-size: 9.5px; color: var(--text-3); margin-top: 8px; line-height: 1.5; }
 .math-note strong { color: #94a3b8; font-weight: 600; }
 
 /* ── SIGNAL IMPORTANCE ── */
@@ -108,7 +108,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 .ig-ind .sig-bar { background: linear-gradient(90deg, #4f46e5, #818cf8); }
 .ig-tea .sig-bar { background: linear-gradient(90deg, #0d9488, #5eead4); }
 .ig-amb .sig-bar { background: linear-gradient(90deg, #d97706, #fbbf24); }
-.sig-val { font-family: var(--font-mono); font-size: 8.5px; color: #475569; min-width: 28px; text-align: right; flex-shrink: 0; }
+.sig-val { font-family: var(--font-mono); font-size: 8.5px; color: var(--text-3); min-width: 28px; text-align: right; flex-shrink: 0; }
 
 /* ── FEATURE GRID ── */
 .feature-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
@@ -120,7 +120,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 .feat-item { margin-bottom: 9px; }
 .feat-item:last-child { margin-bottom: 0; }
 .feat-name { font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: #818cf8; margin-bottom: 2px; }
-.feat-desc { font-size: 10px; color: #475569; line-height: 1.42; }
+.feat-desc { font-size: 10px; color: var(--text-3); line-height: 1.42; }
 
 /* ── VALIDATION ── */
 .val-wrap { display: grid; grid-template-columns: auto 1fr; gap: 13px; }
@@ -137,7 +137,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 .roi-row { display: flex; align-items: center; gap: 11px; margin-bottom: 8px; }
 .roi-row:last-child { margin-bottom: 0; }
 .roi-row.baseline { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04); }
-.roi-year { font-family: var(--font-mono); font-size: 9px; color: #475569; min-width: 46px; }
+.roi-year { font-family: var(--font-mono); font-size: 9px; color: var(--text-3); min-width: 46px; }
 .roi-year.dim { color: #334155; }
 .roi-bar-wrap { flex: 1; height: 7px; background: rgba(255,255,255,0.03); border-radius: 4px; overflow: hidden; }
 .roi-fill { height: 100%; border-radius: 4px; }
@@ -209,7 +209,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.08em;
-  color: #475569;
+  color: var(--text-3);
   text-decoration: none;
   text-transform: uppercase;
   transition: color 0.15s;
@@ -255,7 +255,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   flex-shrink: 0; margin-top: 1px;
 }
 .ex-content { flex: 1; }
-.ex-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #475569; margin-bottom: 3px; }
+.ex-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 3px; }
 .ex-text { font-size: 11px; color: #3d4f65; line-height: 1.5; }
 .ex-text strong { color: #64748b; font-weight: 600; }
 .ex-note { font-size: 10px; color: #2d3d50; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 10px; line-height: 1.5; }
@@ -324,7 +324,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- QUICK SUMMARY -->
 <div class="quick-summary">
-  <div class="qs-title">How Independent Baseball Projections Works — At a Glance</div>
+  <h1 class="qs-title">How Independent Baseball Projections Works — At a Glance</h1>
   <ul class="qs-list">
     <li>Projects expected runs for each team using a <strong>Dual-Poisson model</strong> calibrated on park, weather, pitcher quality, and lineup data</li>
     <li><strong>33 log-odds adjustments</strong> refine the base win probability — pitcher quality, lineup confirmation, bullpen form, BvP, precipitation, line movement, and more</li>
@@ -349,7 +349,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- TODAY'S PICKS CTA -->
 <div style="margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
-  <div style="font-size:11px;color:#475569;line-height:1.5">
+  <div style="font-size:11px;color:var(--text-3);line-height:1.5">
     Curious how the model is priced against the market today?
   </div>
   <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-family:var(--font-display);font-size:11.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;padding:8px 16px;border-radius:7px;box-shadow:0 0 16px rgba(99,102,241,0.25);transition:opacity 0.15s" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
@@ -406,7 +406,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   <div style="font-size:18px;flex-shrink:0;margin-top:2px">ℹ️</div>
   <div>
     <div style="font-size:12px;font-weight:700;color:#818cf8;margin-bottom:6px">Independent Baseball Projections is a market-informed model</div>
-    <p style="font-size:11.5px;color:#475569;line-height:1.65;margin-bottom:6px">Raw team strength, pitching, lineup, park, weather, and situational signals generate the baseline projection. Market information — specifically the book O/U total and Pinnacle no-vig probability — is used as a stabilizing input (via the <code style="font-family:var(--font-mono);font-size:10px;color:#c7d2fe">book_total_constraint</code> factor, α₁₆) to reduce extreme run-total outputs and align the model with the sharp betting market's run environment. After Platt calibration, the final Independent Baseball Projections probability is compared against the no-vig Pinnacle market probability to identify remaining pricing gaps where the model and market diverge.</p>
+    <p style="font-size:11.5px;color:var(--text-3);line-height:1.65;margin-bottom:6px">Raw team strength, pitching, lineup, park, weather, and situational signals generate the baseline projection. Market information — specifically the book O/U total and Pinnacle no-vig probability — is used as a stabilizing input (via the <code style="font-family:var(--font-mono);font-size:10px;color:#c7d2fe">book_total_constraint</code> factor, α₁₆) to reduce extreme run-total outputs and align the model with the sharp betting market's run environment. After Platt calibration, the final Independent Baseball Projections probability is compared against the no-vig Pinnacle market probability to identify remaining pricing gaps where the model and market diverge.</p>
     <p style="font-size:10.5px;color:#334155;font-style:italic;line-height:1.5;margin:0">Because the market is used as both a stabilizing input and a comparison benchmark, Independent Baseball Projections should be understood as a market-informed model rather than a fully market-independent projection. This is disclosed transparently; the model still identifies genuine pricing gaps in approximately 15–25% of games per day.</p>
   </div>
 </div>

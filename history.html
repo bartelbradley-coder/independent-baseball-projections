@@ -238,7 +238,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 
 <div class="page">
 
-  <div class="page-title">Pick History</div>
+  <h1 class="page-title">Pick History</h1>
   <div class="page-subtitle">A complete log of every posted pick — team, odds, stake, result, CLV, and units. Filterable, sortable, and exportable.</div>
 
   <!-- Live section header + compact metrics -->
@@ -302,7 +302,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
       <button class="filter-btn" data-filter="value">5–8% Edge</button>
       <button class="filter-btn" data-filter="marginal-edge">2–5% Edge</button>
       <div class="filter-sep"></div>
-      <select class="month-select" id="side-select" onchange="activeSideFilter=this.value;renderTable(allRows)" title="Filter by side">
+      <select class="month-select" id="side-select" onchange="activeSideFilter=this.value;renderTable(allRows)" title="Filter by side" aria-label="Filter by side">
         <option value="all">All sides</option>
         <option value="dog">🐶 Dogs</option>
         <option value="fav">Favs</option>
@@ -310,11 +310,11 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
         <option value="away">Away</option>
       </select>
       <div class="filter-sep"></div>
-      <input class="search-input" id="search-input" type="text" placeholder="🔍 Team or pitcher…" autocomplete="off">
+      <input class="search-input" id="search-input" type="text" placeholder="🔍 Team or pitcher…" autocomplete="off" aria-label="Search by team or pitcher">
       <div class="filter-sep"></div>
       <div class="threshold-wrap" title="Show only picks where model edge ≥ this value">
         <span class="threshold-lbl">Min edge</span>
-        <input class="threshold-input" id="threshold-input" type="number" min="0" max="20" step="0.5" value="0" autocomplete="off">
+        <input class="threshold-input" id="threshold-input" type="number" min="0" max="20" step="0.5" value="0" autocomplete="off" aria-label="Minimum edge percentage">
         <span class="threshold-pct">%</span>
       </div>
       <button class="filter-btn" id="csv-export-btn" style="margin-left:auto" onclick="exportCSV()">⬇ CSV</button>
@@ -626,7 +626,7 @@ function renderTable(rows) {
   const thHTML = cols.map(c => {
     let cls = c.cls;
     if (c.key === sortCol) cls += (sortDir === 'asc' ? ' sort-asc' : ' sort-desc');
-    return `<th class="${cls.trim()}" data-col="${c.key}">${c.label}</th>`;
+    return `<th scope="col" class="${cls.trim()}" data-col="${c.key}">${c.label}</th>`;
   }).join('');
 
   const trHTML = filtered.map(r => {

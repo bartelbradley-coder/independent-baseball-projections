@@ -233,7 +233,7 @@
 
 <div class="page">
 
-  <div class="page-title">Model Dashboard</div>
+  <h1 class="page-title">Model Dashboard</h1>
   <div class="page-subtitle">High-level model validation — bankroll growth, CLV, edge-tier ROI, strategy comparison, and backtested results.</div>
 
   <!-- Live section header + compact orientation strip -->
@@ -345,7 +345,7 @@
       </div>
       <div id="edge-bars" style="margin-bottom:16px"></div>
       <table class="compare-table" id="edge-table">
-        <thead><tr><th>Tier</th><th>Bets</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+        <thead><tr><th scope="col">Tier</th><th scope="col">Bets</th><th scope="col">W–L</th><th scope="col">Win%</th><th scope="col">ROI</th><th scope="col">Units</th></tr></thead>
         <tbody id="edge-tbody"><tr><td colspan="6" style="color:var(--text-4);padding:14px 10px">Populates as picks settle.</td></tr></tbody>
       </table>
     </div>
@@ -362,7 +362,7 @@
       <div class="card-title" style="margin:20px 0 4px">Performance by Segment</div>
       <div class="card-sub" style="margin-bottom:12px">ROI holding up across bet types is a sign the edge is broad, not concentrated in one lucky bucket.</div>
       <table class="compare-table" id="segment-table">
-        <thead><tr><th>Segment</th><th>Bets</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+        <thead><tr><th scope="col">Segment</th><th scope="col">Bets</th><th scope="col">W–L</th><th scope="col">Win%</th><th scope="col">ROI</th><th scope="col">Units</th></tr></thead>
         <tbody id="segment-tbody"></tbody>
       </table>
     </div>
@@ -379,8 +379,8 @@
       <table class="compare-table" id="threshold-table">
         <thead>
           <tr>
-            <th>Min Edge</th><th>Bets</th><th>W–L</th><th>Win%</th>
-            <th>ROI / Bet</th><th>Total Units</th><th style="width:100px">ROI</th>
+            <th scope="col">Min Edge</th><th scope="col">Bets</th><th scope="col">W–L</th><th scope="col">Win%</th>
+            <th scope="col">ROI / Bet</th><th scope="col">Total Units</th><th scope="col" style="width:100px">ROI</th>
           </tr>
         </thead>
         <tbody id="threshold-tbody">
@@ -451,7 +451,7 @@
           <div class="card-title">🏆 Best Teams by ROI</div>
           <div class="card-sub">Teams the model has found the most value on</div>
           <table class="edge-table" id="top-teams-table">
-            <thead><tr><th>Team</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+            <thead><tr><th scope="col">Team</th><th scope="col">W–L</th><th scope="col">Win%</th><th scope="col">ROI</th><th scope="col">Units</th></tr></thead>
             <tbody id="top-teams-tbody"></tbody>
           </table>
         </div>
@@ -459,7 +459,7 @@
           <div class="card-title">📉 Underperforming Teams</div>
           <div class="card-sub">Teams where model picks have underdelivered</div>
           <table class="edge-table" id="bot-teams-table">
-            <thead><tr><th>Team</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+            <thead><tr><th scope="col">Team</th><th scope="col">W–L</th><th scope="col">Win%</th><th scope="col">ROI</th><th scope="col">Units</th></tr></thead>
             <tbody id="bot-teams-tbody"></tbody>
           </table>
         </div>
@@ -474,7 +474,7 @@
           <div class="card-title">📈 Top Pitchers by ROI</div>
           <div class="card-sub">Best-performing starters when model picks them</div>
           <table class="edge-table" id="top-pitchers-table">
-            <thead><tr><th>Pitcher</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+            <thead><tr><th scope="col">Pitcher</th><th scope="col">W–L</th><th scope="col">Win%</th><th scope="col">ROI</th><th scope="col">Units</th></tr></thead>
             <tbody id="top-pitchers-tbody"><tr><td colspan="5" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
           </table>
         </div>
@@ -482,7 +482,7 @@
           <div class="card-title">📉 Underperforming Pitchers</div>
           <div class="card-sub">Starters the model over-rated this season</div>
           <table class="edge-table" id="bot-pitchers-table">
-            <thead><tr><th>Pitcher</th><th>W–L</th><th>Win%</th><th>ROI</th><th>Units</th></tr></thead>
+            <thead><tr><th scope="col">Pitcher</th><th scope="col">W–L</th><th scope="col">Win%</th><th scope="col">ROI</th><th scope="col">Units</th></tr></thead>
             <tbody id="bot-pitchers-tbody"><tr><td colspan="5" style="color:var(--text-4);padding:16px 10px">Loading…</td></tr></tbody>
           </table>
         </div>
