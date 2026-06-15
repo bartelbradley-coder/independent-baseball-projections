@@ -518,7 +518,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- CORE MATHEMATICS -->
 <div class="section math-coll" id="section-math">
-  <h2 class="sec-lbl coll-trigger" onclick="toggleMathSection(this)">Core Mathematics — Formulas Behind Each Pipeline Stage<span class="coll-arrow-m">▾</span></h2>
+  <h2 class="sec-lbl coll-trigger" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleMathSection(this)">Core Mathematics — Formulas Behind Each Pipeline Stage<span class="coll-arrow-m">▾</span></h2>
   <div class="coll-body-m">
   <div class="math-grid">
 
@@ -853,7 +853,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- OTHER MARKETS -->
 <div class="section math-coll">
-  <h2 class="sec-lbl coll-trigger" onclick="toggleMathSection(this)">Other Markets — Run Line &amp; Over/Under Calibration<span class="coll-arrow-m">▾</span></h2>
+  <h2 class="sec-lbl coll-trigger" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleMathSection(this)">Other Markets — Run Line &amp; Over/Under Calibration<span class="coll-arrow-m">▾</span></h2>
   <div class="coll-body-m">
   <div class="math-grid">
 
@@ -957,7 +957,8 @@ Bias by total line:
 </div>
 <script>
 function toggleMathSection(el) {
-  el.closest('.math-coll').classList.toggle('open');
+  const open = el.closest('.math-coll').classList.toggle('open');
+  el.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 </script>
 </body>
