@@ -4394,10 +4394,10 @@ function prRowCollapsed(p, isBest, gameResult) {
 
   // Sub-line: matchup, then (pregame only) time + the playable-to floor.
   // Playable-to before time: on a narrow sub-line the (less critical) game time
-  // truncates first, keeping the betting-critical "good to +X" visible.
+  // truncates first, keeping the betting-critical "Playable to +X" visible.
   const subBits = [`${away} @ ${home}`];
   if (!live && !over) {
-    if (ptStr) subBits.push(`<span class="pr-good">good to ${ptStr}</span>`);
+    if (ptStr) subBits.push(`<span class="pr-good">Playable to ${ptStr}</span>`);
     if (timeStr) subBits.push(timeStr);
   }
   const star = isBest ? '<span class="pr-star" aria-hidden="true">★</span>' : '';
