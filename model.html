@@ -53,7 +53,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 /* ── SECTION ── */
 .section { margin-bottom: 24px; }
-.sec-lbl { font-size: 8.5px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #334155; margin-bottom: 11px; display: flex; align-items: center; gap: 10px; }
+.sec-lbl { font-size: 8.5px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: var(--text-4); margin-top: 0; margin-bottom: 11px; display: flex; align-items: center; gap: 10px; }
 .sec-lbl::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.04); }
 
 /* ── PIPELINE ── */
@@ -297,7 +297,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
     <a class="nav-link" href="preview.html">Tomorrow</a>
     <a class="nav-link" href="history.html">Pick History</a>
     <a class="nav-link" href="performance.html">Model Dashboard</a>
-    <a class="nav-link active" href="model.html">Model</a>
+    <a class="nav-link active" href="model.html">Methodology</a>
   </div>
   <div class="nav-right">
   </div>
@@ -414,7 +414,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- PIPELINE -->
 <div class="section" id="section-pipeline">
-  <div class="sec-lbl">Inference Pipeline — Input → Transform → Output at Each Stage</div>
+  <h2 class="sec-lbl">Inference Pipeline — Input → Transform → Output at Each Stage</h2>
   <div class="pipeline">
 
     <div class="pipe-stage">
@@ -518,7 +518,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- CORE MATHEMATICS -->
 <div class="section math-coll" id="section-math">
-  <div class="sec-lbl coll-trigger" onclick="toggleMathSection(this)">Core Mathematics — Formulas Behind Each Pipeline Stage<span class="coll-arrow-m">▾</span></div>
+  <h2 class="sec-lbl coll-trigger" onclick="toggleMathSection(this)">Core Mathematics — Formulas Behind Each Pipeline Stage<span class="coll-arrow-m">▾</span></h2>
   <div class="coll-body-m">
   <div class="math-grid">
 
@@ -616,7 +616,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- SIGNAL IMPORTANCE -->
 <div class="section" id="section-signals">
-  <div class="sec-lbl">Signal Importance — Avg. Abs. Log-Odds Contribution per Factor (αᵢ) · Relative Magnitudes Approximate · v2 = 2026 update</div>
+  <h2 class="sec-lbl">Signal Importance — Avg. Abs. Log-Odds Contribution per Factor (αᵢ) · Relative Magnitudes Approximate · v2 = 2026 update</h2>
   <div style="font-size:11px;color:var(--text-3);line-height:1.6;margin:-6px 0 16px;padding:9px 12px;border:1px solid rgba(245,158,11,0.18);background:rgba(245,158,11,0.05);border-radius:8px">
     Importances reflect the model's <em>design</em>; magnitudes are approximate. Several factors marked <strong>inactive</strong> below do not currently affect live picks — retired after backtest validation (bullpen fatigue, pitcher-form slope) or awaiting data wiring (catcher framing, bullpen availability, career H2H matchup). In practice, live discrimination is concentrated in the pitcher-xFIP and run-environment core; the situational adjustments are deliberately small.
   </div>
@@ -687,7 +687,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- FEATURE ENGINEERING -->
 <div class="section" id="section-features">
-  <div class="sec-lbl">Feature Engineering — 33-Signal Architecture Across 4 Layers (v2/v3: 10 new signals added 2026 · a few currently inactive, see note above)</div>
+  <h2 class="sec-lbl">Feature Engineering — 33-Signal Architecture Across 4 Layers (v2/v3: 10 new signals added 2026 · a few currently inactive, see note above)</h2>
   <div class="feature-grid">
 
     <div class="feat-col">
@@ -755,7 +755,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- FROM MODEL TO PICK -->
 <div class="section" id="section-example">
-  <div class="sec-lbl">From Model to Pick — A Practical Example</div>
+  <h2 class="sec-lbl">From Model to Pick — A Practical Example</h2>
   <div class="example-card">
     <div class="ex-row">
       <div class="ex-step">
@@ -793,7 +793,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- VALIDATION -->
 <div class="section" id="section-validation">
-  <div class="sec-lbl">Out-of-Sample Validation — 2022–2024 · Flat $100/Bet · 5%+ Edge Threshold</div>
+  <h2 class="sec-lbl">Out-of-Sample Validation — 2022–2024 · Flat $100/Bet · 4%+ Edge Threshold</h2>
   <div class="val-wrap">
 
     <div class="val-metrics">
@@ -853,7 +853,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- OTHER MARKETS -->
 <div class="section math-coll">
-  <div class="sec-lbl coll-trigger" onclick="toggleMathSection(this)">Other Markets — Run Line &amp; Over/Under Calibration<span class="coll-arrow-m">▾</span></div>
+  <h2 class="sec-lbl coll-trigger" onclick="toggleMathSection(this)">Other Markets — Run Line &amp; Over/Under Calibration<span class="coll-arrow-m">▾</span></h2>
   <div class="coll-body-m">
   <div class="math-grid">
 

@@ -896,7 +896,7 @@ function renderBankrollChart(h) {
   const kellyCol  = kellyEnd >= START ? '#818cf8' : 'var(--red)';  // indigo for Kelly line
 
   el.innerHTML = `
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:100px">
+    <svg role="img" aria-label="Bankroll growth over the season: flat $100 per bet versus half-Kelly staking" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:100px">
       <line x1="0" y1="${zeroY}" x2="${W}" y2="${zeroY}" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="4 3"/>
       <path d="${areaPath}" fill="${col}" fill-opacity="0.07"/>
       <path d="${linePath}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"/>
@@ -954,7 +954,7 @@ function renderCLV(p) {
   const posCount = vals.filter(v => v > 0).length;
   const pctPos   = Math.round(posCount / vals.length * 100);
   el.innerHTML = `
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:${H}px">
+    <svg role="img" aria-label="Closing-line value per pick: green bars beat the closing line, red bars did not" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:${H}px">
       <line x1="${padL}" y1="${zeroY.toFixed(1)}" x2="${W-padR}" y2="${zeroY.toFixed(1)}" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4 3"/>
       ${bars}
     </svg>
@@ -987,7 +987,7 @@ function _monthlyChartSVG(monthly) {
     s += `<text x="${cx.toFixed(1)}" y="${(zeroY+halfH+14).toFixed(1)}" text-anchor="middle" font-size="9" fill="rgba(148,163,184,0.65)">${m.month}</text>`;
     if (m.bets != null) s += `<text x="${cx.toFixed(1)}" y="${(zeroY+halfH+26).toFixed(1)}" text-anchor="middle" font-size="8" fill="rgba(148,163,184,0.38)">${m.bets}b</text>`;
   });
-  return `<svg viewBox="0 0 ${W} ${totalH}" preserveAspectRatio="xMidYMid meet" style="display:block;width:100%;height:auto">
+  return `<svg role="img" aria-label="Monthly return on investment by month" viewBox="0 0 ${W} ${totalH}" preserveAspectRatio="xMidYMid meet" style="display:block;width:100%;height:auto">
     <line x1="${padL}" y1="${zeroY.toFixed(1)}" x2="${W-padR}" y2="${zeroY.toFixed(1)}" stroke="rgba(255,255,255,0.13)" stroke-width="1" stroke-dasharray="3 3"/>
     ${s}
   </svg>`;
@@ -1029,7 +1029,7 @@ function renderCurve(curve) {
   const col = endVal >= 0 ? 'var(--green)' : 'var(--red)';
   const [lx, ly] = pts[pts.length - 1];
   el.innerHTML = `
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:90px">
+    <svg role="img" aria-label="Cumulative profit and loss in units across settled picks" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:90px">
       <path d="${areaPath}" style="fill:${col};fill-opacity:0.12"/>
       <line x1="0" y1="${zeroY.toFixed(1)}" x2="${W}" y2="${zeroY.toFixed(1)}" style="stroke:rgba(255,255,255,0.15);stroke-width:1;stroke-dasharray:4 3"/>
       <path d="${linePath}" style="fill:none;stroke:${col};stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round"/>
@@ -1079,7 +1079,7 @@ function renderRollingWinRate(rows) {
     ` L${lastX},${beY} L${firstX},${beY} Z`;
 
   document.getElementById('rolling-chart').innerHTML = `
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:80px">
+    <svg role="img" aria-label="Rolling 20-pick win rate over time" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:80px">
       ${gridLines}
       <line x1="0" y1="${beY}" x2="${W}" y2="${beY}" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="5 3"/>
       <path d="${areaPath}" fill="${areaCol}"/>
@@ -1186,7 +1186,7 @@ function renderCalendar(rows) {
 
   const totalCol = totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
   document.getElementById('calendar-wrap').innerHTML = `
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:${H}px">
+    <svg role="img" aria-label="Daily profit and loss by day, in units" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:${H}px">
       <line x1="${padL}" y1="${zeroYf}" x2="${W - padR}" y2="${zeroYf}" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="4 3"/>
       ${barsHTML}
       ${labelsHTML}
