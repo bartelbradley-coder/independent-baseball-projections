@@ -518,7 +518,7 @@ function renderSummary(rows) {
 
   document.getElementById('summary-row').innerHTML = `
     <div class="stat-pill"><div class="stat-lbl">2026 Record</div><div class="stat-val white">${wins}W–${losses}L</div><div class="stat-sub">${settled.length} bets</div></div>
-    <div class="stat-pill"><div class="stat-lbl">Season P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${_fmtPnl(totalPnl)}</div><div class="stat-sub">${pnlMode==='kelly'?'half-Kelly sized':pnlMode==='dollars'&&_bankroll>0?`$${_bankroll} bankroll`:'flat $100/bet'}</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Season P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${_fmtPnl(totalPnl)}</div><div class="stat-sub">${pnlMode==='kelly'?'fractional Kelly sized':pnlMode==='dollars'&&_bankroll>0?`$${_bankroll} bankroll`:'flat $100/bet'}</div></div>
     <div class="stat-pill"><div class="stat-lbl">ROI / Bet</div><div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${pct(roi)}</div><div class="stat-sub">per settled bet</div></div>
     <div class="stat-pill"><div class="stat-lbl">Win Rate</div><div class="stat-val white">${winRate != null ? (winRate*100).toFixed(1)+'%' : '—'}</div><div class="stat-sub">~52% break-even</div></div>
     ${avgClv != null ? `<div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${avgClv >= 0 ? 'green' : 'red'}">${pct(avgClv)}</div><div class="stat-sub">n=${clvRows.length}</div></div>` : ''}
