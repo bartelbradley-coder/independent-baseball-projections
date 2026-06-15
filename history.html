@@ -214,6 +214,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 </script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <nav>
   <a class="nav-brand" href="index.html">
@@ -227,7 +228,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
     <a class="nav-link" href="performance.html">Model Dashboard</a>
     <a class="nav-link" href="model.html">Methodology</a>
   </div>
-  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu">
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
   <div class="nav-right">
@@ -236,7 +237,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
   </div>
 </nav>
 
-<div class="page">
+<div class="page" id="main" role="main" tabindex="-1">
 
   <h1 class="page-title">Pick History</h1>
   <div class="page-subtitle">A complete log of every posted pick — team, odds, stake, result, CLV, and units. Filterable, sortable, and exportable.</div>
@@ -280,7 +281,7 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 
   <!-- Streak + Breakdown stats (#4) — collapsible, collapsed by default -->
   <div class="section" id="breakdown-section" style="display:none">
-    <div class="collapsible-header" id="streak-toggle" onclick="toggleStreakSplits()">
+    <div class="collapsible-header" id="streak-toggle" role="button" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleStreakSplits()">
       <div class="sec-lbl" style="margin-bottom:0">Streak &amp; Splits</div>
       <span class="collapsible-arrow" id="streak-arrow">▾</span>
     </div>
@@ -560,7 +561,7 @@ function renderThresholdSummary(rows) {
     ${avgClv != null ? `<div class="tsb-divider"></div>
     <div class="tsb-stat"><div class="tsb-val" style="color:${clvCol}">${pct(avgClv)}</div><div class="tsb-sub">Avg CLV</div></div>` : ''}
     <span style="font-size:10px;color:var(--text-4);margin-left:4px">${shown} picks shown · ${dropped} below threshold hidden</span>
-    <span class="tsb-reset" onclick="document.getElementById('threshold-input').value=0;activeThreshold=0;renderThresholdSummary(allRows);renderTable(allRows);">Reset</span>`;
+    <span class="tsb-reset" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="document.getElementById('threshold-input').value=0;activeThreshold=0;renderThresholdSummary(allRows);renderTable(allRows);">Reset</span>`;
 }
 
 function getFilteredSorted(rows) {
@@ -626,7 +627,7 @@ function renderTable(rows) {
   const thHTML = cols.map(c => {
     let cls = c.cls;
     if (c.key === sortCol) cls += (sortDir === 'asc' ? ' sort-asc' : ' sort-desc');
-    return `<th scope="col" class="${cls.trim()}" data-col="${c.key}">${c.label}</th>`;
+    return `<th scope="col" tabindex="0" aria-sort="${c.key === sortCol ? (sortDir === 'asc' ? 'ascending' : 'descending') : 'none'}" class="${cls.trim()}" data-col="${c.key}">${c.label}</th>`;
   }).join('');
 
   const trHTML = filtered.map(r => {
@@ -671,12 +672,14 @@ function renderTable(rows) {
     </table>`;
 
   document.querySelectorAll('#table-wrap .picks-table th').forEach(th => {
-    th.addEventListener('click', () => {
+    const doSort = () => {
       const col = th.dataset.col;
       if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
       else { sortCol = col; sortDir = 'desc'; }
       renderTable(allRows);
-    });
+    };
+    th.addEventListener('click', doSort);
+    th.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doSort(); } });
   });
 }
 
@@ -769,6 +772,7 @@ function toggleStreakSplits() {
   const isOpen = body.classList.contains('open');
   body.classList.toggle('open', !isOpen);
   header.classList.toggle('open', !isOpen);
+  header.setAttribute('aria-expanded', String(!isOpen));
 }
 
 // ── CSV export ────────────────────────────────────────────────────────────────
@@ -926,7 +930,7 @@ function toggleNav() {
   const links = document.querySelector('.nav-links');
   const btn   = document.getElementById('nav-hamburger');
   if (links) links.classList.toggle('open');
-  if (btn)   btn.classList.toggle('open');
+  if (btn) { btn.classList.toggle('open'); btn.setAttribute('aria-expanded', btn.classList.contains('open') ? 'true' : 'false'); }
 }
 // Close nav when a link is clicked on mobile
 document.querySelectorAll('.nav-link').forEach(el => {

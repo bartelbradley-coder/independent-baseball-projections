@@ -2354,7 +2354,7 @@
     <a class="nav-link" href="performance.html">Model Dashboard</a>
     <a class="nav-link" href="model.html">Methodology</a>
   </div>
-  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu">
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
   <div class="nav-right">
@@ -5275,7 +5275,7 @@ function toggleNav() {
   const links = document.querySelector('.nav-links');
   const btn   = document.getElementById('nav-hamburger');
   if (links) links.classList.toggle('open');
-  if (btn)   btn.classList.toggle('open');
+  if (btn) { btn.classList.toggle('open'); btn.setAttribute('aria-expanded', btn.classList.contains('open') ? 'true' : 'false'); }
 }
 // Close nav when a link is clicked on mobile
 document.querySelectorAll('.nav-link').forEach(el => {

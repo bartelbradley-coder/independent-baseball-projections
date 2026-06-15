@@ -209,6 +209,7 @@
 </script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <nav>
   <a class="nav-brand" href="index.html">
@@ -222,7 +223,7 @@
     <a class="nav-link active" href="performance.html">Model Dashboard</a>
     <a class="nav-link" href="model.html">Methodology</a>
   </div>
-  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu">
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
   <div class="nav-right">
@@ -231,7 +232,7 @@
   </div>
 </nav>
 
-<div class="page">
+<div class="page" id="main" role="main" tabindex="-1">
 
   <h1 class="page-title">Model Dashboard</h1>
   <div class="page-subtitle">High-level model validation — bankroll growth, CLV, edge-tier ROI, strategy comparison, and backtested results.</div>
@@ -401,7 +402,7 @@
   <div class="section">
     <div class="card" style="padding:16px 20px">
       <div class="collapsible-section" id="naive-collapsible">
-        <div class="collapsible-trigger" onclick="toggleSection('naive-body', 'naive-collapsible')">
+        <div class="collapsible-trigger" role="button" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleSection('naive-body', 'naive-collapsible')">
           Model vs. Naive Strategies — 2026 Season <span class="coll-arrow">▾</span>
         </div>
         <div id="naive-body" class="collapsible-content">
@@ -430,7 +431,7 @@
   <div class="section" id="calendar-section" style="display:none">
     <div class="card" style="padding:16px 20px">
       <div class="collapsible-section" id="calendar-collapsible">
-        <div class="collapsible-trigger" onclick="toggleSection('calendar-body', 'calendar-collapsible')">
+        <div class="collapsible-trigger" role="button" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleSection('calendar-body', 'calendar-collapsible')">
           Daily P&amp;L — 2026 Season <span class="coll-arrow">▾</span>
         </div>
         <div id="calendar-body" class="collapsible-content">
@@ -495,7 +496,7 @@
   <div class="section" id="calib-section" style="display:none">
     <div class="card" style="padding:16px 20px">
       <div class="collapsible-section" id="calib-collapsible">
-        <div class="collapsible-trigger" onclick="toggleSection('calib-body', 'calib-collapsible')">
+        <div class="collapsible-trigger" role="button" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleSection('calib-body', 'calib-collapsible')">
           Model Calibration — Predicted vs. Actual Win Rate <span class="coll-arrow">▾</span>
         </div>
         <div id="calib-body" class="collapsible-content">
@@ -509,7 +510,7 @@
   <!-- CHANGE 4: Backtest — collapsible -->
   <div class="collapsible-section" id="backtest-collapsible">
     <div class="results-section backtest-section">
-      <div class="collapsible-trigger" onclick="toggleSection('backtest-body', 'backtest-collapsible')" style="padding:0;margin-bottom:0">
+      <div class="collapsible-trigger" role="button" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleSection('backtest-body', 'backtest-collapsible')" style="padding:0;margin-bottom:0">
         <div style="display:flex;align-items:center;gap:12px">
           <div class="section-badge backtest-badge-lg">BACKTEST</div>
           <div class="section-sub" style="margin:0">Historical model validation using prior seasons. Not live betting results.</div>
@@ -624,6 +625,8 @@ function toggleSection(bodyId, sectionId) {
   if (!section || !body) return;
   const isOpen = section.classList.toggle('open');
   body.style.display = isOpen ? 'block' : 'none';
+  const trigger = section.querySelector('.collapsible-trigger');
+  if (trigger) trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 }
 
 function renderTodayPerfBanner(picks, scores) {
@@ -1511,7 +1514,7 @@ function toggleNav() {
   const links = document.querySelector('.nav-links');
   const btn   = document.getElementById('nav-hamburger');
   if (links) links.classList.toggle('open');
-  if (btn)   btn.classList.toggle('open');
+  if (btn) { btn.classList.toggle('open'); btn.setAttribute('aria-expanded', btn.classList.contains('open') ? 'true' : 'false'); }
 }
 // Close nav when a link is clicked on mobile
 document.querySelectorAll('.nav-link').forEach(el => {

@@ -40,6 +40,7 @@
 </script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <nav>
   <a class="nav-brand" href="index.html">
@@ -53,7 +54,7 @@
     <a class="nav-link" href="performance.html">Model Dashboard</a>
     <a class="nav-link" href="model.html">Methodology</a>
   </div>
-  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu">
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
   <div class="nav-right">
@@ -61,7 +62,7 @@
   </div>
 </nav>
 
-<div class="page">
+<div class="page" id="main" role="main" tabindex="-1">
 
   <div class="page-header">
     <h1 class="page-title">Tomorrow's Opening Lines</h1>
@@ -134,7 +135,7 @@ function toggleNav() {
   const btn   = document.getElementById('nav-hamburger');
   if (!links) return;
   links.classList.toggle('open');
-  btn?.classList.toggle('open');
+  if (btn) { btn.classList.toggle('open'); btn.setAttribute('aria-expanded', btn.classList.contains('open') ? 'true' : 'false'); }
 }
 document.querySelectorAll('.nav-link').forEach(el => {
   el.addEventListener('click', () => {
