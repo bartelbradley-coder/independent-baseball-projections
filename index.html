@@ -2369,9 +2369,9 @@
   <header class="hero">
     <div class="hero-grid">
       <div class="hero-copy">
-        <div class="hero-eyebrow">Quantitative MLB Model · 2026 Season</div>
+        <div class="hero-eyebrow">100% Free in 2026 · Quantitative MLB Model</div>
         <h1 class="hero-title">Bet the number,<br>not the noise.</h1>
-        <p class="hero-sub">Independent Baseball Projections models a fair win probability for every MLB game, then flags the bets where our line beats the book — every pick logged before first pitch and tracked in full.</p>
+        <p class="hero-sub">Independent Baseball Projections models a fair win probability for every MLB game, then flags the bets where our line beats the book — every pick logged before first pitch and tracked in full. Free all season, no paywall or upsell.</p>
         <p class="hero-proof" id="hero-proof">Every pick graded and tracked — the full record is public, win or loss.</p>
         <div class="hero-cta">
           <a class="hero-btn hero-btn-primary" href="#picks-anchor">See today's <span id="hero-pick-count"></span> picks <span class="hero-arrow">↓</span></a>
@@ -2466,7 +2466,7 @@
 
   <!-- MARGINAL PICKS -->
   <div class="section" id="marginal-section" style="display:none">
-    <h2 class="sec-lbl">Near-Miss Signals — Below 2% Threshold</h2>
+    <h2 class="sec-lbl">Near-Miss Signals — Below 4% Threshold</h2>
     <div style="font-size:10px;color:var(--text-4);margin-bottom:12px;margin-top:-4px">
       Model found edge below the posting threshold. Tracked for transparency — not recommended bets.
     </div>
@@ -2478,6 +2478,25 @@
   <div id="preview-container"></div>
 
   <!-- Yesterday's Results, Week Strip, and Performance Charts removed -->
+
+  <!-- HOW TO USE THESE PICKS -->
+  <div class="section" id="how-to-use">
+    <h2 class="sec-lbl">How to use these picks</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:12px">
+      <div style="padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.02)">
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">1 · Shop the best price</div>
+        <div style="font-size:12px;color:var(--text-3);line-height:1.7">We benchmark against Pinnacle's no-vig line, but you don't need Pinnacle — bet at whichever book gives you the best number. A better price is a bigger edge.</div>
+      </div>
+      <div style="padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.02)">
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">2 · Respect the "Playable to" price</div>
+        <div style="font-size:12px;color:var(--text-3);line-height:1.7">Each pick lists the worst odds still worth betting. Lines move fast after we post — if the price has dropped past that number, the edge is gone. Pass rather than chase.</div>
+      </div>
+      <div style="padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.02)">
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">3 · Size with discipline</div>
+        <div style="font-size:12px;color:var(--text-3);line-height:1.7">Stake flat units or fractional Kelly — never more than you can afford to lose. Consistent sizing is what turns a real edge into long-run profit and survives the variance.</div>
+      </div>
+    </div>
+  </div>
 
   <!-- EMAIL CAPTURE -->
   <section class="email-capture-section" id="email-capture">
@@ -2519,7 +2538,7 @@
       <p style="font-size:12px;color:var(--text-3);line-height:1.7;margin-bottom:14px">
         Pitcher quality, lineup status, park factors, weather, bullpen quality, BvP career matchup, arsenal fit, market audit, and more — applied as model adjustments before the market edge comparison.
         The final Independent Baseball Projections probability is compared against the no-vig Pinnacle probability to identify pricing gaps.
-        Only picks with ≥2% edge vs. Pinnacle are posted.
+        Only picks with ≥4% edge vs. Pinnacle are posted.
       </p>
       <div class="trust-strip" style="margin-bottom:14px">
         <div class="trust-card"><div class="trust-label">Model</div><div class="trust-val">Dual-Poisson + log-odds</div></div>
@@ -2540,7 +2559,7 @@
       </details>
       <details class="faq-item" style="margin-bottom:6px">
         <summary class="faq-q">How is edge calculated?</summary>
-        <div class="faq-a">Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). Independent Baseball Projections only posts picks with at least 2% edge vs. Pinnacle's no-vig line.</div>
+        <div class="faq-a">Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). Independent Baseball Projections only posts picks with at least 4% edge vs. Pinnacle's no-vig line.</div>
       </details>
       <details class="faq-item">
         <summary class="faq-q">Does past performance guarantee future results?</summary>
@@ -2551,6 +2570,14 @@
       </div>
     </div>
   </details>
+
+  <!-- WHO'S BEHIND THIS -->
+  <section class="who-runs" style="max-width:680px;margin:22px auto 0;padding:18px 20px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.02)">
+    <div style="font-family:var(--font-display,'Barlow Condensed',system-ui,sans-serif);font-size:13px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-2);margin-bottom:10px">Who's behind this</div>
+    <p style="font-size:13px;color:var(--text-3);line-height:1.8;margin:0">
+      Independent Baseball Projections is a one-person project, built and run by <strong style="color:var(--text)">BB</strong>. I built an independent win-probability model from scratch and post every pick publicly — timestamped before first pitch, never deleted after a loss — to prove the edge is real instead of asking you to take it on faith. Free during the 2026 track-record build.
+    </p>
+  </section>
 
 </div>
 
@@ -2574,7 +2601,9 @@
   </div>
   <div class="footer-brand" style="display:none">Independent Baseball Projections · Bet the number, not the noise. · Every pick logged before first pitch.</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
+  <div class="rg-resource" style="margin-top:8px;font-size:10px;color:var(--text-3);line-height:1.6">Gambling problem? Call <a href="tel:18005224700" style="color:var(--text-2)">1-800-GAMBLER</a> or visit <a href="https://www.ncpgambling.org" target="_blank" rel="noopener" style="color:var(--text-2)">ncpgambling.org</a>.</div>
   <div class="footer-links"><a href="model.html">Methodology</a> · <a href="history.html">Pick History</a> · <a href="performance.html">Model Dashboard</a></div>
+  <div class="footer-byline" style="margin-top:10px;font-size:10px;color:var(--text-4);letter-spacing:0.04em">Built &amp; run by BB · an independent one-person project</div>
 </footer>
 
 <!-- ── Share card modal ── -->
@@ -3823,7 +3852,7 @@ function renderEmptyState(data, hist, marginal = []) {
       <div class="stat-pill"><div class="stat-lbl">2026 Season</div><div class="stat-val white">${s.wins}W–${s.losses}L</div><div class="stat-sub">${s.units >= 0 ? '+' : ''}${(s.units||0).toFixed(1)}u</div></div>
     </div>` : '';
 
-  // Near-miss panel: show signals that nearly cleared the 2% threshold
+  // Near-miss panel: show signals that nearly cleared the 4% threshold
   let nearMissHTML = '';
   if (marginal.length > 0) {
     const rows = marginal.map(p => `
@@ -3836,7 +3865,7 @@ function renderEmptyState(data, hist, marginal = []) {
     nearMissHTML = `
       <div style="margin-top:20px;padding:14px 16px;background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.15);border-radius:10px">
         <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);margin-bottom:8px">
-          ⚠️ ${marginal.length} Signal${marginal.length > 1 ? 's' : ''} Below 2% Threshold
+          ⚠️ ${marginal.length} Signal${marginal.length > 1 ? 's' : ''} Below 4% Threshold
         </div>
         ${rows}
         <div style="font-size:10px;color:var(--text-4);margin-top:8px">Model found signals — none cleared the 2% minimum edge for a recommended bet.</div>
@@ -4256,7 +4285,7 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
     strip.className = 'status-strip ss-pending';
     strip.innerHTML = `
       <span class="ss-badge ss-badge-pending">${pre9 ? '🕐 PENDING' : '📊 NO PICKS'}</span>
-      <span class="ss-text">${pre9 ? 'Picks post at 9:00 AM CT after lineup confirmation' : 'No picks clear the 2% edge threshold today'}</span>
+      <span class="ss-text">${pre9 ? 'Picks post at 9:00 AM CT after lineup confirmation' : 'No picks clear the 4% edge threshold today'}</span>
       <a class="ss-link" href="preview.html">Tomorrow's opening lines →</a>`;
     return;
   }
@@ -4355,7 +4384,7 @@ function prTableHead() {
 function prTier(p) {
   if (p.is_flagged === true || p.current_lineup_confirmed === false) return { cls: 'watch', lbl: 'Watch' };
   if ((p.edge || 0) >= 0.08) return { cls: 'strong', lbl: 'Strong' };
-  if ((p.edge || 0) >= 0.02) return { cls: 'value', lbl: 'Value' };
+  if ((p.edge || 0) >= 0.04) return { cls: 'value', lbl: 'Value' };
   return { cls: 'watch', lbl: 'Watch' };
 }
 function prTierBadge(p) { const t = prTier(p); return `<span class="pr-tier ${t.cls}">${t.lbl}</span>`; }
@@ -4371,7 +4400,7 @@ function pickStatus(p, gameResult) {
     return { cls: 'final', label: 'Final' + sc };
   }
   if (isLiveGame(p)) { const sc = gameResult && gameResult.score ? ' ' + gameResult.score : ''; return { cls: 'live', label: 'Live' + sc }; }
-  if (p.current_edge != null && p.current_edge < 0.02) return { cls: 'stale', label: 'No longer playable' };
+  if (p.current_edge != null && p.current_edge < 0.04) return { cls: 'stale', label: 'No longer playable' };
   if (p.current_lineup_confirmed === false) return { cls: 'warn', label: 'Lineup pending' };
   return { cls: 'ok', label: 'Playable' };
 }
@@ -4535,7 +4564,7 @@ function render(data, hist, scores = {}, perf = null) {
         metaEl.style.display = 'block';
       }
     }
-    const mainPicks = (data.picks || []).filter(p => (p.edge || 0) >= 0.02);
+    const mainPicks = (data.picks || []).filter(p => (p.edge || 0) >= 0.04);
     const strongCount = mainPicks.filter(p => (p.edge || 0) >= 0.08).length;
     if (mainPicks.length > 0) {
       document.title = mainPicks.length + ' Value Bet' + (mainPicks.length !== 1 ? 's' : '') +
@@ -4596,7 +4625,7 @@ function render(data, hist, scores = {}, perf = null) {
     }
     const cnt = document.getElementById('hero-pick-count');
     if (cnt && data && Array.isArray(data.picks)) {
-      const n = data.picks.filter(p => (p.edge || 0) >= 0.02).length;
+      const n = data.picks.filter(p => (p.edge || 0) >= 0.04).length;
       if (n > 0) cnt.textContent = String(n);
     }
 
@@ -4610,7 +4639,7 @@ function render(data, hist, scores = {}, perf = null) {
   window.renderHeroDemo = function(data) {
     if (!data || !Array.isArray(data.picks)) return;
     const cand = data.picks
-      .filter(p => !p.is_flagged && (p.edge || 0) >= 0.02 && p.model_prob != null && p.market_prob != null)
+      .filter(p => !p.is_flagged && (p.edge || 0) >= 0.04 && p.model_prob != null && p.market_prob != null)
       .sort((a, b) => (b.edge || 0) - (a.edge || 0))[0];
     if (!cand) return; // keep generic sample
 
@@ -4738,7 +4767,7 @@ function render(data, hist, scores = {}, perf = null) {
     // helper, bankroll mode, and exposure stay in sync on mode change.
     const sizingEl = document.getElementById('sizing-bar');
     if (sizingEl) {
-      const _smain = (data.picks || []).filter(p => (p.edge || 0) >= 0.02);
+      const _smain = (data.picks || []).filter(p => (p.edge || 0) >= 0.04);
       let _sstake, _savgStr, _sShow;
       if (isKelly) {
         const _stotKU  = _smain.reduce((s, p) => s + (p.kelly_units || 0), 0);
@@ -4856,7 +4885,7 @@ function render(data, hist, scores = {}, perf = null) {
 
   // renderCLVBanner removed — CLV is now in the picks header block (Row 1)
 
-  const _mainForTracking = (data.picks || []).filter(p => (p.edge || 0) >= 0.02);
+  const _mainForTracking = (data.picks || []).filter(p => (p.edge || 0) >= 0.04);
 
 
   // Correlated warning
@@ -4868,8 +4897,8 @@ function render(data, hist, scores = {}, perf = null) {
   // Main picks
   // Sorted best-first (edge desc) so the strongest plays lead and main[0] is the
   // genuine top pick / Best Bet. Display ordering only — no filtering change.
-  const main     = (data.picks || []).filter(p => p.edge >= 0.02).sort((a, b) => (b.edge || 0) - (a.edge || 0));
-  const marginal = (data.picks || []).filter(p => p.edge < 0.02).sort((a, b) => (b.edge || 0) - (a.edge || 0));
+  const main     = (data.picks || []).filter(p => p.edge >= 0.04).sort((a, b) => (b.edge || 0) - (a.edge || 0));
+  const marginal = (data.picks || []).filter(p => p.edge < 0.04).sort((a, b) => (b.edge || 0) - (a.edge || 0));
 
   if (main.length === 0) {
     renderEmptyState(data, hist, marginal);
@@ -5032,7 +5061,7 @@ function render(data, hist, scores = {}, perf = null) {
     // Tier header for marginal section
     const _marHd = `<div class="tier-header marginal-tier" style="margin:0;flex:1">
         <span class="tier-label">⚠️ Marginal</span>
-        <span class="tier-edge-tag">Below 2% Threshold · ${marginal.length}</span>
+        <span class="tier-edge-tag">Below 4% Threshold · ${marginal.length}</span>
         <span class="tier-divider"></span>
       </div>`;
     document.getElementById('marginal-container').innerHTML =

@@ -2,8 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Independent Baseball Projections — Model Architecture</title>
 <link rel="canonical" href="https://independentbaseballprojections.net/model.html">
+<meta name="description" content="How the Independent Baseball Projections model works: a Dual-Poisson run-expectancy engine with 33 log-odds adjustments, Platt calibration, and out-of-sample validation vs. Pinnacle no-vig lines.">
+<meta property="og:title" content="Independent Baseball Projections — Methodology">
+<meta property="og:description" content="Dual-Poisson + 33 log-odds signals + Platt calibration. The full model pipeline, the math, the 33 signals, and 2022–2024 out-of-sample backtest results.">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://independentbaseballprojections.net/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://independentbaseballprojections.net/model.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Independent Baseball Projections — Methodology">
+<meta name="twitter:description" content="The full model pipeline: Dual-Poisson, 33 log-odds adjustments, Platt calibration, and out-of-sample validation.">
+<meta name="twitter:image" content="https://independentbaseballprojections.net/og-image.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='5' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='white'>IB</text><text x='16' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='%2360a5fa'>P</text><line x1='21' y1='23' x2='25' y2='18' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='25' cy='18' r='1.4' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -136,8 +149,8 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 /* ── FOOTER ── */
 .footer { margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: space-between; }
-.footer-l { font-size: 9px; color: #1e293b; letter-spacing: 0.05em; line-height: 1.6; }
-.footer-r { font-family: var(--font-display); font-size: 13px; font-weight: 600; color: #1e293b; letter-spacing: 0.12em; }
+.footer-l { font-size: 9px; color: var(--text-4); letter-spacing: 0.05em; line-height: 1.6; }
+.footer-r { font-family: var(--font-display); font-size: 13px; font-weight: 600; color: var(--text-4); letter-spacing: 0.12em; }
 
 /* ── QUICK SUMMARY ── */
 .quick-summary {
@@ -316,7 +329,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
     <li>Projects expected runs for each team using a <strong>Dual-Poisson model</strong> calibrated on park, weather, pitcher quality, and lineup data</li>
     <li><strong>33 log-odds adjustments</strong> refine the base win probability — pitcher quality, lineup confirmation, bullpen form, BvP, precipitation, line movement, and more</li>
     <li>Calibrated monthly on 2026 live results using <strong>Platt scaling</strong> — parameters updated as the season progresses</li>
-    <li><strong>Edge = blended model probability − Pinnacle no-vig price.</strong> Only picks where the model sees ≥5% mispricing are posted as official plays. <em>Pure model probability</em> (no market input) is tracked separately for calibration — never using market-blended numbers to evaluate model skill.</li>
+    <li><strong>Edge = blended model probability − Pinnacle no-vig price.</strong> Only picks where the model sees ≥4% mispricing are posted as official plays. <em>Pure model probability</em> (no market input) is tracked separately for calibration — never using market-blended numbers to evaluate model skill.</li>
     <li>Every pick logged with timestamp before first pitch. <strong>CLV tracked to closing line</strong> to validate the signal is real, not luck</li>
   </ul>
 </div>
@@ -368,7 +381,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   </div>
   <div class="msig-cell">
     <div class="msig-lbl">Bet Filter</div>
-    <div class="msig-val">edge ≥ 5%</div>
+    <div class="msig-val">edge ≥ 4%</div>
     <div class="msig-sub">vs. no-vig Pinnacle</div>
   </div>
   <div class="msig-cell">
@@ -572,7 +585,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="math-hdr">⚡  Edge Detection &amp; Stake Sizing</div>
       <div class="f-lbl">Model edge vs. no-vig Pinnacle</div>
       <div class="fbox"><span class="v">edge</span> <span class="op">=</span> <span class="v">p_cal</span> <span class="op">−</span> <span class="v">p_nv_Pinnacle</span>
-<span class="cm">// Bet flagged if edge ≥ 0.05</span></div>
+<span class="cm">// Bet flagged if edge ≥ 0.04</span></div>
       <div class="f-lbl">Fractional Kelly sizing — conservative multi-step reduction</div>
 <div class="fbox"><span class="v">b</span>  <span class="op">=</span> decimal_odds <span class="op">−</span> <span class="n">1</span>
 <span class="v">p</span>  <span class="op">=</span> <span class="v">p_cal</span>  <span class="op">;</span>  <span class="v">q</span> <span class="op">=</span> <span class="n">1</span> <span class="op">−</span> <span class="v">p</span>
@@ -807,7 +820,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
     <div class="roi-block">
       <div class="roi-title">+10.4% — Improving Every Out-of-Sample Year</div>
-      <div class="roi-sub">Flat $100/bet · 5%+ edge signals only · vs. −4.0% baseline (bet every game, full vig)</div>
+      <div class="roi-sub">Flat $100/bet · 4%+ edge signals only · vs. −4.0% baseline (bet every game, full vig)</div>
       <div class="roi-row">
         <div class="roi-year">2022</div>
         <div class="roi-bar-wrap"><div class="roi-fill pos" style="width:6.7%"></div></div>
@@ -929,12 +942,14 @@ Bias by total line:
   <div class="footer-l">
     INDEPENDENT BASEBALL PROJECTIONS · Dual-Poisson Win Probability Engine · 33-Signal Architecture · Log-Odds Adjustments · Platt Calibration · Fractional Kelly Sizing · CLV Tracked<br>
     Sources: MLB Stats API · FanGraphs · Baseball Savant · Open-Meteo · UmpScoreCards · Pinnacle (Odds API)<br>
-    <span style="font-size:9px;color:#1e293b">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Never bet more than you can afford to lose. 18+ only. Bet responsibly.</span>
+    <span style="font-size:9px;color:var(--text-3)">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Never bet more than you can afford to lose. 18+ only. Bet responsibly.</span><br>
+    <span style="font-size:9px;color:var(--text-3)">Gambling problem? Call <a href="tel:18005224700" style="color:var(--text-2)">1-800-GAMBLER</a> or visit <a href="https://www.ncpgambling.org" target="_blank" rel="noopener" style="color:var(--text-2)">ncpgambling.org</a>.</span><br>
+    <span style="font-size:9px;color:var(--text-4);display:inline-block;margin-top:4px;letter-spacing:0.04em">Built &amp; run by BB · an independent one-person project</span>
   </div>
   <div class="footer-r">
-    <a href="index.html" style="color:#1e293b;text-decoration:none;font-size:11px;font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0">Today's Picks</a> ·
-    <a href="history.html" style="color:#1e293b;text-decoration:none;font-size:11px;font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0">Pick History</a> ·
-    <a href="performance.html" style="color:#1e293b;text-decoration:none;font-size:11px;font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0">Model Dashboard</a>
+    <a href="index.html" style="color:var(--text-3);text-decoration:none;font-size:11px;font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0">Today's Picks</a> ·
+    <a href="history.html" style="color:var(--text-3);text-decoration:none;font-size:11px;font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0">Pick History</a> ·
+    <a href="performance.html" style="color:var(--text-3);text-decoration:none;font-size:11px;font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0">Model Dashboard</a>
   </div>
 </div>
 
