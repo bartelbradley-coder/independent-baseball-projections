@@ -378,7 +378,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   <div class="msig-cell">
     <div class="msig-lbl">Calibration</div>
     <div class="msig-val">Platt sigmoid</div>
-    <div class="msig-sub">A = 0.590 · B = +0.025</div>
+    <div class="msig-sub">monthly sigmoid fit</div>
   </div>
   <div class="msig-cell">
     <div class="msig-lbl">Bet Filter</div>
@@ -387,7 +387,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   </div>
   <div class="msig-cell">
     <div class="msig-lbl">Sizing Method</div>
-    <div class="msig-val">½-Kelly / 3u</div>
+    <div class="msig-val">Fractional Kelly / 3u</div>
     <div class="msig-sub">bankroll fraction</div>
   </div>
   <div class="msig-cell">
@@ -485,7 +485,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       </div>
       <div class="pipe-io">
         <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">p_adj (raw model output)</div></div>
-        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">p_cal — σ(0.590·logit(p_adj)+0.025)</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">p_cal — σ(A·logit(p_adj)+B) · fitted</div></div>
       </div>
     </div>
 
@@ -525,7 +525,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
     <div class="math-block ci">
       <div class="math-hdr">λ  Run Expectancy Construction</div>
       <div class="f-lbl">Base lambda — form-blended, park-adjusted</div>
-      <div class="fbox"><span class="v">λ_base</span> <span class="op">=</span> (<span class="n">0.65</span> × <span class="v">RS₃ᵧᵣ</span> <span class="op">+</span> <span class="n">0.35</span> × <span class="v">RS_L15</span>) <span class="op">/</span> <span class="v">G</span>
+      <div class="fbox"><span class="v">λ_base</span> <span class="op">=</span> (<span class="n">w₁</span> × <span class="v">RS₃ᵧᵣ</span> <span class="op">+</span> <span class="n">w₂</span> × <span class="v">RS_L15</span>) <span class="op">/</span> <span class="v">G</span>
          × <span class="v">park_factor</span>
 <span class="cm">// RS₃ᵧᵣ: 3yr rolling RS/G · RS_L15: last 15G avg</span></div>
       <div class="f-lbl">Log-odds stacking — 33 factors, logit space</div>
@@ -535,7 +535,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 <span class="cm">// 33 αᵢ ∈ ℝ · logit prevents p ∉ (0,1)</span>
 
 <span class="v">p_adj</span> <span class="op">=</span> <span class="fn">sigmoid</span>(<span class="fn">logit</span>(<span class="v">p_adj</span>))</div>
-      <div class="math-note">65/35 blend weights recent L15 performance to capture hot/cold streaks without overreacting to small samples. Park adjustment applied symmetrically to both offensive and defensive λ.</div>
+      <div class="math-note">The blend favors the multi-year base while still weighting recent (L15) form to capture hot/cold streaks without overreacting to small samples. Park adjustment applied symmetrically to both offensive and defensive λ.</div>
     </div>
 
     <div class="math-block cv">
@@ -557,13 +557,13 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="f-lbl">Sigmoid recalibration — fitted OOS 2022–2024</div>
       <div class="fbox"><span class="v">p_cal</span> <span class="op">=</span> <span class="fn">σ</span>(<span class="v">A</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_raw</span>) <span class="op">+</span> <span class="v">B</span>)
 
-      <span class="op">=</span> <span class="n">1</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">+</span> <span class="fn">exp</span>(<span class="op">−</span>(<span class="hl">0.590</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_raw</span>)
-                 <span class="op">+</span> <span class="hl">0.025</span>)))</div>
+      <span class="op">=</span> <span class="n">1</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">+</span> <span class="fn">exp</span>(<span class="op">−</span>(<span class="hl">A</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_raw</span>)
+                 <span class="op">+</span> <span class="hl">B</span>)))</div>
       <div class="f-lbl">Parameter interpretation</div>
-      <div class="fbox"><span class="hl">A = 0.590</span>  <span class="cm">// &lt; 1: model over-expresses
+      <div class="fbox"><span class="hl">A &lt; 1</span>  <span class="cm">// &lt; 1: model over-expresses
           //   confidence; compress toward 50%</span>
-<span class="hl">B = +0.025</span> <span class="cm">// home-team bias correction</span></div>
-      <div class="math-note">Fitted via MLE on 3yr OOS outcomes. Brier Score: <strong>0.234</strong> model vs. <strong>0.250</strong> market — 6.4% improvement. A &lt; 1 confirms the raw Poisson systematically over-prices favorites; calibration compresses the logit toward the empirical base rate.</div>
+<span class="hl">B &gt; 0</span> <span class="cm">// home-team bias correction</span></div>
+      <div class="math-note">Fitted via MLE on out-of-sample outcomes (exact A,&nbsp;B recalibrated monthly and not published). Brier Score: <strong>0.234</strong> model vs. <strong>0.250</strong> market — 6.4% improvement. A &lt; 1 confirms the raw Poisson systematically over-prices favorites; calibration compresses the logit toward the empirical base rate.</div>
     </div>
 
     <div class="math-block cs">
@@ -707,7 +707,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="feat-item"><div class="feat-name">tto_penalty <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v2</span></div><div class="feat-desc">Times-through-order degradation: ~0.25 runs/TTO beyond the first. Batters adapt; a starter projected for 7+ IP faces measurably higher opponent scoring late.</div></div>
       <div class="feat-item"><div class="feat-name">platoon_fip_split</div><div class="feat-desc">LHH/RHH xFIP delta weighted by opposing lineup handedness % (per-batter split, not team-level).</div></div>
       <div class="feat-item"><div class="feat-name">swstr_pct</div><div class="feat-desc">Swinging-strike rate from Baseball Savant. Leading indicator for K% — predicts FIP before results converge.</div></div>
-      <div class="feat-item"><div class="feat-name">bullpen_xfip_tiered</div><div class="feat-desc">Closer (35%) / Setup (25%) / Middle (40%) xFIP blend. Fatigue-adjusted by recent appearance counts per tier.</div></div>
+      <div class="feat-item"><div class="feat-name">bullpen_xfip_tiered</div><div class="feat-desc">A tiered closer / setup / middle-relief xFIP blend. Fatigue-adjusted by recent appearance counts per tier.</div></div>
       <div class="feat-item"><div class="feat-name">bullpen_recent_xfip <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v2</span></div><div class="feat-desc">14-day rolling bullpen xFIP blended 30/70 with season average. Captures in-season bullpen volatility that season-long averages smooth over.</div></div>
       <div class="feat-item"><div class="feat-name">arsenal_fit <span style="color:var(--indigo-lt);font-size:9px;font-weight:700">v2</span></div><div class="feat-desc">Statcast pitch-mix matchup score (−1 to +1): how well the starter's pitch category usage (power FB, breaking, offspeed) suppresses the opposing lineup's handedness profile.</div></div>
       <div class="feat-item" style="opacity:0.55"><div class="feat-name">pitcher_form_slope <span style="color:#94a3b8;font-size:9px;font-weight:700">inactive</span></div><div class="feat-desc">OLS slope of xFIP over last 5 starts. <strong>Currently inactive</strong> — retired after the 5-start slope showed no reliable directional edge (mean-reversion; market already prices recent form).</div></div>
@@ -776,7 +776,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
         <div class="ex-num">3</div>
         <div class="ex-content">
           <div class="ex-title">Platt calibration</div>
-          <div class="ex-text">Logit-scaled by fitted slope 0.587 + intercept 0.021 → <strong>final model probability: 54.5%</strong></div>
+          <div class="ex-text">Logit-scaled by the fitted Platt calibration → <strong>final model probability: 54.5%</strong></div>
         </div>
       </div>
       <div class="ex-step">
@@ -793,7 +793,8 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 <!-- VALIDATION -->
 <div class="section" id="section-validation">
-  <h2 class="sec-lbl">Out-of-Sample Validation — 2022–2024 · Flat $100/Bet · 4%+ Edge Threshold</h2>
+  <h2 class="sec-lbl">Out-of-Sample Backtest (Hypothetical) — 2022–2024 · Flat $100/Bet · 4%+ Edge</h2>
+  <div style="font-size:11px;color:var(--text-3);line-height:1.6;margin:0 0 14px;padding:9px 12px;border:1px solid rgba(245,158,11,0.18);background:rgba(245,158,11,0.05);border-radius:8px"><strong style="color:#fbbf24">These are hypothetical backtest results.</strong> The 2022–2024 figures are simulated on historical data with the current model design — not money actually wagered — and the model was developed knowing this period, so live results will differ. For the real, forward-tested record see <a href="performance.html" style="color:var(--text-2)">Model Dashboard</a> and <a href="history.html" style="color:var(--text-2)">Pick History</a>. Past performance does not guarantee future results.</div>
   <div class="val-wrap">
 
     <div class="val-metrics">
@@ -820,8 +821,8 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
     </div>
 
     <div class="roi-block">
-      <div class="roi-title">+10.4% — Improving Every Out-of-Sample Year</div>
-      <div class="roi-sub">Flat $100/bet · 4%+ edge signals only · vs. −4.0% baseline (bet every game, full vig)</div>
+      <div class="roi-title">Backtested ROI by Season — 2022–2024 (Hypothetical)</div>
+      <div class="roi-sub">Hypothetical backtest. Flat $100/bet · 4%+ edge signals only · vs. −4.0% baseline (bet every game, full vig)</div>
       <div class="roi-row">
         <div class="roi-year">2022</div>
         <div class="roi-bar-wrap"><div class="roi-fill pos" style="width:6.7%"></div></div>
@@ -862,12 +863,12 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
       <div class="f-lbl">Platt scaling — RL-specific constants, fitted OOS 2022–2024</div>
       <div class="fbox"><span class="v">p_rl_cal</span> <span class="op">=</span> <span class="fn">σ</span>(<span class="v">A_rl</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_rl_raw</span>) <span class="op">+</span> <span class="v">B_rl</span>)
 
-         <span class="op">=</span> <span class="n">1</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">+</span> <span class="fn">exp</span>(<span class="op">−</span>(<span class="hl">0.8188</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_rl_raw</span>)
-                          <span class="op">−</span> <span class="hl">0.1035</span>)))</div>
+         <span class="op">=</span> <span class="n">1</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">+</span> <span class="fn">exp</span>(<span class="op">−</span>(<span class="hl">A_rl</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_rl_raw</span>)
+                          <span class="op">−</span> <span class="hl">B_rl</span>)))</div>
       <div class="f-lbl">Parameter interpretation</div>
-      <div class="fbox"><span class="hl">A_rl</span> <span class="op">=</span> <span class="n">0.8188</span>  <span class="cm">// &lt; 1: slight overconfidence;
+      <div class="fbox"><span class="hl">A_rl</span> <span class="op">&lt;</span> <span class="n">1</span>  <span class="cm">// &lt; 1: slight overconfidence;
                //   less shrinkage than ML model</span>
-<span class="hl">B_rl</span> <span class="op">=</span> <span class="op">−</span><span class="n">0.1035</span> <span class="cm">// small away-team correction</span></div>
+<span class="hl">B_rl</span> <span class="op">&lt;</span> <span class="n">0</span> <span class="cm">// small away-team correction</span></div>
       <div class="f-lbl">Backtest results — 7,237 games, OOS 2022–2024</div>
       <div class="fbox">Home cover rate:  <span class="n">35.7%</span> actual vs <span class="n">35.6%</span> model
 Direction acc.:   <span class="n">64.7%</span>  <span class="cm">(better side predicted)</span>
@@ -889,13 +890,13 @@ Away <span class="op">+</span><span class="n">1.5</span> win rate vs model edge:
       <div class="f-lbl">Platt scaling — O/U constants, fitted OOS 2022–2024</div>
       <div class="fbox"><span class="v">p_over_cal</span> <span class="op">=</span> <span class="fn">σ</span>(<span class="v">A_ou</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_over_raw</span>) <span class="op">+</span> <span class="v">B_ou</span>)
 
-           <span class="op">=</span> <span class="n">1</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">+</span> <span class="fn">exp</span>(<span class="op">−</span>(<span class="hl">0.5268</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_over_raw</span>)
-                             <span class="op">−</span> <span class="hl">0.2020</span>)))</div>
+           <span class="op">=</span> <span class="n">1</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">+</span> <span class="fn">exp</span>(<span class="op">−</span>(<span class="hl">A_ou</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_over_raw</span>)
+                             <span class="op">−</span> <span class="hl">B_ou</span>)))</div>
       <div class="f-lbl">Parameter interpretation</div>
-      <div class="fbox"><span class="hl">A_ou</span> <span class="op">=</span> <span class="n">0.5268</span>  <span class="cm">// heavy shrinkage toward 50% —
+      <div class="fbox"><span class="hl">A_ou</span> <span class="op">≪</span> <span class="n">1</span>  <span class="cm">// heavy shrinkage toward 50% —
                //   model significantly over-expresses
                //   confidence on totals</span>
-<span class="hl">B_ou</span> <span class="op">=</span> <span class="op">−</span><span class="n">0.2020</span> <span class="cm">// corrects systematic over-prediction
+<span class="hl">B_ou</span> <span class="op">&lt;</span> <span class="n">0</span> <span class="cm">// corrects systematic over-prediction
                //   on high-scoring games</span></div>
       <div class="f-lbl">Status — informational, not separately bet</div>
       <div class="fbox">Synthetic-line ROI <span class="op">@</span> <span class="op">≥</span><span class="n">0%</span> edge:  <span class="v">+3.0%</span>
@@ -909,11 +910,26 @@ Bias by total line:
 // over/under odds shown in Other Markets card).
 // Standalone O/U bets deferred until live
 // edge evidence accumulates over several weeks.</span></div>
-      <div class="math-note">Real O/U book prices (best execution + Pinnacle no-vig benchmark) are fetched daily and displayed in each pick card's Other Markets section. The heavy Platt shrinkage (A=0.527 vs A=0.590 for ML) reveals the Poisson model has weaker calibration on run totals — likely due to left-tail inflation (low-scoring games more common than Poisson predicts at high-k values).</div>
+      <div class="math-note">Real O/U book prices (best execution + Pinnacle no-vig benchmark) are fetched daily and displayed in each pick card's Other Markets section. The heavy Platt shrinkage (much stronger than the ML model&#39;s) reveals the Poisson model has weaker calibration on run totals — likely due to left-tail inflation (low-scoring games more common than Poisson predicts at high-k values).</div>
     </div>
 
   </div>
   </div><!-- /.coll-body-m -->
+</div>
+
+<!-- LIMITATIONS -->
+<div class="section" id="section-limitations">
+  <h2 class="sec-lbl">Honest Limitations — What This Model Does &amp; Doesn't Do</h2>
+  <div class="quick-summary" style="background:rgba(245,158,11,0.05);border-color:rgba(245,158,11,0.18)">
+    <ul class="qs-list">
+      <li><strong>Backtests flatter themselves.</strong> The 2022–2024 numbers are hypothetical and were tuned over the same period they report. The live, timestamped record is the real test — judge the model there.</li>
+      <li><strong>The live sample is still small.</strong> A few months of forward picks can't yet confirm a durable edge; expect wide swings.</li>
+      <li><strong>CLV is still being validated.</strong> Closing-line value is the durability signal we trust most, but the live sample is thin and not yet conclusive — we'd rather show it honestly than over-claim.</li>
+      <li><strong>Market-informed, not independent.</strong> The model uses the sharp market as both a stabilizing input and a benchmark, so by design it won't diverge wildly from Pinnacle.</li>
+      <li><strong>Blind to late news.</strong> Once lineups post, the model doesn't react to scratches, first-pitch weather swings, or in-game information.</li>
+      <li><strong>A real edge still loses often.</strong> Even genuine value loses a large share of the time — only flat, disciplined, bankroll-aware staking survives the variance.</li>
+    </ul>
+  </div>
 </div>
 
 <!-- FOOTER -->
@@ -943,9 +959,9 @@ Bias by total line:
   <div class="footer-l">
     INDEPENDENT BASEBALL PROJECTIONS · Dual-Poisson Win Probability Engine · 33-Signal Architecture · Log-Odds Adjustments · Platt Calibration · Fractional Kelly Sizing · CLV Tracked<br>
     Sources: MLB Stats API · FanGraphs · Baseball Savant · Open-Meteo · UmpScoreCards · Pinnacle (Odds API)<br>
-    <span style="font-size:9px;color:var(--text-3)">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Never bet more than you can afford to lose. 18+ only. Bet responsibly.</span><br>
+    <span style="font-size:9px;color:var(--text-3)">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Never bet more than you can afford to lose. 21+ only (or the legal age where you live). Bet responsibly.</span><br>
     <span style="font-size:9px;color:var(--text-3)">Gambling problem? Call <a href="tel:18005224700" style="color:var(--text-2)">1-800-GAMBLER</a> or visit <a href="https://www.ncpgambling.org" target="_blank" rel="noopener" style="color:var(--text-2)">ncpgambling.org</a>.</span><br>
-    <span style="font-size:9px;color:var(--text-4);display:inline-block;margin-top:4px;letter-spacing:0.04em">Built &amp; run by BB · an independent one-person project</span>
+    <span style="font-size:9px;color:var(--text-4);display:inline-block;margin-top:4px;letter-spacing:0.04em">Last updated June 2026 · model v3 · Built &amp; run by BB · an independent one-person project</span>
   </div>
   <div class="footer-r">
     <a href="index.html" style="color:var(--text-3);text-decoration:none;font-size:11px;font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0">Today's Picks</a> ·
