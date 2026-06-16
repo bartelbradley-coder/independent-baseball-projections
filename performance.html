@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Independent Baseball Projections — Model Dashboard</title>
 <link rel="canonical" href="https://independentbaseballprojections.net/performance.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Independent Baseball Projections — Model Dashboard",
+  "description": "Model validation dashboard: bankroll growth, closing-line value, edge-tier ROI, calibration, and backtested results for the Independent Baseball Projections MLB model.",
+  "url": "https://independentbaseballprojections.net/performance.html",
+  "isPartOf": { "@type": "WebSite", "name": "Independent Baseball Projections", "url": "https://independentbaseballprojections.net/" },
+  "publisher": { "@type": "Organization", "name": "Independent Baseball Projections", "url": "https://independentbaseballprojections.net/" }
+}
+</script>
 <meta name="description" content="Model Dashboard for Independent Baseball Projections. Bankroll growth, P&L curve, win rate trends, calibration, CLV validation, edge-tier ROI, and threshold analysis.">
 <meta property="og:title" content="Independent Baseball Projections — Model Dashboard">
 <meta property="og:description" content="Model Dashboard — bankroll growth, CLV validation, edge-tier breakdown, strategy comparison, and out-of-sample backtest results.">
@@ -21,7 +32,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=14">
+<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="index.css?v=2">
 <style>
 .page-title { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
 .page-subtitle { font-size: 12px; color: var(--text-3); margin-bottom: 24px; }
@@ -562,49 +574,13 @@
       <span class="fsm-lbl fsm-active">MLB</span>
     </div>
     <div class="fsm-sep"></div>
-    <!-- NFL — coming soon -->
-    <div class="fsm-item fsm-soon">
-      <svg width="28" height="28" viewBox="0 0 88 88">
-        <path d="M44,5 C48,5 76,22 76,44 C76,66 48,83 44,83 C40,83 12,66 12,44 C12,22 40,5 44,5 Z" stroke="rgba(255,255,255,0.85)" stroke-width="1.8" fill="rgba(99,102,241,0.1)"/>
-        <line x1="44" y1="18" x2="44" y2="70" stroke="rgba(255,255,255,0.3)" stroke-width="1.3"/>
-        <text x="19" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#f1f5f9">IB</text><text x="44" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text>
-      </svg>
-      <span class="fsm-lbl">NFL</span>
-      <span class="fsm-badge">soon</span>
-    </div>
-    <div class="fsm-sep"></div>
-    <!-- NBA — coming soon -->
-    <div class="fsm-item fsm-soon">
-      <svg width="28" height="28" viewBox="0 0 88 88">
-        <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.10)"/>
-        <circle cx="44" cy="44" r="33" stroke="rgba(255,255,255,0.85)" stroke-width="2" fill="none"/>
-        <path d="M44,11 Q46,30 46,44 Q46,58 44,77" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
-        <path d="M11,44 Q25,16 44,12 Q63,16 77,44" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
-        <path d="M11,44 Q25,72 44,76 Q63,72 77,44" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/>
-        <text x="19" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#f1f5f9">IB</text><text x="44" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text>
-      </svg>
-      <span class="fsm-lbl">NBA</span>
-      <span class="fsm-badge">soon</span>
-    </div>
-    <div class="fsm-sep"></div>
-    <!-- NHL — coming soon -->
-    <div class="fsm-item fsm-soon">
-      <svg width="28" height="28" viewBox="0 0 88 88">
-        <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.12)" stroke="rgba(255,255,255,0.85)" stroke-width="2"/>
-        <circle cx="44" cy="44" r="24" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="5"/>
-        <text x="19" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#f1f5f9">IB</text><text x="44" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text>
-        <line x1="55" y1="58" x2="62" y2="49" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
-        <circle cx="62" cy="49" r="3.5" fill="#22c55e"/>
-      </svg>
-      <span class="fsm-lbl">NHL</span>
-      <span class="fsm-badge">soon</span>
-    </div>
+    <span class="fsm-lbl" style="opacity:.55;font-weight:600">More sports coming for 2027</span>
   </div>
-  <div class="footer-brand" style="display:none">Independent Baseball Projections · Quantitative Win Probability Model · Dual-Poisson + 33 Log-Odds Adjustments + Platt Calibration</div>
+  <div class="footer-brand" style="display:none">Independent Baseball Projections · Bet the number, not the noise. · Every pick logged before first pitch.</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
-  <div class="rg-resource" style="margin-top:8px;font-size:10px;color:var(--text-3);line-height:1.6">Gambling problem? Call <a href="tel:18005224700" style="color:var(--text-2)">1-800-GAMBLER</a> or visit <a href="https://www.ncpgambling.org" target="_blank" rel="noopener" style="color:var(--text-2)">ncpgambling.org</a>.</div>
-  <div class="footer-links"><a href="model.html">Methodology</a> · <a href="history.html">Pick History</a> · <a href="index.html">Today's Picks</a></div>
-  <div class="footer-byline" style="margin-top:10px;font-size:10px;color:var(--text-4);letter-spacing:0.04em">Built &amp; run by BB · an independent one-person project</div>
+  <div class="rg-resource">Gambling problem? Call <a href="tel:18005224700">1-800-GAMBLER</a> or visit <a href="https://www.ncpgambling.org" target="_blank" rel="noopener">ncpgambling.org</a>.</div>
+  <div class="footer-links"><a href="model.html">Methodology</a> · <a href="history.html">Pick History</a> · <a href="performance.html">Model Dashboard</a></div>
+  <div class="footer-byline">Built &amp; run by BB · an independent one-person project</div>
 </footer>
 
 <script src="ibp-utils.js"></script>

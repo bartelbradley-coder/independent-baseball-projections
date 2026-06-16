@@ -3,8 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Independent Baseball Projections — Model Architecture</title>
+<title>Independent Baseball Projections — Methodology</title>
 <link rel="canonical" href="https://independentbaseballprojections.net/model.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "How the Independent Baseball Projections Model Works",
+  "description": "A Dual-Poisson run-expectancy engine with 33 log-odds adjustments, Platt calibration, and out-of-sample validation vs. Pinnacle no-vig lines.",
+  "url": "https://independentbaseballprojections.net/model.html",
+  "author": { "@type": "Organization", "name": "Independent Baseball Projections", "url": "https://independentbaseballprojections.net/" },
+  "publisher": { "@type": "Organization", "name": "Independent Baseball Projections", "url": "https://independentbaseballprojections.net/" }
+}
+</script>
 <meta name="description" content="How the Independent Baseball Projections model works: a Dual-Poisson run-expectancy engine with 33 log-odds adjustments, Platt calibration, and out-of-sample validation vs. Pinnacle no-vig lines.">
 <meta property="og:title" content="Independent Baseball Projections — Methodology">
 <meta property="og:description" content="Dual-Poisson + 33 log-odds signals + Platt calibration. The full model pipeline, the math, the 33 signals, and 2022–2024 out-of-sample backtest results.">
@@ -275,6 +286,8 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   .wrap { padding: 16px 14px 32px; }
 }
 </style>
+<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="index.css?v=2">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LR4YJLHZK4"></script>
 <script>
@@ -286,7 +299,6 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<link rel="stylesheet" href="style.css?v=14">
 <nav>
   <a class="nav-brand" href="index.html">
     <div class="nav-logo"><svg width="32" height="32" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg"><circle cx="44" cy="44" r="32" fill="rgba(99,102,241,0.1)"/><circle cx="44" cy="44" r="32" stroke="rgba(255,255,255,0.82)" stroke-width="1.8" fill="none"/><path d="M18,26 Q26,34 19,44 Q13,54 20,62" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M70,26 Q62,34 69,44 Q75,54 68,62" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/><text x="19" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="white">IB</text><text x="44" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text><line x1="56" y1="60" x2="64" y2="50" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/><circle cx="64" cy="50" r="3.3" fill="#22c55e"/></svg></div>
@@ -310,7 +322,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
     <div class="brand-icon"><svg width="46" height="46" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg"><circle cx="44" cy="44" r="32" fill="rgba(99,102,241,0.1)"/><circle cx="44" cy="44" r="32" stroke="rgba(255,255,255,0.82)" stroke-width="1.8" fill="none"/><path d="M18,26 Q26,34 19,44 Q13,54 20,62" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M70,26 Q62,34 69,44 Q75,54 68,62" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/><text x="19" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="white">IB</text><text x="44" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text><line x1="56" y1="60" x2="64" y2="50" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/><circle cx="64" cy="50" r="3.3" fill="#22c55e"/></svg></div>
     <div>
       <div class="brand-name"><span class="brand-fair">INDEPENDENT BASEBALL</span> <span class="brand-bold">PROJECTIONS</span></div>
-      <div class="brand-sub">Model Architecture · Technical Reference · Dual-Poisson Win Probability Engine</div>
+      <div class="brand-sub">Methodology · Technical Reference · Dual-Poisson Win Probability Engine</div>
     </div>
   </div>
   <div class="hdr-pills">
@@ -932,45 +944,33 @@ Bias by total line:
   </div>
 </div>
 
-<!-- FOOTER -->
-  <!-- Sport marks footer -->
-  <div style="display:flex;align-items:flex-end;justify-content:center;gap:6px;margin-top:20px;margin-bottom:10px;">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-      <svg width="28" height="28" viewBox="0 0 88 88"><circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.12)"/><circle cx="44" cy="44" r="33" stroke="rgba(255,255,255,0.82)" stroke-width="2" fill="none"/><path d="M16,24 Q25,33 18,44 Q11,55 18,64" stroke="rgba(255,255,255,0.32)" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M72,24 Q63,33 70,44 Q77,55 70,64" stroke="rgba(255,255,255,0.32)" stroke-width="1.4" fill="none" stroke-linecap="round"/><text x="19" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#f1f5f9">IB</text><text x="44" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text><line x1="55" y1="58" x2="63" y2="48" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/><circle cx="63" cy="48" r="3.5" fill="#22c55e"/></svg>
-      <span style="font-family:system-ui,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.14em;color:#94a3b8;">MLB</span>
-    </div>
-    <div style="width:1px;height:32px;background:rgba(255,255,255,0.07);margin:0 3px;align-self:center;"></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.28;">
-      <svg width="28" height="28" viewBox="0 0 88 88"><path d="M44,5 C48,5 76,22 76,44 C76,66 48,83 44,83 C40,83 12,66 12,44 C12,22 40,5 44,5 Z" stroke="rgba(255,255,255,0.85)" stroke-width="1.8" fill="rgba(99,102,241,0.1)"/><line x1="44" y1="18" x2="44" y2="70" stroke="rgba(255,255,255,0.3)" stroke-width="1.3"/><text x="19" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#f1f5f9">IB</text><text x="44" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text></svg>
-      <span style="font-family:system-ui,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.14em;color:#334155;">NFL</span>
-    </div>
-    <div style="width:1px;height:32px;background:rgba(255,255,255,0.07);margin:0 3px;align-self:center;"></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.28;">
-      <svg width="28" height="28" viewBox="0 0 88 88"><circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.10)"/><circle cx="44" cy="44" r="33" stroke="rgba(255,255,255,0.85)" stroke-width="2" fill="none"/><path d="M44,11 Q46,30 46,44 Q46,58 44,77" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/><path d="M11,44 Q25,16 44,12 Q63,16 77,44" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/><path d="M11,44 Q25,72 44,76 Q63,72 77,44" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" fill="none"/><text x="19" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#f1f5f9">IB</text><text x="44" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text></svg>
-      <span style="font-family:system-ui,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.14em;color:#334155;">NBA</span>
-    </div>
-    <div style="width:1px;height:32px;background:rgba(255,255,255,0.07);margin:0 3px;align-self:center;"></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.28;">
-      <svg width="28" height="28" viewBox="0 0 88 88"><circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.12)" stroke="rgba(255,255,255,0.85)" stroke-width="2"/><circle cx="44" cy="44" r="24" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="5"/><text x="19" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#f1f5f9">IB</text><text x="44" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text><line x1="55" y1="58" x2="62" y2="49" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/><circle cx="62" cy="49" r="3.5" fill="#22c55e"/></svg>
-      <span style="font-family:system-ui,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.14em;color:#334155;">NHL</span>
-    </div>
-  </div>
-<div class="footer">
-  <div class="footer-l">
-    INDEPENDENT BASEBALL PROJECTIONS · Dual-Poisson Win Probability Engine · 33-Signal Architecture · Log-Odds Adjustments · Platt Calibration · Fractional Kelly Sizing · CLV Tracked<br>
-    Sources: MLB Stats API · FanGraphs · Baseball Savant · Open-Meteo · UmpScoreCards · Pinnacle (Odds API)<br>
-    <span style="font-size:9px;color:var(--text-3)">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Never bet more than you can afford to lose. 21+ only (or the legal age where you live). Bet responsibly.</span><br>
-    <span style="font-size:9px;color:var(--text-3)">Gambling problem? Call <a href="tel:18005224700" style="color:var(--text-2)">1-800-GAMBLER</a> or visit <a href="https://www.ncpgambling.org" target="_blank" rel="noopener" style="color:var(--text-2)">ncpgambling.org</a>.</span><br>
-    <span style="font-size:9px;color:var(--text-4);display:inline-block;margin-top:4px;letter-spacing:0.04em">Last updated June 2026 · model v3 · Built &amp; run by BB · an independent one-person project</span>
-  </div>
-  <div class="footer-r">
-    <a href="index.html" style="color:var(--text-3);text-decoration:none;font-size:11px;font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0">Today's Picks</a> ·
-    <a href="history.html" style="color:var(--text-3);text-decoration:none;font-size:11px;font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0">Pick History</a> ·
-    <a href="performance.html" style="color:var(--text-3);text-decoration:none;font-size:11px;font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0">Model Dashboard</a>
-  </div>
-</div>
+</div><!-- /wrap -->
 
-</div>
+<footer>
+  <div class="footer-sport-marks">
+    <!-- MLB — active -->
+    <div class="fsm-item">
+      <svg width="28" height="28" viewBox="0 0 88 88">
+        <circle cx="44" cy="44" r="33" fill="rgba(99,102,241,0.12)"/>
+        <circle cx="44" cy="44" r="33" stroke="rgba(255,255,255,0.82)" stroke-width="2" fill="none"/>
+        <path d="M16,24 Q25,33 18,44 Q11,55 18,64" stroke="rgba(255,255,255,0.32)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        <path d="M72,24 Q63,33 70,44 Q77,55 70,64" stroke="rgba(255,255,255,0.32)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        <text x="19" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#f1f5f9">IB</text><text x="44" y="54" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text>
+        <line x1="55" y1="58" x2="63" y2="48" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="63" cy="48" r="3.5" fill="#22c55e"/>
+      </svg>
+      <span class="fsm-lbl fsm-active">MLB</span>
+    </div>
+    <div class="fsm-sep"></div>
+    <span class="fsm-lbl" style="opacity:.55;font-weight:600">More sports coming for 2027</span>
+  </div>
+  <div class="footer-brand" style="display:none">Independent Baseball Projections · Bet the number, not the noise. · Every pick logged before first pitch.</div>
+  <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
+  <div class="rg-resource">Gambling problem? Call <a href="tel:18005224700">1-800-GAMBLER</a> or visit <a href="https://www.ncpgambling.org" target="_blank" rel="noopener">ncpgambling.org</a>.</div>
+  <div class="footer-links"><a href="model.html">Methodology</a> · <a href="history.html">Pick History</a> · <a href="performance.html">Model Dashboard</a></div>
+  <div class="footer-byline">Built &amp; run by BB · an independent one-person project</div>
+</footer>
+
 <script>
 function toggleMathSection(el) {
   const open = el.closest('.math-coll').classList.toggle('open');
