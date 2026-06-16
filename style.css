@@ -1140,8 +1140,8 @@ details[open] .faq-q::after { content: '−'; }
 .pr-odds .pr-o-book { color:var(--text-4); font-weight:400; font-size:10px; }
 .pr-odds .pr-o-na { color:var(--text-4); font-weight:400; }  /* live/final — no actionable price */
 .pr-mv { font-size:10px; margin-left:3px; }
-.pr-mv.up   { color:#5ea87f; }   /* muted green — Edge stays the bright one */
-.pr-mv.down { color:#cc7a7a; }   /* muted red */
+.pr-mv.ahead  { color:#5ea87f; }   /* muted green — we locked a better number than now (CLV+) */
+.pr-mv.behind { color:#cc7a7a; }   /* muted red — better price available now */
 
 /* play to — worst price still worth betting */
 .pr-play { text-align:right; font-family:var(--font-mono); font-size:12.5px; color:var(--text); font-variant-numeric:tabular-nums; white-space:nowrap; }
@@ -1249,6 +1249,7 @@ details[open] .faq-q::after { content: '−'; }
 .dw-lg { width:100%; height:auto; display:block; }
 .dw-lg .dw-lg-val { font-family:var(--font-mono); font-size:11px; font-weight:600; fill:var(--text); }
 .dw-lg .dw-lg-lbl { font-family:var(--font-ui); font-size:10px; fill:var(--text-4); }
+.dw-lg-cap { font-size:10px; color:var(--text-4); margin-top:6px; line-height:1.5; }
 .dw-clv { display:flex; align-items:baseline; gap:6px; flex-shrink:0; }
 .dw-clv .dw-clv-k, .dw-clv .dw-clv-s { font-size:10px; color:var(--text-4); }
 .dw-clv b { font-family:var(--font-mono); font-size:13px; font-weight:700; color:var(--text-2); }

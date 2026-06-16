@@ -1466,9 +1466,9 @@ function oneLineDriverV8(p) {
 // Small inline line graph for price movement. Takes a generic array of points
 // — [{ label, odds }] — so when the backend starts persisting intraday odds
 // snapshots, the same renderer just receives more points (only the x-spacing /
-// label density would change). Price is plotted on the "cents" scale so the line
-// rises when the number moved in the bettor's favour; coloured green if it ended
-// better than the posted line, red if worse, neutral if flat.
+// label density would change). Price is plotted on the "cents" scale. Colour is by
+// VALUE TO THE BETTOR, not price direction: green when we're ahead (current/closing
+// line is WORSE than the price we locked -> positive CLV), red when behind, neutral if flat.
 function prLineGraph(points) {
   const pts = (points || []).filter(p => p.odds != null && !isNaN(p.odds));
   if (pts.length < 2) return '';
@@ -1487,8 +1487,9 @@ function prLineGraph(points) {
   const y = c => padTop + plotH - ((c - lo) / (hi - lo)) * plotH;
   const baseIdx = pts.findIndex(p => /posted|open/i.test(p.label || ''));
   const baseC = cents[baseIdx >= 0 ? baseIdx : 0], lastC = cents[cents.length - 1];
-  const dir = lastC > baseC + 0.5 ? 'up' : lastC < baseC - 0.5 ? 'down' : 'flat';
-  const col = dir === 'up' ? 'var(--green)' : dir === 'down' ? 'var(--red)' : 'var(--text-4)';
+  // "ahead" = current/closing number is WORSE than the line we locked (market moved our way -> CLV+)
+  const dir = lastC < baseC - 0.5 ? 'ahead' : lastC > baseC + 0.5 ? 'behind' : 'flat';
+  const col = dir === 'ahead' ? 'var(--green)' : dir === 'behind' ? 'var(--red)' : 'var(--text-4)';
   const poly = pts.map((p, i) => xs[i].toFixed(1) + ',' + y(cents[i]).toFixed(1)).join(' ');
   let svg = '<svg class="dw-lg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Line movement graph">';
   svg += '<polyline points="' + poly + '" fill="none" stroke="' + col + '" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>';
@@ -1502,6 +1503,17 @@ function prLineGraph(points) {
     }
   });
   return svg + '</svg>';
+}
+
+// odds_history timestamps are UTC (run_timestamp); format to a CT clock for labels.
+function _clockFromT(t) {
+  if (!t) return '';
+  let s = String(t).trim();
+  if (/T\d{2}:\d{2}$/.test(s)) s += ':00Z';
+  else if (/T\d{2}:\d{2}:\d{2}$/.test(s)) s += 'Z';
+  const d = new Date(s);
+  if (isNaN(d)) return '';
+  return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago' });
 }
 
 // Expanded pick drawer — decision-first, in order: should I bet it? · price &
@@ -1651,6 +1663,11 @@ function prDrawerHTML(p, isBest, gameResult) {
     else if ((live || over) && p.closing_prob != null) lgPts.push({ label: 'Closed', odds: _americanFromImplied(p.closing_prob) });
   }
   const graphHTML = prLineGraph(lgPts) || '<div class="dw-cap">Not enough line data to chart.</div>';
+  let lgCap = '';
+  if (_hist.length >= 2) {
+    lgCap = '<div class="dw-lg-cap">Tracked ' + _clockFromT(_hist[0].t) + ' \u2192 ' + _clockFromT(_hist[_hist.length - 1].t)
+          + ' CT \u00b7 ' + _hist.length + ' snapshots \u00b7 <span style="color:var(--green)">green</span> = current line is worse than what we locked (you\'re ahead)</div>';
+  }
   let clvHTML = '';
   if (p.clv != null && (live || over)) {   // CLV only exists once the line has closed (first pitch)
     const clvpp = p.clv * 100;
@@ -1659,7 +1676,7 @@ function prDrawerHTML(p, isBest, gameResult) {
     clvHTML = '<div class="dw-clv"><span class="dw-clv-k">CLV</span><b class="' + cls + '">' + (clvpp >= 0 ? '+' : '') + clvpp.toFixed(1) + 'pp</b><span class="dw-clv-s">' + note + '</span></div>';
   }
   const moveHTML = '<div class="dw-sec"><div class="dw-move-head"><div class="dw-h2">Line Movement</div>' + clvHTML + '</div>'
-    + '<div class="dw-lgwrap">' + graphHTML + '</div></div>';
+    + '<div class="dw-lgwrap">' + graphHTML + lgCap + '</div></div>';
 
   const actionsHTML = '<div class="dw-actions">'
     + '<button type="button" class="dw-act" onclick="sharePickCard(\'' + cardId + '\')">Share</button>'
@@ -1889,9 +1906,9 @@ function prRowCollapsed(p, isBest, gameResult) {
     const cc = _oddsToCents(cur), pc = _oddsToCents(p.odds);
     let mv = '';
     if (cc != null && pc != null) {
-      const diff = Math.round(cc - pc);
-      if (diff >= 1)       mv = `<span class="pr-mv up" title="${diff}¢ better than the captured line">▲${diff}¢</span>`;
-      else if (diff <= -1) mv = `<span class="pr-mv down" title="${Math.abs(diff)}¢ worse than the captured line">▼${Math.abs(diff)}¢</span>`;
+      const val = Math.round(pc - cc);   // + = we locked a better number than the current line (ahead / CLV+)
+      if (val >= 1)       mv = `<span class="pr-mv ahead" title="You locked ${val}¢ better than the current line — you're ahead (positive CLV)">✓ +${val}¢</span>`;
+      else if (val <= -1) mv = `<span class="pr-mv behind" title="A ${Math.abs(val)}¢ better price is available now than we locked">−${Math.abs(val)}¢</span>`;
     }
     oddsCell = `<span class="pr-o-main">${fmtO(cur)}${mv}${book ? ' <span class="pr-o-book">' + book + '</span>' : ''}</span>`;
   }
