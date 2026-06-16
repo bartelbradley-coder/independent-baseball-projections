@@ -1235,16 +1235,19 @@ details[open] .faq-q::after { content: '−'; }
 .dw-read { font-size:12.5px; line-height:1.55; color:var(--text-3); }
 
 /* matchup data table */
-.dw-mtable { width:100%; border-collapse:collapse; }
-.dw-mtable th { font-size:10px; font-weight:700; color:var(--text-4); text-align:right; padding:0 0 8px; border-bottom:1px solid var(--border); white-space:nowrap; }
-.dw-mtable th:first-child { text-align:left; }
-.dw-mtable th span { display:block; font-weight:400; color:var(--text-4); font-size:9px; margin-top:1px; }
-.dw-mtable td { font-family:var(--font-mono); font-size:12px; color:var(--text-2); text-align:right; padding:6px 0; border-bottom:1px solid rgba(255,255,255,.05); font-variant-numeric:tabular-nums; }
+.dw-mtable { width:100%; border-collapse:collapse; table-layout:fixed; }
+.dw-mtable th { font-size:10px; font-weight:700; color:var(--text-4); text-align:right; padding:0 4px 8px; border-bottom:1px solid var(--border); vertical-align:bottom; }
+.dw-mtable th:first-child { width:37%; text-align:left; padding-left:0; }
+.dw-mtable th:last-child  { width:16%; padding-right:0; }
+.dw-mtable th span { display:block; font-weight:400; color:var(--text-4); font-size:8.5px; margin-top:2px; white-space:normal; line-height:1.2; }
+.dw-mtable td { font-family:var(--font-mono); font-size:12px; color:var(--text-2); text-align:right; padding:6px 4px; border-bottom:1px solid rgba(255,255,255,.05); font-variant-numeric:tabular-nums; }
+.dw-mtable td:first-child { padding-left:0; }
+.dw-mtable td:last-child  { padding-right:0; }
 .dw-mtable tr:last-child td { border-bottom:none; }
 .dw-mtable td.dw-mt-metric { font-family:var(--font-ui); color:var(--text-3); text-align:left; }
 .dw-mtable td.good { color:var(--green); font-weight:700; }
 .dw-mtable td.bad  { color:var(--red);   font-weight:700; }
-.dw-dir { color:var(--text-4); font-size:9.5px; }
+.dw-dir { display:block; color:var(--text-4); font-size:9px; font-weight:400; margin-top:1px; }
 
 /* status & context rows — compact: label column + value right after (not far right) */
 .dw-rows { display:flex; flex-direction:column; gap:1px; }
@@ -1258,8 +1261,8 @@ details[open] .faq-q::after { content: '−'; }
 .dw-move-head .dw-h2 { margin-bottom:0; }
 .dw-lgwrap { margin-top:10px; }
 .dw-lg { width:100%; height:auto; display:block; }
-.dw-lg .dw-lg-val { font-family:var(--font-mono); font-size:11px; font-weight:600; fill:var(--text); }
-.dw-lg .dw-lg-lbl { font-family:var(--font-ui); font-size:10px; fill:var(--text-4); }
+.dw-lg .dw-lg-val { font-family:var(--font-mono); font-size:17px; font-weight:600; fill:var(--text); }
+.dw-lg .dw-lg-lbl { font-family:var(--font-ui); font-size:15px; fill:var(--text-4); }
 .dw-lg-cap { font-size:10px; color:var(--text-4); margin-top:6px; line-height:1.5; }
 .dw-clv { display:flex; align-items:baseline; gap:6px; flex-shrink:0; }
 .dw-clv .dw-clv-k, .dw-clv .dw-clv-s { font-size:10px; color:var(--text-4); }

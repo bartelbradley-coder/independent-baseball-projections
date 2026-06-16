@@ -1328,7 +1328,7 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   const pickPit = p.pitcher ? '<span>' + p.pitcher + '</span>' : '';
   const oppPit = p.opp_pitcher ? '<span>' + p.opp_pitcher + '</span>' : '';
   const tableHTML = mqRows.length
-    ? '<table class="dw-mtable"><thead><tr><th>Metric</th><th>' + pickAbbr + pickPit + '</th><th>' + oppAbbr + oppPit + '</th><th>Advantage</th></tr></thead><tbody>' + mqRows.join('') + '</tbody></table>'
+    ? '<table class="dw-mtable"><thead><tr><th>Metric</th><th>' + pickAbbr + pickPit + '</th><th>' + oppAbbr + oppPit + '</th><th>Adv.</th></tr></thead><tbody>' + mqRows.join('') + '</tbody></table>'
     : '<div class="dw-cap">No paired matchup metrics for this game.</div>';
 
   const lc = p.current_lineup_confirmed != null ? p.current_lineup_confirmed : rs.pick_lineup_confirmed;
