@@ -33,6 +33,14 @@
       "creator": { "@id": "https://independentbaseballprojections.net/#org" },
       "isAccessibleForFree": true,
       "keywords": ["MLB", "sports betting", "win probability", "closing line value", "quantitative model"]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How does the model price each game?", "acceptedAnswer": { "@type": "Answer", "text": "It converts the model's win probability into American odds with no margin — the theoretical price at which neither side has an edge. Edge is the gap between that model price and the market." } },
+        { "@type": "Question", "name": "How is edge calculated?", "acceptedAnswer": { "@type": "Answer", "text": "Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). Independent Baseball Projections only posts picks with at least 4% edge vs. Pinnacle's no-vig line." } },
+        { "@type": "Question", "name": "Does past performance guarantee future results?", "acceptedAnswer": { "@type": "Answer", "text": "No. Sports betting involves risk and variance. The model identifies positive expected value — not certainty. Never bet more than you can afford to lose." } }
+      ]
     }
   ]
 }
@@ -73,7 +81,7 @@
     <div class="nav-name"><span class="nav-fair">INDEPENDENT BASEBALL</span> <span class="nav-bold">PROJECTIONS</span></div>
   </a>
   <div class="nav-links">
-    <a class="nav-link active" href="index.html">Today's Picks</a>
+    <a class="nav-link active" aria-current="page" href="index.html">Today's Picks</a>
     <a class="nav-link" href="preview.html">Tomorrow</a>
     <a class="nav-link" href="history.html">Pick History</a>
     <a class="nav-link" href="performance.html">Model Dashboard</a>
@@ -235,7 +243,7 @@
         Independent Baseball Projections is a one-person project, built and run by <strong>BB</strong>. I built an independent win-probability model from scratch and post every pick publicly — timestamped before first pitch, never deleted after a loss — to prove the edge is real instead of asking you to take it on faith.
       </div>
       <div class="am-legal">
-        ⚠️ For informational and educational purposes only. Not financial advice. Must be 18+ and located in a legal jurisdiction. Bet responsibly.
+        ⚠️ For informational and educational purposes only. Not financial advice. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.
       </div>
     </div>
   </details>
@@ -291,6 +299,6 @@
 </div>
 
 <script src="ibp-utils.js"></script>
-<script src="index.js?v=6"></script>
+<script src="index.js?v=7"></script>
 </body>
 </html>

@@ -1236,7 +1236,7 @@ function renderEmptyState(data, hist, marginal = []) {
           ⚠️ ${marginal.length} Signal${marginal.length > 1 ? 's' : ''} Below 4% Threshold
         </div>
         ${rows}
-        <div style="font-size:10px;color:var(--text-4);margin-top:8px">Model found signals — none cleared the 2% minimum edge for a recommended bet.</div>
+        <div style="font-size:10px;color:var(--text-4);margin-top:8px">Model found signals — none cleared the 4% minimum edge for a recommended bet.</div>
       </div>`;
   }
 

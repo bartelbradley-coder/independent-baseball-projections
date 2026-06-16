@@ -56,8 +56,11 @@
     <a class="nav-link" href="preview.html">Tomorrow</a>
     <a class="nav-link" href="history.html">Pick History</a>
     <a class="nav-link" href="performance.html">Model Dashboard</a>
-    <a class="nav-link active" href="model.html">Methodology</a>
+    <a class="nav-link active" aria-current="page" href="model.html">Methodology</a>
   </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
   <div class="nav-right">
   </div>
 </nav>
@@ -627,7 +630,7 @@
       <div class="fbox"><span class="v">p_rl_cal</span> <span class="op">=</span> <span class="fn">σ</span>(<span class="v">A_rl</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_rl_raw</span>) <span class="op">+</span> <span class="v">B_rl</span>)
 
          <span class="op">=</span> <span class="n">1</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">+</span> <span class="fn">exp</span>(<span class="op">−</span>(<span class="hl">A_rl</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_rl_raw</span>)
-                          <span class="op">−</span> <span class="hl">B_rl</span>)))</div>
+                          <span class="op">+</span> <span class="hl">B_rl</span>)))</div>
       <div class="f-lbl">Parameter interpretation</div>
       <div class="fbox"><span class="hl">A_rl</span> <span class="op">&lt;</span> <span class="n">1</span>  <span class="cm">// &lt; 1: slight overconfidence;
                //   less shrinkage than ML model</span>
@@ -654,7 +657,7 @@ Away <span class="op">+</span><span class="n">1.5</span> win rate vs model edge:
       <div class="fbox"><span class="v">p_over_cal</span> <span class="op">=</span> <span class="fn">σ</span>(<span class="v">A_ou</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_over_raw</span>) <span class="op">+</span> <span class="v">B_ou</span>)
 
            <span class="op">=</span> <span class="n">1</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">+</span> <span class="fn">exp</span>(<span class="op">−</span>(<span class="hl">A_ou</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_over_raw</span>)
-                             <span class="op">−</span> <span class="hl">B_ou</span>)))</div>
+                             <span class="op">+</span> <span class="hl">B_ou</span>)))</div>
       <div class="f-lbl">Parameter interpretation</div>
       <div class="fbox"><span class="hl">A_ou</span> <span class="op">≪</span> <span class="n">1</span>  <span class="cm">// heavy shrinkage toward 50% —
                //   model significantly over-expresses
@@ -723,6 +726,20 @@ Bias by total line:
 </footer>
 
 <script>
+// ── Nav hamburger ──
+function toggleNav() {
+  const links = document.querySelector('.nav-links');
+  const btn   = document.getElementById('nav-hamburger');
+  if (!links) return;
+  links.classList.toggle('open');
+  if (btn) { btn.classList.toggle('open'); btn.setAttribute('aria-expanded', btn.classList.contains('open') ? 'true' : 'false'); }
+}
+document.querySelectorAll('.nav-link').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelector('.nav-links')?.classList.remove('open');
+  });
+});
+
 function toggleMathSection(el) {
   const open = el.closest('.math-coll').classList.toggle('open');
   el.setAttribute('aria-expanded', open ? 'true' : 'false');
