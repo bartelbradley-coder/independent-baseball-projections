@@ -1972,6 +1972,17 @@ function prKey(e, row) {
 }
 
 function render(data, hist, scores = {}, perf = null) {
+  // Staleness guard: before the morning pipeline run, today.json still holds the
+  // PRIOR day's picks. If its date is behind "today" in CT, the new day's picks
+  // haven't posted — clear them so the page shows the pending state ("Today's
+  // Picks Post at 9:00 AM CT") instead of yesterday's games.
+  try {
+    const _ctToday = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
+    if (data && data.date && String(data.date) < _ctToday) {
+      data = Object.assign({}, data, { picks: [], no_picks_yet: true });
+    }
+  } catch (e) { /* if date parsing fails, fall through and render as-is */ }
+
   _scoresRef = scores;   // stash so the share card can render settled results
   _perfRef = perf;       // stash edge-tier performance for share-card credibility
   // Build historical context lookup and start countdown timer (both idempotent)
