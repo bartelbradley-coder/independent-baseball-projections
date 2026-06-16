@@ -10,15 +10,15 @@
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": "How the Independent Baseball Projections Model Works",
-  "description": "A Dual-Poisson run-expectancy engine with 33 log-odds adjustments, Platt calibration, and out-of-sample validation vs. Pinnacle no-vig lines.",
+  "description": "A Dual-Poisson run-expectancy engine with 30+ signals, Platt calibration, and out-of-sample validation vs. Pinnacle no-vig lines.",
   "url": "https://independentbaseballprojections.net/model.html",
   "author": { "@type": "Organization", "name": "Independent Baseball Projections", "url": "https://independentbaseballprojections.net/" },
   "publisher": { "@type": "Organization", "name": "Independent Baseball Projections", "url": "https://independentbaseballprojections.net/" }
 }
 </script>
-<meta name="description" content="How the Independent Baseball Projections model works: a Dual-Poisson run-expectancy engine with 33 log-odds adjustments, Platt calibration, and out-of-sample validation vs. Pinnacle no-vig lines.">
+<meta name="description" content="How the Independent Baseball Projections model works: a Dual-Poisson run-expectancy engine with 30+ signals, Platt calibration, and out-of-sample validation vs. Pinnacle no-vig lines.">
 <meta property="og:title" content="Independent Baseball Projections — Methodology">
-<meta property="og:description" content="Dual-Poisson + 33 log-odds signals + Platt calibration. The full model pipeline, the math, the 33 signals, and 2022–2024 out-of-sample backtest results.">
+<meta property="og:description" content="Dual-Poisson + 30+ signals + Platt calibration. The full model pipeline, the math, the signals, and 2022–2024 out-of-sample backtest results.">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://independentbaseballprojections.net/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -26,7 +26,7 @@
 <meta property="og:url" content="https://independentbaseballprojections.net/model.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Independent Baseball Projections — Methodology">
-<meta name="twitter:description" content="The full model pipeline: Dual-Poisson, 33 log-odds adjustments, Platt calibration, and out-of-sample validation.">
+<meta name="twitter:description" content="The full model pipeline: Dual-Poisson, 30+ signals, Platt calibration, and out-of-sample validation.">
 <meta name="twitter:image" content="https://independentbaseballprojections.net/og-image.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='5' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='white'>IB</text><text x='16' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='%2360a5fa'>P</text><line x1='21' y1='23' x2='25' y2='18' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='25' cy='18' r='1.4' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -73,8 +73,8 @@
     </div>
   </div>
   <div class="hdr-pills">
-    <div class="hdr-pill p-ind">33-Signal Model</div>
-    <div class="hdr-pill p-ind">33 Log-Odds Adj.</div>
+    <div class="hdr-pill p-ind">30+ Signal Model</div>
+    <div class="hdr-pill p-ind">3 Signal Pathways</div>
     <div class="hdr-pill p-vio">Dual-Poisson</div>
     <div class="hdr-pill p-tea">Platt Calibrated</div>
     <div class="hdr-pill p-sla">CLV Tracked</div>
@@ -87,8 +87,8 @@
   <h1 class="qs-title">How Independent Baseball Projections Works — At a Glance</h1>
   <ul class="qs-list">
     <li>Projects expected runs for each team using a <strong>Dual-Poisson model</strong> calibrated on park, weather, pitcher quality, and lineup data</li>
-    <li><strong>33 log-odds adjustments</strong> refine the base win probability — pitcher quality, lineup confirmation, bullpen form, BvP, precipitation, line movement, and more</li>
-    <li>Calibrated monthly on 2026 live results using <strong>Platt scaling</strong> — parameters updated as the season progresses</li>
+    <li><strong>30+ signals</strong> refine the base win probability through three pathways — run-environment inputs to the run rates, log-odds adjustments to the win probability, and confidence-shrinkage multipliers (pitcher quality, lineup confirmation, bullpen form, BvP, precipitation, line movement, and more)</li>
+    <li><strong>Platt-scaled</strong> on a 7,359-game 2022–24 out-of-sample backtest, lightly blended with 2026 live results as the live sample grows</li>
     <li><strong>Edge = blended model probability − Pinnacle no-vig price.</strong> Only picks where the model sees ≥4% mispricing are posted as official plays. <em>Pure model probability</em> (no market input) is tracked separately for calibration — never using market-blended numbers to evaluate model skill.</li>
     <li>Every pick logged with timestamp before first pitch. <strong>CLV tracked to closing line</strong> to validate the signal is real, not luck</li>
   </ul>
@@ -129,19 +129,19 @@
     <div class="msig-sub">λ_home + λ_away → CDF</div>
   </div>
   <div class="msig-cell">
-    <div class="msig-lbl">Feature Layers</div>
-    <div class="msig-val">4 · 33 signals</div>
-    <div class="msig-sub">pitcher / sit. / market</div>
+    <div class="msig-lbl">Signal Pathways</div>
+    <div class="msig-val">3 · 30+ signals</div>
+    <div class="msig-sub">λ-input · log-odds · shrink</div>
   </div>
   <div class="msig-cell">
     <div class="msig-lbl">Adjustments</div>
-    <div class="msig-val">33 log-odds</div>
+    <div class="msig-val">30+ signals</div>
     <div class="msig-sub">logit(p) += Σ αᵢ</div>
   </div>
   <div class="msig-cell">
     <div class="msig-lbl">Calibration</div>
     <div class="msig-val">Platt sigmoid</div>
-    <div class="msig-sub">monthly sigmoid fit</div>
+    <div class="msig-sub">OOS fit + live blend</div>
   </div>
   <div class="msig-cell">
     <div class="msig-lbl">Bet Filter</div>
@@ -200,7 +200,7 @@
       </div>
       <div class="pipe-io">
         <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">Raw JSON dicts per game</div></div>
-        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">30 float features (home/away): xFIP, xERA, K-BB%, OPS splits, BvP, arsenal fit, park, weather, ump…</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">~50 numeric inputs per game (home/away): xFIP, xERA, K-BB%, OPS splits, BvP, arsenal fit, park, weather, ump…</div></div>
       </div>
     </div>
 
@@ -235,7 +235,7 @@
         <div class="pipe-name">Log-Odds Adj.</div>
       </div>
       <div class="pipe-io">
-        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">p_base + 33 αᵢ float signals</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">p_base + 30+ signal adjustments</div></div>
         <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">p_adj — logit(p_base)+Σαᵢ → sigmoid</div></div>
       </div>
     </div>
@@ -291,11 +291,11 @@
       <div class="fbox"><span class="v">λ_base</span> <span class="op">=</span> (<span class="n">w₁</span> × <span class="v">RS₃ᵧᵣ</span> <span class="op">+</span> <span class="n">w₂</span> × <span class="v">RS_L15</span>) <span class="op">/</span> <span class="v">G</span>
          × <span class="v">park_factor</span>
 <span class="cm">// RS₃ᵧᵣ: 3yr rolling RS/G · RS_L15: last 15G avg</span></div>
-      <div class="f-lbl">Log-odds stacking — 33 factors, logit space</div>
+      <div class="f-lbl">Log-odds stacking — signal factors in logit space</div>
       <div class="fbox"><span class="fn">logit</span>(<span class="v">p</span>) <span class="op">=</span> <span class="fn">log</span>(<span class="v">p</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">−</span> <span class="v">p</span>))
 
 <span class="fn">logit</span>(<span class="v">p_adj</span>) <span class="op">=</span> <span class="fn">logit</span>(<span class="v">p_base</span>) <span class="op">+</span> <span class="fn">Σᵢ</span> <span class="v">αᵢ</span>
-<span class="cm">// 33 αᵢ ∈ ℝ · logit prevents p ∉ (0,1)</span>
+<span class="cm">// αᵢ ∈ ℝ · logit prevents p ∉ (0,1)</span>
 
 <span class="v">p_adj</span> <span class="op">=</span> <span class="fn">sigmoid</span>(<span class="fn">logit</span>(<span class="v">p_adj</span>))</div>
       <div class="math-note">The blend favors the multi-year base while still weighting recent (L15) form to capture hot/cold streaks without overreacting to small samples. Park adjustment applied symmetrically to both offensive and defensive λ.</div>
@@ -312,7 +312,7 @@
       <div class="fbox"><span class="fn">P</span>(home wins) <span class="op">=</span>
   <span class="fn">Σ</span>_{k=1}^∞ <span class="fn">P</span>(<span class="v">R_home</span><span class="op">=</span><span class="v">k</span>) <span class="op">·</span> <span class="fn">CDF</span><sub>Pois</sub>(<span class="v">λ_away</span><span class="op">,</span> <span class="v">k</span><span class="op">−</span><span class="n">1</span>)
 <span class="cm">// Tie → extra innings as 50/50</span></div>
-      <div class="math-note">No Monte Carlo needed — win prob is computed exactly from Poisson CDFs. Teams are modeled as independent (no run correlation). Pitcher, park, and lineup signals enter via λ; 33 log-odds factors adjust the derived win probability directly.</div>
+      <div class="math-note">No Monte Carlo needed — win prob is computed exactly from Poisson CDFs. Teams are modeled as independent (no run correlation). Run-environment signals (park, weather, umpire, platoon, baserunning) enter via λ; log-odds adjustments and confidence-shrinkage multipliers then adjust the derived win probability.</div>
     </div>
 
     <div class="math-block ct">
@@ -326,7 +326,7 @@
       <div class="fbox"><span class="hl">A &lt; 1</span>  <span class="cm">// &lt; 1: model over-expresses
           //   confidence; compress toward 50%</span>
 <span class="hl">B &gt; 0</span> <span class="cm">// home-team bias correction</span></div>
-      <div class="math-note">Fitted via MLE on out-of-sample outcomes (exact A,&nbsp;B recalibrated monthly and not published). Brier Score: <strong>0.234</strong> model vs. <strong>0.250</strong> market — 6.4% improvement. A &lt; 1 confirms the raw Poisson systematically over-prices favorites; calibration compresses the logit toward the empirical base rate.</div>
+      <div class="math-note">Fitted via MLE on the 2022–24 out-of-sample backtest, lightly blended with 2026 live outcomes as the sample grows (exact A,&nbsp;B not published). Brier Score: <strong>0.234</strong> model vs. <strong>0.250</strong> market — 6.4% improvement. A &lt; 1 confirms the raw Poisson systematically over-prices favorites; calibration compresses the logit toward the empirical base rate.</div>
     </div>
 
     <div class="math-block cs">
@@ -381,13 +381,13 @@
 <div class="section" id="section-signals">
   <h2 class="sec-lbl">Signal Importance — Avg. Abs. Log-Odds Contribution per Factor (αᵢ) · Relative Magnitudes Approximate · v2 = 2026 update</h2>
   <div style="font-size:11px;color:var(--text-3);line-height:1.6;margin:-6px 0 16px;padding:9px 12px;border:1px solid rgba(245,158,11,0.18);background:rgba(245,158,11,0.05);border-radius:8px">
-    Importances reflect the model's <em>design</em>; magnitudes are approximate. Several factors marked <strong>inactive</strong> below do not currently affect live picks — retired after backtest validation (bullpen fatigue, pitcher-form slope) or awaiting data wiring (catcher framing, bullpen availability, career H2H matchup). In practice, live discrimination is concentrated in the pitcher-xFIP and run-environment core; the situational adjustments are deliberately small.
+    The model's 30+ signals flow through three pathways — run-environment inputs to the Poisson run rates, log-odds adjustments to the win probability, and confidence-shrinkage multipliers. They are grouped by domain below for readability; importances reflect the model's <em>design</em> and magnitudes are approximate. Several factors marked <strong>inactive</strong> below do not currently affect live picks — retired after backtest validation (bullpen fatigue, pitcher-form slope) or awaiting data wiring (catcher framing, bullpen availability, career H2H matchup). In practice, live discrimination is concentrated in the pitcher-xFIP and run-environment core; the situational adjustments are deliberately small.
   </div>
   <div class="imp-grid">
 
     <div class="imp-group ig-ind">
       <div class="imp-ghdr">
-        <div class="imp-gtitle">⚾ Pitcher Layer</div>
+        <div class="imp-gtitle">⚾ Pitcher</div>
         <div class="imp-gcount">5 factors · α₁–α₅</div>
       </div>
       <div class="sig-row"><div class="sig-idx">α₁</div><div class="sig-name">Starter xFIP matchup</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:100%"></div></div><div class="sig-val">0.18</div></div>
@@ -399,7 +399,7 @@
 
     <div class="imp-group ig-tea">
       <div class="imp-ghdr">
-        <div class="imp-gtitle">🌤 Situational Layer</div>
+        <div class="imp-gtitle">🌤 Situational</div>
         <div class="imp-gcount">6 factors · α₆–α₁₁</div>
       </div>
       <div class="sig-row"><div class="sig-idx">α₆</div><div class="sig-name">Park factor</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:67%"></div></div><div class="sig-val">0.12</div></div>
@@ -412,7 +412,7 @@
 
     <div class="imp-group ig-amb">
       <div class="imp-ghdr">
-        <div class="imp-gtitle">📈 Market &amp; Lineup Layer</div>
+        <div class="imp-gtitle">📈 Market &amp; Lineup</div>
         <div class="imp-gcount">7 factors · α₁₂–α₁₈</div>
       </div>
       <div class="sig-row"><div class="sig-idx">α₁₂</div><div class="sig-name">Lineup OPS split (hand)</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:61%"></div></div><div class="sig-val">0.11</div></div>
@@ -450,14 +450,14 @@
 
 <!-- FEATURE ENGINEERING -->
 <div class="section" id="section-features">
-  <h2 class="sec-lbl">Feature Engineering — 33-Signal Architecture Across 4 Layers (v2/v3: 10 new signals added 2026 · a few currently inactive, see note above)</h2>
+  <h2 class="sec-lbl">Feature Engineering — 30+ Signals (v2/v3: 10 new signals added 2026 · a few currently inactive, see note above)</h2>
   <div class="feature-grid">
 
     <div class="feat-col">
       <div class="feat-col-hdr">
         <div class="feat-col-icon">⚾</div>
         <div>
-          <div class="feat-col-title">Pitcher Layer</div>
+          <div class="feat-col-title">Pitcher</div>
           <div class="feat-col-src">MLB Stats API · Baseball Savant</div>
         </div>
       </div>
@@ -482,7 +482,7 @@
       <div class="feat-col-hdr">
         <div class="feat-col-icon">🌤</div>
         <div>
-          <div class="feat-col-title">Situational Layer</div>
+          <div class="feat-col-title">Situational</div>
           <div class="feat-col-src">Savant · Open-Meteo · UmpScoreCards</div>
         </div>
       </div>
@@ -498,7 +498,7 @@
       <div class="feat-col-hdr">
         <div class="feat-col-icon">📈</div>
         <div>
-          <div class="feat-col-title">Lineup &amp; Market Layer</div>
+          <div class="feat-col-title">Lineup &amp; Market</div>
           <div class="feat-col-src">MLB Stats API · Pinnacle / Odds API</div>
         </div>
       </div>
@@ -531,7 +531,7 @@
       <div class="ex-step">
         <div class="ex-num">2</div>
         <div class="ex-content">
-          <div class="ex-title">33 log-odds adjustments</div>
+          <div class="ex-title">30+ signals</div>
           <div class="ex-text">Home starter Stuff+ 118 (+0.3pp), lineup quality +0.8pp, TTO penalty −0.4pp, umpire wide zone +0.2pp, BvP +0.5pp → net <strong>+1.4pp adjustment</strong></div>
         </div>
       </div>
