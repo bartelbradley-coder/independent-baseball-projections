@@ -104,294 +104,34 @@ const TEAM_COLORS = {
   STL:'#C41E3A', TB:'#8FBCE6', TEX:'#C0111F', TOR:'#1D78CE', WSH:'#AB0003',
 };
 
-function _buildShareCardHTML(p) {
-  // ── Data binding from pick object ──────────────────────────────────────────
-  const edgePct  = p.edge ? (p.edge * 100).toFixed(1) : '0.0';
-  const modelPct = p.model_prob  ? (p.model_prob  * 100).toFixed(1) : null;
-  const mktPct   = p.market_prob ? (p.market_prob * 100).toFixed(1) : null;
-  const isDog    = (p.odds || 0) > 0;
-  const team     = (p.pick || '???').toUpperCase();
-  const oddsCls  = isDog ? 'pos' : 'neg';
-  const oddsStr  = formatOdds(p.odds);
-
-  // Verdict tier → card accent
-  const v = (p.verdict || '').toUpperCase();
-  const isCond = v.includes('CONDITIONAL') || v.includes('REDUCED');
-  const tierCls = isCond ? 'cond' : 'val';
-  const badgeText = isCond ? 'Conditional Value' : '✓ Official Value Bet';
-
-  // ── Settled result (result-card variant) ───────────────────────────────────
-  // Result/score come from live ESPN scores, not the pick object. P&L is derived
-  // from the result + odds on the displayed stake. (CLV is post-settlement only,
-  // so it isn't shown here — it lives in history.json.)
-  const _gr = (typeof getPickResult === 'function') ? getPickResult(p, _scoresRef) : null;
-  const isSettled = !!(_gr && _gr.status === 'final');
-  const won = isSettled && _gr.result === 'W';
-  const finalScore = isSettled ? _gr.score : '';
-  const _stakeU = p.kelly_units || 1;
-  const _mult = (p.odds > 0) ? (p.odds / 100) : (100 / Math.abs(p.odds || 100));
-  const _pnlU = won ? _stakeU * _mult : -_stakeU;
-  const pnlStr = (_pnlU >= 0 ? '+' : '−') + Math.abs(_pnlU).toFixed(1) + 'u';
-  const cardAccent = isSettled ? (won ? 'val' : 'lost') : tierCls;
-  const teamAccent = TEAM_COLORS[(p.pick || '').toUpperCase()] || '#3a4658';
-  // CLV — prefer the pick's own clv (now exported into today.json once the
-  // closing-line snapshot runs intraday); fall back to a history.json lookup.
-  let clvPp = (p.clv != null && !isNaN(parseFloat(p.clv))) ? parseFloat(p.clv) * 100 : null;
-  if (clvPp == null && _histDataRef && Array.isArray(_histDataRef.rows)) {
-    const m = _histDataRef.rows.slice().reverse().find(r =>
-      (r.pick || '') === (p.pick || '') && (r.game || '') === (p.game || '') &&
-      r.clv != null && r.clv !== '');
-    if (m) clvPp = parseFloat(m.clv) * 100;
-  }
-  const showClv = isSettled && clvPp != null && !isNaN(clvPp);
-
-  // ── Model factor decomposition (top 3 adjustments) — shows the inputs ───────
-  const _adjs = (p.adj_breakdown && p.adj_breakdown.adjustments) ? p.adj_breakdown.adjustments : [];
-  const _topAdjs = _adjs.slice()
-    .sort((a, b) => Math.abs(b.pp || 0) - Math.abs(a.pp || 0))
-    .slice(0, 3);
-  const factorsHTML = _topAdjs.length ? `<div class="scm-factors">${_topAdjs.map(a => {
-    const pos = (a.positive !== false) && (a.pp || 0) >= 0;
-    const sign = pos ? '+' : '−';
-    return `<span class="scm-factor"><span class="scm-factor-lbl">${a.label}</span><span class="scm-factor-pp ${pos ? 'pos' : 'neg'}">${sign}${Math.abs(a.pp || 0).toFixed(1)}</span></span>`;
-  }).join('')}</div>` : '';
-
-  // ── Edge-tier track record — ties this pick to proven performance ───────────
-  let tierLineHTML = '';
-  const _tiers = (_perfRef && _perfRef.edge_tiers) || [];
-  if (_tiers.length) {
-    const _ePct = (p.edge || 0) * 100;
-    const _tm = _tiers.find(t => {
-      const lbl = t.label || '';
-      if (lbl.includes('8%+') || lbl.includes('8+')) return _ePct >= 8;
-      const m = lbl.match(/([\d.]+)\D+([\d.]+)/);
-      return m && _ePct >= parseFloat(m[1]) && _ePct < parseFloat(m[2]);
-    });
-    if (_tm && _tm.bets && _tm.win_rate != null && _tm.roi != null) {
-      const wr  = (_tm.win_rate * 100).toFixed(0);
-      const roi = (_tm.roi >= 0 ? '+' : '') + (_tm.roi * 100).toFixed(0) + '%';
-      tierLineHTML = `<div class="scm-tier-line"><span class="scm-tier-tag">${_tm.label} edge, 2026</span> ${wr}% win · <span class="scm-tier-roi">${roi} ROI</span> · ${_tm.bets} picks</div>`;
-    }
-  }
-
-  // Stake
-  const stakeUnits = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—';
-  const stakeDollar = (_bankroll > 0 && p.kelly_units)
-    ? '$' + Math.round(p.kelly_units * _bankroll / 100) : '';
-  const stakeDisplay = stakeDollar ? stakeUnits + ' / ' + stakeDollar : stakeUnits;
-
-  // Pitchers and xFIP
-  const rs = p.raw_stats || {};
-  const pickPitcher = p.pitcher || '';
-  const oppPitcher  = p.opp_pitcher || '';
-  const pickXfip    = rs.pick_xfip != null ? rs.pick_xfip.toFixed(2) : null;
-  const oppXfip     = rs.opp_xfip  != null ? rs.opp_xfip.toFixed(2)  : null;
-  const pitcherHTML = (pickPitcher && oppPitcher)
-    ? `<span class="scm-pitcher-pick">${pickPitcher}</span>
-       ${pickXfip ? `<span class="scm-pitcher-xfip">(${pickXfip} xFIP)</span>` : ''}
-       <span class="scm-pitcher-vs">vs.</span>
-       <span class="scm-pitcher-opp">${oppPitcher}</span>
-       ${oppXfip  ? `<span class="scm-pitcher-xfip">(${oppXfip} xFIP)</span>` : ''}`
-    : '';
-
-  // Lineup status
-  const homeConf = p.home_lineup_confirmed;
-  const awayConf = p.away_lineup_confirmed;
-  const isHome   = (p.side || '').toUpperCase() === 'HOME';
-  const pickConf = isHome ? homeConf : awayConf;
-  const oppConf  = isHome ? awayConf : homeConf;
-  const [homeTeam, awayTeam] = (p.game || '').includes(' @ ')
-    ? p.game.split(' @ ').map(s => s.trim()) : [p.pick, '—'];
-  const oppTeam  = isHome ? awayTeam : homeTeam;
-  const pickDot  = pickConf === true ? 'conf' : 'proj';
-  const oppDot   = oppConf  === true ? 'conf' : 'proj';
-  const pickStat = pickConf === true ? 'Confirmed' : 'Projected';
-  const oppStat  = oppConf  === true ? 'Confirmed' : 'Projected';
-  const lineupWarn = (pickConf !== true || oppConf !== true)
-    ? `<span class="scm-lu-warn">— confirm before betting</span>` : '';
-
-  // Game time
-  let gameTimeStr = '';
-  if (p.game_time) {
-    try {
-      const d = new Date(p.game_time);
-      const ct = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago' });
-      gameTimeStr = 'Tonight, ' + ct + ' CT';
-    } catch(e) { gameTimeStr = ''; }
-  }
-
-  // Probability bar (zoomed ±12pp window)
-  let mktF = '40.0', edgeF = '20.0';
-  if (mktPct && modelPct) {
-    const mktV = parseFloat(mktPct);
-    const mdlV = parseFloat(modelPct);
-    const lo   = Math.max(0, mktV - 12);
-    const hi   = Math.min(100, mdlV + 12);
-    const range = hi - lo || 1;
-    mktF  = ((mktV - lo) / range * 100).toFixed(1);
-    edgeF = ((mdlV - mktV) / range * 100).toFixed(1);
-  }
-
-  // Key stats
-  const playableTo = p.playable_to != null
-    ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to)) : '—';
-  const fairML = p.fair_odds != null
-    ? (p.fair_odds > 0 ? '+' + p.fair_odds : String(p.fair_odds)) : '—';
-
-  // Best available — sorted book entries if available, fallback to p.best_book
-  const _bdn = {novig:'Novig',prophetx:'ProphetX',pinnacle:'Pinnacle',lowvig:'LowVig',
-    betonlineag:'BetOnline',draftkings:'DraftKings',fanduel:'FanDuel',
-    betmgm:'BetMGM',betrivers:'BetRivers',espnbet:'ESPN Bet'};
-  const topEntry = sanitizeBookOdds(p).best;
-  const bestBookName = topEntry ? topEntry.book : (_bdn[(p.best_book||'').toLowerCase()] || p.best_book || '—');
-  const bestOddsStr  = topEntry
-    ? (topEntry.odds > 0 ? '+' + topEntry.odds : String(topEntry.odds))
-    : (p.best_odds != null ? formatOdds(p.best_odds) : formatOdds(p.odds));
-
-  // Driver — 3-sentence SP narrative if xFIP available, else narrative fallback
-  let driverHTML = '';
-  if (pickPitcher && oppPitcher && pickXfip && oppXfip) {
-    const gap = Math.abs(parseFloat(pickXfip) - parseFloat(oppXfip)).toFixed(2);
-    driverHTML = `<strong>SP edge</strong> \u2014 ${pickPitcher} ${pickXfip} xFIP vs ${oppPitcher} ${oppXfip}: a ${gap}-point gap the market hasn't priced.`;
-  } else if (p.narrative) {
-    const sents = p.narrative.trim().split(/\.\s+(?=[A-Z])/);
-    const first3 = sents.slice(0, 3).join('. ').replace(/<[^>]+>/g, '');
-    // Bold the first clause if it has a dash separator
-    const parts = first3.split(' \u2014 ');
-    if (parts.length >= 2) {
-      driverHTML = `<strong>${parts[0].trim()}</strong> \u2014 ${parts.slice(1).join(' \u2014 ')}`;
-    } else {
-      driverHTML = first3;
-    }
-  } else {
-    driverHTML = `<strong>Model edge</strong> \u2014 Model projects ${modelPct || '—'}% vs market ${mktPct || '—'}%. Model price ${fairML} vs best available ${bestOddsStr}. Edge: +${edgePct}pp vs Pinnacle no-vig.`;
-  }
-
-  // Date
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
-  // Season record
-  const season = (_todayDataRef && _todayDataRef.season) || {};
-  const recLine1 = (season.wins != null && season.losses != null && season.roi != null)
-    ? `${season.wins}W\u2013${season.losses}L \u00b7 ${season.roi >= 0 ? '+' : ''}${(season.roi*100).toFixed(1)}% ROI` : '—';
-  const recLine2 = ['2026 Season', season.bets ? season.bets + ' picks logged' : ''].filter(Boolean).join(' \u00b7 ');
-
-  // Posted at
-  const postedAt = p.posted_at || '—';
-
-  return `<div class="sc-modal ${cardAccent}" id="share-card-el" style="--team-accent:${teamAccent}">
-    <div class="scm-topbar"></div>
-
-    <!-- 1. Header 62px -->
-    <div class="scm-hdr">
-      <div class="scm-brand">
-        <div class="scm-logo">
-          <svg width="28" height="28" viewBox="0 0 18 18" fill="none">
-            <circle cx="9" cy="9" r="8" stroke="rgba(255,255,255,.7)" stroke-width="1.1"/>
-            <text x="1" y="13" font-family="system-ui" font-size="7" font-weight="900" fill="white">IB</text><text x="10" y="13" font-family="system-ui" font-size="7" font-weight="900" fill="#818cf8">P</text>
-          </svg>
-        </div>
-        <div>
-          <div class="scm-wm"><span class="f">INDEPENDENT BASEBALL</span> PROJECTIONS</div>
-          <div class="scm-tagline">Bet the number, not the noise.</div>
-        </div>
-      </div>
-      <div class="scm-badge ${isSettled ? (won ? 'won' : 'lost') : tierCls}">${isSettled ? (won ? '✓ WON · ' + pnlStr : '✗ LOST · ' + pnlStr) : badgeText}</div>
-      <div class="scm-date">${dateStr}</div>
+function _buildShareCardHTML(p, isBest) {
+  // The shareable image IS the expanded pick card (prDrawerHTML), wrapped in a slim
+  // brand header + disclaimer/URL footer. Single source of truth — no parallel design.
+  const gr = (typeof getPickResult === 'function') ? getPickResult(p, _scoresRef) : null;
+  const drawer = prDrawerHTML(p, !!isBest, gr, true);   // forShare=true -> no action buttons
+  let dateStr = '';
+  try {
+    const d = (typeof _todayDataRef !== 'undefined' && _todayDataRef && _todayDataRef.date)
+      ? new Date(_todayDataRef.date + 'T12:00:00') : new Date();
+    if (!isNaN(d)) dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch (e) {}
+  return `<div class="sc-wrap" id="share-card-el">
+    <div class="sc-wrap-hdr">
+      <svg class="sc-wrap-logo" width="22" height="22" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg"><circle cx="44" cy="44" r="32" fill="rgba(99,102,241,0.1)"/><circle cx="44" cy="44" r="32" stroke="rgba(255,255,255,0.82)" stroke-width="1.8" fill="none"/><text x="19" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="white">IB</text><text x="44" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text><line x1="56" y1="60" x2="64" y2="50" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/><circle cx="64" cy="50" r="3.3" fill="#22c55e"/></svg>
+      <span class="sc-wrap-name"><b>INDEPENDENT BASEBALL</b> PROJECTIONS</span>
+      <span class="sc-wrap-date">${dateStr}</span>
     </div>
-
-    <!-- 2. Matchup & Lineup 198px -->
-    <div class="scm-lineup">
-      <div class="scm-matchup-row">
-        <span class="scm-matchup-name">${p.game || '—'}</span>
-        ${isSettled ? `<span class="scm-matchup-sep">·</span><span class="scm-gametime">Final · ${finalScore}</span>`
-          : gameTimeStr ? `<span class="scm-matchup-sep">·</span><span class="scm-gametime">${gameTimeStr}</span>` : ''}
-      </div>
-      ${pitcherHTML ? `<div class="scm-pitchers">${pitcherHTML}</div>` : ''}
-      <div class="scm-lineup-status">
-        <div class="scm-lu-item">
-          <div class="scm-lu-dot ${isSettled || (pickDot === 'conf' && oppDot === 'conf') ? 'conf' : 'proj'}"></div>
-          <span class="scm-lu-stat ${isSettled || (pickDot === 'conf' && oppDot === 'conf') ? 'conf' : 'proj'}">${isSettled ? 'Posted before first pitch · tracked in full' : (pickConf === true && oppConf === true ? 'Lineups confirmed' : 'Lineups projected — verify before betting')}</span>
-        </div>
-      </div>
+    <div class="sc-wrap-body">${drawer}</div>
+    <div class="sc-wrap-ftr">
+      <div class="sc-wrap-disc">Informational only — not financial advice. Verify current odds and lineup before placing any bet. Past performance does not guarantee future results.</div>
+      <div class="sc-wrap-url">independentbaseballprojections.net</div>
     </div>
-
-    <!-- 3. Pick + Stats two-column 280px -->
-    <div class="scm-pick-stats">
-      <div class="scm-pick-left">
-        <div class="scm-pick-headline">
-          <span class="scm-team">${team}</span>
-          <span class="scm-bet-type">ML</span>
-          <span class="scm-odds ${oddsCls}">${oddsStr}</span>
-        </div>
-        <div class="scm-stake-row">
-          <span class="scm-stake-lbl">Stake</span>
-          <span class="scm-stake-val">${stakeDisplay}</span>
-          ${_bankroll > 0 ? `<span class="scm-stake-note">$${_bankroll.toLocaleString()} bankroll · Kelly</span>` : ''}
-        </div>
-      </div>
-      <div class="scm-pick-right">
-        ${isSettled ? `
-        <div class="scm-result-block ${won ? 'won' : 'lost'}">
-          <div class="scm-stat-lbl">Result</div>
-          <div class="scm-result-word ${won ? 'won' : 'lost'}">${won ? 'WON' : 'LOST'}</div>
-          <div class="scm-result-pnl">${pnlStr}${stakeDollar ? ' · ' + (won ? '+' : '−') + '$' + Math.abs(Math.round(_pnlU * _bankroll / 100)).toLocaleString() : ''}</div>
-        </div>` : `
-        <div class="scm-best-block">
-          <div class="scm-stat-lbl">Best Price</div>
-          <div class="scm-best-odds">${bestOddsStr}</div>
-          <div class="scm-best-book">${bestBookName}</div>
-          <div class="scm-stat-sub">verify before betting</div>
-        </div>`}
-      </div>
-    </div>
-
-    <!-- 4. Edge + Prob Bar 200px -->
-    <div class="scm-edge">
-      <div class="scm-edge-top">
-        <div class="scm-edge-num">${showClv ? (clvPp >= 0 ? '+' : '−') + Math.abs(clvPp).toFixed(1) + 'pp' : '+' + edgePct + 'pp'}</div>
-        <div class="scm-edge-kicker">${showClv ? (clvPp >= 0 ? 'CLV · BEAT THE CLOSE' : 'CLV · CLOSED PAST') : (isSettled ? 'PRE-GAME EDGE' : 'EDGE')}</div>
-      </div>
-      <div>
-        <div class="scm-bar-hdr">
-          <span class="scm-bar-lbl mkt">Market ${mktPct || '—'}%</span>
-          <span class="scm-bar-lbl mdl">Model ${modelPct || '—'}%</span>
-        </div>
-        <div class="scm-bar-track">
-          <div class="scm-bar-mkt" style="width:${mktF}%"></div>
-          <div class="scm-bar-edg" style="left:${mktF}%;width:${Math.max(0,parseFloat(edgeF)).toFixed(1)}%"></div>
-        </div>
-      </div>
-      ${tierLineHTML}
-    </div>
-
-    <!-- 5. Driver + model factors -->
-    <div class="scm-driver-section">
-      <div class="scm-driver-inner">
-        <div class="scm-driver-text">${driverHTML}</div>
-        ${factorsHTML}
-      </div>
-    </div>
-
-    <!-- 6. Footer 190px -->
-    <div class="scm-ftr">
-      <div class="scm-ftr-url">independentbaseballprojections.net</div>
-      <div class="scm-ftr-record">${recLine1}<br>${recLine2}</div>
-      <div class="scm-ftr-meta">
-        <div class="scm-fi"><span class="scm-fi-lbl">Posted before first pitch</span><span class="scm-fi-val">${postedAt}</span></div>
-        <div class="scm-fi-dot"></div>
-        <div class="scm-fi"><span class="scm-fi-lbl">Benchmark</span><span class="scm-fi-val">Pinnacle no-vig</span></div>
-      </div>
-      <div class="scm-ftr-disc">Informational only — not financial advice. Verify current odds and lineup before placing any bet. Past performance does not guarantee future results.</div>
-    </div>
-
   </div>`;
 }
 
 
 // ── Show share modal ─────────────────────────────────────────────────────────
-function sharePickCard(id) {
+function sharePickCard(id, isBest) {
   const p = picksMap[id];
   if (!p) return;
   _shareCardPickId = id;
@@ -400,24 +140,22 @@ function sharePickCard(id) {
   const preview = document.getElementById('share-modal-preview');
   if (!modal || !preview) return;
 
-  // Build card HTML and inject
-  preview.innerHTML = _buildShareCardHTML(p);
+  // Build card HTML and inject — the exact expanded drawer + slim brand/disclaimer frame
+  preview.innerHTML = _buildShareCardHTML(p, isBest);
 
-  // Scale the 1080×1080 card to fit the modal preview area
-  // Use top-center origin so the card stays horizontally centred when scaled
+  // Scale the natural-size card to fit the modal preview (card is portrait, not 1080²)
   const scaledEl = document.getElementById('share-card-el');
   if (scaledEl) {
     const modalBox = document.querySelector('.share-modal-box');
-    const boxW     = modalBox ? modalBox.offsetWidth : Math.min(window.innerWidth * 0.92, 700);
-    const maxH     = window.innerHeight * 0.65; // leave room for toolbar + actions
-    const scaleByW = boxW / 1080;
-    const scaleByH = maxH / 1080;
-    const scale    = Math.min(scaleByW, scaleByH, 1); // never upscale
-    const scaledH  = Math.round(1080 * scale);
-    scaledEl.style.transform      = `scale(${scale})`;
+    const boxW  = modalBox ? modalBox.offsetWidth : Math.min(window.innerWidth * 0.92, 700);
+    const maxH  = window.innerHeight * 0.65; // leave room for toolbar + actions
+    const cardW = scaledEl.offsetWidth  || 680;
+    const cardH = scaledEl.offsetHeight || 680;
+    const scale = Math.min(boxW / cardW, maxH / cardH, 1); // never upscale
+    scaledEl.style.transform       = `scale(${scale})`;
     scaledEl.style.transformOrigin = 'top center';
-    // Size the preview container to exactly the scaled height; card is centred by flex
-    preview.style.height   = scaledH + 'px';
+    const scaledH = Math.round(cardH * scale);
+    preview.style.height    = scaledH + 'px';
     preview.style.minHeight = scaledH + 'px';
   }
 
@@ -480,7 +218,7 @@ async function downloadShareCard() {
 
   btn.disabled = true;
   btn.textContent = '⏳ Rendering…';
-  if (hint) hint.textContent = 'Generating 1080×1080 PNG…';
+  if (hint) hint.textContent = 'Generating PNG…';
 
   try {
     // Temporarily reset transform so html2canvas captures full 1080×1080
@@ -490,12 +228,10 @@ async function downloadShareCard() {
     el.style.transformOrigin = 'top left';
 
     const canvas = await html2canvas(el, {
-      width: 1080,
-      height: 1080,
-      scale: 1,
+      scale: 2,
       useCORS: true,
       allowTaint: true,
-      backgroundColor: '#06090f',
+      backgroundColor: '#0b0e16',
       logging: false,
     });
 
@@ -512,11 +248,11 @@ async function downloadShareCard() {
     link.click();
 
     btn.textContent = '✓ Downloaded';
-    if (hint) hint.textContent = '1080×1080 PNG saved';
+    if (hint) hint.textContent = 'PNG saved';
     setTimeout(() => {
       btn.disabled = false;
       btn.textContent = '⬇ Download PNG';
-      if (hint) hint.textContent = '1080×1080 · ready to post';
+      if (hint) hint.textContent = 'Ready to share';
     }, 2500);
   } catch (err) {
     console.error('[Independent Baseball Projections] html2canvas error:', err);
@@ -543,9 +279,9 @@ async function nativeShareCard() {
     el.style.transformOrigin = 'top left';
 
     const canvas = await html2canvas(el, {
-      width: 1080, height: 1080, scale: 1,
+      scale: 2,
       useCORS: true, allowTaint: true,
-      backgroundColor: '#06090f', logging: false,
+      backgroundColor: '#0b0e16', logging: false,
     });
 
     el.style.transform = savedTransform;
@@ -697,27 +433,7 @@ function refreshKellyUSD() {
 }
 
 // ── Copy pick to clipboard ────────────────────────────────────────────────────
-function copyPick(id) {
-  const p = picksMap[id];
-  if (!p) return;
-  const edge    = (p.edge * 100).toFixed(1);
-  const model   = p.model_prob  ? (p.model_prob  * 100).toFixed(1) : null;
-  const mkt     = p.market_prob ? (p.market_prob * 100).toFixed(1) : null;
-  const kelly   = p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '';
-  const usdPart = (_bankroll > 0 && p.kelly_units) ? ` ($${Math.round(p.kelly_units * _bankroll / 100)})` : '';
-  const parts   = [`🎯 BET: ${p.pick} ${formatOdds(p.odds)}`];
-  if (model && mkt) parts.push(`Independent Baseball Projections ${model}% vs. Pinnacle ${mkt}%`);
-  parts.push(`+${edge}% edge`);
-  if (kelly) parts.push(`${kelly}${usdPart} Kelly`);
-  const text = parts.join(' | ');
-  navigator.clipboard.writeText(text).catch(() => {});
-  const btn = document.querySelector(`[data-copy-id="${id}"]`);
-  if (btn) {
-    btn.textContent = '✓ Copied';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 2000);
-  }
-}
+// copyPick removed — the Copy button was retired (share now produces the full card image)
 
 // ── Is game currently live? ───────────────────────────────────────────────────
 function isLiveGame(p) {
@@ -1520,7 +1236,7 @@ function _clockFromT(t) {
 // stake? · why does the model like it? · what data supports it? · did the line
 // move favourably? Two-column body (sparse picks collapse to one). Two accent
 // colours only: green = helps the pick, red = hurts it.
-function prDrawerHTML(p, isBest, gameResult) {
+function prDrawerHTML(p, isBest, gameResult, forShare) {
   const cardId = prCardId(p);
   const rs = p.raw_stats || {};
   const parts = String(p.game || '').split('@').map(s => s.trim());
@@ -1678,10 +1394,9 @@ function prDrawerHTML(p, isBest, gameResult) {
   const moveHTML = '<div class="dw-sec"><div class="dw-move-head"><div class="dw-h2">Line Movement</div>' + clvHTML + '</div>'
     + '<div class="dw-lgwrap">' + graphHTML + lgCap + '</div></div>';
 
-  const actionsHTML = '<div class="dw-actions">'
-    + '<button type="button" class="dw-act" onclick="sharePickCard(\'' + cardId + '\')">Share</button>'
-    + '<button type="button" class="dw-act" onclick="copyPick(\'' + cardId + '\')">Copy</button>'
-    + '</div>';
+  const actionsHTML = forShare ? '' : ('<div class="dw-actions">'
+    + '<button type="button" class="dw-act" onclick="sharePickCard(\'' + cardId + '\', ' + (isBest ? 1 : 0) + ')">Share</button>'
+    + '</div>');
 
   return '<div class="dw">' + headHTML + bandHTML + bodyHTML + moveHTML + actionsHTML + '</div>';
 }

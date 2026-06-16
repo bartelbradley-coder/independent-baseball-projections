@@ -1176,6 +1176,17 @@ details[open] .faq-q::after { content: '−'; }
 /* ── Expanded pick drawer — decision-first, two-column ───────────────────── */
 .dw { display:flex; flex-direction:column; padding:8px 4px 4px; font-family:var(--font-ui); }
 
+/* ── Shareable pick image: the exact expanded drawer + slim brand/disclaimer frame ── */
+.sc-wrap { width:680px; box-sizing:border-box; background:#0b0e16; border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px 20px 14px; }
+.sc-wrap-hdr { display:flex; align-items:center; gap:9px; padding-bottom:12px; margin-bottom:4px; border-bottom:1px solid rgba(255,255,255,0.07); }
+.sc-wrap-name { font-family:var(--font-display); font-size:14px; letter-spacing:0.04em; color:var(--text-3); }
+.sc-wrap-name b { color:var(--text); font-weight:800; }
+.sc-wrap-date { margin-left:auto; font-family:var(--font-mono); font-size:11px; color:var(--text-4); }
+.sc-wrap-body .dw { padding-top:2px; }
+.sc-wrap-ftr { margin-top:12px; padding-top:11px; border-top:1px solid rgba(255,255,255,0.07); }
+.sc-wrap-disc { font-size:9.5px; color:var(--text-4); line-height:1.5; }
+.sc-wrap-url { margin-top:6px; font-family:var(--font-mono); font-size:11px; font-weight:600; color:var(--indigo-lt); letter-spacing:0.02em; }
+
 /* the bet — verdict that cites the numbers */
 .dw-head { display:flex; align-items:baseline; gap:8px 10px; flex-wrap:wrap; margin-bottom:13px; }
 .dw-head-name { font-family:var(--font-display); font-size:19px; font-weight:800; letter-spacing:.01em; color:var(--text); }
