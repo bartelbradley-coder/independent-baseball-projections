@@ -1082,81 +1082,77 @@ details[open] .faq-q::after { content: '−'; }
 .pr-stack { display:block; }
 .pr-table { border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.022); overflow:hidden; margin-bottom:16px; }
 
-/* 6 columns: matchup+bet · single edge meter · edge · stake · tier+status · chevron */
-.pr-cols { display:grid; grid-template-columns:minmax(0,2.5fr) minmax(108px,1.5fr) 0.8fr 0.72fr 1.25fr 22px; align-items:center; gap:14px; }
-.pr-head { padding:9px 18px; border-bottom:1px solid var(--border); background:rgba(255,255,255,.015); }
-.pr-head > span { font-size:10px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; color:var(--text-4); }
-.pr-head .r { text-align:right; }
+/* table: matchup+time · pick(team+line) · mkt→model · edge · current-odds · play-to · stake · chevron */
+.pr-cols {
+  display:grid;
+  grid-template-columns:
+    minmax(120px,1.7fr)   /* matchup + time */
+    minmax(78px,1fr)      /* pick: team + captured line */
+    minmax(94px,1.2fr)    /* mkt → model */
+    .72fr                 /* edge */
+    minmax(96px,1.2fr)    /* current odds */
+    minmax(56px,.8fr)     /* play to */
+    .78fr                 /* stake */
+    20px;                 /* chevron */
+  align-items:center; gap:11px;
+}
+.pr-head { padding:7px 16px; border-bottom:1px solid var(--border); background:rgba(255,255,255,.02); }
+.pr-head .pr-h { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-4); display:flex; align-items:center; gap:3px; min-width:0; white-space:nowrap; }
+.pr-head .pr-h.h-mm, .pr-head .pr-h.h-edge, .pr-head .pr-h.h-odds, .pr-head .pr-h.h-play, .pr-head .pr-h.h-stake { justify-content:flex-end; }
+.pr-head .pr-h.sortable { cursor:pointer; }
+.pr-head .pr-h.sortable:hover { color:var(--text-3); }
+.pr-head .pr-h.active { color:var(--text-2); }
+.pr-head .pr-sortarr { color:var(--indigo-lt); font-size:9px; margin-left:2px; }
+.pr-head .pr-sortarr.inactive { color:var(--text-4); opacity:.45; }  /* persistent "sortable" hint */
+.pr-head .pr-h.sortable:hover .pr-sortarr.inactive { opacity:.8; }
 
-.pr-row { padding:13px 18px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .12s; background:transparent; width:100%; }
+.pr-row { padding:10px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .12s, opacity .12s; background:transparent; width:100%; }
 .pr-wrap:last-child > .pr-row { border-bottom:none; }
 .pr-row:hover { background:rgba(255,255,255,.028); }
 .pr-row:focus-visible { outline:2px solid var(--indigo-lt); outline-offset:-2px; }
-.pr-row.best { background:linear-gradient(90deg,rgba(99,102,241,.08),transparent 55%); box-shadow:inset 3px 0 0 var(--indigo); }
 .pr-row.open { background:rgba(99,102,241,.06); }
+.pr-row.pr-faded { opacity:.62; }
+.pr-row.pr-faded:hover { opacity:.85; }
 
-/* matchup + bet */
-.pr-mu { display:flex; align-items:center; gap:9px; min-width:0; }
-.pr-logo { width:20px; height:20px; object-fit:contain; flex-shrink:0; }
-.pr-logo-fb { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,.06); color:var(--text-2); font-size:8px; font-weight:800; }
-.pr-logo.dim, .pr-logo-fb.dim { filter:grayscale(.7); opacity:.45; }
-.pr-mu-tx { min-width:0; }
-.pr-betname { font-family:var(--font-display); font-size:16.5px; font-weight:700; letter-spacing:.01em; line-height:1.15; white-space:nowrap; color:var(--text); }
-.pr-betname .pr-bt { color:var(--text-3); font-weight:600; font-size:13px; margin-left:3px; }
-.pr-betname .pr-bo { font-family:var(--font-mono); font-size:13.5px; font-weight:600; color:var(--text); margin-left:5px; }
-.pr-star { color:var(--amber); font-size:12px; margin-right:4px; }
-.pr-sub { font-size:11px; color:var(--text-4); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-variant-numeric:tabular-nums; }
-.pr-sub .pr-good { color:var(--green); }
+/* matchup + time — plain game label (the Pick column names the side) */
+.pr-mu { min-width:0; }
+.pr-match { font-family:var(--font-display); font-size:14px; font-weight:600; color:var(--text-2); line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pr-match .pr-at { color:var(--text-4); font-weight:400; margin:0 1px; }
+.pr-time { font-family:var(--font-mono); font-size:9.5px; color:var(--text-4); margin-top:2px; white-space:nowrap; }
 
-/* single edge meter: Market → Model, green gap = edge */
-.pr-mcell { min-width:0; }
-.pr-meter { position:relative; height:6px; border-radius:3px; background:rgba(255,255,255,.07); }
-.pr-meter > i { position:absolute; top:0; height:100%; display:block; }
-.pr-meter .pmm-mkt { left:0; border-radius:3px 0 0 3px; background:rgba(148,163,184,.45); }
-.pr-meter .pmm-gap { background:var(--green); }
-.pr-meter .pmm-tick { top:-2px; width:2px; height:10px; border-radius:1px; background:var(--indigo-lt); }
-.pr-mcap { display:flex; gap:5px; align-items:baseline; font-family:var(--font-mono); font-size:10px; color:var(--text-4); margin-top:5px; font-variant-numeric:tabular-nums; white-space:nowrap; }
-.pr-mcap .pmm-arr { color:var(--text-4); }
-.pr-mcap .mdl { color:var(--indigo-lt); }
+/* pick — team + the line it was captured at */
+.pr-pick { font-family:var(--font-display); font-size:13.5px; font-weight:700; color:var(--text); white-space:nowrap; min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.pr-pick .pr-bo { font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--text-3); margin-left:5px; }
 
-/* edge */
-.pr-edge { font-family:var(--font-mono,monospace); font-size:17px; font-weight:700; text-align:right; font-variant-numeric:tabular-nums; line-height:1.05; }
-.pr-edge .pr-pp { font-size:10px; font-weight:600; margin-left:1px; }
+/* mkt → model win prob (neutral — Edge is the coloured one) */
+.pr-mm { font-family:var(--font-mono); font-size:12px; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.pr-mm .pr-mm-mkt { color:var(--text-4); }
+.pr-mm .pr-mm-arr { color:var(--text-4); margin:0 3px; }
+.pr-mm .pr-mm-mdl { color:var(--text); font-weight:600; }
+
+/* edge — the one emphasised, colour-coded number */
+.pr-edge { font-family:var(--font-mono); font-size:15px; font-weight:700; text-align:right; font-variant-numeric:tabular-nums; line-height:1.05; white-space:nowrap; }
 .pr-edge.pos { color:var(--green); }
 .pr-edge.neg { color:var(--red); }
-.pr-edge-stake { display:none; }
 
-/* stake */
-.pr-bet { text-align:right; font-family:var(--font-mono,monospace); font-variant-numeric:tabular-nums; }
-.pr-bet .pr-bu { font-size:14px; font-weight:700; color:var(--text); }
-.pr-bet .pr-bd { display:block; font-size:11px; color:var(--text-4); margin-top:2px; min-height:13px; }
+/* current odds + book + ¢ movement vs the captured line */
+.pr-odds { text-align:right; min-width:0; }
+.pr-odds .pr-o-main { font-family:var(--font-mono); font-size:12.5px; font-weight:600; color:var(--text); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.pr-odds .pr-o-book { color:var(--text-4); font-weight:400; font-size:10px; }
+.pr-odds .pr-o-na { color:var(--text-4); font-weight:400; }  /* live/final — no actionable price */
+.pr-mv { font-size:10px; margin-left:3px; }
+.pr-mv.up   { color:#5ea87f; }   /* muted green — Edge stays the bright one */
+.pr-mv.down { color:#cc7a7a; }   /* muted red */
 
-/* ONE tier badge + a quiet status chip */
-.pr-rt { display:flex; flex-direction:column; align-items:flex-end; gap:5px; min-width:0; }
-.pr-tier { font-size:10px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; padding:3px 9px; border-radius:999px; white-space:nowrap; }
-.pr-tier.strong { color:var(--amber); background:rgba(245,158,11,.12); border:1px solid rgba(245,158,11,.3); }
-.pr-tier.value  { color:var(--green); background:rgba(34,197,94,.10); border:1px solid rgba(34,197,94,.28); }
-.pr-tier.watch  { color:var(--text-3); background:rgba(255,255,255,.04); border:1px solid var(--border); }
-.pr-status { display:flex; align-items:center; gap:4px; font-size:10px; font-weight:500; color:var(--text-3); white-space:nowrap; }
-.pr-status .pr-sdot { width:6px; height:6px; border-radius:50%; background:var(--text-4); flex-shrink:0; }
-.pr-status.ok    { color:var(--green); }  .pr-status.ok .pr-sdot    { background:var(--green); }
-.pr-status.warn  { color:var(--amber); }  .pr-status.warn .pr-sdot  { background:var(--amber); }
-.pr-status.stale { color:var(--red); }    .pr-status.stale .pr-sdot { background:var(--red); }
-.pr-status.live  { color:var(--text-2); } .pr-status.live .pr-sdot  { background:var(--text-2); }
-.pr-status.final { color:var(--text-3); } .pr-status.final .pr-sdot { background:var(--text-4); }
-.pr-status.won   { color:var(--green); }  .pr-status.won .pr-sdot   { background:var(--green); }
-.pr-status.lost  { color:var(--red); }    .pr-status.lost .pr-sdot  { background:var(--red); }
+/* play to — worst price still worth betting */
+.pr-play { text-align:right; font-family:var(--font-mono); font-size:12.5px; color:var(--text); font-variant-numeric:tabular-nums; white-space:nowrap; }
 
-.pr-chev { justify-self:end; color:var(--text-4); font-size:16px; line-height:1; transition:transform .16s; }
+/* stake — units primary, $ secondary */
+.pr-stake { text-align:right; font-family:var(--font-mono); font-size:12.5px; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.pr-stake .pr-st-usd { display:block; font-size:9px; font-weight:400; color:var(--text-4); margin-top:1px; min-height:11px; }
+
+.pr-chev { justify-self:end; color:var(--text-4); font-size:15px; line-height:1; transition:transform .16s; }
 .pr-row.open .pr-chev { transform:rotate(90deg); color:var(--indigo-lt); }
-
-/* light in-table tier divider (replaces the repeated full column header) */
-.pr-tierdiv { display:flex; align-items:baseline; gap:8px; padding:7px 18px; background:rgba(255,255,255,.018); border-bottom:1px solid var(--border); }
-.pr-tierdiv .ptd-lbl { font-family:var(--font-display); font-size:11.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
-.pr-tierdiv .ptd-tag { font-size:10px; color:var(--text-4); }
-.pr-tierdiv.strong .ptd-lbl { color:var(--amber); }
-.pr-tierdiv.value  .ptd-lbl { color:var(--green); }
-@media (max-width:640px) { .pr-tierdiv { padding:6px 13px; } }
 
 /* Action Today strip — one consolidated band: counts · top edge · state · updated */
 .action-today { background:rgba(255,255,255,.022); border:1px solid var(--border); border-radius:12px; padding:11px 14px; margin:2px 0 12px; }
@@ -1248,27 +1244,25 @@ details[open] .faq-q::after { content: '−'; }
 .pr-collapse.open .pr-collapse-chev { transform:rotate(90deg); color:var(--indigo-lt); }
 .pr-collapse-body { margin-top:10px; }
 
-/* tablet — tighten columns */
+/* Responsive — progressively hide lower-priority columns (no side-scroll).
+   Core that always survives: Matchup · Pick · Edge · Current odds.
+   Drop order as width shrinks: Stake → Mkt→Model → Play-to → chevron. */
 @media (max-width:1024px) {
-  .pr-cols { grid-template-columns:minmax(0,2.2fr) minmax(92px,1.3fr) 0.75fr 0.65fr 1.1fr 20px; gap:10px; }
+  .pr-stake, .pr-head .h-stake { display:none; }
+  .pr-cols { grid-template-columns:minmax(112px,1.7fr) minmax(74px,1fr) minmax(90px,1.2fr) .72fr minmax(92px,1.2fr) minmax(54px,.8fr) 18px; }
   .pr-head, .pr-row { padding-left:14px; padding-right:14px; }
 }
-
-/* mobile (portrait) — 2-line layout: matchup + edge on top, meter + tier/status below */
-@media (max-width:640px) {
-  .pr-head { display:none; }
-  .pr-row {
-    grid-template-columns:1fr auto;
-    grid-template-areas:"mu edge" "meter rt";
-    gap:10px 12px; align-items:center; padding:12px 13px;
-  }
-  .pr-mu    { grid-area:mu; align-self:center; }
-  .pr-edge  { grid-area:edge; align-self:start; font-size:18px; }
-  .pr-edge-stake { display:block; font-family:var(--font-mono); font-size:11px; font-weight:400; color:var(--text-3); margin-top:3px; }
-  .pr-mcell { grid-area:meter; align-self:center; min-width:0; }
-  .pr-bet   { display:none; }
-  .pr-rt    { grid-area:rt; flex-direction:row; align-items:center; justify-content:flex-end; gap:8px; }
-  .pr-chev  { display:none; }
-  .pr-betname { font-size:15.5px; }
-  .pr-logo  { width:18px; height:18px; }
+@media (max-width:900px) {
+  .pr-mm, .pr-head .h-mm { display:none; }
+  .pr-cols { grid-template-columns:minmax(108px,1.7fr) minmax(72px,1fr) .8fr minmax(90px,1.2fr) minmax(54px,.8fr) 18px; }
+}
+@media (max-width:760px) {
+  .pr-play, .pr-head .h-play { display:none; }
+  .pr-cols { grid-template-columns:minmax(104px,1.7fr) minmax(70px,1fr) .85fr minmax(86px,1.1fr) 18px; }
+}
+@media (max-width:620px) {
+  .pr-chev, .pr-head .h-chev { display:none; }
+  .pr-cols { grid-template-columns:minmax(96px,1.7fr) minmax(64px,1fr) .9fr minmax(80px,1.1fr); gap:10px; }
+  .pr-row { padding:10px 13px; }
+  .pr-edge { font-size:16px; }
 }

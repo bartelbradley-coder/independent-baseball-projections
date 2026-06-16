@@ -1197,7 +1197,8 @@ async function loadPicks() {
     _histRef = hist;
     if (data) render(data, hist, scores, perf);
     else { renderEmptyState(null, hist); renderStatusStrip([], true, null); }
-    renderPreview(preview);
+    // Tomorrow's preview now lives on its own page (preview.html) — kept off the
+    // Today's Picks page so the actionable picks lead. renderPreview(preview);
   } catch (e) {
     console.error('[Independent Baseball Projections] loadPicks error:', e);
     document.getElementById('picks-container').innerHTML = `
@@ -1695,37 +1696,16 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  Compact pick ROWS (slim analytics-table layout). FRONT-END ONLY — reuse the
-//  SAME pick fields. No model / data / filtering / classification change.
-//    · prRowCollapsed       → the slim at-a-glance row
+//  Pick ROWS (dense, sortable analytics table). FRONT-END ONLY — reuse the SAME
+//  pick fields. No model / data / filtering / classification change.
+//    · prSetSort / prSortPicks / prActionable → sort + actionable-first ordering
+//    · prRowCollapsed       → one collapsed analytics row
 //    · prRowHTML            → row wrapper = collapsed row + lazy-built drawer slot
-//    · prTable / prRows / prTierDivider / prTableHead → table container + header
+//    · prRows / prTableHead → rows + sortable column header
 //    · prToggle / prKey     → expand-collapse a row (builds prDrawerHTML on demand)
 //    · prDrawerHTML / prFullRationaleHTML → the expanded decision drawer
-//    · prCollapsible        → default-collapsed section wrapper (Marginal/Completed)
 // ════════════════════════════════════════════════════════════════════════════
 
-// ESPN team-logo CDN. 29/30 model abbrevs map directly to lowercase; only the
-// model's "MET" differs (ESPN uses "nym"). A failed load falls back to a
-// team-abbreviation monogram chip (prLogoFail) so a row never breaks.
-const _PR_LOGO_MAP = { MET: 'nym' };
-function prLogoSrc(ab) {
-  const k = String(ab || '').toUpperCase();
-  const slug = _PR_LOGO_MAP[k] || k.toLowerCase();
-  // ESPN combiner resizes the logo to ~2× the 22px display (44px) instead of
-  // shipping the 500px source: ~1.4 KB vs ~20 KB each, with a longer cache.
-  return 'https://a.espncdn.com/combiner/i?img=/i/teamlogos/mlb/500/' + slug + '.png&w=44&h=44';
-}
-function prLogoFail(img) {
-  const s = document.createElement('span');
-  s.className = 'pr-logo pr-logo-fb' + (img.classList.contains('dim') ? ' dim' : '');
-  s.textContent = (img.getAttribute('alt') || '').slice(0, 3);
-  img.replaceWith(s);
-}
-function prLogoImg(ab, dim) {
-  const k = String(ab || '').toUpperCase();
-  return `<img class="pr-logo${dim ? ' dim' : ''}" src="${prLogoSrc(k)}" alt="${k}" width="22" height="22" loading="lazy" onerror="prLogoFail(this)">`;
-}
 
 // CT clock for the matchup subline (matches the card's game-time format).
 function prGameTime(iso) {
@@ -1739,22 +1719,87 @@ function prGameTime(iso) {
 // Value pill — DISPLAY ONLY; mirrors the existing edge tiers (does not change
 // classification). A flagged pick or unconfirmed pick-side lineup → "Conditional".
 
-function prTableHead() {
-  return `<div class="pr-cols pr-head">` +
-    `<span>Pick</span>` +
-    `<span>Market → Model<span class="tip" data-tip="No-vig market probability (Pinnacle, vig removed) on the left; our model's win probability on the right. The green gap is the edge.">?</span></span>` +
-    `<span class="r">Edge</span><span class="r">Stake</span><span class="r">Status</span><span></span></div>`;
+// ── Pick-table sort + status helpers ──────────────────────────────────────────
+// One flat, sortable table. Rows are grouped by an action-status rank (PLAY first,
+// then WAIT, PASS, LIVE, FINAL, WATCH) and sorted within each band by the active
+// key (default edge desc; Matchup sorts by time, Mkt→Model by model %).
+let _picksSort = { key: 'edge', dir: -1 };   // dir: -1 desc, +1 asc
+function prSetSort(key) {
+  if (_picksSort.key === key) _picksSort.dir = -_picksSort.dir;
+  else _picksSort = { key, dir: key === 'time' ? 1 : -1 };  // time ascends, values descend
+  rerenderPicks();
+}
+function prHeadKey(e, key) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prSetSort(key); } }
+function prSortVal(p, key) {
+  if (key === 'model') return p.model_prob || 0;
+  if (key === 'time')  return p.game_time ? (Date.parse(p.game_time) || 0) : Number.POSITIVE_INFINITY;
+  return p.edge || 0;
+}
+function prSortPicks(arr) {
+  const { key, dir } = _picksSort;
+  return arr.slice().sort((a, b) => {
+    const aa = prActionable(a) ? 0 : 1, bb = prActionable(b) ? 0 : 1;
+    if (aa !== bb) return aa - bb;                  // actionable plays lead
+    const d = (prSortVal(a, key) - prSortVal(b, key)) * dir;
+    return d || ((b.edge || 0) - (a.edge || 0));    // then active key (default edge desc)
+  });
 }
 
-// ONE primary tier badge: Strong / Value / Watch. A flagged or unconfirmed-lineup
-// pick is demoted to Watch (its caveat surfaces in the status chip instead).
-function prTier(p) {
-  if (p.is_flagged === true || p.current_lineup_confirmed === false) return { cls: 'watch', lbl: 'Watch' };
-  if ((p.edge || 0) >= 0.08) return { cls: 'strong', lbl: 'Strong' };
-  if ((p.edge || 0) >= 0.04) return { cls: 'value', lbl: 'Value' };
-  return { cls: 'watch', lbl: 'Watch' };
+// American odds → a continuous "cents" scale where +100 and -100 both map to 0 and
+// higher = a better price for the bettor. Lets us measure line movement and cushion
+// cleanly, even across the +/- boundary.
+function _oddsToCents(o) {
+  if (o == null || isNaN(o)) return null;
+  return o > 0 ? o - 100 : -(Math.abs(o) - 100);
 }
-function prTierBadge(p) { const t = prTier(p); return `<span class="pr-tier ${t.cls}">${t.lbl}</span>`; }
+
+// Cents of room between the current best price and the playable floor. Negative
+// means the price has already moved past the floor — the edge is gone. Returns
+// null when either input is missing.
+function prCushion(p) {
+  const sb = sanitizeBookOdds(p);
+  const cur = sb.best ? sb.best.odds : (p.best_odds != null ? p.best_odds : p.odds);
+  const cc = _oddsToCents(cur), ptc = _oddsToCents(p.playable_to);
+  return (cc != null && ptc != null) ? Math.round(cc - ptc) : null;
+}
+
+// A pick is actionable when it's pregame, still clears the 4% edge threshold, and
+// its current price hasn't moved past the playable floor. Live, final, edge-gone,
+// and near-miss picks are informational — faded and sorted below the live plays.
+function prActionable(p) {
+  if (isLiveGame(p) || isGameOver(p)) return false;
+  if ((p.edge || 0) < 0.04) return false;                                  // near-miss
+  if (p.current_edge != null && p.current_edge < 0.04) return false;       // edge moved off
+  const c = prCushion(p);
+  if (c != null && c <= 0) return false;                                   // price past the floor
+  return true;
+}
+
+function prSortArrow(key) {
+  if (_picksSort.key !== key) return `<span class="pr-sortarr inactive">↕</span>`;  // persistent "sortable" cue
+  return `<span class="pr-sortarr">${_picksSort.dir < 0 ? '▾' : '▴'}</span>`;
+}
+function _prHsort(key, label, cls) {
+  const active = _picksSort.key === key ? ' active' : '';
+  const sort = active ? (_picksSort.dir < 0 ? 'descending' : 'ascending') : 'none';
+  return `<span class="pr-h ${cls} sortable${active}" role="button" tabindex="0" aria-sort="${sort}" `
+    + `onclick="prSetSort('${key}')" onkeydown="prHeadKey(event,'${key}')">${label}${prSortArrow(key)}</span>`;
+}
+function _prH(label, cls) {
+  return `<span class="pr-h ${cls}">${label}</span>`;
+}
+function prTableHead() {
+  return `<div class="pr-cols pr-head">`
+    + _prHsort('time', 'Matchup', 'h-mu')
+    + _prH('Pick', 'h-pick')
+    + _prHsort('model', 'Mkt → Model', 'h-mm')
+    + _prHsort('edge', 'Edge', 'h-edge')
+    + _prH('Current odds', 'h-odds')
+    + _prH('Play to', 'h-play')
+    + _prH('Stake', 'h-stake')
+    + `<span class="pr-h h-chev"></span>`
+    + `</div>`;
+}
 
 // Actionable status: Playable / Lineup pending / No longer playable / Live / Final.
 // Live & Final are NEUTRAL (we don't make live-betting recommendations). The
@@ -1772,76 +1817,79 @@ function pickStatus(p, gameResult) {
   return { cls: 'ok', label: 'Playable' };
 }
 
-// One slim collapsed row (Variant A — compact single line).
+// One collapsed analytics row (simple, edge-sorted table).
+// Columns: Matchup+time · Pick(team + captured line) · Mkt→Model · Edge ·
+// Current odds(+book, ¢move) · Play-to · Stake · chevron.
 function prRowCollapsed(p, isBest, gameResult) {
   const parts = String(p.game || '').split('@').map(s => s.trim());
   const away = parts[0] || '', home = parts[1] || '';
   const pickAbbr = (p.pick || '').toUpperCase();
-  const isAwayPick = away.toUpperCase() === pickAbbr;
-  const isHomePick = home.toUpperCase() === pickAbbr;
   const live = isLiveGame(p), over = isGameOver(p);
+  const fmtO = o => (o == null ? '—' : (o > 0 ? '+' + o : String(o)));
 
-  const typeLabel = p.pick_type === 'MONEYLINE' ? 'ML'
-    : p.pick_type === 'RUN_LINE' ? 'RL'
-    : (p.pick_type || '').replace(/_/g, ' ');
-  const oddsStr = p.odds != null ? (p.odds > 0 ? '+' + p.odds : String(p.odds)) : '';
-  const ptStr = p.playable_to != null ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to)) : '';
+  // Matchup — plain game label + time; the Pick column names the side.
   const timeStr = prGameTime(p.game_time);
 
-  // Sub-line: matchup, then (pregame only) time + the playable-to floor.
-  // Playable-to before time: on a narrow sub-line the (less critical) game time
-  // truncates first, keeping the betting-critical "Playable to +X" visible.
-  const subBits = [`${away} @ ${home}`];
-  if (!live && !over) {
-    if (ptStr) subBits.push(`<span class="pr-good">Playable to ${ptStr}</span>`);
-    if (timeStr) subBits.push(timeStr);
+  // Pick — team + the line the pick was captured at (run line shows its spread).
+  let spread = '';
+  if (p.pick_type === 'RUN_LINE' && p.run_line && p.run_line.spread) {
+    const sp = String(p.run_line.spread);
+    spread = ' ' + (sp.charAt(0) === '-' ? sp : '+' + sp);
   }
-  const star = isBest ? '<span class="pr-star" aria-hidden="true">★</span>' : '';
+  const pickCell = `${pickAbbr}${spread}<span class="pr-bo">${fmtO(p.odds)}</span>`;
 
-  // Probabilities → single Market→Model edge meter (grey market fill, green gap = edge).
-  const mp = p.model_prob, bp = p.market_prob;
-  const mpPct = mp != null ? (mp * 100).toFixed(1) + '%' : '—';
-  const bpPct = bp != null ? (bp * 100).toFixed(1) + '%' : '—';
-  const mpW = mp != null ? Math.max(2, Math.min(100, mp * 100)) : 0;
-  const bpW = bp != null ? Math.max(2, Math.min(100, bp * 100)) : 0;
-  const gapW = Math.max(0, mpW - bpW);
-  const meterHTML = (mp != null && bp != null)
-    ? `<div class="pr-meter"><i class="pmm-mkt" style="width:${bpW.toFixed(1)}%"></i>` +
-      `<i class="pmm-gap" style="left:${bpW.toFixed(1)}%;width:${gapW.toFixed(1)}%"></i>` +
-      `<i class="pmm-tick" style="left:calc(${mpW.toFixed(1)}% - 1px)"></i></div>` +
-      `<div class="pr-mcap"><span>${bpPct}</span><span class="pmm-arr">→</span><span class="mdl">${mpPct}</span></div>`
-    : `<div class="pr-mcap">—</div>`;
+  // Market → Model win probabilities.
+  const bp = p.market_prob, mp = p.model_prob;
+  const bpPct = bp != null ? (bp * 100).toFixed(1) : '—';
+  const mpPct = mp != null ? (mp * 100).toFixed(1) : '—';
 
   const ev = p.edge || 0;
-  const edgeStr = (ev >= 0 ? '+' : '') + (ev * 100).toFixed(1);
+  const edgeStr = (ev >= 0 ? '+' : '') + (ev * 100).toFixed(1) + 'pp';
   const edgeCls = ev >= 0 ? 'pos' : 'neg';
 
-  // Stake is mode-aware: Flat = $100 flat (1.0u); Kelly = kelly_units sized to
-  // bankroll (the $ filled live by refreshKellyUSD via the .kelly-usd hooks).
+  // Current odds — pregame: best book price + ¢ movement vs the captured line.
+  // Live/Final: the captured price (in-play odds aren't a bet you can make).
+  let oddsCell;
+  if (live || over) {
+    oddsCell = `<span class="pr-o-main pr-o-na">—</span>`;  // no actionable current price
+  } else {
+    const sb = sanitizeBookOdds(p);
+    const cur  = sb.best ? sb.best.odds : (p.best_odds != null ? p.best_odds : p.odds);
+    const book = sb.best ? sb.best.book : (p.best_book || '');
+    const cc = _oddsToCents(cur), pc = _oddsToCents(p.odds);
+    let mv = '';
+    if (cc != null && pc != null) {
+      const diff = Math.round(cc - pc);
+      if (diff >= 1)       mv = `<span class="pr-mv up" title="${diff}¢ better than the captured line">▲${diff}¢</span>`;
+      else if (diff <= -1) mv = `<span class="pr-mv down" title="${Math.abs(diff)}¢ worse than the captured line">▼${Math.abs(diff)}¢</span>`;
+    }
+    oddsCell = `<span class="pr-o-main">${fmtO(cur)}${mv}${book ? ' <span class="pr-o-book">' + book + '</span>' : ''}</span>`;
+  }
+
+  const ptStr = fmtO(p.playable_to);
+
+  // Stake — units primary, $ secondary.
   const _isKellyMode = _indexPnlMode === 'kelly';
-  const units  = _isKellyMode ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') : '1.0u';
-  const betUSD = _isKellyMode
-    ? `<span class="pr-bd kelly-usd" data-units="${p.kelly_units || 0}"></span>`
-    : `<span class="pr-bd">$100</span>`;
+  const units = _isKellyMode ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') : '1.0u';
+  const stakeSub = _isKellyMode
+    ? `<span class="pr-st-usd kelly-usd" data-units="${p.kelly_units || 0}"></span>`
+    : '';  // flat mode: stake is 1.0u on every row — no need to repeat $100
 
-  const st = pickStatus(p, gameResult);
+  // Accessible name — colour/position cues are invisible to assistive tech.
+  const ariaLabel = `${away} at ${home}, pick ${pickAbbr}${spread} ${fmtO(p.odds)}`
+    + `${timeStr && !live && !over ? ', ' + timeStr : ''}, market ${bpPct} percent, model ${mpPct} percent, edge ${edgeStr}`
+    + `, playable to ${ptStr}, stake ${units}.`;
 
-  // Accessible name — the visual cues (meter, badge colour, ★) are invisible to
-  // assistive tech, so state the pick + key numbers + status explicitly.
-  const ariaLabel = `Pick ${pickAbbr}${oddsStr ? ' ' + oddsStr : ''}, ${away} at ${home}`
-    + `${timeStr && !live && !over ? ', ' + timeStr : ''}${isBest ? ', top edge' : ''}, ${st.label}. `
-    + `Model ${mpPct}, market ${bpPct}, edge ${edgeStr} points, ${prTier(p).lbl}.`;
-
-  return `<div class="pr-cols pr-row${isBest ? ' best' : ''}" role="button" tabindex="0" data-pr-card="${prCardId(p)}" ` +
-    `aria-expanded="false" aria-label="${ariaLabel}" onclick="prToggle(this)" onkeydown="prKey(event,this)">` +
-    `<div class="pr-mu">${prLogoImg(away, !isAwayPick)}${prLogoImg(home, !isHomePick)}<div class="pr-mu-tx">` +
-      `<div class="pr-betname">${star}${pickAbbr}<span class="pr-bt">${typeLabel}</span><span class="pr-bo">${oddsStr}</span></div>` +
-      `<div class="pr-sub">${subBits.join(' · ')}</div></div></div>` +
-    `<div class="pr-mcell">${meterHTML}</div>` +
-    `<div class="pr-edge ${edgeCls}">${edgeStr}<span class="pr-pp">pp</span><span class="pr-edge-stake">${units}</span></div>` +
-    `<div class="pr-bet"><span class="pr-bu">${units}</span>${betUSD}</div>` +
-    `<div class="pr-rt">${prTierBadge(p)}<div class="pr-status ${st.cls}"><span class="pr-sdot"></span>${st.label}</div></div>` +
-    `<div class="pr-chev" aria-hidden="true">›</div></div>`;
+  return `<div class="pr-cols pr-row${prActionable(p) ? '' : ' pr-faded'}" role="button" tabindex="0" data-pr-card="${prCardId(p)}" `
+    + `aria-expanded="false" aria-label="${ariaLabel}" onclick="prToggle(this)" onkeydown="prKey(event,this)">`
+    + `<div class="pr-mu"><div class="pr-match">${away} <span class="pr-at">@</span> ${home}</div><div class="pr-time">${timeStr || '—'}</div></div>`
+    + `<div class="pr-pick">${pickCell}</div>`
+    + `<div class="pr-mm"><span class="pr-mm-mkt">${bpPct}</span><span class="pr-mm-arr">→</span><span class="pr-mm-mdl">${mpPct}</span></div>`
+    + `<div class="pr-edge ${edgeCls}">${edgeStr}</div>`
+    + `<div class="pr-odds">${oddsCell}</div>`
+    + `<div class="pr-play">${ptStr}</div>`
+    + `<div class="pr-stake">${units}${stakeSub}</div>`
+    + `<div class="pr-chev" aria-hidden="true">›</div></div>`;
 }
 
 // cardId mirrors pickCardHTML's own formula so picksMap stays populated WITHOUT
@@ -1860,20 +1908,11 @@ function prRowHTML(p, isBest, gameResult) {
     `<div class="pr-details" hidden data-card-id="${cardId}" data-best="${isBest ? '1' : ''}"></div></div>`;
 }
 
-// Just the rows (no column header / no table wrapper) — lets a single table
-// host one shared header with light tier dividers between groups.
-function prRows(picks, topPick, spotlightTop, scores) {
-  return picks.map(p => prRowHTML(p, spotlightTop && p === topPick, getPickResult(p, scores))).join('');
+// Plain rows (no column header / no table wrapper). `ordered` is already sorted
+// by prSortPicks (actionable first, then by the active key).
+function prRows(ordered, scores) {
+  return ordered.map(p => prRowHTML(p, false, getPickResult(p, scores))).join('');
 }
-// A full pr-table block (column header + rows) — used where a group is rendered alone.
-function prTable(picks, topPick, spotlightTop, scores) {
-  return `<div class="pr-table">${prTableHead()}${prRows(picks, topPick, spotlightTop, scores)}</div>`;
-}
-// A lightweight in-table tier divider (replaces the repeated full column header).
-function prTierDivider(cls, label, tag) {
-  return `<div class="pr-tierdiv ${cls}"><span class="ptd-lbl">${label}</span><span class="ptd-tag">${tag}</span></div>`;
-}
-
 function prToggle(row) {
   const det = row.parentElement && row.parentElement.querySelector('.pr-details');
   if (!det) return;
@@ -1894,20 +1933,6 @@ function prToggle(row) {
 }
 function prKey(e, row) {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prToggle(row); }
-}
-
-// Default-collapsed section wrapper (Marginal + Completed).
-function prCollapsible(headerHTML, bodyHTML, defaultOpen) {
-  return `<div class="pr-collapse${defaultOpen ? ' open' : ''}">` +
-    `<button class="pr-collapse-hd" aria-expanded="${defaultOpen ? 'true' : 'false'}" onclick="prToggleSection(this)">` +
-    `${headerHTML}<span class="pr-collapse-chev" aria-hidden="true">›</span></button>` +
-    `<div class="pr-collapse-body"${defaultOpen ? '' : ' hidden'}>${bodyHTML}</div></div>`;
-}
-function prToggleSection(btn) {
-  const body = btn.parentElement.querySelector('.pr-collapse-body');
-  if (!body) return;
-  if (body.hasAttribute('hidden')) { body.removeAttribute('hidden'); btn.parentElement.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
-  else { body.setAttribute('hidden', ''); btn.parentElement.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
 }
 
 function render(data, hist, scores = {}, perf = null) {
@@ -2119,7 +2144,7 @@ function render(data, hist, scores = {}, perf = null) {
           </div>
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
-            <span class="phb-stat-label">Avg CLV<span class="tip" data-tip="Closing Line Value: how much better our posted price is vs. the final Pinnacle no-vig line. Positive CLV is the strongest signal the model finds real edge.">?</span></span>
+            <span class="phb-stat-label">Avg CLV</span>
             <span class="phb-stat-val ${clvStr ? clvCol : 'muted'}">${clvStr || '—'}</span>
             <span class="phb-stat-sub">${clvStr ? (data.clv_count || '') + ' picks' : 'pending'}</span>
           </div>
@@ -2155,7 +2180,7 @@ function render(data, hist, scores = {}, perf = null) {
         <div class="sizing-bar">
           <div class="phb-toggle">
             <button class="phb-tog${!isKelly ? ' active' : ''}" id="phb-flat-btn" onclick="setPicksPnlMode('flat')">Flat $100</button>
-            <button class="phb-tog${isKelly ? ' active' : ''}" id="phb-kelly-btn" onclick="setPicksPnlMode('kelly')">Kelly<span class="tip" data-tip="Kelly criterion: sizes each bet by its edge and your bankroll. We use half-Kelly (more conservative). 1 unit = 1% of bankroll.">?</span></button>
+            <button class="phb-tog${isKelly ? ' active' : ''}" id="phb-kelly-btn" onclick="setPicksPnlMode('kelly')">Kelly</button>
           </div>
           ${isKelly ? '<span class="phb-kelly-active"><span class="phb-ka-dot"></span>Kelly Sizing Active</span>' : ''}
           <div class="phb-bankroll${isKelly ? '' : ' flat-mode'}" id="phb-bankroll-wrap">
@@ -2173,7 +2198,8 @@ function render(data, hist, scores = {}, perf = null) {
 
   renderPicksHeaderBlock(data, hist);
   renderHeroProof(data);
-  renderEvidenceSection(data, perf, hist);
+  // Track-record evidence grid + calibration chart now live on the Model
+  // Dashboard (performance.html). renderEvidenceSection(data, perf, hist);
 
   // ── CLV validation banner ────────────────────────────────────────────────
   // Rendered below the record strip. Only shown when avg_clv data is present.
@@ -2271,55 +2297,19 @@ function render(data, hist, scores = {}, perf = null) {
     renderEmptyState(data, hist, marginal);
   } else {
     _mainPicksRef = main;
-    const topPick = main[0];
-    const spotlightTop = main.length >= 2 && topPick.edge >= 0.08;
-    const gridClass = 'pr-stack';  // rows now provide their own .pr-table container
     const shareAllHTML = main.length >= 2
       ? `<div class="share-all-row"><button class="share-all-btn" onclick="shareAllPicks()">𝕏 Share All ${main.length} Picks</button></div>`
       : '';
 
-    // ── Today's exposure block ────────────────────────────────────────────
-    const _totalKU   = main.reduce((s, p) => s + (p.kelly_units || 0), 0);
-    const _avgKU     = main.length ? _totalKU / main.length : 0;
-    // Exposure %: 1 Kelly unit = 1% of bankroll (not ÷10 ×100 which gives 10× too high)
-    const _totalDol  = _bankroll > 0 ? Math.round(_totalKU * _bankroll / 100) : null;
-    const _bPct      = _bankroll > 0
-      ? ((_totalDol / _bankroll) * 100).toFixed(1)   // e.g. 442/10000*100 = 4.4
-      : _totalKU.toFixed(1);                          // fallback: units ARE the %
-    const _isKellyOn = _indexPnlMode === 'kelly';
-    // Compact one-line exposure summary (replaces the old 4-card band — it was a
-    // second metric band stacked under the season stats; this collapses it).
-    const _stakeStr = _totalDol != null ? '$' + _totalDol.toLocaleString() : _totalKU.toFixed(1) + 'u';
-    const _modeStr  = _isKellyOn ? 'Kelly sizing' : 'Flat $100';
-    const actionStripHTML = _totalKU > 0 ? `
-      <div class="exposure-line">
-        <span class="exl-title">Today's Exposure</span>
-        <span class="exl-sep">·</span>
-        <span class="exl-item"><strong class="g">${_stakeStr}</strong> stake · ${main.length} pick${main.length !== 1 ? 's' : ''}</span>
-        <span class="exl-sep">·</span>
-        <span class="exl-item"><strong>${_bPct}%</strong> bankroll</span>
-        <span class="exl-sep">·</span>
-        <span class="exl-item"><strong>${_avgKU.toFixed(1)}u</strong> avg</span>
-        <span class="exl-mode">${_modeStr}${_bankroll > 0 ? ' · $' + _bankroll.toLocaleString() : ''}</span>
-      </div>` : '';
-
-    // ── Group picks by game state (time-based) ───────────────────────────────
-    // Bucket by start time (same source as the per-card Live/Final badge) so the
-    // sections always match the badges and never collapse to a flat mixed list
-    // when the ESPN scores feed is missing. Scores still enrich card content.
+    // ── Game-state counts (drive the Action Today summary line only) ──────────
     const liveGroup      = main.filter(p => isLiveGame(p));
     const completedGroup = main.filter(p => isGameOver(p));
     const upcomingGroup  = main.filter(p => !isLiveGame(p) && !isGameOver(p));
+    const allDone = main.length > 0 && upcomingGroup.length === 0 && liveGroup.length === 0;
 
-    const useGrouping = liveGroup.length > 0 || completedGroup.length > 0;
-
-    // ── Today's-state summary (inline, folded into the Action Today strip) ─────
-    // Leads with the actionable Upcoming count, then Live, then Final + W-L.
     let _stateInline = '';
     let _atNote = 'Odds &amp; starters captured at model run time — re-check current prices and lineups before betting.';
-    // All of today's games have started/finished → reframe as a results recap.
-    const allDone = main.length > 0 && upcomingGroup.length === 0 && liveGroup.length === 0;
-    if (useGrouping) {
+    if (liveGroup.length > 0 || completedGroup.length > 0) {
       let fw = 0, fl = 0;
       completedGroup.forEach(p => {
         const g = scores[p.game];
@@ -2342,59 +2332,14 @@ function render(data, hist, scores = {}, perf = null) {
       }
     }
 
-    function sectionHeader(type, label, count) {
-      return `<div class="picks-section-header">
-        <span class="psh-dot ${type}"></span>
-        <span class="psh-label ${type}">${label}</span>
-        <span class="psh-count">${count}</span>
-        <span class="psh-line"></span>
-      </div>`;
-    }
+    // ── One flat, edge-sorted table ──────────────────────────────────────────
+    // Near-miss picks (edge < 4%) fold in too. prSortPicks leads with the
+    // actionable plays (sorted by the active key, default edge desc); live, final,
+    // edge-gone, and near-miss picks are faded and sorted below.
+    const ordered = prSortPicks(main.concat(marginal));
+    const picksHTML = `<div class="pr-table">${prTableHead()}${prRows(ordered, scores)}</div>`;
 
-    function tierHeader(cls, icon, label, edgeTag) {
-      return `<div class="tier-header ${cls}">
-        <span class="tier-label">${icon} ${label}</span>
-        <span class="tier-edge-tag">${edgeTag}</span>
-        <span class="tier-divider"></span>
-      </div>`;
-    }
-
-    // One table, one column header; Strong / Value split by a light in-table divider.
-    function renderPickGroup(picks) {
-      const strong = picks.filter(p => p.edge >= 0.08);
-      const value  = picks.filter(p => p.edge  < 0.08);
-      let inner = '';
-      if (strong.length > 0) inner += prTierDivider('strong', 'Strong', '8%+ edge') + prRows(strong, topPick, spotlightTop, scores);
-      if (value.length  > 0) inner += prTierDivider('value',  'Value',  '2–8% edge') + prRows(value, topPick, spotlightTop, scores);
-      return `<div class="pr-table">${prTableHead()}${inner}</div>`;
-    }
-
-    let picksHTML = '';
-    if (allDone) {
-      // Single completed group — the "Today's Results" lead replaces the header.
-      picksHTML = `<div class="${gridClass}">` + renderPickGroup(completedGroup) + '</div>';
-    } else if (useGrouping) {
-      // Upcoming first — the actionable, bettable picks lead; Live and Completed
-      // are informational and follow.
-      if (upcomingGroup.length > 0)
-        picksHTML += sectionHeader('upcoming', 'Upcoming', upcomingGroup.length) +
-                     `<div class="${gridClass}">` + renderPickGroup(upcomingGroup) + '</div>';
-      if (liveGroup.length > 0)
-        picksHTML += sectionHeader('live', 'Live', liveGroup.length) +
-                     `<div class="${gridClass}">` + renderPickGroup(liveGroup) + '</div>';
-      if (completedGroup.length > 0)
-        picksHTML += prCollapsible(
-                     sectionHeader('completed', 'Completed', completedGroup.length),
-                     `<div class="${gridClass}">` + renderPickGroup(completedGroup) + '</div>', false);
-    } else {
-      // No live data yet — render flat with tier headers as before
-      picksHTML = renderPickGroup(main);
-    }
-
-    // ── Action Today strip — one consolidated band under the <h2> replacing the
-    // old summary line + legend + model-info-note + state strip. Counts, top
-    // edge, live state, and the model-run time in a single card. (Exposure +
-    // Flat/Kelly controls stay in the sizing bar just below.)
+    // ── Action Today strip — counts, top edge, live state, model-run time ─────
     const _strongN = main.filter(p => p.edge >= 0.08).length;
     const _best    = main[0];
     const _metaBits = [`<strong>${main.length}</strong> pick${main.length !== 1 ? 's' : ''}`];
@@ -2413,9 +2358,7 @@ function render(data, hist, scores = {}, perf = null) {
       + `<div class="at-note">${_atNote}</div>`
       + `</div>`;
 
-    document.getElementById('picks-container').innerHTML =
-      shareAllHTML +
-      (useGrouping ? picksHTML : `<div class="${gridClass}">` + picksHTML + '</div>');
+    document.getElementById('picks-container').innerHTML = shareAllHTML + picksHTML;
     refreshKellyUSD();
     refreshBetButtons();
     refreshPersonalTracker();
@@ -2423,18 +2366,10 @@ function render(data, hist, scores = {}, perf = null) {
     updateFloatingResults(scores);
   }
 
-  if (marginal.length > 0) {
-    document.getElementById('marginal-section').style.display = 'block';
-    // Tier header for marginal section
-    const _marHd = `<div class="tier-header marginal-tier" style="margin:0;flex:1">
-        <span class="tier-label">⚠️ Marginal</span>
-        <span class="tier-edge-tag">Below 4% Threshold · ${marginal.length}</span>
-        <span class="tier-divider"></span>
-      </div>`;
-    document.getElementById('marginal-container').innerHTML =
-      prCollapsible(_marHd, '<div class="pr-stack">' + prTable(marginal, null, false, scores) + '</div>', false);
-    refreshKellyUSD();
-  }
+  // Near-miss picks now fold into the main table as WATCH rows — hide the old
+  // standalone Marginal section.
+  const _marSection = document.getElementById('marginal-section');
+  if (_marSection) _marSection.style.display = 'none';
 
 }
 
@@ -2576,14 +2511,10 @@ function refreshScoreBadges(scores) {
     const gr = getPickResult(p, scores);
     if (!gr) continue;
 
-    // Update the collapsed row's status chip — the DEFAULT surface, present even
-    // when the drawer was never expanded (its card id only exists once built).
-    const rowStatus = document.querySelector('.pr-row[data-pr-card="' + cardId + '"] .pr-status');
-    if (rowStatus) {
-      const st = pickStatus(p, gr);
-      rowStatus.className = 'pr-status ' + st.cls;
-      rowStatus.innerHTML = '<span class="pr-sdot"></span>' + st.label;
-    }
+    // Fade the row live as a game starts or finishes (full re-sort happens on the
+    // next render). Present even when the drawer was never expanded.
+    const rowEl = document.querySelector('.pr-row[data-pr-card="' + cardId + '"]');
+    if (rowEl) rowEl.classList.toggle('pr-faded', !prActionable(p));
 
     const cardEl = document.getElementById(cardId);
     if (!cardEl) continue;
