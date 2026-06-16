@@ -1280,6 +1280,17 @@ details[open] .faq-q::after { content: '−'; }
   .dw-bi { min-width:100px; }
 }
 
+@media (max-width:560px) {
+  /* top band: clean 2×2 grid instead of a cramped 3-then-1 wrap */
+  .dw-band { display:grid; grid-template-columns:1fr 1fr; gap:12px 0; margin-bottom:6px; }
+  .dw-bi { min-width:0; padding:8px 12px; border-left:none; }
+  .dw-bi:nth-child(2n)   { border-left:1px solid var(--border); }   /* divider between the two columns */
+  .dw-bi:nth-child(n+3)  { border-top:1px solid var(--border); }    /* divider between the two rows */
+  /* line-movement graph: its 900-wide viewBox shrinks SVG text hard on phones — enlarge it */
+  .dw-lg .dw-lg-val { font-size:28px; }
+  .dw-lg .dw-lg-lbl { font-size:24px; }
+}
+
 /* collapsible sections (Marginal / Completed) */
 .pr-collapse { margin-bottom:14px; }
 .pr-collapse-hd { display:flex; align-items:center; width:100%; min-height:44px; background:transparent; border:0; padding:6px 0; cursor:pointer; color:inherit; font:inherit; text-align:left; }
