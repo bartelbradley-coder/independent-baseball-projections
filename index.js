@@ -1484,20 +1484,28 @@ function prLineGraph(points) {
   let lo = Math.min(...cents), hi = Math.max(...cents);
   if (hi === lo) { hi += 1; lo -= 1; }
   const padY = (hi - lo) * 0.18 || 1; lo -= padY; hi += padY;
-  const x = i => padX + plotW * i / (pts.length - 1);
+  // x position — time-proportional when every point has a timestamp (so a move
+  // shows *when* it happened); otherwise evenly spaced.
+  const tms = pts.map(p => p.t ? Date.parse(p.t) : NaN);
+  const useTime = tms.every(t => !isNaN(t)) && tms[tms.length - 1] > tms[0];
+  const span = useTime ? (tms[tms.length - 1] - tms[0]) : 1;
+  const xs = pts.map((p, i) => useTime ? padX + plotW * (tms[i] - tms[0]) / span : padX + plotW * i / (pts.length - 1));
   const y = c => padTop + plotH - ((c - lo) / (hi - lo)) * plotH;
-  const baseIdx = pts.findIndex(p => /posted/i.test(p.label));
+  const baseIdx = pts.findIndex(p => /posted|open/i.test(p.label || ''));
   const baseC = cents[baseIdx >= 0 ? baseIdx : 0], lastC = cents[cents.length - 1];
   const dir = lastC > baseC + 0.5 ? 'up' : lastC < baseC - 0.5 ? 'down' : 'flat';
   const col = dir === 'up' ? 'var(--green)' : dir === 'down' ? 'var(--red)' : 'var(--text-4)';
-  const poly = pts.map((p, i) => x(i).toFixed(1) + ',' + y(cents[i]).toFixed(1)).join(' ');
+  const poly = pts.map((p, i) => xs[i].toFixed(1) + ',' + y(cents[i]).toFixed(1)).join(' ');
   let svg = '<svg class="dw-lg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Line movement graph">';
   svg += '<polyline points="' + poly + '" fill="none" stroke="' + col + '" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>';
   pts.forEach((p, i) => {
-    const px = x(i).toFixed(1), py = y(cents[i]);
-    svg += '<circle cx="' + px + '" cy="' + py.toFixed(1) + '" r="3.4" fill="' + col + '"/>';
-    svg += '<text x="' + px + '" y="' + (py - 9).toFixed(1) + '" class="dw-lg-val" text-anchor="middle">' + (p.odds > 0 ? '+' + p.odds : p.odds) + '</text>';
-    svg += '<text x="' + px + '" y="' + (H - 6) + '" class="dw-lg-lbl" text-anchor="middle">' + p.label + '</text>';
+    const px = xs[i].toFixed(1), py = y(cents[i]);
+    const labeled = !!p.label;   // only key points get a dot label; the rest are plain vertices
+    svg += '<circle cx="' + px + '" cy="' + py.toFixed(1) + '" r="' + (labeled ? '3.4' : '1.8') + '" fill="' + col + '"/>';
+    if (labeled) {
+      svg += '<text x="' + px + '" y="' + (py - 9).toFixed(1) + '" class="dw-lg-val" text-anchor="middle">' + (p.odds > 0 ? '+' + p.odds : p.odds) + '</text>';
+      svg += '<text x="' + px + '" y="' + (H - 6) + '" class="dw-lg-lbl" text-anchor="middle">' + p.label + '</text>';
+    }
   });
   return svg + '</svg>';
 }
@@ -1631,12 +1639,23 @@ function prDrawerHTML(p, isBest, gameResult) {
     ? '<div class="dw-cols"><div class="dw-col">' + whyInner + '</div><div class="dw-col">' + dataInner + '</div></div>'
     : '<div class="dw-sec">' + whyInner + '</div><div class="dw-sec">' + dataInner + '</div>';
 
-  // ── Line movement — array-driven price graph + CLV ─────────────────────
-  const lgPts = [];
-  if (p.line_open != null) lgPts.push({ label: 'Opened', odds: p.line_open });
-  lgPts.push({ label: 'Posted', odds: p.odds });
-  if (!live && !over && sb.best) lgPts.push({ label: 'Current', odds: sb.best.odds });
-  else if ((live || over) && p.closing_prob != null) lgPts.push({ label: 'Closed', odds: _americanFromImplied(p.closing_prob) });
+  // ── Line movement — real intraday curve from odds_history; fall back to the
+  //    Opened → Posted → Current/Closed 3-point graph when the series is absent.
+  let lgPts;
+  const _hist = Array.isArray(p.odds_history) ? p.odds_history.filter(h => h && h.odds != null) : [];
+  if (_hist.length >= 2) {
+    const _endLabel = (live || over) ? 'Close' : 'Now';   // label only the endpoints; intermediate points stay plain
+    lgPts = _hist.map((h, i) => ({
+      odds: h.odds, t: h.t,
+      label: i === 0 ? 'Open' : i === _hist.length - 1 ? _endLabel : ''
+    }));
+  } else {
+    lgPts = [];
+    if (p.line_open != null) lgPts.push({ label: 'Opened', odds: p.line_open });
+    lgPts.push({ label: 'Posted', odds: p.odds });
+    if (!live && !over && sb.best) lgPts.push({ label: 'Current', odds: sb.best.odds });
+    else if ((live || over) && p.closing_prob != null) lgPts.push({ label: 'Closed', odds: _americanFromImplied(p.closing_prob) });
+  }
   const graphHTML = prLineGraph(lgPts) || '<div class="dw-cap">Not enough line data to chart.</div>';
   let clvHTML = '';
   if (p.clv != null && (live || over)) {   // CLV only exists once the line has closed (first pitch)
