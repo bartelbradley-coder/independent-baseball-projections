@@ -420,7 +420,7 @@ function renderTable(rows) {
     { key: 'model_prob', label: 'Model%',  cls: 'hide-sm' },
     { key: 'result',     label: 'Result',  cls: '' },
     { key: 'clv',        label: 'CLV',     cls: 'hide-sm' },
-    { key: 'pnl_u',      label: 'P&L',     cls: '' },
+    { key: 'pnl_u',      label: pnlMode === 'dollars' ? 'P&L ($)' : 'P&L (u)',     cls: '' },
   ];
 
   const thHTML = cols.map(c => {

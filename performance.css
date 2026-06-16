@@ -175,3 +175,13 @@
   .hero-stat:nth-last-child(-n+2) { border-bottom: none; }
   .hero-val { font-size: 22px; }
 }
+
+/* Wide data tables scroll horizontally on small screens instead of squishing/clipping */
+@media (max-width: 640px) {
+  .compare-table, .edge-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+}
