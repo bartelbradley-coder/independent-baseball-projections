@@ -1347,8 +1347,12 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   // The pick's starter is already named in the table header — only repeat it here
   // on sparse picks where the table isn't shown.
   const starterRow = mqRows.length ? '' : '<div class="dw-rc"><span class="dw-rk">Starter</span><span class="dw-rv">' + (p.pitcher || '—') + '</span></div>';
+  const projStarterRow = p.projected_starter
+    ? '<div class="dw-rc"><span class="dw-rk">Starter</span><span class="dw-rv" style="color:#fbbf24" title="A starting pitcher here was filled from a consensus of ESPN + multiple sportsbooks because MLB has not posted the official probable yet. Re-confirm before betting.">Projected (consensus)</span></div>'
+    : '';
   const statusHTML = '<div class="dw-h3">Status &amp; Context</div><div class="dw-rows">'
     + '<div class="dw-rc"><span class="dw-rk">Lineup</span><span class="dw-rv ' + (lc === true ? 'good' : '') + '">' + (lc === true ? 'Confirmed' : 'Projected') + '</span></div>'
+    + projStarterRow
     + starterRow
     + '<div class="dw-rc"><span class="dw-rk">Weather</span><span class="dw-rv">' + weatherTxt + '</span></div>'
     + (runEnv.length ? '<div class="dw-rc"><span class="dw-rk">Run env.</span><span class="dw-rv">' + runEnv.join(' · ') + '</span></div>' : '')
