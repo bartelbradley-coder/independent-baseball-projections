@@ -3,14 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>
-  /* Returning-visitor detection — runs before paint so the hero renders in its
-     compact form on repeat visits (full landing band on first visit). */
-  try {
-    if (localStorage.getItem('ibp_visited')) document.documentElement.classList.add('returning');
-    localStorage.setItem('ibp_visited', '1');
-  } catch (e) {}
-</script>
 <title>Independent Baseball Projections — Today's Picks</title>
 <meta name="description" content="Independent Baseball Projections is a quantitative win probability model that finds daily MLB betting edges using calibrated probabilities, no-vig market comparison, and transparent pick tracking. Every pick logged before first pitch. Full record auditable.">
 <link rel="canonical" href="https://independentbaseballprojections.net/">
@@ -60,9 +52,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=14">
+<link rel="stylesheet" href="style.css?v=17">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link rel="stylesheet" href="index.css?v=1">
+<link rel="stylesheet" href="index.css?v=2">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LR4YJLHZK4"></script>
 <script>
@@ -98,45 +90,11 @@
 
 <div class="page" id="picks" role="main" tabindex="-1">
 
-  <!-- VALUE PROP: one-line positioning for first-time visitors (also the page H1) -->
-  <header class="hero">
-    <div class="hero-grid">
-      <div class="hero-copy">
-        <div class="hero-eyebrow">100% Free in 2026 · Quantitative MLB Model</div>
-        <h1 class="hero-title">Bet the number,<br>not the noise.</h1>
-        <p class="hero-sub">Independent Baseball Projections models a fair win probability for every MLB game, then flags the bets where our line beats the book — every pick logged before first pitch and tracked in full. Free all season, no paywall or upsell.</p>
-        <p class="hero-proof" id="hero-proof">Every pick graded and tracked — the full record is public, win or loss.</p>
-        <div class="hero-cta">
-          <a class="hero-btn hero-btn-primary" href="#picks-anchor">See today's <span id="hero-pick-count"></span> picks <span class="hero-arrow">↓</span></a>
-          <a class="hero-btn hero-btn-secondary" href="#email-capture">Get the daily recap →</a>
-        </div>
-      </div>
-      <div class="hero-visual" aria-hidden="true">
-        <div class="hero-demo">
-          <div class="hero-demo-top">
-            <div>
-              <div class="hero-demo-label" id="hd-label">Sample edge</div>
-              <div class="hero-demo-team" id="hd-team">How it works</div>
-            </div>
-            <span class="hero-demo-odds" id="hd-odds">+150</span>
-          </div>
-          <div class="pc-v8-bar hero-demo-bar">
-            <div class="pb8-hdr">
-              <span class="pb8-lbl mkt" id="hd-mkt">Market 40%</span>
-              <span class="pb8-edge-ctr" id="hd-edge">+7pp</span>
-              <span class="pb8-lbl mdl" id="hd-mdl">Model 47%</span>
-            </div>
-            <div class="pb8-track">
-              <div class="pb8-mkt-fill" id="hd-mkt-fill" style="width:60%"></div>
-              <div class="pb8-edge-fill" id="hd-edge-fill" style="left:60%;width:14%"></div>
-              <div class="pb8-tick" id="hd-tick" style="left:calc(74% - 1px)"></div>
-            </div>
-            <div class="pb8-legend">Grey = book · gap = model edge · <span style="color:var(--indigo-lt)">▏</span> = Independent Baseball Projections</div>
-          </div>
-          <div class="hero-demo-cap">When our model's win probability beats the book's implied odds, that gap is your edge.</div>
-        </div>
-      </div>
-    </div>
+  <!-- VALUE PROP: one-line positioning (also the page H1) -->
+  <header class="hero hero-slim">
+    <div class="hero-eyebrow">100% Free in 2026 · Quantitative MLB Model</div>
+    <h1 class="hero-title">Bet the number, not the noise.</h1>
+    <p class="hero-sub">A fair win probability for every MLB game — we post only the bets where our number beats the book, each logged before first pitch and tracked in full. <a href="model.html">How it works →</a></p>
   </header>
 
   <!-- STATUS STRIP: always-visible daily state indicator -->
@@ -153,8 +111,8 @@
   <!-- PICKS HEADER BLOCK: performance stats + sizing controls -->
   <div id="picks-header-block"></div>
 
-  <!-- Track record anchor — subtle link for curious new visitors -->
-  <a href="#evidence-section" class="track-record-link">↓ View track record &amp; methodology</a>
+  <!-- Track record anchor — links to the full dashboard -->
+  <a href="performance.html" class="track-record-link">View track record &amp; methodology →</a>
 
   <!-- Correlated picks warning -->
   <div class="corr-warning" id="corr-warning" style="display:none">
@@ -171,7 +129,7 @@
   <!-- TODAY'S PICKS — inline expansion below each card -->
   <div class="section" id="picks-anchor" style="scroll-margin-top:72px">
     <h2 class="sec-lbl" id="page-date">Today's Value Bets</h2>
-    <div id="page-refresh-meta" style="display:none;font-size:10px;color:var(--text-4);margin-top:3px;margin-bottom:2px;font-family:var(--font-mono)"></div>
+    <div id="page-refresh-meta" class="page-refresh-meta" style="display:none"></div>
     <div id="picks-summary"></div>
     <div id="sizing-bar"></div>
     <div id="picks-container">
@@ -197,70 +155,44 @@
     </div>
   </div>
 
-  <!-- MARGINAL PICKS -->
+  <!-- EMAIL CAPTURE — slim inline bar (full pitch demoted; list growth is secondary) -->
+  <section class="email-bar" id="email-capture">
+    <div class="eb-copy"><strong>Get the daily recap by email</strong> — one email a day, only on days with picks. Free during the 2026 track-record build.</div>
+    <form class="ec-form eb-form" id="ec-form" onsubmit="handleEmailSubmit(event)">
+      <input class="ec-input" type="email" name="email_address" aria-label="Email address"
+             placeholder="your@email.com" required autocomplete="email">
+      <button class="ec-btn" type="submit">Get Daily Recap →</button>
+    </form>
+    <div class="ec-success" id="ec-success">✓ You're on the list — recap coming your way.</div>
+  </section>
+
+  <!-- MARGINAL PICKS (near-miss) -->
   <div class="section" id="marginal-section" style="display:none">
     <h2 class="sec-lbl">Near-Miss Signals — Below 4% Threshold</h2>
-    <div style="font-size:10px;color:var(--text-4);margin-bottom:12px;margin-top:-4px">
-      Model found edge below the posting threshold. Tracked for transparency — not recommended bets.
-    </div>
+    <div class="sec-note">Model found edge below the posting threshold. Tracked for transparency — not recommended bets.</div>
     <div id="marginal-container"></div>
   </div>
 
-
-  <!-- EVENING PREVIEW: tomorrow's opening-line picks -->
-  <div id="preview-container"></div>
-
-  <!-- Yesterday's Results, Week Strip, and Performance Charts removed -->
-
-  <!-- HOW TO USE THESE PICKS -->
-  <div class="section" id="how-to-use">
-    <h2 class="sec-lbl">How to use these picks</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:12px">
-      <div style="padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.02)">
-        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">1 · Shop the best price</div>
-        <div style="font-size:12px;color:var(--text-3);line-height:1.7">We benchmark against Pinnacle's no-vig line, but you don't need Pinnacle — bet at whichever book gives you the best number. A better price is a bigger edge.</div>
+  <!-- HOW TO USE THESE PICKS — collapsed -->
+  <details class="disc-block" id="how-to-use">
+    <summary><span>How to use these picks</span><span class="am-chevron">▾</span></summary>
+    <div class="howto-grid">
+      <div class="howto-card">
+        <div class="howto-h">1 · Shop the best price</div>
+        <div class="howto-b">We benchmark against Pinnacle's no-vig line, but you don't need Pinnacle — bet at whichever book gives you the best number. A better price is a bigger edge.</div>
       </div>
-      <div style="padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.02)">
-        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">2 · Respect the "Playable to" price</div>
-        <div style="font-size:12px;color:var(--text-3);line-height:1.7">Each pick lists the worst odds still worth betting. Lines move fast after we post — if the price has dropped past that number, the edge is gone. Pass rather than chase.</div>
+      <div class="howto-card">
+        <div class="howto-h">2 · Respect the "Playable to" price</div>
+        <div class="howto-b">Each pick lists the worst odds still worth betting. Lines move fast after we post — if the price has dropped past that number, the edge is gone. Pass rather than chase.</div>
       </div>
-      <div style="padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.02)">
-        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">3 · Size with discipline</div>
-        <div style="font-size:12px;color:var(--text-3);line-height:1.7">Stake flat units or fractional Kelly — never more than you can afford to lose. Consistent sizing is what turns a real edge into long-run profit and survives the variance.</div>
+      <div class="howto-card">
+        <div class="howto-h">3 · Size with discipline</div>
+        <div class="howto-b">Stake flat units or fractional Kelly — never more than you can afford to lose. Consistent sizing is what turns a real edge into long-run profit and survives the variance.</div>
       </div>
     </div>
-  </div>
+  </details>
 
-  <!-- EMAIL CAPTURE -->
-  <section class="email-capture-section" id="email-capture">
-    <div class="ec-inner">
-      <div>
-        <div class="ec-badge">⚾ Free Access — 2026 Season</div>
-      </div>
-      <div>
-        <h2 class="ec-headline">Get the daily picks recap in your inbox</h2>
-        <p class="ec-sub"><strong style="color:var(--text-2)">One email a day, only on days with picks.</strong> Free during our 2026 track-record build — every pick timestamped, CLV-tracked, and auditable. <span style="color:var(--text-4)">Paid tiers with real-time alerts launch before the 2027 season.</span></p>
-      </div>
-      <form class="ec-form" id="ec-form" onsubmit="handleEmailSubmit(event)">
-        <input class="ec-input" type="email" name="email_address" aria-label="Email address"
-               placeholder="your@email.com" required autocomplete="email">
-        <button class="ec-btn" type="submit">Get Daily Recap →</button>
-      </form>
-      <div class="ec-success" id="ec-success">
-        ✓ You're on the list — picks recap coming your way. We'll let you know when premium launches.
-      </div>
-      <p class="ec-fine">No spam. One email per day, only on days with picks. Unsubscribe anytime.</p>
-    </div>
-  </section>
-
-  <!-- EVIDENCE SECTION: 3 specific, data-backed claims for new visitors -->
-  <section id="evidence-section" class="evidence-section" style="display:none">
-    <div class="evidence-heading">Track Record</div>
-    <div class="evidence-grid" id="evidence-grid"></div>
-    <div id="calibration-block"></div>
-  </section>
-
-  <!-- ABOUT THIS MODEL — collapsed single expandable replacing 4 sections -->
+  <!-- ABOUT THIS MODEL — collapsed; folds in "who's behind this" -->
   <details class="about-model" id="about-model">
     <summary>
       <span>ℹ️</span>
@@ -268,29 +200,29 @@
       <span class="am-chevron">▾</span>
     </summary>
     <div class="about-model-body">
-      <p style="font-size:12px;color:var(--text-3);line-height:1.7;margin-bottom:14px">
+      <p class="am-p">
         Pitcher quality, lineup status, park factors, weather, bullpen quality, BvP career matchup, arsenal fit, market audit, and more — applied as model adjustments before the market edge comparison.
         The final Independent Baseball Projections probability is compared against the no-vig Pinnacle probability to identify pricing gaps.
         Only picks with ≥4% edge vs. Pinnacle are posted.
       </p>
-      <div class="trust-strip" style="margin-bottom:14px">
+      <div class="trust-strip am-mb">
         <div class="trust-card"><div class="trust-label">Model</div><div class="trust-val">Dual-Poisson + log-odds</div></div>
         <div class="trust-card"><div class="trust-label">Benchmark</div><div class="trust-val">No-vig Pinnacle</div></div>
         <div class="trust-card"><div class="trust-label">Signals</div><div class="trust-val">33 log-odds adj.</div></div>
         <div class="trust-card"><div class="trust-label">Calibration</div><div class="trust-val">Platt-scaled monthly</div></div>
       </div>
-      <ul style="font-size:11px;color:var(--text-4);line-height:1.9;padding-left:16px;margin-bottom:14px">
+      <ul class="am-list">
         <li>Every pick is logged before first pitch — timestamps are immutable</li>
         <li>Results are never deleted after losses</li>
         <li>Closing-line value is tracked to verify edge holds to close</li>
         <li>Live results are reported separately from historical backtests</li>
         <li>Past performance does not guarantee future results</li>
       </ul>
-      <details class="faq-item" style="margin-bottom:6px">
+      <details class="faq-item">
         <summary class="faq-q">How does the model price each game?</summary>
         <div class="faq-a">It converts the model's win probability into American odds with no margin — the theoretical price at which neither side has an edge. Edge is the gap between that model price and the market.</div>
       </details>
-      <details class="faq-item" style="margin-bottom:6px">
+      <details class="faq-item">
         <summary class="faq-q">How is edge calculated?</summary>
         <div class="faq-a">Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). Independent Baseball Projections only posts picks with at least 4% edge vs. Pinnacle's no-vig line.</div>
       </details>
@@ -298,19 +230,15 @@
         <summary class="faq-q">Does past performance guarantee future results?</summary>
         <div class="faq-a">No. Sports betting involves risk and variance. The model identifies positive expected value — not certainty. Never bet more than you can afford to lose.</div>
       </details>
-      <div style="margin-top:14px;font-size:10px;color:var(--text-4);line-height:1.7">
+      <div class="am-who">
+        <div class="am-who-h">Who's behind this</div>
+        Independent Baseball Projections is a one-person project, built and run by <strong>BB</strong>. I built an independent win-probability model from scratch and post every pick publicly — timestamped before first pitch, never deleted after a loss — to prove the edge is real instead of asking you to take it on faith.
+      </div>
+      <div class="am-legal">
         ⚠️ For informational and educational purposes only. Not financial advice. Must be 18+ and located in a legal jurisdiction. Bet responsibly.
       </div>
     </div>
   </details>
-
-  <!-- WHO'S BEHIND THIS -->
-  <section class="who-runs" style="max-width:680px;margin:22px auto 0;padding:18px 20px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.02)">
-    <div style="font-family:var(--font-display,'Barlow Condensed',system-ui,sans-serif);font-size:13px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-2);margin-bottom:10px">Who's behind this</div>
-    <p style="font-size:13px;color:var(--text-3);line-height:1.8;margin:0">
-      Independent Baseball Projections is a one-person project, built and run by <strong style="color:var(--text)">BB</strong>. I built an independent win-probability model from scratch and post every pick publicly — timestamped before first pitch, never deleted after a loss — to prove the edge is real instead of asking you to take it on faith. Free during the 2026 track-record build.
-    </p>
-  </section>
 
 </div>
 
@@ -334,9 +262,9 @@
   </div>
   <div class="footer-brand" style="display:none">Independent Baseball Projections · Bet the number, not the noise. · Every pick logged before first pitch.</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
-  <div class="rg-resource" style="margin-top:8px;font-size:10px;color:var(--text-3);line-height:1.6">Gambling problem? Call <a href="tel:18005224700" style="color:var(--text-2)">1-800-GAMBLER</a> or visit <a href="https://www.ncpgambling.org" target="_blank" rel="noopener" style="color:var(--text-2)">ncpgambling.org</a>.</div>
+  <div class="rg-resource">Gambling problem? Call <a href="tel:18005224700">1-800-GAMBLER</a> or visit <a href="https://www.ncpgambling.org" target="_blank" rel="noopener">ncpgambling.org</a>.</div>
   <div class="footer-links"><a href="model.html">Methodology</a> · <a href="history.html">Pick History</a> · <a href="performance.html">Model Dashboard</a></div>
-  <div class="footer-byline" style="margin-top:10px;font-size:10px;color:var(--text-4);letter-spacing:0.04em">Built &amp; run by BB · an independent one-person project</div>
+  <div class="footer-byline">Built &amp; run by BB · an independent one-person project</div>
 </footer>
 
 <!-- ── Share card modal ── -->
@@ -363,6 +291,6 @@
 </div>
 
 <script src="ibp-utils.js"></script>
-<script src="index.js?v=1"></script>
+<script src="index.js?v=4"></script>
 </body>
 </html>

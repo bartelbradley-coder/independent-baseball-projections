@@ -1197,7 +1197,8 @@ async function loadPicks() {
     _histRef = hist;
     if (data) render(data, hist, scores, perf);
     else { renderEmptyState(null, hist); renderStatusStrip([], true, null); }
-    renderPreview(preview);
+    // Tomorrow's preview now lives on its own page (preview.html) — kept off the
+    // Today's Picks page so the actionable picks lead. renderPreview(preview);
   } catch (e) {
     console.error('[Independent Baseball Projections] loadPicks error:', e);
     document.getElementById('picks-container').innerHTML = `
@@ -1468,165 +1469,191 @@ function oneLineDriverV8(p) {
 // metrics, distinct from the model adjustments in "Why it rates"), and line
 // movement + CLV. Replaces embedding the entire legacy pickCardHTML (which
 // re-rendered the edge/books/stake/factors a 2nd–3rd time in the old styling).
-function prFullRationaleHTML(p) {
-  const rs = p.raw_stats || {};
-  const pickAbbr = (p.pick || '').toUpperCase();
-  const fmtO = (o) => o == null ? '—' : (o > 0 ? '+' + o : String(o));
-
-  // Matchup Quality — only metrics present on BOTH sides; better side greened.
-  let mqRows = '';
-  function mqRow(label, pv, ov, betterHigh, fmt) {
-    if (pv == null || ov == null || isNaN(pv) || isNaN(ov)) return;
-    const pBetter = betterHigh ? pv > ov : pv < ov;
-    mqRows += '<div class="dw-rc"><span class="dw-rk">' + label + '</span>'
-      + '<span class="dw-mq"><b class="' + (pBetter ? 'dw-mq-good' : '') + '">' + fmt(pv) + '</b>'
-      + '<span class="dw-mq-sep">vs</span><b class="' + (!pBetter ? 'dw-mq-good' : '') + '">' + fmt(ov) + '</b></span></div>';
-  }
-  mqRow('Starter xFIP', rs.pick_xfip, rs.opp_xfip, false, x => x.toFixed(2));
-  mqRow('K-BB%', rs.pick_kbb_pct != null ? rs.pick_kbb_pct * 100 : null, rs.opp_kbb_pct != null ? rs.opp_kbb_pct * 100 : null, true, x => x.toFixed(1) + '%');
-  mqRow('Defense (OAA)', rs.pick_oaa, rs.opp_oaa, true, x => (x > 0 ? '+' : '') + x);
-  mqRow('Arsenal fit', rs.pick_arsenal_fit, rs.opp_arsenal_fit, true, x => (x > 0 ? '+' : '') + x.toFixed(2));
-  mqRow('Proj. IP', rs.pick_proj_ip, rs.opp_proj_ip, true, x => x.toFixed(1));
-  const conds = [];
-  if (rs.park_factor != null) conds.push('Park ' + rs.park_factor.toFixed(2));
-  if (rs.ump_name) conds.push('HP ump ' + rs.ump_name);
-  const condLine = conds.length ? '<div class="dw-pr-note">' + conds.join(' · ') + '</div>' : '';
-  const mqHTML = mqRows
-    ? '<div class="dw-card"><div class="dw-h">Matchup quality <span class="dw-hsub">' + pickAbbr + ' vs opp · better side green</span></div>' + mqRows + condLine + '</div>'
-    : '';
-
-  // Line movement + CLV (open→posted are fixed; CLV is fixed at the close).
-  let lmRows = '';
-  if (p.line_open != null) lmRows += '<div class="dw-pr"><span class="dw-pl">Opened</span><span class="dw-pv">' + fmtO(p.line_open) + '</span></div>';
-  lmRows += '<div class="dw-pr"><span class="dw-pl">Posted</span><span class="dw-pv">' + fmtO(p.odds) + '</span></div>';
-  if (p.clv != null) {
-    const clvpp = p.clv * 100;
-    const clvCls = clvpp >= 0.5 ? 'g' : clvpp <= -0.5 ? 'r' : '';
-    const clvNote = clvpp >= 0.5 ? ' · beat the close' : clvpp <= -0.5 ? ' · closed past us' : ' · matched close';
-    lmRows += '<div class="dw-pr"><span class="dw-pl">CLV</span><span class="dw-pv ' + clvCls + '">' + (clvpp >= 0 ? '+' : '') + clvpp.toFixed(1) + 'pp' + clvNote + '</span></div>';
-  }
-  const lmHTML = '<div class="dw-card"><div class="dw-h">Line movement</div>' + lmRows + '</div>';
-
-  const narrHTML = (p.narrative && p.narrative.trim())
-    ? '<div class="dw-card"><div class="dw-h">Model rationale</div><div class="dw-prose">' + p.narrative + '</div></div>'
-    : '';
-
-  return narrHTML + mqHTML + lmHTML;
+// Small inline line graph for price movement. Takes a generic array of points
+// — [{ label, odds }] — so when the backend starts persisting intraday odds
+// snapshots, the same renderer just receives more points (only the x-spacing /
+// label density would change). Price is plotted on the "cents" scale so the line
+// rises when the number moved in the bettor's favour; coloured green if it ended
+// better than the posted line, red if worse, neutral if flat.
+function prLineGraph(points) {
+  const pts = (points || []).filter(p => p.odds != null && !isNaN(p.odds));
+  if (pts.length < 2) return '';
+  const W = 900, H = 84, padX = 64, padTop = 26, padBot = 24;  // wide viewBox → fills the section
+  const plotW = W - padX * 2, plotH = H - padTop - padBot;
+  const cents = pts.map(p => _oddsToCents(p.odds));
+  let lo = Math.min(...cents), hi = Math.max(...cents);
+  if (hi === lo) { hi += 1; lo -= 1; }
+  const padY = (hi - lo) * 0.18 || 1; lo -= padY; hi += padY;
+  const x = i => padX + plotW * i / (pts.length - 1);
+  const y = c => padTop + plotH - ((c - lo) / (hi - lo)) * plotH;
+  const baseIdx = pts.findIndex(p => /posted/i.test(p.label));
+  const baseC = cents[baseIdx >= 0 ? baseIdx : 0], lastC = cents[cents.length - 1];
+  const dir = lastC > baseC + 0.5 ? 'up' : lastC < baseC - 0.5 ? 'down' : 'flat';
+  const col = dir === 'up' ? 'var(--green)' : dir === 'down' ? 'var(--red)' : 'var(--text-4)';
+  const poly = pts.map((p, i) => x(i).toFixed(1) + ',' + y(cents[i]).toFixed(1)).join(' ');
+  let svg = '<svg class="dw-lg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Line movement graph">';
+  svg += '<polyline points="' + poly + '" fill="none" stroke="' + col + '" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>';
+  pts.forEach((p, i) => {
+    const px = x(i).toFixed(1), py = y(cents[i]);
+    svg += '<circle cx="' + px + '" cy="' + py.toFixed(1) + '" r="3.4" fill="' + col + '"/>';
+    svg += '<text x="' + px + '" y="' + (py - 9).toFixed(1) + '" class="dw-lg-val" text-anchor="middle">' + (p.odds > 0 ? '+' + p.odds : p.odds) + '</text>';
+    svg += '<text x="' + px + '" y="' + (H - 6) + '" class="dw-lg-lbl" text-anchor="middle">' + p.label + '</text>';
+  });
+  return svg + '</svg>';
 }
 
+// Expanded pick drawer — decision-first, in order: should I bet it? · price &
+// stake? · why does the model like it? · what data supports it? · did the line
+// move favourably? Two-column body (sparse picks collapse to one). Two accent
+// colours only: green = helps the pick, red = hurts it.
 function prDrawerHTML(p, isBest, gameResult) {
   const cardId = prCardId(p);
+  const rs = p.raw_stats || {};
+  const parts = String(p.game || '').split('@').map(s => s.trim());
+  const away = parts[0] || '', home = parts[1] || '';
   const pickAbbr = (p.pick || '').toUpperCase();
+  const oppAbbr = (away.toUpperCase() === pickAbbr ? home : away).toUpperCase();
   const typeLabel = p.pick_type === 'MONEYLINE' ? 'ML' : p.pick_type === 'RUN_LINE' ? 'RL' : (p.pick_type || '').replace(/_/g, ' ');
-  const oddsStr = p.odds != null ? (p.odds > 0 ? '+' + p.odds : String(p.odds)) : '';
-  const isDog = (p.odds || 0) > 0;
+  const fmtO = o => (o == null ? '—' : (o > 0 ? '+' + o : String(o)));
   const live = isLiveGame(p), over = isGameOver(p);
   const scoreStr = gameResult && gameResult.score ? ' ' + gameResult.score : '';
+  const sb = sanitizeBookOdds(p);
 
   const mp = p.model_prob, bp = p.market_prob;
   const mpPct = mp != null ? (mp * 100).toFixed(1) + '%' : '—';
   const bpPct = bp != null ? (bp * 100).toFixed(1) + '%' : '—';
-  const mpW = mp != null ? Math.max(2, Math.min(100, mp * 100)) : 0;
   const bpW = bp != null ? Math.max(2, Math.min(100, bp * 100)) : 0;
+  const mpW = mp != null ? Math.max(2, Math.min(100, mp * 100)) : 0;
   const gapW = Math.max(0, mpW - bpW);
   const ev = p.edge || 0;
-  const edgeStr = (ev >= 0 ? '+' : '') + (ev * 100).toFixed(1);
-  const ptStr = p.playable_to != null ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to)) : '—';
+  const edgeStr = (ev >= 0 ? '+' : '') + (ev * 100).toFixed(1) + 'pp';
+  const ptStr = fmtO(p.playable_to);
+
+  // current best price + book
+  let curStr, curBook = '', curGood = false;
+  if (live || over) { curStr = '—'; }
+  else if (sb.best) { curStr = fmtO(sb.best.odds); curBook = sb.best.book; const capImp = _impliedFromAmerican(p.odds); curGood = capImp != null && sb.best.implied < capImp - 0.005; }
+  else { curStr = fmtO(p.best_odds != null ? p.best_odds : p.odds); curBook = p.best_book || ''; }
 
   const isKelly = _indexPnlMode === 'kelly';
-  const stakeStr = isKelly
-    ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') + ' <span class="dw-usd kelly-usd" data-units="' + (p.kelly_units || 0) + '"></span>'
-    : '1.0u <span class="dw-usd">· $100</span>';
+  const stakeUnits = isKelly ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') : '1.0u';
+  const stakeSub = isKelly ? '<span class="kelly-usd" data-units="' + (p.kelly_units || 0) + '"></span>' : '$100';
 
-  const st = pickStatus(p, gameResult);
-  let statusDetail;
-  if (over) statusDetail = st.label + ' · pregame pick logged at ' + oddsStr + (p.posted_at ? ' (' + p.posted_at + ')' : '');
-  else if (live) statusDetail = 'Pregame pick — now live' + scoreStr + '. Line captured ' + oddsStr + (p.posted_at ? ' at ' + p.posted_at : '');
-  else statusDetail = 'Line captured ' + oddsStr + (p.posted_at ? ' at ' + p.posted_at : '') + ' — re-check current price before betting';
+  // ── verdict (cites the numbers) ────────────────────────────────────────
+  const cushion = prCushion(p);
+  let pill, pCls, detail;
+  if (over) { const r = gameResult && gameResult.result; pill = 'Final'; pCls = r === 'W' ? 'good' : r === 'L' ? 'bad' : 'neu'; detail = (r === 'W' ? 'Won' : r === 'L' ? 'Lost' : 'Settled') + scoreStr; }
+  else if (live) { pill = 'Live'; pCls = 'neu'; detail = 'in-play' + scoreStr + ' — odds have moved off this pick'; }
+  else if ((p.edge || 0) < 0.04) { pill = 'Below threshold'; pCls = 'neu'; detail = 'model edge is under our 4% cutoff — not a recommended bet'; }
+  else if (!prActionable(p)) { pill = 'No longer playable'; pCls = 'bad'; detail = 'current ' + curStr + ' is past Play to ' + ptStr; }
+  else if (p.current_lineup_confirmed === false) { pill = 'Playable'; pCls = 'neu'; detail = 'lineup not yet confirmed — re-check before betting'; }
+  else { pill = 'Still playable'; pCls = 'good'; detail = 'current ' + curStr + ' beats Play to ' + ptStr; }
 
+  const headHTML = '<div class="dw-head"><span class="dw-head-name">' + pickAbbr + ' ' + typeLabel + '</span>'
+    + '<span class="dw-pill ' + pCls + '">' + pill + '</span>'
+    + '<span class="dw-head-detail">— ' + detail + '</span></div>';
+
+  // ── decision band: current · posted · play-to · stake ──────────────────
+  const bandHTML = '<div class="dw-band">'
+    + '<div class="dw-bi"><span class="dw-bi-k">Current odds</span><span class="dw-bi-v' + (curGood ? ' good' : '') + '">' + ((live || over) ? '—' : curStr) + '</span>' + ((!live && !over && curBook) ? '<span class="dw-bi-s">' + curBook + '</span>' : '') + '</div>'
+    + '<div class="dw-bi"><span class="dw-bi-k">Posted line</span><span class="dw-bi-v">' + fmtO(p.odds) + '</span>' + (p.posted_at ? '<span class="dw-bi-s">at ' + p.posted_at + '</span>' : '') + '</div>'
+    + '<div class="dw-bi"><span class="dw-bi-k">Play to</span><span class="dw-bi-v">' + ((live || over) ? '—' : ptStr) + '</span></div>'
+    + '<div class="dw-bi"><span class="dw-bi-k">Stake</span><span class="dw-bi-v">' + stakeUnits + '</span><span class="dw-bi-s">' + stakeSub + '</span></div>'
+    + '</div>';
+
+  // ── Why the model likes it (left) ──────────────────────────────────────
   const meterHTML = (mp != null && bp != null)
-    ? '<div class="dw-meter"><i class="m-mkt" style="width:' + bpW.toFixed(1) + '%"></i><i class="m-gap" style="left:' + bpW.toFixed(1) + '%;width:' + gapW.toFixed(1) + '%"></i><i class="m-tick" style="left:calc(' + mpW.toFixed(1) + '% - 1px)"></i></div>'
-      + '<div class="dw-meter-cap"><span>Market ' + bpPct + '</span><span class="g">' + edgeStr + 'pp</span><span class="mdl">Model ' + mpPct + '</span></div>'
+    ? '<div class="dw-meter-cap"><span>Market <b>' + bpPct + '</b></span><span class="dw-arr">→</span><span>Model <b>' + mpPct + '</b></span><span class="g">Edge ' + edgeStr + '</span></div>'
+      + '<div class="dw-meter"><i class="m-mkt" style="width:' + bpW.toFixed(1) + '%"></i><i class="m-gap" style="left:' + bpW.toFixed(1) + '%;width:' + gapW.toFixed(1) + '%"></i><i class="m-tick" style="left:calc(' + mpW.toFixed(1) + '% - 1px)"></i></div>'
+      + '<div class="dw-cap">Bar shows implied win probability.</div>'
     : '';
-
   const adjs = (p.adj_breakdown && p.adj_breakdown.adjustments) || [];
-  const chips = adjs.slice().sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 8)
-    .map(a => '<span class="dw-chip ' + (a.positive ? 'pos' : 'neg') + '">' + a.label + ' <b>' + (a.pp >= 0 ? '+' : '') + a.pp.toFixed(1) + '</b></span>').join('');
-  const whyHTML = chips ? '<div class="dw-card"><div class="dw-h">Why it rates</div><div class="dw-chips">' + chips + '</div></div>' : '';
+  const pos = adjs.filter(a => a.positive).sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 5);
+  const neg = adjs.filter(a => !a.positive).sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 5);
+  const frow = a => '<div class="dw-frow"><b class="' + (a.positive ? 'good' : 'bad') + '">' + (a.pp >= 0 ? '+' : '') + a.pp.toFixed(1) + '</b><span>' + a.label + '</span></div>';
+  const driversCol = pos.length ? '<div class="dw-fcol"><div class="dw-fh good">Key Drivers</div>' + pos.map(frow).join('') + '</div>' : '';
+  const offsetsCol = neg.length ? '<div class="dw-fcol"><div class="dw-fh bad">Offsets</div>' + neg.map(frow).join('') + '</div>' : '';
+  const factorsHTML = (driversCol || offsetsCol) ? '<div class="dw-factors">' + driversCol + offsetsCol + '</div>' : '';
+  const listJoin = arr => arr.length <= 1 ? (arr[0] || '') : arr.slice(0, -1).join(', ') + ' and ' + arr[arr.length - 1];
+  const tp = pos.slice(0, 2).map(a => a.label.toLowerCase()), tn = neg.slice(0, 2).map(a => a.label.toLowerCase());
+  let readTxt = '';
+  if (tp.length) { readTxt = pickAbbr + ' is undervalued mainly on ' + listJoin(tp) + (tn.length ? ', partly offset by ' + listJoin(tn) : '') + '.'; }
+  const readHTML = readTxt ? '<div class="dw-h3">Model Read</div><div class="dw-read">' + readTxt + '</div>' : '';
+  const whyInner = '<div class="dw-h2">Why The Model Likes It</div>' + meterHTML + factorsHTML + readHTML;
 
-  const rs = p.raw_stats || {};
+  // ── Matchup data + status (right) ──────────────────────────────────────
+  const mqRows = [];
+  function mqAdd(label, dir, pv, ov, betterHigh, fmt) {
+    if (pv == null || ov == null || isNaN(pv) || isNaN(ov)) return;
+    const pBetter = betterHigh ? pv > ov : pv < ov;
+    mqRows.push('<tr><td class="dw-mt-metric">' + label + ' <span class="dw-dir">' + dir + '</span></td>'
+      + '<td>' + fmt(pv) + '</td><td>' + fmt(ov) + '</td>'
+      + '<td class="' + (pBetter ? 'good' : 'bad') + '">' + (pBetter ? pickAbbr : oppAbbr) + '</td></tr>');
+  }
+  mqAdd('Starter xFIP', 'lower better', rs.pick_xfip, rs.opp_xfip, false, x => x.toFixed(2));
+  mqAdd('K-BB%', 'higher better', rs.pick_kbb_pct != null ? rs.pick_kbb_pct * 100 : null, rs.opp_kbb_pct != null ? rs.opp_kbb_pct * 100 : null, true, x => x.toFixed(1) + '%');
+  mqAdd('Defense (OAA)', 'higher better', rs.pick_oaa, rs.opp_oaa, true, x => (x > 0 ? '+' : '') + x);
+  mqAdd('Arsenal fit', 'higher better', rs.pick_arsenal_fit, rs.opp_arsenal_fit, true, x => (x > 0 ? '+' : '') + x.toFixed(2));
+  mqAdd('Proj. IP', 'higher better', rs.pick_proj_ip, rs.opp_proj_ip, true, x => x.toFixed(1));
+  const pickPit = p.pitcher ? '<span>' + p.pitcher + '</span>' : '';
+  const oppPit = p.opp_pitcher ? '<span>' + p.opp_pitcher + '</span>' : '';
+  const tableHTML = mqRows.length
+    ? '<table class="dw-mtable"><thead><tr><th>Metric</th><th>' + pickAbbr + pickPit + '</th><th>' + oppAbbr + oppPit + '</th><th>Advantage</th></tr></thead><tbody>' + mqRows.join('') + '</tbody></table>'
+    : '<div class="dw-cap">No paired matchup metrics for this game.</div>';
+
   const lc = p.current_lineup_confirmed != null ? p.current_lineup_confirmed : rs.pick_lineup_confirmed;
-  const lineup = lc === true ? ['Confirmed', 'ok'] : ['Projected', 'warn'];
-  const starter = p.pitcher ? [p.pitcher, 'neu'] : ['—', 'neu'];
-  let weather;
-  if (p.is_domed) { weather = ['Roof closed', 'ok']; }
+  let weatherTxt;
+  if (p.is_domed) weatherTxt = 'Roof closed';
   else {
     const t = p.temp_f != null ? Math.round(p.temp_f) + '°F' : '';
     const w = p.wind_speed_mph != null ? ', wind ' + Math.round(p.wind_speed_mph) + ' mph' : '';
     const d = p.wind_dir_degrees != null ? ' ' + windCompass(p.wind_dir_degrees) : '';
-    weather = [((t + w + d).trim() || '—'), 'neu'];
+    weatherTxt = (t + w + d).trim() || '—';
   }
-  const riskHTML = '<div class="dw-card"><div class="dw-h">Risk checks</div>'
-    + '<div class="dw-rc"><span class="dw-rk">Lineup</span><span class="dw-rv ' + lineup[1] + '">' + lineup[0] + '</span></div>'
-    + '<div class="dw-rc"><span class="dw-rk">Starter</span><span class="dw-rv ' + starter[1] + '">' + starter[0] + '</span></div>'
-    + '<div class="dw-rc"><span class="dw-rk">Weather</span><span class="dw-rv ' + weather[1] + '">' + weather[0] + '</span></div>'
-    + '<div class="dw-rc"><span class="dw-rk">Market</span><span class="dw-rv ' + (over ? 'neu">Settled' : live ? 'neu">Line moved (live)' : 'warn">Re-check price') + '</span></div>'
+  const runEnv = [];
+  if (rs.park_factor != null) runEnv.push('Park ' + rs.park_factor.toFixed(2));
+  if (rs.ump_name) runEnv.push('HP ump ' + rs.ump_name);
+  // The pick's starter is already named in the table header — only repeat it here
+  // on sparse picks where the table isn't shown.
+  const starterRow = mqRows.length ? '' : '<div class="dw-rc"><span class="dw-rk">Starter</span><span class="dw-rv">' + (p.pitcher || '—') + '</span></div>';
+  const statusHTML = '<div class="dw-h3">Status &amp; Context</div><div class="dw-rows">'
+    + '<div class="dw-rc"><span class="dw-rk">Lineup</span><span class="dw-rv ' + (lc === true ? 'good' : '') + '">' + (lc === true ? 'Confirmed' : 'Projected') + '</span></div>'
+    + starterRow
+    + '<div class="dw-rc"><span class="dw-rk">Weather</span><span class="dw-rv">' + weatherTxt + '</span></div>'
+    + (runEnv.length ? '<div class="dw-rc"><span class="dw-rk">Run env.</span><span class="dw-rv">' + runEnv.join(' · ') + '</span></div>' : '')
     + '</div>';
+  const dataInner = '<div class="dw-h2">Matchup Data</div>' + tableHTML + statusHTML;
 
-  // Price section is game-state-aware. Pregame: the live-updating book_odds are
-  // the actionable current price → show best available. Live/Final: book_odds is
-  // in-game odds that have moved off the posted line and is NOT a bet you can make
-  // at this pick → show the logged price + a state note instead.
-  let priceHTML;
-  if (live || over) {
-    priceHTML = '<div class="dw-card"><div class="dw-h">Posted price</div>'
-      + '<div class="dw-pr"><span class="dw-pl">Logged at</span><span class="dw-pv">' + oddsStr + (p.best_book ? ' ' + p.best_book : '') + '</span></div>'
-      + '<div class="dw-pr-note">' + (over ? 'Game final' : 'Game in progress') + ' — live odds have moved off the posted line and no longer reflect this pick.</div>'
-      + '</div>';
-  } else {
-    const sb = sanitizeBookOdds(p);
-    const capImp = _impliedFromAmerican(p.odds);
-    const better = sb.best && capImp != null && sb.best.implied < capImp - 0.005;
-    let priceRows = '<div class="dw-pr"><span class="dw-pl">Captured</span><span class="dw-pv">' + oddsStr + (p.best_book ? ' ' + p.best_book : '') + '</span></div>';
-    if (sb.best) {
-      priceRows += '<div class="dw-pr"><span class="dw-pl">Current best</span><span class="dw-pv' + (better ? ' g' : '') + '">' + (sb.best.odds > 0 ? '+' + sb.best.odds : String(sb.best.odds)) + ' ' + sb.best.book + '</span></div>';
-      sb.entries.slice(1, 3).forEach(e => { priceRows += '<div class="dw-pr"><span class="dw-pl">' + e.book + '</span><span class="dw-pv">' + (e.odds > 0 ? '+' + e.odds : String(e.odds)) + '</span></div>'; });
-      if (sb.dropped > 0) priceRows += '<div class="dw-pr-note">' + sb.dropped + ' book' + (sb.dropped > 1 ? 's' : '') + ' hidden — off-market vs consensus</div>';
-    } else {
-      priceRows += '<div class="dw-pr-note">Live book prices unavailable right now — verify the current line before betting.</div>';
-    }
-    priceHTML = '<div class="dw-card"><div class="dw-h">Best available price</div>' + priceRows + '</div>';
+  // Two columns when there's a real matchup table; otherwise stack so the right
+  // side never sits empty.
+  const twoCol = mqRows.length > 0;
+  const bodyHTML = twoCol
+    ? '<div class="dw-cols"><div class="dw-col">' + whyInner + '</div><div class="dw-col">' + dataInner + '</div></div>'
+    : '<div class="dw-sec">' + whyInner + '</div><div class="dw-sec">' + dataInner + '</div>';
+
+  // ── Line movement — array-driven price graph + CLV ─────────────────────
+  const lgPts = [];
+  if (p.line_open != null) lgPts.push({ label: 'Opened', odds: p.line_open });
+  lgPts.push({ label: 'Posted', odds: p.odds });
+  if (!live && !over && sb.best) lgPts.push({ label: 'Current', odds: sb.best.odds });
+  else if ((live || over) && p.closing_prob != null) lgPts.push({ label: 'Closed', odds: _americanFromImplied(p.closing_prob) });
+  const graphHTML = prLineGraph(lgPts) || '<div class="dw-cap">Not enough line data to chart.</div>';
+  let clvHTML = '';
+  if (p.clv != null && (live || over)) {   // CLV only exists once the line has closed (first pitch)
+    const clvpp = p.clv * 100;
+    const cls = clvpp >= 0.5 ? 'g' : clvpp <= -0.5 ? 'r' : '';
+    const note = clvpp >= 0.5 ? 'beat the close' : clvpp <= -0.5 ? 'closed past us' : 'matched close';
+    clvHTML = '<div class="dw-clv"><span class="dw-clv-k">CLV</span><b class="' + cls + '">' + (clvpp >= 0 ? '+' : '') + clvpp.toFixed(1) + 'pp</b><span class="dw-clv-s">' + note + '</span></div>';
   }
+  const moveHTML = '<div class="dw-sec"><div class="dw-move-head"><div class="dw-h2">Line Movement</div>' + clvHTML + '</div>'
+    + '<div class="dw-lgwrap">' + graphHTML + '</div></div>';
 
-  const topPos = adjs.filter(a => a.positive).sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 3).map(a => a.label.toLowerCase());
-  let drivers = topPos.length ? topPos.join(', ') : 'a multi-factor model edge';
-  if (topPos.length > 1) drivers = drivers.replace(/, ([^,]*)$/, ', and $1');
-  const summaryHTML = (mp != null && bp != null)
-    ? '<div class="dw-summary">' + pickAbbr + ' is priced like a <b>' + bpPct + '</b> ' + (isDog ? 'underdog' : 'favorite') + ', but the model makes them <b>' + mpPct + '</b> — edge from ' + drivers + '.</div>'
-    : '';
-
-  const fullHTML = '<details class="dw-details"><summary>View full model rationale</summary><div class="dw-full">' + prFullRationaleHTML(p) + '</div></details>';
   const actionsHTML = '<div class="dw-actions">'
-    + '<button type="button" class="dw-act" onclick="sharePickCard(\'' + cardId + '\')">⬆ Share</button>'
-    + '<button type="button" class="dw-act" onclick="copyPick(\'' + cardId + '\')">⧉ Copy</button>'
+    + '<button type="button" class="dw-act" onclick="sharePickCard(\'' + cardId + '\')">Share</button>'
+    + '<button type="button" class="dw-act" onclick="copyPick(\'' + cardId + '\')">Copy</button>'
     + '</div>';
 
-  return '<div class="dw">'
-    + '<div class="dw-card dw-action"><div class="dw-h">Official play</div>'
-      + '<div class="dw-action-grid">'
-        + '<div><span class="dw-k">Bet</span><span class="dw-v dw-bet">' + pickAbbr + ' ' + typeLabel + ' ' + oddsStr + '</span></div>'
-        + '<div><span class="dw-k">Stake</span><span class="dw-v">' + stakeStr + '</span></div>'
-        + '<div><span class="dw-k">Edge</span><span class="dw-v g">' + edgeStr + 'pp</span></div>'
-        + '<div><span class="dw-k">Playable to</span><span class="dw-v a">' + ((live || over) ? '—' : ptStr) + '</span></div>'
-      + '</div>'
-      + '<div class="dw-status ' + st.cls + '"><span class="dw-sdot"></span>' + statusDetail + '</div>'
-    + '</div>'
-    + (meterHTML ? '<div class="dw-card"><div class="dw-h">Edge</div>' + meterHTML + '</div>' : '')
-    + whyHTML
-    + '<div class="dw-2col">' + riskHTML + priceHTML + '</div>'
-    + '<div class="dw-card">' + summaryHTML + fullHTML + '</div>'
-    + actionsHTML
-  + '</div>';
+  return '<div class="dw">' + headHTML + bandHTML + bodyHTML + moveHTML + actionsHTML + '</div>';
 }
 
 // ── Pick card HTML ────────────────────────────────────────────────────────────
@@ -1695,37 +1722,16 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  Compact pick ROWS (slim analytics-table layout). FRONT-END ONLY — reuse the
-//  SAME pick fields. No model / data / filtering / classification change.
-//    · prRowCollapsed       → the slim at-a-glance row
+//  Pick ROWS (dense, sortable analytics table). FRONT-END ONLY — reuse the SAME
+//  pick fields. No model / data / filtering / classification change.
+//    · prSetSort / prSortPicks / prActionable → sort + actionable-first ordering
+//    · prRowCollapsed       → one collapsed analytics row
 //    · prRowHTML            → row wrapper = collapsed row + lazy-built drawer slot
-//    · prTable / prRows / prTierDivider / prTableHead → table container + header
+//    · prRows / prTableHead → rows + sortable column header
 //    · prToggle / prKey     → expand-collapse a row (builds prDrawerHTML on demand)
-//    · prDrawerHTML / prFullRationaleHTML → the expanded decision drawer
-//    · prCollapsible        → default-collapsed section wrapper (Marginal/Completed)
+//    · prDrawerHTML        → the expanded decision-first drawer
 // ════════════════════════════════════════════════════════════════════════════
 
-// ESPN team-logo CDN. 29/30 model abbrevs map directly to lowercase; only the
-// model's "MET" differs (ESPN uses "nym"). A failed load falls back to a
-// team-abbreviation monogram chip (prLogoFail) so a row never breaks.
-const _PR_LOGO_MAP = { MET: 'nym' };
-function prLogoSrc(ab) {
-  const k = String(ab || '').toUpperCase();
-  const slug = _PR_LOGO_MAP[k] || k.toLowerCase();
-  // ESPN combiner resizes the logo to ~2× the 22px display (44px) instead of
-  // shipping the 500px source: ~1.4 KB vs ~20 KB each, with a longer cache.
-  return 'https://a.espncdn.com/combiner/i?img=/i/teamlogos/mlb/500/' + slug + '.png&w=44&h=44';
-}
-function prLogoFail(img) {
-  const s = document.createElement('span');
-  s.className = 'pr-logo pr-logo-fb' + (img.classList.contains('dim') ? ' dim' : '');
-  s.textContent = (img.getAttribute('alt') || '').slice(0, 3);
-  img.replaceWith(s);
-}
-function prLogoImg(ab, dim) {
-  const k = String(ab || '').toUpperCase();
-  return `<img class="pr-logo${dim ? ' dim' : ''}" src="${prLogoSrc(k)}" alt="${k}" width="22" height="22" loading="lazy" onerror="prLogoFail(this)">`;
-}
 
 // CT clock for the matchup subline (matches the card's game-time format).
 function prGameTime(iso) {
@@ -1739,109 +1745,168 @@ function prGameTime(iso) {
 // Value pill — DISPLAY ONLY; mirrors the existing edge tiers (does not change
 // classification). A flagged pick or unconfirmed pick-side lineup → "Conditional".
 
+// ── Pick-table sort + status helpers ──────────────────────────────────────────
+// One flat, sortable table. Rows are grouped by an action-status rank (PLAY first,
+// then WAIT, PASS, LIVE, FINAL, WATCH) and sorted within each band by the active
+// key (default edge desc; Matchup sorts by time, Mkt→Model by model %).
+let _picksSort = { key: 'edge', dir: -1 };   // dir: -1 desc, +1 asc
+function prSetSort(key) {
+  if (_picksSort.key === key) _picksSort.dir = -_picksSort.dir;
+  else _picksSort = { key, dir: key === 'time' ? 1 : -1 };  // time ascends, values descend
+  rerenderPicks();
+}
+function prHeadKey(e, key) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prSetSort(key); } }
+function prSortVal(p, key) {
+  if (key === 'model') return p.model_prob || 0;
+  if (key === 'time')  return p.game_time ? (Date.parse(p.game_time) || 0) : Number.POSITIVE_INFINITY;
+  return p.edge || 0;
+}
+function prSortPicks(arr) {
+  const { key, dir } = _picksSort;
+  return arr.slice().sort((a, b) => {
+    const aa = prActionable(a) ? 0 : 1, bb = prActionable(b) ? 0 : 1;
+    if (aa !== bb) return aa - bb;                  // actionable plays lead
+    const d = (prSortVal(a, key) - prSortVal(b, key)) * dir;
+    return d || ((b.edge || 0) - (a.edge || 0));    // then active key (default edge desc)
+  });
+}
+
+// American odds → a continuous "cents" scale where +100 and -100 both map to 0 and
+// higher = a better price for the bettor. Lets us measure line movement and cushion
+// cleanly, even across the +/- boundary.
+function _oddsToCents(o) {
+  if (o == null || isNaN(o)) return null;
+  return o > 0 ? o - 100 : -(Math.abs(o) - 100);
+}
+
+// Implied win probability → American odds (used for the closing-line point on the
+// movement graph). Inverse of _impliedFromAmerican.
+function _americanFromImplied(prob) {
+  if (prob == null || prob <= 0 || prob >= 1) return null;
+  return prob >= 0.5 ? -Math.round(prob / (1 - prob) * 100) : Math.round((1 - prob) / prob * 100);
+}
+
+// Cents of room between the current best price and the playable floor. Negative
+// means the price has already moved past the floor — the edge is gone. Returns
+// null when either input is missing.
+function prCushion(p) {
+  const sb = sanitizeBookOdds(p);
+  const cur = sb.best ? sb.best.odds : (p.best_odds != null ? p.best_odds : p.odds);
+  const cc = _oddsToCents(cur), ptc = _oddsToCents(p.playable_to);
+  return (cc != null && ptc != null) ? Math.round(cc - ptc) : null;
+}
+
+// A pick is actionable when it's pregame, still clears the 4% edge threshold, and
+// its current price hasn't moved past the playable floor. Live, final, edge-gone,
+// and near-miss picks are informational — faded and sorted below the live plays.
+function prActionable(p) {
+  if (isLiveGame(p) || isGameOver(p)) return false;
+  if ((p.edge || 0) < 0.04) return false;                                  // near-miss
+  if (p.current_edge != null && p.current_edge < 0.04) return false;       // edge moved off
+  const c = prCushion(p);
+  if (c != null && c <= 0) return false;                                   // price past the floor
+  return true;
+}
+
+function prSortArrow(key) {
+  if (_picksSort.key !== key) return `<span class="pr-sortarr inactive">↕</span>`;  // persistent "sortable" cue
+  return `<span class="pr-sortarr">${_picksSort.dir < 0 ? '▾' : '▴'}</span>`;
+}
+function _prHsort(key, label, cls) {
+  const active = _picksSort.key === key ? ' active' : '';
+  const sort = active ? (_picksSort.dir < 0 ? 'descending' : 'ascending') : 'none';
+  return `<span class="pr-h ${cls} sortable${active}" role="button" tabindex="0" aria-sort="${sort}" `
+    + `onclick="prSetSort('${key}')" onkeydown="prHeadKey(event,'${key}')">${label}${prSortArrow(key)}</span>`;
+}
+function _prH(label, cls) {
+  return `<span class="pr-h ${cls}">${label}</span>`;
+}
 function prTableHead() {
-  return `<div class="pr-cols pr-head">` +
-    `<span>Pick</span>` +
-    `<span>Market → Model<span class="tip" data-tip="No-vig market probability (Pinnacle, vig removed) on the left; our model's win probability on the right. The green gap is the edge.">?</span></span>` +
-    `<span class="r">Edge</span><span class="r">Stake</span><span class="r">Status</span><span></span></div>`;
+  return `<div class="pr-cols pr-head">`
+    + _prHsort('time', 'Matchup', 'h-mu')
+    + _prH('Pick', 'h-pick')
+    + _prHsort('model', 'Mkt → Model', 'h-mm')
+    + _prHsort('edge', 'Edge', 'h-edge')
+    + _prH('Current odds', 'h-odds')
+    + _prH('Play to', 'h-play')
+    + _prH('Stake', 'h-stake')
+    + `<span class="pr-h h-chev"></span>`
+    + `</div>`;
 }
 
-// ONE primary tier badge: Strong / Value / Watch. A flagged or unconfirmed-lineup
-// pick is demoted to Watch (its caveat surfaces in the status chip instead).
-function prTier(p) {
-  if (p.is_flagged === true || p.current_lineup_confirmed === false) return { cls: 'watch', lbl: 'Watch' };
-  if ((p.edge || 0) >= 0.08) return { cls: 'strong', lbl: 'Strong' };
-  if ((p.edge || 0) >= 0.04) return { cls: 'value', lbl: 'Value' };
-  return { cls: 'watch', lbl: 'Watch' };
-}
-function prTierBadge(p) { const t = prTier(p); return `<span class="pr-tier ${t.cls}">${t.lbl}</span>`; }
-
-// Actionable status: Playable / Lineup pending / No longer playable / Live / Final.
-// Live & Final are NEUTRAL (we don't make live-betting recommendations). The
-// price-moved states light up only once the backend fills the current_* fields.
-function pickStatus(p, gameResult) {
-  if (isGameOver(p)) {
-    const sc = gameResult && gameResult.score ? ' ' + gameResult.score : '';
-    if (gameResult && gameResult.result === 'W') return { cls: 'won', label: 'Won' + sc };
-    if (gameResult && gameResult.result === 'L') return { cls: 'lost', label: 'Lost' + sc };
-    return { cls: 'final', label: 'Final' + sc };
-  }
-  if (isLiveGame(p)) { const sc = gameResult && gameResult.score ? ' ' + gameResult.score : ''; return { cls: 'live', label: 'Live' + sc }; }
-  if (p.current_edge != null && p.current_edge < 0.04) return { cls: 'stale', label: 'No longer playable' };
-  if (p.current_lineup_confirmed === false) return { cls: 'warn', label: 'Lineup pending' };
-  return { cls: 'ok', label: 'Playable' };
-}
-
-// One slim collapsed row (Variant A — compact single line).
+// One collapsed analytics row (simple, edge-sorted table).
+// Columns: Matchup+time · Pick(team + captured line) · Mkt→Model · Edge ·
+// Current odds(+book, ¢move) · Play-to · Stake · chevron.
 function prRowCollapsed(p, isBest, gameResult) {
   const parts = String(p.game || '').split('@').map(s => s.trim());
   const away = parts[0] || '', home = parts[1] || '';
   const pickAbbr = (p.pick || '').toUpperCase();
-  const isAwayPick = away.toUpperCase() === pickAbbr;
-  const isHomePick = home.toUpperCase() === pickAbbr;
   const live = isLiveGame(p), over = isGameOver(p);
+  const fmtO = o => (o == null ? '—' : (o > 0 ? '+' + o : String(o)));
 
-  const typeLabel = p.pick_type === 'MONEYLINE' ? 'ML'
-    : p.pick_type === 'RUN_LINE' ? 'RL'
-    : (p.pick_type || '').replace(/_/g, ' ');
-  const oddsStr = p.odds != null ? (p.odds > 0 ? '+' + p.odds : String(p.odds)) : '';
-  const ptStr = p.playable_to != null ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to)) : '';
+  // Matchup — plain game label + time; the Pick column names the side.
   const timeStr = prGameTime(p.game_time);
 
-  // Sub-line: matchup, then (pregame only) time + the playable-to floor.
-  // Playable-to before time: on a narrow sub-line the (less critical) game time
-  // truncates first, keeping the betting-critical "Playable to +X" visible.
-  const subBits = [`${away} @ ${home}`];
-  if (!live && !over) {
-    if (ptStr) subBits.push(`<span class="pr-good">Playable to ${ptStr}</span>`);
-    if (timeStr) subBits.push(timeStr);
+  // Pick — team + the line the pick was captured at (run line shows its spread).
+  let spread = '';
+  if (p.pick_type === 'RUN_LINE' && p.run_line && p.run_line.spread) {
+    const sp = String(p.run_line.spread);
+    spread = ' ' + (sp.charAt(0) === '-' ? sp : '+' + sp);
   }
-  const star = isBest ? '<span class="pr-star" aria-hidden="true">★</span>' : '';
+  const pickCell = `${pickAbbr}${spread}<span class="pr-bo">${fmtO(p.odds)}</span>`;
 
-  // Probabilities → single Market→Model edge meter (grey market fill, green gap = edge).
-  const mp = p.model_prob, bp = p.market_prob;
-  const mpPct = mp != null ? (mp * 100).toFixed(1) + '%' : '—';
-  const bpPct = bp != null ? (bp * 100).toFixed(1) + '%' : '—';
-  const mpW = mp != null ? Math.max(2, Math.min(100, mp * 100)) : 0;
-  const bpW = bp != null ? Math.max(2, Math.min(100, bp * 100)) : 0;
-  const gapW = Math.max(0, mpW - bpW);
-  const meterHTML = (mp != null && bp != null)
-    ? `<div class="pr-meter"><i class="pmm-mkt" style="width:${bpW.toFixed(1)}%"></i>` +
-      `<i class="pmm-gap" style="left:${bpW.toFixed(1)}%;width:${gapW.toFixed(1)}%"></i>` +
-      `<i class="pmm-tick" style="left:calc(${mpW.toFixed(1)}% - 1px)"></i></div>` +
-      `<div class="pr-mcap"><span>${bpPct}</span><span class="pmm-arr">→</span><span class="mdl">${mpPct}</span></div>`
-    : `<div class="pr-mcap">—</div>`;
+  // Market → Model win probabilities.
+  const bp = p.market_prob, mp = p.model_prob;
+  const bpPct = bp != null ? (bp * 100).toFixed(1) : '—';
+  const mpPct = mp != null ? (mp * 100).toFixed(1) : '—';
 
   const ev = p.edge || 0;
-  const edgeStr = (ev >= 0 ? '+' : '') + (ev * 100).toFixed(1);
+  const edgeStr = (ev >= 0 ? '+' : '') + (ev * 100).toFixed(1) + 'pp';
   const edgeCls = ev >= 0 ? 'pos' : 'neg';
 
-  // Stake is mode-aware: Flat = $100 flat (1.0u); Kelly = kelly_units sized to
-  // bankroll (the $ filled live by refreshKellyUSD via the .kelly-usd hooks).
+  // Current odds — pregame: best book price + ¢ movement vs the captured line.
+  // Live/Final: the captured price (in-play odds aren't a bet you can make).
+  let oddsCell;
+  if (live || over) {
+    oddsCell = `<span class="pr-o-main pr-o-na">—</span>`;  // no actionable current price
+  } else {
+    const sb = sanitizeBookOdds(p);
+    const cur  = sb.best ? sb.best.odds : (p.best_odds != null ? p.best_odds : p.odds);
+    const book = sb.best ? sb.best.book : (p.best_book || '');
+    const cc = _oddsToCents(cur), pc = _oddsToCents(p.odds);
+    let mv = '';
+    if (cc != null && pc != null) {
+      const diff = Math.round(cc - pc);
+      if (diff >= 1)       mv = `<span class="pr-mv up" title="${diff}¢ better than the captured line">▲${diff}¢</span>`;
+      else if (diff <= -1) mv = `<span class="pr-mv down" title="${Math.abs(diff)}¢ worse than the captured line">▼${Math.abs(diff)}¢</span>`;
+    }
+    oddsCell = `<span class="pr-o-main">${fmtO(cur)}${mv}${book ? ' <span class="pr-o-book">' + book + '</span>' : ''}</span>`;
+  }
+
+  const ptStr = fmtO(p.playable_to);
+
+  // Stake — units primary, $ secondary.
   const _isKellyMode = _indexPnlMode === 'kelly';
-  const units  = _isKellyMode ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') : '1.0u';
-  const betUSD = _isKellyMode
-    ? `<span class="pr-bd kelly-usd" data-units="${p.kelly_units || 0}"></span>`
-    : `<span class="pr-bd">$100</span>`;
+  const units = _isKellyMode ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') : '1.0u';
+  const stakeSub = _isKellyMode
+    ? `<span class="pr-st-usd kelly-usd" data-units="${p.kelly_units || 0}"></span>`
+    : '';  // flat mode: stake is 1.0u on every row — no need to repeat $100
 
-  const st = pickStatus(p, gameResult);
+  // Accessible name — colour/position cues are invisible to assistive tech.
+  const ariaLabel = `${away} at ${home}, pick ${pickAbbr}${spread} ${fmtO(p.odds)}`
+    + `${timeStr && !live && !over ? ', ' + timeStr : ''}, market ${bpPct} percent, model ${mpPct} percent, edge ${edgeStr}`
+    + `, playable to ${ptStr}, stake ${units}.`;
 
-  // Accessible name — the visual cues (meter, badge colour, ★) are invisible to
-  // assistive tech, so state the pick + key numbers + status explicitly.
-  const ariaLabel = `Pick ${pickAbbr}${oddsStr ? ' ' + oddsStr : ''}, ${away} at ${home}`
-    + `${timeStr && !live && !over ? ', ' + timeStr : ''}${isBest ? ', top edge' : ''}, ${st.label}. `
-    + `Model ${mpPct}, market ${bpPct}, edge ${edgeStr} points, ${prTier(p).lbl}.`;
-
-  return `<div class="pr-cols pr-row${isBest ? ' best' : ''}" role="button" tabindex="0" data-pr-card="${prCardId(p)}" ` +
-    `aria-expanded="false" aria-label="${ariaLabel}" onclick="prToggle(this)" onkeydown="prKey(event,this)">` +
-    `<div class="pr-mu">${prLogoImg(away, !isAwayPick)}${prLogoImg(home, !isHomePick)}<div class="pr-mu-tx">` +
-      `<div class="pr-betname">${star}${pickAbbr}<span class="pr-bt">${typeLabel}</span><span class="pr-bo">${oddsStr}</span></div>` +
-      `<div class="pr-sub">${subBits.join(' · ')}</div></div></div>` +
-    `<div class="pr-mcell">${meterHTML}</div>` +
-    `<div class="pr-edge ${edgeCls}">${edgeStr}<span class="pr-pp">pp</span><span class="pr-edge-stake">${units}</span></div>` +
-    `<div class="pr-bet"><span class="pr-bu">${units}</span>${betUSD}</div>` +
-    `<div class="pr-rt">${prTierBadge(p)}<div class="pr-status ${st.cls}"><span class="pr-sdot"></span>${st.label}</div></div>` +
-    `<div class="pr-chev" aria-hidden="true">›</div></div>`;
+  return `<div class="pr-cols pr-row${prActionable(p) ? '' : ' pr-faded'}" role="button" tabindex="0" data-pr-card="${prCardId(p)}" `
+    + `aria-expanded="false" aria-label="${ariaLabel}" onclick="prToggle(this)" onkeydown="prKey(event,this)">`
+    + `<div class="pr-mu"><div class="pr-match">${away} <span class="pr-at">@</span> ${home}</div><div class="pr-time">${timeStr || '—'}</div></div>`
+    + `<div class="pr-pick">${pickCell}</div>`
+    + `<div class="pr-mm"><span class="pr-mm-mkt">${bpPct}</span><span class="pr-mm-arr">→</span><span class="pr-mm-mdl">${mpPct}</span></div>`
+    + `<div class="pr-edge ${edgeCls}">${edgeStr}</div>`
+    + `<div class="pr-odds">${oddsCell}</div>`
+    + `<div class="pr-play">${ptStr}</div>`
+    + `<div class="pr-stake">${units}${stakeSub}</div>`
+    + `<div class="pr-chev" aria-hidden="true">›</div></div>`;
 }
 
 // cardId mirrors pickCardHTML's own formula so picksMap stays populated WITHOUT
@@ -1860,20 +1925,11 @@ function prRowHTML(p, isBest, gameResult) {
     `<div class="pr-details" hidden data-card-id="${cardId}" data-best="${isBest ? '1' : ''}"></div></div>`;
 }
 
-// Just the rows (no column header / no table wrapper) — lets a single table
-// host one shared header with light tier dividers between groups.
-function prRows(picks, topPick, spotlightTop, scores) {
-  return picks.map(p => prRowHTML(p, spotlightTop && p === topPick, getPickResult(p, scores))).join('');
+// Plain rows (no column header / no table wrapper). `ordered` is already sorted
+// by prSortPicks (actionable first, then by the active key).
+function prRows(ordered, scores) {
+  return ordered.map(p => prRowHTML(p, false, getPickResult(p, scores))).join('');
 }
-// A full pr-table block (column header + rows) — used where a group is rendered alone.
-function prTable(picks, topPick, spotlightTop, scores) {
-  return `<div class="pr-table">${prTableHead()}${prRows(picks, topPick, spotlightTop, scores)}</div>`;
-}
-// A lightweight in-table tier divider (replaces the repeated full column header).
-function prTierDivider(cls, label, tag) {
-  return `<div class="pr-tierdiv ${cls}"><span class="ptd-lbl">${label}</span><span class="ptd-tag">${tag}</span></div>`;
-}
-
 function prToggle(row) {
   const det = row.parentElement && row.parentElement.querySelector('.pr-details');
   if (!det) return;
@@ -1894,20 +1950,6 @@ function prToggle(row) {
 }
 function prKey(e, row) {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prToggle(row); }
-}
-
-// Default-collapsed section wrapper (Marginal + Completed).
-function prCollapsible(headerHTML, bodyHTML, defaultOpen) {
-  return `<div class="pr-collapse${defaultOpen ? ' open' : ''}">` +
-    `<button class="pr-collapse-hd" aria-expanded="${defaultOpen ? 'true' : 'false'}" onclick="prToggleSection(this)">` +
-    `${headerHTML}<span class="pr-collapse-chev" aria-hidden="true">›</span></button>` +
-    `<div class="pr-collapse-body"${defaultOpen ? '' : ' hidden'}>${bodyHTML}</div></div>`;
-}
-function prToggleSection(btn) {
-  const body = btn.parentElement.querySelector('.pr-collapse-body');
-  if (!body) return;
-  if (body.hasAttribute('hidden')) { body.removeAttribute('hidden'); btn.parentElement.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
-  else { body.setAttribute('hidden', ''); btn.parentElement.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
 }
 
 function render(data, hist, scores = {}, perf = null) {
@@ -2119,7 +2161,7 @@ function render(data, hist, scores = {}, perf = null) {
           </div>
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
-            <span class="phb-stat-label">Avg CLV<span class="tip" data-tip="Closing Line Value: how much better our posted price is vs. the final Pinnacle no-vig line. Positive CLV is the strongest signal the model finds real edge.">?</span></span>
+            <span class="phb-stat-label">Avg CLV</span>
             <span class="phb-stat-val ${clvStr ? clvCol : 'muted'}">${clvStr || '—'}</span>
             <span class="phb-stat-sub">${clvStr ? (data.clv_count || '') + ' picks' : 'pending'}</span>
           </div>
@@ -2155,7 +2197,7 @@ function render(data, hist, scores = {}, perf = null) {
         <div class="sizing-bar">
           <div class="phb-toggle">
             <button class="phb-tog${!isKelly ? ' active' : ''}" id="phb-flat-btn" onclick="setPicksPnlMode('flat')">Flat $100</button>
-            <button class="phb-tog${isKelly ? ' active' : ''}" id="phb-kelly-btn" onclick="setPicksPnlMode('kelly')">Kelly<span class="tip" data-tip="Kelly criterion: sizes each bet by its edge and your bankroll. We use half-Kelly (more conservative). 1 unit = 1% of bankroll.">?</span></button>
+            <button class="phb-tog${isKelly ? ' active' : ''}" id="phb-kelly-btn" onclick="setPicksPnlMode('kelly')">Kelly</button>
           </div>
           ${isKelly ? '<span class="phb-kelly-active"><span class="phb-ka-dot"></span>Kelly Sizing Active</span>' : ''}
           <div class="phb-bankroll${isKelly ? '' : ' flat-mode'}" id="phb-bankroll-wrap">
@@ -2173,7 +2215,8 @@ function render(data, hist, scores = {}, perf = null) {
 
   renderPicksHeaderBlock(data, hist);
   renderHeroProof(data);
-  renderEvidenceSection(data, perf, hist);
+  // Track-record evidence grid + calibration chart now live on the Model
+  // Dashboard (performance.html). renderEvidenceSection(data, perf, hist);
 
   // ── CLV validation banner ────────────────────────────────────────────────
   // Rendered below the record strip. Only shown when avg_clv data is present.
@@ -2271,55 +2314,19 @@ function render(data, hist, scores = {}, perf = null) {
     renderEmptyState(data, hist, marginal);
   } else {
     _mainPicksRef = main;
-    const topPick = main[0];
-    const spotlightTop = main.length >= 2 && topPick.edge >= 0.08;
-    const gridClass = 'pr-stack';  // rows now provide their own .pr-table container
     const shareAllHTML = main.length >= 2
       ? `<div class="share-all-row"><button class="share-all-btn" onclick="shareAllPicks()">𝕏 Share All ${main.length} Picks</button></div>`
       : '';
 
-    // ── Today's exposure block ────────────────────────────────────────────
-    const _totalKU   = main.reduce((s, p) => s + (p.kelly_units || 0), 0);
-    const _avgKU     = main.length ? _totalKU / main.length : 0;
-    // Exposure %: 1 Kelly unit = 1% of bankroll (not ÷10 ×100 which gives 10× too high)
-    const _totalDol  = _bankroll > 0 ? Math.round(_totalKU * _bankroll / 100) : null;
-    const _bPct      = _bankroll > 0
-      ? ((_totalDol / _bankroll) * 100).toFixed(1)   // e.g. 442/10000*100 = 4.4
-      : _totalKU.toFixed(1);                          // fallback: units ARE the %
-    const _isKellyOn = _indexPnlMode === 'kelly';
-    // Compact one-line exposure summary (replaces the old 4-card band — it was a
-    // second metric band stacked under the season stats; this collapses it).
-    const _stakeStr = _totalDol != null ? '$' + _totalDol.toLocaleString() : _totalKU.toFixed(1) + 'u';
-    const _modeStr  = _isKellyOn ? 'Kelly sizing' : 'Flat $100';
-    const actionStripHTML = _totalKU > 0 ? `
-      <div class="exposure-line">
-        <span class="exl-title">Today's Exposure</span>
-        <span class="exl-sep">·</span>
-        <span class="exl-item"><strong class="g">${_stakeStr}</strong> stake · ${main.length} pick${main.length !== 1 ? 's' : ''}</span>
-        <span class="exl-sep">·</span>
-        <span class="exl-item"><strong>${_bPct}%</strong> bankroll</span>
-        <span class="exl-sep">·</span>
-        <span class="exl-item"><strong>${_avgKU.toFixed(1)}u</strong> avg</span>
-        <span class="exl-mode">${_modeStr}${_bankroll > 0 ? ' · $' + _bankroll.toLocaleString() : ''}</span>
-      </div>` : '';
-
-    // ── Group picks by game state (time-based) ───────────────────────────────
-    // Bucket by start time (same source as the per-card Live/Final badge) so the
-    // sections always match the badges and never collapse to a flat mixed list
-    // when the ESPN scores feed is missing. Scores still enrich card content.
+    // ── Game-state counts (drive the Action Today summary line only) ──────────
     const liveGroup      = main.filter(p => isLiveGame(p));
     const completedGroup = main.filter(p => isGameOver(p));
     const upcomingGroup  = main.filter(p => !isLiveGame(p) && !isGameOver(p));
+    const allDone = main.length > 0 && upcomingGroup.length === 0 && liveGroup.length === 0;
 
-    const useGrouping = liveGroup.length > 0 || completedGroup.length > 0;
-
-    // ── Today's-state summary (inline, folded into the Action Today strip) ─────
-    // Leads with the actionable Upcoming count, then Live, then Final + W-L.
     let _stateInline = '';
     let _atNote = 'Odds &amp; starters captured at model run time — re-check current prices and lineups before betting.';
-    // All of today's games have started/finished → reframe as a results recap.
-    const allDone = main.length > 0 && upcomingGroup.length === 0 && liveGroup.length === 0;
-    if (useGrouping) {
+    if (liveGroup.length > 0 || completedGroup.length > 0) {
       let fw = 0, fl = 0;
       completedGroup.forEach(p => {
         const g = scores[p.game];
@@ -2342,59 +2349,14 @@ function render(data, hist, scores = {}, perf = null) {
       }
     }
 
-    function sectionHeader(type, label, count) {
-      return `<div class="picks-section-header">
-        <span class="psh-dot ${type}"></span>
-        <span class="psh-label ${type}">${label}</span>
-        <span class="psh-count">${count}</span>
-        <span class="psh-line"></span>
-      </div>`;
-    }
+    // ── One flat, edge-sorted table ──────────────────────────────────────────
+    // Near-miss picks (edge < 4%) fold in too. prSortPicks leads with the
+    // actionable plays (sorted by the active key, default edge desc); live, final,
+    // edge-gone, and near-miss picks are faded and sorted below.
+    const ordered = prSortPicks(main.concat(marginal));
+    const picksHTML = `<div class="pr-table">${prTableHead()}${prRows(ordered, scores)}</div>`;
 
-    function tierHeader(cls, icon, label, edgeTag) {
-      return `<div class="tier-header ${cls}">
-        <span class="tier-label">${icon} ${label}</span>
-        <span class="tier-edge-tag">${edgeTag}</span>
-        <span class="tier-divider"></span>
-      </div>`;
-    }
-
-    // One table, one column header; Strong / Value split by a light in-table divider.
-    function renderPickGroup(picks) {
-      const strong = picks.filter(p => p.edge >= 0.08);
-      const value  = picks.filter(p => p.edge  < 0.08);
-      let inner = '';
-      if (strong.length > 0) inner += prTierDivider('strong', 'Strong', '8%+ edge') + prRows(strong, topPick, spotlightTop, scores);
-      if (value.length  > 0) inner += prTierDivider('value',  'Value',  '2–8% edge') + prRows(value, topPick, spotlightTop, scores);
-      return `<div class="pr-table">${prTableHead()}${inner}</div>`;
-    }
-
-    let picksHTML = '';
-    if (allDone) {
-      // Single completed group — the "Today's Results" lead replaces the header.
-      picksHTML = `<div class="${gridClass}">` + renderPickGroup(completedGroup) + '</div>';
-    } else if (useGrouping) {
-      // Upcoming first — the actionable, bettable picks lead; Live and Completed
-      // are informational and follow.
-      if (upcomingGroup.length > 0)
-        picksHTML += sectionHeader('upcoming', 'Upcoming', upcomingGroup.length) +
-                     `<div class="${gridClass}">` + renderPickGroup(upcomingGroup) + '</div>';
-      if (liveGroup.length > 0)
-        picksHTML += sectionHeader('live', 'Live', liveGroup.length) +
-                     `<div class="${gridClass}">` + renderPickGroup(liveGroup) + '</div>';
-      if (completedGroup.length > 0)
-        picksHTML += prCollapsible(
-                     sectionHeader('completed', 'Completed', completedGroup.length),
-                     `<div class="${gridClass}">` + renderPickGroup(completedGroup) + '</div>', false);
-    } else {
-      // No live data yet — render flat with tier headers as before
-      picksHTML = renderPickGroup(main);
-    }
-
-    // ── Action Today strip — one consolidated band under the <h2> replacing the
-    // old summary line + legend + model-info-note + state strip. Counts, top
-    // edge, live state, and the model-run time in a single card. (Exposure +
-    // Flat/Kelly controls stay in the sizing bar just below.)
+    // ── Action Today strip — counts, top edge, live state, model-run time ─────
     const _strongN = main.filter(p => p.edge >= 0.08).length;
     const _best    = main[0];
     const _metaBits = [`<strong>${main.length}</strong> pick${main.length !== 1 ? 's' : ''}`];
@@ -2413,9 +2375,7 @@ function render(data, hist, scores = {}, perf = null) {
       + `<div class="at-note">${_atNote}</div>`
       + `</div>`;
 
-    document.getElementById('picks-container').innerHTML =
-      shareAllHTML +
-      (useGrouping ? picksHTML : `<div class="${gridClass}">` + picksHTML + '</div>');
+    document.getElementById('picks-container').innerHTML = shareAllHTML + picksHTML;
     refreshKellyUSD();
     refreshBetButtons();
     refreshPersonalTracker();
@@ -2423,18 +2383,10 @@ function render(data, hist, scores = {}, perf = null) {
     updateFloatingResults(scores);
   }
 
-  if (marginal.length > 0) {
-    document.getElementById('marginal-section').style.display = 'block';
-    // Tier header for marginal section
-    const _marHd = `<div class="tier-header marginal-tier" style="margin:0;flex:1">
-        <span class="tier-label">⚠️ Marginal</span>
-        <span class="tier-edge-tag">Below 4% Threshold · ${marginal.length}</span>
-        <span class="tier-divider"></span>
-      </div>`;
-    document.getElementById('marginal-container').innerHTML =
-      prCollapsible(_marHd, '<div class="pr-stack">' + prTable(marginal, null, false, scores) + '</div>', false);
-    refreshKellyUSD();
-  }
+  // Near-miss picks now fold into the main table as WATCH rows — hide the old
+  // standalone Marginal section.
+  const _marSection = document.getElementById('marginal-section');
+  if (_marSection) _marSection.style.display = 'none';
 
 }
 
@@ -2576,14 +2528,10 @@ function refreshScoreBadges(scores) {
     const gr = getPickResult(p, scores);
     if (!gr) continue;
 
-    // Update the collapsed row's status chip — the DEFAULT surface, present even
-    // when the drawer was never expanded (its card id only exists once built).
-    const rowStatus = document.querySelector('.pr-row[data-pr-card="' + cardId + '"] .pr-status');
-    if (rowStatus) {
-      const st = pickStatus(p, gr);
-      rowStatus.className = 'pr-status ' + st.cls;
-      rowStatus.innerHTML = '<span class="pr-sdot"></span>' + st.label;
-    }
+    // Fade the row live as a game starts or finishes (full re-sort happens on the
+    // next render). Present even when the drawer was never expanded.
+    const rowEl = document.querySelector('.pr-row[data-pr-card="' + cardId + '"]');
+    if (rowEl) rowEl.classList.toggle('pr-faded', !prActionable(p));
 
     const cardEl = document.getElementById(cardId);
     if (!cardEl) continue;

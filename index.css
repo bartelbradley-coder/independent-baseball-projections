@@ -111,19 +111,67 @@
   .hero-btn { font-size: 13px; padding: 10px 16px; }
 }
 
-/* Returning visitor — collapse the landing band to a slim header so picks
-   surface sooner. Full band only on first visit. */
-.returning .hero { padding: 20px 30px 22px; }
-.returning .hero-grid { grid-template-columns: 1fr; gap: 0; align-items: start; }
-.returning .hero-visual,
-.returning .hero-sub,
-.returning .hero-proof { display: none; }
-.returning .hero-eyebrow { margin-bottom: 8px; }
-.returning .hero-title { font-size: 28px; margin-bottom: 14px; }
+/* ── Slim hero — one-line positioning so today's picks lead ─────── */
+.hero-slim { padding: 22px 26px; }
+.hero-slim .hero-title { font-size: 30px; margin-bottom: 10px; }
+.hero-slim .hero-sub { font-size: 14px; color: var(--text-3); max-width: 660px; margin: 0; }
+.hero-slim .hero-sub a { color: var(--indigo-lt); text-decoration: none; white-space: nowrap; }
+.hero-slim .hero-sub a:hover { text-decoration: underline; }
 @media (max-width: 640px) {
-  .returning .hero { padding: 16px 18px 18px; }
-  .returning .hero-title { font-size: 24px; }
+  .hero-slim { padding: 18px 18px; }
+  .hero-slim .hero-title { font-size: 25px; }
 }
+
+/* ── Section note (fine print under a sec-lbl) ──────────────────── */
+.sec-note { font-size: 11px; color: var(--text-4); line-height: 1.6; margin: -2px 0 12px; }
+
+/* ── Slim email bar (list growth demoted below the picks) ───────── */
+.email-bar {
+  display: flex; align-items: center; gap: 12px 18px; flex-wrap: wrap;
+  padding: 14px 18px; margin: 8px 0 18px;
+  background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.20);
+  border-radius: 12px;
+}
+.email-bar .eb-copy { flex: 1 1 280px; min-width: 0; font-size: 12.5px; color: var(--text-3); line-height: 1.55; }
+.email-bar .eb-copy strong { color: var(--text); font-weight: 700; }
+.email-bar .eb-form { flex: 0 1 360px; margin: 0; }
+.email-bar .ec-success { flex-basis: 100%; }
+@media (max-width: 560px) { .email-bar .eb-form { flex-basis: 100%; } }
+
+/* ── How-to (collapsed; shares the About-model look) ────────────── */
+.disc-block {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; margin-bottom: 16px; overflow: hidden;
+}
+.disc-block > summary {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px; cursor: pointer; list-style: none;
+  color: var(--text-4); font-size: 12px; font-weight: 600;
+  letter-spacing: 0.04em; user-select: none;
+}
+.disc-block > summary::-webkit-details-marker { display: none; }
+.disc-block > summary:hover { color: var(--text-3); background: rgba(255,255,255,0.02); }
+.disc-block[open] > summary { border-bottom: 1px solid var(--border); color: var(--text-3); }
+.disc-block[open] .am-chevron { transform: rotate(180deg); }
+.howto-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 12px; padding: 16px; }
+.howto-card { padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; background: rgba(255,255,255,0.02); }
+.howto-h { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.howto-b { font-size: 12px; color: var(--text-3); line-height: 1.7; }
+
+/* ── About-model body helpers (replace former inline styles) ────── */
+.am-p { font-size: 12px; color: var(--text-3); line-height: 1.7; margin-bottom: 14px; }
+.am-mb { margin-bottom: 14px; }
+.am-list { font-size: 11px; color: var(--text-4); line-height: 1.9; padding-left: 16px; margin-bottom: 14px; }
+.am-who { margin-top: 14px; font-size: 12.5px; color: var(--text-3); line-height: 1.75; }
+.am-who strong { color: var(--text); }
+.am-who-h { font-family: var(--font-display); font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-2); margin-bottom: 7px; }
+.am-legal { margin-top: 14px; font-size: 10px; color: var(--text-4); line-height: 1.7; }
+
+/* ── Footer / meta micro-text (replace former inline styles) ────── */
+.page-refresh-meta { font-size: 10px; color: var(--text-4); margin: 3px 0 2px; font-family: var(--font-mono); }
+.rg-resource { margin-top: 8px; font-size: 10px; color: var(--text-3); line-height: 1.6; }
+.rg-resource a { color: var(--text-2); }
+.footer-byline { margin-top: 10px; font-size: 10px; color: var(--text-4); letter-spacing: 0.04em; }
 
 .record-strip {
   display: flex;
