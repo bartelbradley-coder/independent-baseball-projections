@@ -1293,6 +1293,20 @@ details[open] .faq-q::after { content: '−'; }
   .dw-lg .dw-lg-lbl { font-size:24px; }
 }
 
+/* ── Share card: always export the wide / desktop layout ─────────────────────
+   The shared PNG is an html2canvas capture of the fixed-680px .sc-wrap, but the
+   drawer's viewport media queries (above) fire on phones and stack everything
+   into a very tall portrait. These .sc-wrap-scoped rules re-assert the desktop
+   layout so the exported image is consistent on every device. They affect ONLY
+   the share card — the live expanded drawer keeps its responsive behaviour.
+   (Placed after the media blocks so they win equal-specificity ties.) */
+.sc-wrap .dw-cols { grid-template-columns:1fr 1fr; }
+.sc-wrap .dw-band { display:flex; flex-wrap:wrap; }
+.sc-wrap .dw-bi { min-width:120px; padding:0 16px; border-left:1px solid var(--border); border-top:none; }
+.sc-wrap .dw-bi:first-child { border-left:none; padding-left:0; }
+.sc-wrap .dw-lg .dw-lg-val { font-size:17px; }
+.sc-wrap .dw-lg .dw-lg-lbl { font-size:15px; }
+
 /* collapsible sections (Marginal / Completed) */
 .pr-collapse { margin-bottom:14px; }
 .pr-collapse-hd { display:flex; align-items:center; width:100%; min-height:44px; background:transparent; border:0; padding:6px 0; cursor:pointer; color:inherit; font:inherit; text-align:left; }
