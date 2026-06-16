@@ -1625,7 +1625,7 @@ function prRowCollapsed(p, isBest, gameResult) {
       if (val >= 1)       mv = `<span class="pr-mv ahead" title="You locked ${val}¢ better than the current line — you're ahead (positive CLV)">✓ +${val}¢</span>`;
       else if (val <= -1) mv = `<span class="pr-mv behind" title="A ${Math.abs(val)}¢ better price is available now than we locked">−${Math.abs(val)}¢</span>`;
     }
-    oddsCell = `<span class="pr-o-main">${fmtO(cur)}${mv}${book ? ' <span class="pr-o-book">' + book + '</span>' : ''}</span>`;
+    oddsCell = `<span class="pr-o-main">${fmtO(cur)}${mv}${book ? '<span class="pr-o-book">' + book + '</span>' : ''}</span>`;
   }
 
   const ptStr = fmtO(p.playable_to);
