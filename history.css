@@ -13,12 +13,6 @@
 .card-title { font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); margin-bottom: 4px; }
 .card-sub   { font-size: 10px; color: var(--text-4); margin-bottom: 14px; }
 
-/* Edge tier table — used by pitcher/team tables */
-.edge-table { width: 100%; border-collapse: collapse; }
-.edge-table th { font-size: 8.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-.edge-table td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 12px; color: var(--text-3); }
-.edge-table tr:last-child td { border-bottom: none; }
-
 /* Backtest */
 .roi-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .roi-year { font-family: var(--font-display); font-size: 13px; font-weight: 600; color: var(--text-2); width: 56px; flex-shrink: 0; }

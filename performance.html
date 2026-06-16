@@ -31,8 +31,8 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='5' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='white'>IB</text><text x='16' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='%2360a5fa'>P</text><line x1='21' y1='23' x2='25' y2='18' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='25' cy='18' r='1.4' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=17">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=18">
 <link rel="stylesheet" href="index.css?v=2">
 <link rel="stylesheet" href="performance.css?v=1">
 <!-- Google tag (gtag.js) -->
@@ -442,37 +442,7 @@ function toggleSection(bodyId, sectionId) {
   if (trigger) trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 }
 
-function renderTodayPerfBanner(picks, scores) {
-  const banner = document.getElementById('today-perf-banner');
-  const rowsEl = document.getElementById('today-perf-rows');
-  if (!picks || picks.length === 0) return;
-  banner.style.display = 'block';
-
-  const items = picks.map(p => {
-    const g    = scores[p.game];
-    const side = (p.side || '').toUpperCase();
-    let statusHTML = '';
-    if (!g || g.status === 'scheduled') {
-      statusHTML = `<span style="color:var(--text-4);font-size:10px">⏳</span>`;
-    } else if (g.status === 'live') {
-      const sc = `${g.awayScore}–${g.homeScore}`;
-      statusHTML = `<span style="color:var(--green);font-size:10px;font-weight:700">● ${sc}</span>`;
-    } else {
-      const won = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
-      const ps  = side === 'AWAY' ? g.awayScore : g.homeScore;
-      const os  = side === 'AWAY' ? g.homeScore : g.awayScore;
-      statusHTML = `<span style="color:${won?'var(--green)':'var(--red)'};font-family:var(--font-display);font-size:13px;font-weight:700">${won?'W':'L'} ${ps}–${os}</span>`;
-    }
-    const oddsStr = p.odds > 0 ? `+${p.odds}` : String(p.odds);
-    return `<div style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:11px">
-      <span style="font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text-2)">${p.pick}</span>
-      <span style="color:var(--amber);font-family:var(--font-mono)">${oddsStr}</span>
-      <span style="color:var(--text-4);flex:1">${p.game}</span>
-      ${statusHTML}
-    </div>`;
-  }).join('');
-  rowsEl.innerHTML = items;
-}
+// renderTodayPerfBanner removed — dead code (uncalled; targeted nonexistent #today-perf-* nodes)
 
 // computeTodaySettled, extendPnlCurve, applyTodayToPerf → ibp-utils.js
 
