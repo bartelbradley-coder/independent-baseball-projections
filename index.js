@@ -1617,7 +1617,6 @@ function prRowCollapsed(p, isBest, gameResult) {
   } else {
     const sb = sanitizeBookOdds(p);
     const cur  = sb.best ? sb.best.odds : (p.best_odds != null ? p.best_odds : p.odds);
-    const book = sb.best ? sb.best.book : (p.best_book || '');
     const cc = _oddsToCents(cur), pc = _oddsToCents(p.odds);
     let mv = '';
     if (cc != null && pc != null) {
@@ -1625,7 +1624,7 @@ function prRowCollapsed(p, isBest, gameResult) {
       if (val >= 1)       mv = `<span class="pr-mv ahead" title="You locked ${val}¢ better than the current line — you're ahead (positive CLV)">✓ +${val}¢</span>`;
       else if (val <= -1) mv = `<span class="pr-mv behind" title="A ${Math.abs(val)}¢ better price is available now than we locked">−${Math.abs(val)}¢</span>`;
     }
-    oddsCell = `<span class="pr-o-main">${fmtO(cur)}${mv}${book ? '<span class="pr-o-book">' + book + '</span>' : ''}</span>`;
+    oddsCell = `<span class="pr-o-main">${fmtO(cur)}${mv}</span>`;  // book name shown in the expanded card's Current odds
   }
 
   const ptStr = fmtO(p.playable_to);
