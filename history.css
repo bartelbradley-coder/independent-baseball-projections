@@ -4,7 +4,7 @@
 /* page-title/page-subtitle now provided by the shared .hero.hero-slim band (index.css) */
 
 .summary-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
-.summary-row .stat-pill { flex: 1; min-width: 110px; }
+.summary-row .stat-pill { flex: 1; min-width: 110px; justify-content: center; }  /* vertically center so taller siblings don't leave empty bottom space */
 
 /* Analytics two-col */
 .analytics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -161,4 +161,6 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
   #table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .picks-table { font-size: 11px; }
   .picks-table th, .picks-table td { padding: 7px 6px; }
+  /* keep the record (e.g. 250W–218L) on one line in the narrower mobile boxes */
+  .summary-row .stat-val { font-size: 17px; white-space: nowrap; }
 }
