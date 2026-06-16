@@ -132,14 +132,6 @@
     </div>
   </div>
 
-  <!-- P&L Cumulative Curve (moved up from #3 to #3) -->
-  <div class="section">
-    <div class="sec-lbl">Cumulative P&amp;L Curve — 2026 Season</div>
-    <div class="card" style="padding:16px 20px">
-      <div class="pnl-curve-wrap" id="pnl-curve"><div class="loading" style="padding:20px">Loading…</div></div>
-    </div>
-  </div>
-
   <!-- CLV + Monthly ROI (moved up) -->
   <div class="section">
     <div class="two-col">
@@ -481,7 +473,6 @@ async function loadAll() {
     const hAugmented = newSettled.length > 0 && h ? {
       ...h,
       rows: [...(h.rows || []), ...newSettled],
-      pnl_curve: extendPnlCurve(h.pnl_curve || [], newSettled),
     } : h;
     const pAugmented = applyTodayToPerf(p, newSettled);
 
@@ -508,8 +499,6 @@ async function loadAll() {
     renderBankrollChart(hAugmented);
     renderNaiveCallout(pAugmented);
     const hRows = (hAugmented && hAugmented.rows) ? hAugmented.rows : [];
-    const pnlCurve = (hAugmented && hAugmented.pnl_curve) ? hAugmented.pnl_curve : [];
-    renderCurve(pnlCurve);
     renderCLV(pAugmented);
     renderMonthly(pAugmented);
     renderRollingWinRate(hRows);
@@ -639,17 +628,20 @@ function renderBankrollChart(h) {
 
   // Build dollar curves: $5,000 start (matches the bankroll Kelly sizing was calibrated to)
   // Flat: $100/bet = 2% of $5,000 — conventional flat-bet sizing
-  // Kelly: stake = START × kelly_pct ≈ $274/bet avg = same as the posted kelly_dollar values
+  // Kelly: stake = START × kelly_pct (per-bet). Avg stake is computed from the data below.
   const START = 5000;
-  let running = START, kellyRunning = START;
+  let running = START, kellyRunning = START, kellyStakeSum = 0;
   const curve = [START], kellyCurve = [START];
   for (const r of settled) {
     running += (r.pnl_u || 0) * 100;
     curve.push(running);
     const kp = parseFloat(r.kelly_pct) || 0;
+    kellyStakeSum += START * kp;
     kellyRunning += (r.pnl_u || 0) * (START * kp);
     kellyCurve.push(kellyRunning);
   }
+  const kellyAvgStake = kellyStakeSum / settled.length;
+  const kellyAvgPct   = (kellyAvgStake / START) * 100;
 
   const allVals = [...curve, ...kellyCurve];
   const minV = Math.min(...allVals);
@@ -700,7 +692,7 @@ function renderBankrollChart(h) {
       </span>
     </div>
     <div style="font-size:9px;color:var(--text-4);margin-top:6px">
-      Both start at $5,000 · ${settled.length} bets · Flat = $100/bet (2% of bankroll) · Kelly ≈ $274/bet avg (5.5% of bankroll) · static sizing on initial bankroll
+      Both start at $5,000 · ${settled.length} bets · Flat = $100/bet (2% of bankroll) · Kelly ≈ $${Math.round(kellyAvgStake)}/bet avg (${kellyAvgPct.toFixed(1)}% of bankroll) · static sizing on initial bankroll
     </div>`;
 }
 
@@ -741,7 +733,7 @@ function renderCLV(p) {
       <line x1="${padL}" y1="${zeroY.toFixed(1)}" x2="${W-padR}" y2="${zeroY.toFixed(1)}" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4 3"/>
       ${bars}
     </svg>
-    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-4);margin-top:5px">
+    <div style="display:flex;flex-wrap:wrap;gap:2px 12px;justify-content:space-between;font-size:10px;color:var(--text-4);margin-top:5px">
       <span>Last ${vals.length} picks with CLV data</span>
       <span><span style="color:var(--green)">${posCount} positive</span> · <span style="color:var(--red)">${vals.length - posCount} negative</span> · ${pctPos}% beat closing line</span>
     </div>`;
@@ -787,42 +779,6 @@ function renderMonthly(p) {
     return;
   }
   el.innerHTML = _monthlyChartSVG(monthly);
-}
-
-// ── P&L cumulative curve (moved from history.html) ────────────────────────────
-function renderCurve(curve) {
-  const el = document.getElementById('pnl-curve');
-  if (!curve || curve.length === 0) {
-    el.innerHTML = '<div style="color:var(--text-4);font-size:12px;padding:20px 0">Accumulates as picks settle.</div>';
-    return;
-  }
-  const data = [0, ...curve];
-  const minV = Math.min(...data, 0);
-  const maxV = Math.max(...data, 0);
-  const range = maxV - minV || 1;
-  const W = 800, H = 90, padT = 10, padB = 10;
-  const innerH = H - padT - padB;
-  const yFor = v => padT + innerH * (1 - (v - minV) / range);
-  const xFor = i => (i / (data.length - 1)) * W;
-  const zeroY = yFor(0);
-  const pts = data.map((v, i) => [xFor(i).toFixed(1), yFor(v).toFixed(1)]);
-  const linePath = pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x},${y}`).join(' ');
-  const areaPath = `${linePath} L${pts[pts.length-1][0]},${zeroY.toFixed(1)} L${pts[0][0]},${zeroY.toFixed(1)} Z`;
-  const endVal = curve[curve.length - 1];
-  const col = endVal >= 0 ? 'var(--green)' : 'var(--red)';
-  const [lx, ly] = pts[pts.length - 1];
-  el.innerHTML = `
-    <svg role="img" aria-label="Cumulative profit and loss in units across settled picks" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:90px">
-      <path d="${areaPath}" style="fill:${col};fill-opacity:0.12"/>
-      <line x1="0" y1="${zeroY.toFixed(1)}" x2="${W}" y2="${zeroY.toFixed(1)}" style="stroke:rgba(255,255,255,0.15);stroke-width:1;stroke-dasharray:4 3"/>
-      <path d="${linePath}" style="fill:none;stroke:${col};stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round"/>
-      <circle cx="${lx}" cy="${ly}" r="3.5" style="fill:${col}"/>
-    </svg>
-    <div class="pnl-curve-meta">
-      <span>${curve.length} settled picks</span>
-      <span style="opacity:0.4">── 0u baseline ──</span>
-      <span style="color:${col}"><strong>${endVal >= 0 ? '+' : ''}${endVal.toFixed(2)}u</strong> total</span>
-    </div>`;
 }
 
 // ── Rolling 20-pick win rate chart (moved from history.html) ──────────────────

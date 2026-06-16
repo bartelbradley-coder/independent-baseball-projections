@@ -3,7 +3,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.5; }
-.wrap { width: 1100px; margin: 0 auto; padding: 30px 28px 44px; }
+.wrap { max-width: 1100px; width: 100%; margin: 0 auto; padding: 30px 28px 44px; }
 
 /* ── HEADER ── */
 .hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 20px; border-bottom: 1px solid rgba(99,102,241,0.18); position: relative; }
@@ -254,5 +254,8 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   .msig { flex-direction: column; }
   .msig-cell { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.04); }
   .msig-cell:last-child { border-bottom: none; }
+  .val-wrap { grid-template-columns: 1fr; }
+  .val-metrics { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+  .val-card { min-width: 0; }
   .wrap { padding: 16px 14px 32px; }
 }
