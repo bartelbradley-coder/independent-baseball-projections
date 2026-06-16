@@ -158,9 +158,20 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 @keyframes arp-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
 @media (max-width: 700px) {
-  #table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .picks-table { font-size: 11px; }
-  .picks-table th, .picks-table td { padding: 7px 6px; }
   /* keep the record (e.g. 250W–218L) on one line in the narrower mobile boxes */
   .summary-row .stat-val { font-size: 17px; white-space: nowrap; }
+
+  /* settled-picks table → stacked per-pick cards (no horizontal scroll) */
+  #table-wrap { background: transparent; border: none; }   /* the per-pick cards are the boxes */
+  .picks-table, .picks-table tbody { display: block; }
+  .picks-table thead { display: none; }
+  .picks-table tr { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 14px; padding: 12px 14px; margin-bottom: 10px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card); }
+  .picks-table tr:last-child { margin-bottom: 0; }
+  .picks-table tr.row-strong { border-color: rgba(245,158,11,.25); background: rgba(245,158,11,.03); }
+  .picks-table tr.row-value  { border-color: rgba(34,197,94,.22); background: rgba(34,197,94,.03); }
+  .picks-table tr.row-strong td, .picks-table tr.row-value td { background: transparent; }
+  .picks-table td { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; min-width: 0; border: none !important; padding: 0 !important; font-size: 12.5px; }
+  .picks-table td::before { content: attr(data-label); color: var(--text-4); font-size: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; flex-shrink: 0; }
+  .picks-table td[data-label="Pick"] { order: -1; grid-column: 1 / -1; border-bottom: 1px solid var(--border) !important; padding-bottom: 8px !important; margin-bottom: 2px; font-family: var(--font-display); font-size: 15px; font-weight: 700; }
+  .picks-table td[data-label="Pick"]::before { display: none; }
 }
