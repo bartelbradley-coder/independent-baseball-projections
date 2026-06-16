@@ -35,11 +35,6 @@
 <link rel="stylesheet" href="style.css?v=17">
 <link rel="stylesheet" href="index.css?v=2">
 <style>
-.page-header { margin-bottom: 6px; }
-.page-title  { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; letter-spacing: .03em; }
-.page-sub    { font-size: 12px; color: var(--text-3); margin-bottom: 20px; line-height: 1.5; }
-.page-sub a  { color: var(--indigo-lt); text-decoration: none; }
-.page-sub a:hover { text-decoration: underline; }
 .gen-at { font-size: 11px; color: var(--text-4); margin-bottom: 16px; }
 </style>
 <!-- Google tag (gtag.js) -->
@@ -76,15 +71,11 @@
 
 <div class="page" id="main" role="main" tabindex="-1">
 
-  <div class="page-header">
-    <h1 class="page-title">Tomorrow's Opening Lines</h1>
-    <div class="page-sub">
-      Early model signals based on overnight opening lines and projected lineups.
-      <strong>These are not official picks.</strong>
-      Official picks post at <strong>9:00 AM CT</strong> the following morning after lineup confirmation and CLV tracking begins.
-      <a href="index.html">→ View today's official picks</a>
-    </div>
-  </div>
+  <header class="hero hero-slim">
+    <div class="hero-eyebrow">Preliminary · Tomorrow's Opening Lines</div>
+    <h1 class="hero-title">Tomorrow's Opening Lines</h1>
+    <p class="hero-sub">Early model signals from overnight opening lines and projected lineups — <strong>not official picks</strong>. Official picks post at <strong>9:00 AM CT</strong> after lineup confirmation. <a href="index.html">Today's picks →</a></p>
+  </header>
 
   <!-- Disclaimer -->
   <div class="preview-page-disclaimer">
@@ -214,7 +205,7 @@ async function loadPreview() {
     // Page title — adapt label depending on whether this is still "tomorrow"
     // or has rolled into today's slate after midnight
     if (data.date) {
-      document.querySelector('.page-title').textContent = isToday
+      document.querySelector('.hero-title').textContent = isToday
         ? 'Preliminary Estimates — ' + formatDate(data.date + 'T12:00:00Z')
         : 'Opening Lines — '         + formatDate(data.date + 'T12:00:00Z');
     }

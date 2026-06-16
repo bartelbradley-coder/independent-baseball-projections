@@ -35,8 +35,7 @@
 <link rel="stylesheet" href="style.css?v=17">
 <link rel="stylesheet" href="index.css?v=2">
 <style>
-.page-title { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
-.page-subtitle { font-size: 12px; color: var(--text-3); margin-bottom: 24px; }
+/* page-title/page-subtitle now provided by the shared .hero.hero-slim band (index.css) */
 
 /* Headline stats */
 .headline-stats {
@@ -246,8 +245,11 @@
 
 <div class="page" id="main" role="main" tabindex="-1">
 
-  <h1 class="page-title">Model Dashboard</h1>
-  <div class="page-subtitle">High-level model validation — bankroll growth, CLV, edge-tier ROI, strategy comparison, and backtested results.</div>
+  <header class="hero hero-slim">
+    <div class="hero-eyebrow">Model Validation · Updated Daily</div>
+    <h1 class="hero-title">Model Dashboard</h1>
+    <p class="hero-sub">Bankroll growth, closing-line value, edge-tier ROI, and backtested results — the full case for whether the edge is real. <a href="model.html">How it works →</a></p>
+  </header>
 
   <!-- Live section header + compact orientation strip -->
   <div class="results-section live-section">
