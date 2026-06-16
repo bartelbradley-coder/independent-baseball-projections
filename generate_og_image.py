@@ -12,9 +12,9 @@ SITE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 ARIAL       = '/System/Library/Fonts/Supplemental/Arial.ttf'
 ARIAL_BOLD  = '/System/Library/Fonts/Supplemental/Arial Bold.ttf'
-GEORGIA     = '/System/Library/Fonts/Supplemental/Georgia.ttf'
+ARIAL_BLACK = '/System/Library/Fonts/Supplemental/Arial Black.ttf'
 
-# Palette
+# Palette (matches the live site)
 BG_DARK   = (15,  23,  42)
 BG_MID    = (30,  41,  59)
 BORDER    = (51,  65,  85)
@@ -24,6 +24,8 @@ TEXT_MUT  = (100, 116, 139)
 GREEN     = (34,  197, 94)
 AMBER     = (245, 158, 11)
 INDIGO    = (99,  102, 241)
+INDIGO_LT = (129, 140, 248)
+BLUE      = (96,  165, 250)   # the "P" in the IBP mark
 
 
 def load_stats():
@@ -39,7 +41,7 @@ def load_stats():
         avg_clv = sum(r['clv'] for r in clv_r) / len(clv_r) if clv_r else 0
         roi    = pnl / len(settled) if settled else 0
         return {
-            'record':  f'{wins}W–{losses}L',
+            'record':  f'{wins}-{losses}',
             'pnl':     f'+{pnl:.1f}u'    if pnl    >= 0 else f'{pnl:.1f}u',
             'avg_clv': f'+{avg_clv*100:.2f}%' if avg_clv >= 0 else f'{avg_clv*100:.2f}%',
             'roi':     f'+{roi*100:.1f}%' if roi    >= 0 else f'{roi*100:.1f}%',
@@ -83,6 +85,60 @@ def rounded_rect(draw, x0, y0, x1, y1, r=12, fill=None, outline=None, width=1):
         draw.line([(x1, y0 + r), (x1, y1 - r)], fill=outline, width=width)
 
 
+def _quad(p0, p1, p2, steps=28):
+    """Sample a quadratic bezier into a polyline (for the baseball stitches)."""
+    pts = []
+    for i in range(steps + 1):
+        t = i / steps
+        u = 1 - t
+        x = u*u*p0[0] + 2*u*t*p1[0] + t*t*p2[0]
+        y = u*u*p0[1] + 2*u*t*p1[1] + t*t*p2[1]
+        pts.append((x, y))
+    return pts
+
+
+def draw_badge(size, alpha=255):
+    """Render the IBP circular mark (matches the site nav logo) at `size` px.
+
+    Coordinates follow the site SVG viewBox of 88×88, scaled to `size`.
+    Returns an RGBA image; `alpha` (0-255) scales overall opacity for watermarks.
+    """
+    S  = size
+    sc = S / 88.0
+    im = Image.new('RGBA', (S, S), (0, 0, 0, 0))
+    d  = ImageDraw.Draw(im)
+    def P(x, y): return (x * sc, y * sc)
+    def A(a):    return int(a * alpha / 255)
+    lw_ring   = max(1, round(1.8 * sc))
+    lw_stitch = max(1, round(1.5 * sc))
+    lw_bat    = max(1, round(2.5 * sc))
+
+    # Faint indigo fill + white ring
+    d.ellipse([P(12, 12), P(76, 76)], fill=(99, 102, 241, A(26)))
+    d.ellipse([P(12, 12), P(76, 76)], outline=(255, 255, 255, A(210)), width=lw_ring)
+
+    # Baseball stitches (two mirrored chained quadratics)
+    left  = _quad((18, 26), (26, 34), (19, 44)) + _quad((19, 44), (13, 54), (20, 62))
+    right = _quad((70, 26), (62, 34), (69, 44)) + _quad((69, 44), (75, 54), (68, 62))
+    d.line([P(*pt) for pt in left],  fill=(255, 255, 255, A(77)), width=lw_stitch, joint='curve')
+    d.line([P(*pt) for pt in right], fill=(255, 255, 255, A(77)), width=lw_stitch, joint='curve')
+
+    # IBP monogram (baseline anchored, matching the SVG text y=52)
+    try:
+        f_mono = ImageFont.truetype(ARIAL_BLACK, round(20 * sc))
+        d.text(P(18, 53), 'IB', font=f_mono, fill=(255, 255, 255, A(255)), anchor='ls')
+        ib_w = d.textlength('IB', font=f_mono)
+        d.text((P(18, 53)[0] + ib_w + 2 * sc, P(18, 53)[1]), 'P',
+               font=f_mono, fill=(BLUE[0], BLUE[1], BLUE[2], A(255)), anchor='ls')
+    except Exception:
+        pass
+
+    # Green bat + ball accent
+    d.line([P(56, 60), P(64, 50)], fill=(34, 197, 94, A(255)), width=lw_bat)
+    d.ellipse([P(64 - 3.3, 50 - 3.3), P(64 + 3.3, 50 + 3.3)], fill=(34, 197, 94, A(255)))
+    return im
+
+
 def generate(output_path=None):
     if output_path is None:
         output_path = os.path.join(SITE_DIR, 'og-image.png')
@@ -92,86 +148,72 @@ def generate(output_path=None):
     img   = Image.new('RGB', (W, H), BG_DARK)
     draw  = ImageDraw.Draw(img)
 
-    # ── Background gradient ──────────────────────────────────────────────
+    # ── Background gradient + top accent bar ─────────────────────────────
     gradient_rect(draw, 0, 0, W, H, BG_DARK, BG_MID)
-
-    # ── Accent bar (indigo → green) ──────────────────────────────────────
     gradient_rect(draw, 0, 0, W, 7, INDIGO, GREEN, vertical=False)
+
+    # ── Faint badge watermark (right side) ───────────────────────────────
+    wm = draw_badge(360, alpha=30)
+    img.paste(wm, (855, 210), wm)
 
     # ── Fonts ────────────────────────────────────────────────────────────
     try:
-        f_title    = ImageFont.truetype(ARIAL_BOLD,  52)
+        f_word1    = ImageFont.truetype(ARIAL_BOLD,  33)   # "INDEPENDENT BASEBALL"
+        f_word2    = ImageFont.truetype(ARIAL_BLACK, 33)   # "PROJECTIONS"
         f_tagline  = ImageFont.truetype(ARIAL,       21)
-        f_stat_lbl = ImageFont.truetype(ARIAL_BOLD,  12)
-        f_stat_val = ImageFont.truetype(GEORGIA,     38)
+        f_stat_lbl = ImageFont.truetype(ARIAL_BOLD,  13)
+        f_stat_val = ImageFont.truetype(ARIAL_BLACK, 36)
         f_desc     = ImageFont.truetype(ARIAL,       19)
-        f_url      = ImageFont.truetype(ARIAL_BOLD,  18)
+        f_url      = ImageFont.truetype(ARIAL_BOLD,  19)
     except Exception:
-        f_title = f_tagline = f_stat_lbl = f_stat_val = f_desc = f_url = ImageFont.load_default()
+        f_word1 = f_word2 = f_tagline = f_stat_lbl = f_stat_val = f_desc = f_url = ImageFont.load_default()
 
-    # ── Title ────────────────────────────────────────────────────────────
-    draw.text((80, 90),  '⚾ INDEPENDENT BASEBALL PROJECTIONS', font=f_title,   fill=TEXT_PRI)
-    draw.text((80, 155), 'Quantitative Win Probability · Dual-Poisson Model',
+    # ── Logo badge + two-tone wordmark ───────────────────────────────────
+    badge = draw_badge(96)
+    img.paste(badge, (80, 66), badge)
+
+    wx, wy = 200, 100   # wordmark baseline
+    draw.text((wx, wy), 'INDEPENDENT BASEBALL ', font=f_word1, fill=TEXT_SEC, anchor='ls')
+    w1 = draw.textlength('INDEPENDENT BASEBALL ', font=f_word1)
+    draw.text((wx + w1, wy), 'PROJECTIONS', font=f_word2, fill=TEXT_PRI, anchor='ls')
+
+    draw.text((80, 175), 'Quantitative Win Probability · Dual-Poisson Model',
               font=f_tagline, fill=TEXT_SEC)
 
     # ── Divider ──────────────────────────────────────────────────────────
-    draw.line([(80, 198), (1120, 198)], fill=BORDER, width=1)
+    draw.line([(80, 212), (1120, 212)], fill=BORDER, width=1)
 
     # ── Stat boxes ───────────────────────────────────────────────────────
     boxes = [
-        {'label': '2026 SEASON',  'value': stats['record'],  'color': TEXT_PRI},
-        {'label': 'P&L UNITS',    'value': stats['pnl'],      'color': GREEN},
-        {'label': 'AVG CLV',      'value': stats['avg_clv'],  'color': GREEN},
-        {'label': 'SEASON ROI',   'value': stats['roi'],      'color': AMBER},
+        {'label': '2026 RECORD', 'value': stats['record'],  'color': TEXT_PRI},
+        {'label': 'P&L UNITS',   'value': stats['pnl'],      'color': GREEN},
+        {'label': 'AVG CLV',     'value': stats['avg_clv'],  'color': GREEN},
+        {'label': 'ROI / BET',   'value': stats['roi'],      'color': AMBER},
     ]
 
-    box_w, box_h = 230, 115
+    box_w, box_h = 230, 118
     gap          = 20
-    total_w      = len(boxes) * box_w + (len(boxes) - 1) * gap
     start_x      = 80
-    box_y        = 220
+    box_y        = 240
 
     for i, box in enumerate(boxes):
         bx = start_x + i * (box_w + gap)
-        # Background card
         rounded_rect(draw, bx, box_y, bx + box_w, box_y + box_h,
-                     r=12, fill=BG_MID, outline=BORDER, width=1)
-        # Label (centred)
+                     r=14, fill=BG_MID, outline=BORDER, width=1)
         lbl = box['label']
-        try:
-            lw = draw.textlength(lbl, font=f_stat_lbl)
-        except Exception:
-            lw = len(lbl) * 7
-        draw.text((bx + box_w/2 - lw/2, box_y + 16), lbl,
-                  font=f_stat_lbl, fill=TEXT_MUT)
-        # Value (centred)
+        lw  = draw.textlength(lbl, font=f_stat_lbl)
+        draw.text((bx + box_w/2 - lw/2, box_y + 20), lbl, font=f_stat_lbl, fill=TEXT_MUT)
         val = box['value']
-        try:
-            vw = draw.textlength(val, font=f_stat_val)
-        except Exception:
-            vw = len(val) * 22
-        draw.text((bx + box_w/2 - vw/2, box_y + 54), val,
-                  font=f_stat_val, fill=box['color'])
+        vw  = draw.textlength(val, font=f_stat_val)
+        draw.text((bx + box_w/2 - vw/2, box_y + 52), val, font=f_stat_val, fill=box['color'])
 
     # ── Description ──────────────────────────────────────────────────────
-    draw.text((80, 372),
-              'Daily MLB value bets · Edge vs. no-vig Pinnacle · Half-Kelly sizing · CLV tracked',
+    draw.text((80, 405),
+              'Daily MLB value bets · Edge vs. no-vig Pinnacle · Fractional-Kelly sizing · CLV tracked',
               font=f_desc, fill=TEXT_SEC)
 
     # ── URL ──────────────────────────────────────────────────────────────
-    draw.text((80, 575),
-              'independentbaseballprojections.net',
-              font=f_url, fill=INDIGO)
-
-    # ── Baseball decoration (right side) ─────────────────────────────────
-    cx, cy, cr = 1100, 400, 110
-    draw.ellipse([cx - cr, cy - cr, cx + cr, cy + cr], outline=BORDER, width=2)
-    draw.ellipse([cx - 80, cy - 80, cx + 80, cy + 80], outline=(30, 58, 95), width=1)
-    try:
-        f_ball = ImageFont.truetype(ARIAL, 90)
-        draw.text((cx - 45, cy - 50), '⚾', font=f_ball, fill=(30, 41, 59))
-    except Exception:
-        pass
+    draw.text((80, 575), 'independentbaseballprojections.net', font=f_url, fill=INDIGO_LT)
 
     img.save(output_path, 'PNG', optimize=True)
     print(f'[og-image] Saved {output_path}')
