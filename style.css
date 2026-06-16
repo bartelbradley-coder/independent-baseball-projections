@@ -1177,7 +1177,11 @@ details[open] .faq-q::after { content: '−'; }
 .dw { display:flex; flex-direction:column; padding:8px 4px 4px; font-family:var(--font-ui); }
 
 /* ── Shareable pick image: the exact expanded drawer + slim brand/disclaimer frame ── */
-.sc-wrap { width:680px; box-sizing:border-box; background:#0b0e16; border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px 20px 14px; }
+/* flex-shrink:0 — .share-modal-preview is a flex container; without this the card
+   shrinks below 680px on narrow phones, cramming the two-column layout (and
+   html2canvas then captures it shrunk). Pinning the width keeps the exported
+   card identical on every device; the modal preview is fit via JS transform. */
+.sc-wrap { width:680px; flex-shrink:0; box-sizing:border-box; background:#0b0e16; border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px 20px 14px; }
 .sc-wrap-hdr { display:flex; align-items:center; gap:9px; padding-bottom:12px; margin-bottom:4px; border-bottom:1px solid rgba(255,255,255,0.07); }
 .sc-wrap-name { font-family:var(--font-display); font-size:14px; letter-spacing:0.04em; color:var(--text-3); }
 .sc-wrap-name b { color:var(--text); font-weight:800; }
