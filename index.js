@@ -1188,7 +1188,8 @@ function oneLineDriverV8(p) {
 function prLineGraph(points) {
   const pts = (points || []).filter(p => p.odds != null && !isNaN(p.odds));
   if (pts.length < 2) return '';
-  const W = 900, H = 84, padX = 64, padTop = 26, padBot = 24;  // wide viewBox → fills the section
+  const W = 900, H = 124, padX = 64, padTop = 44, padBot = 42;  // wide viewBox → fills the section; tall enough that the
+                                                                // enlarged mobile value/label text clears the line (see style.css .dw-lg @media)
   const plotW = W - padX * 2, plotH = H - padTop - padBot;
   const cents = pts.map(p => _oddsToCents(p.odds));
   let lo = Math.min(...cents), hi = Math.max(...cents);
@@ -1214,8 +1215,8 @@ function prLineGraph(points) {
     const labeled = !!p.label;   // only key points get a dot label; the rest are plain vertices
     svg += '<circle cx="' + px + '" cy="' + py.toFixed(1) + '" r="' + (labeled ? '3.4' : '1.8') + '" fill="' + col + '"/>';
     if (labeled) {
-      svg += '<text x="' + px + '" y="' + (py - 9).toFixed(1) + '" class="dw-lg-val" text-anchor="middle">' + (p.odds > 0 ? '+' + p.odds : p.odds) + '</text>';
-      svg += '<text x="' + px + '" y="' + (H - 6) + '" class="dw-lg-lbl" text-anchor="middle">' + p.label + '</text>';
+      svg += '<text x="' + px + '" y="' + (py - 20).toFixed(1) + '" class="dw-lg-val" text-anchor="middle">' + (p.odds > 0 ? '+' + p.odds : p.odds) + '</text>';
+      svg += '<text x="' + px + '" y="' + (H - 12) + '" class="dw-lg-lbl" text-anchor="middle">' + p.label + '</text>';
     }
   });
   return svg + '</svg>';
