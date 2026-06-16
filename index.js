@@ -1469,165 +1469,191 @@ function oneLineDriverV8(p) {
 // metrics, distinct from the model adjustments in "Why it rates"), and line
 // movement + CLV. Replaces embedding the entire legacy pickCardHTML (which
 // re-rendered the edge/books/stake/factors a 2nd–3rd time in the old styling).
-function prFullRationaleHTML(p) {
-  const rs = p.raw_stats || {};
-  const pickAbbr = (p.pick || '').toUpperCase();
-  const fmtO = (o) => o == null ? '—' : (o > 0 ? '+' + o : String(o));
-
-  // Matchup Quality — only metrics present on BOTH sides; better side greened.
-  let mqRows = '';
-  function mqRow(label, pv, ov, betterHigh, fmt) {
-    if (pv == null || ov == null || isNaN(pv) || isNaN(ov)) return;
-    const pBetter = betterHigh ? pv > ov : pv < ov;
-    mqRows += '<div class="dw-rc"><span class="dw-rk">' + label + '</span>'
-      + '<span class="dw-mq"><b class="' + (pBetter ? 'dw-mq-good' : '') + '">' + fmt(pv) + '</b>'
-      + '<span class="dw-mq-sep">vs</span><b class="' + (!pBetter ? 'dw-mq-good' : '') + '">' + fmt(ov) + '</b></span></div>';
-  }
-  mqRow('Starter xFIP', rs.pick_xfip, rs.opp_xfip, false, x => x.toFixed(2));
-  mqRow('K-BB%', rs.pick_kbb_pct != null ? rs.pick_kbb_pct * 100 : null, rs.opp_kbb_pct != null ? rs.opp_kbb_pct * 100 : null, true, x => x.toFixed(1) + '%');
-  mqRow('Defense (OAA)', rs.pick_oaa, rs.opp_oaa, true, x => (x > 0 ? '+' : '') + x);
-  mqRow('Arsenal fit', rs.pick_arsenal_fit, rs.opp_arsenal_fit, true, x => (x > 0 ? '+' : '') + x.toFixed(2));
-  mqRow('Proj. IP', rs.pick_proj_ip, rs.opp_proj_ip, true, x => x.toFixed(1));
-  const conds = [];
-  if (rs.park_factor != null) conds.push('Park ' + rs.park_factor.toFixed(2));
-  if (rs.ump_name) conds.push('HP ump ' + rs.ump_name);
-  const condLine = conds.length ? '<div class="dw-pr-note">' + conds.join(' · ') + '</div>' : '';
-  const mqHTML = mqRows
-    ? '<div class="dw-card"><div class="dw-h">Matchup quality <span class="dw-hsub">' + pickAbbr + ' vs opp · better side green</span></div>' + mqRows + condLine + '</div>'
-    : '';
-
-  // Line movement + CLV (open→posted are fixed; CLV is fixed at the close).
-  let lmRows = '';
-  if (p.line_open != null) lmRows += '<div class="dw-pr"><span class="dw-pl">Opened</span><span class="dw-pv">' + fmtO(p.line_open) + '</span></div>';
-  lmRows += '<div class="dw-pr"><span class="dw-pl">Posted</span><span class="dw-pv">' + fmtO(p.odds) + '</span></div>';
-  if (p.clv != null) {
-    const clvpp = p.clv * 100;
-    const clvCls = clvpp >= 0.5 ? 'g' : clvpp <= -0.5 ? 'r' : '';
-    const clvNote = clvpp >= 0.5 ? ' · beat the close' : clvpp <= -0.5 ? ' · closed past us' : ' · matched close';
-    lmRows += '<div class="dw-pr"><span class="dw-pl">CLV</span><span class="dw-pv ' + clvCls + '">' + (clvpp >= 0 ? '+' : '') + clvpp.toFixed(1) + 'pp' + clvNote + '</span></div>';
-  }
-  const lmHTML = '<div class="dw-card"><div class="dw-h">Line movement</div>' + lmRows + '</div>';
-
-  const narrHTML = (p.narrative && p.narrative.trim())
-    ? '<div class="dw-card"><div class="dw-h">Model rationale</div><div class="dw-prose">' + p.narrative + '</div></div>'
-    : '';
-
-  return narrHTML + mqHTML + lmHTML;
+// Small inline line graph for price movement. Takes a generic array of points
+// — [{ label, odds }] — so when the backend starts persisting intraday odds
+// snapshots, the same renderer just receives more points (only the x-spacing /
+// label density would change). Price is plotted on the "cents" scale so the line
+// rises when the number moved in the bettor's favour; coloured green if it ended
+// better than the posted line, red if worse, neutral if flat.
+function prLineGraph(points) {
+  const pts = (points || []).filter(p => p.odds != null && !isNaN(p.odds));
+  if (pts.length < 2) return '';
+  const W = 900, H = 84, padX = 64, padTop = 26, padBot = 24;  // wide viewBox → fills the section
+  const plotW = W - padX * 2, plotH = H - padTop - padBot;
+  const cents = pts.map(p => _oddsToCents(p.odds));
+  let lo = Math.min(...cents), hi = Math.max(...cents);
+  if (hi === lo) { hi += 1; lo -= 1; }
+  const padY = (hi - lo) * 0.18 || 1; lo -= padY; hi += padY;
+  const x = i => padX + plotW * i / (pts.length - 1);
+  const y = c => padTop + plotH - ((c - lo) / (hi - lo)) * plotH;
+  const baseIdx = pts.findIndex(p => /posted/i.test(p.label));
+  const baseC = cents[baseIdx >= 0 ? baseIdx : 0], lastC = cents[cents.length - 1];
+  const dir = lastC > baseC + 0.5 ? 'up' : lastC < baseC - 0.5 ? 'down' : 'flat';
+  const col = dir === 'up' ? 'var(--green)' : dir === 'down' ? 'var(--red)' : 'var(--text-4)';
+  const poly = pts.map((p, i) => x(i).toFixed(1) + ',' + y(cents[i]).toFixed(1)).join(' ');
+  let svg = '<svg class="dw-lg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Line movement graph">';
+  svg += '<polyline points="' + poly + '" fill="none" stroke="' + col + '" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>';
+  pts.forEach((p, i) => {
+    const px = x(i).toFixed(1), py = y(cents[i]);
+    svg += '<circle cx="' + px + '" cy="' + py.toFixed(1) + '" r="3.4" fill="' + col + '"/>';
+    svg += '<text x="' + px + '" y="' + (py - 9).toFixed(1) + '" class="dw-lg-val" text-anchor="middle">' + (p.odds > 0 ? '+' + p.odds : p.odds) + '</text>';
+    svg += '<text x="' + px + '" y="' + (H - 6) + '" class="dw-lg-lbl" text-anchor="middle">' + p.label + '</text>';
+  });
+  return svg + '</svg>';
 }
 
+// Expanded pick drawer — decision-first, in order: should I bet it? · price &
+// stake? · why does the model like it? · what data supports it? · did the line
+// move favourably? Two-column body (sparse picks collapse to one). Two accent
+// colours only: green = helps the pick, red = hurts it.
 function prDrawerHTML(p, isBest, gameResult) {
   const cardId = prCardId(p);
+  const rs = p.raw_stats || {};
+  const parts = String(p.game || '').split('@').map(s => s.trim());
+  const away = parts[0] || '', home = parts[1] || '';
   const pickAbbr = (p.pick || '').toUpperCase();
+  const oppAbbr = (away.toUpperCase() === pickAbbr ? home : away).toUpperCase();
   const typeLabel = p.pick_type === 'MONEYLINE' ? 'ML' : p.pick_type === 'RUN_LINE' ? 'RL' : (p.pick_type || '').replace(/_/g, ' ');
-  const oddsStr = p.odds != null ? (p.odds > 0 ? '+' + p.odds : String(p.odds)) : '';
-  const isDog = (p.odds || 0) > 0;
+  const fmtO = o => (o == null ? '—' : (o > 0 ? '+' + o : String(o)));
   const live = isLiveGame(p), over = isGameOver(p);
   const scoreStr = gameResult && gameResult.score ? ' ' + gameResult.score : '';
+  const sb = sanitizeBookOdds(p);
 
   const mp = p.model_prob, bp = p.market_prob;
   const mpPct = mp != null ? (mp * 100).toFixed(1) + '%' : '—';
   const bpPct = bp != null ? (bp * 100).toFixed(1) + '%' : '—';
-  const mpW = mp != null ? Math.max(2, Math.min(100, mp * 100)) : 0;
   const bpW = bp != null ? Math.max(2, Math.min(100, bp * 100)) : 0;
+  const mpW = mp != null ? Math.max(2, Math.min(100, mp * 100)) : 0;
   const gapW = Math.max(0, mpW - bpW);
   const ev = p.edge || 0;
-  const edgeStr = (ev >= 0 ? '+' : '') + (ev * 100).toFixed(1);
-  const ptStr = p.playable_to != null ? (p.playable_to > 0 ? '+' + p.playable_to : String(p.playable_to)) : '—';
+  const edgeStr = (ev >= 0 ? '+' : '') + (ev * 100).toFixed(1) + 'pp';
+  const ptStr = fmtO(p.playable_to);
+
+  // current best price + book
+  let curStr, curBook = '', curGood = false;
+  if (live || over) { curStr = '—'; }
+  else if (sb.best) { curStr = fmtO(sb.best.odds); curBook = sb.best.book; const capImp = _impliedFromAmerican(p.odds); curGood = capImp != null && sb.best.implied < capImp - 0.005; }
+  else { curStr = fmtO(p.best_odds != null ? p.best_odds : p.odds); curBook = p.best_book || ''; }
 
   const isKelly = _indexPnlMode === 'kelly';
-  const stakeStr = isKelly
-    ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') + ' <span class="dw-usd kelly-usd" data-units="' + (p.kelly_units || 0) + '"></span>'
-    : '1.0u <span class="dw-usd">· $100</span>';
+  const stakeUnits = isKelly ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') : '1.0u';
+  const stakeSub = isKelly ? '<span class="kelly-usd" data-units="' + (p.kelly_units || 0) + '"></span>' : '$100';
 
-  const st = pickStatus(p, gameResult);
-  let statusDetail;
-  if (over) statusDetail = st.label + ' · pregame pick logged at ' + oddsStr + (p.posted_at ? ' (' + p.posted_at + ')' : '');
-  else if (live) statusDetail = 'Pregame pick — now live' + scoreStr + '. Line captured ' + oddsStr + (p.posted_at ? ' at ' + p.posted_at : '');
-  else statusDetail = 'Line captured ' + oddsStr + (p.posted_at ? ' at ' + p.posted_at : '') + ' — re-check current price before betting';
+  // ── verdict (cites the numbers) ────────────────────────────────────────
+  const cushion = prCushion(p);
+  let pill, pCls, detail;
+  if (over) { const r = gameResult && gameResult.result; pill = 'Final'; pCls = r === 'W' ? 'good' : r === 'L' ? 'bad' : 'neu'; detail = (r === 'W' ? 'Won' : r === 'L' ? 'Lost' : 'Settled') + scoreStr; }
+  else if (live) { pill = 'Live'; pCls = 'neu'; detail = 'in-play' + scoreStr + ' — odds have moved off this pick'; }
+  else if ((p.edge || 0) < 0.04) { pill = 'Below threshold'; pCls = 'neu'; detail = 'model edge is under our 4% cutoff — not a recommended bet'; }
+  else if (!prActionable(p)) { pill = 'No longer playable'; pCls = 'bad'; detail = 'current ' + curStr + ' is past Play to ' + ptStr; }
+  else if (p.current_lineup_confirmed === false) { pill = 'Playable'; pCls = 'neu'; detail = 'lineup not yet confirmed — re-check before betting'; }
+  else { pill = 'Still playable'; pCls = 'good'; detail = 'current ' + curStr + ' beats Play to ' + ptStr; }
 
+  const headHTML = '<div class="dw-head"><span class="dw-head-name">' + pickAbbr + ' ' + typeLabel + '</span>'
+    + '<span class="dw-pill ' + pCls + '">' + pill + '</span>'
+    + '<span class="dw-head-detail">— ' + detail + '</span></div>';
+
+  // ── decision band: current · posted · play-to · stake ──────────────────
+  const bandHTML = '<div class="dw-band">'
+    + '<div class="dw-bi"><span class="dw-bi-k">Current odds</span><span class="dw-bi-v' + (curGood ? ' good' : '') + '">' + ((live || over) ? '—' : curStr) + '</span>' + ((!live && !over && curBook) ? '<span class="dw-bi-s">' + curBook + '</span>' : '') + '</div>'
+    + '<div class="dw-bi"><span class="dw-bi-k">Posted line</span><span class="dw-bi-v">' + fmtO(p.odds) + '</span>' + (p.posted_at ? '<span class="dw-bi-s">at ' + p.posted_at + '</span>' : '') + '</div>'
+    + '<div class="dw-bi"><span class="dw-bi-k">Play to</span><span class="dw-bi-v">' + ((live || over) ? '—' : ptStr) + '</span></div>'
+    + '<div class="dw-bi"><span class="dw-bi-k">Stake</span><span class="dw-bi-v">' + stakeUnits + '</span><span class="dw-bi-s">' + stakeSub + '</span></div>'
+    + '</div>';
+
+  // ── Why the model likes it (left) ──────────────────────────────────────
   const meterHTML = (mp != null && bp != null)
-    ? '<div class="dw-meter"><i class="m-mkt" style="width:' + bpW.toFixed(1) + '%"></i><i class="m-gap" style="left:' + bpW.toFixed(1) + '%;width:' + gapW.toFixed(1) + '%"></i><i class="m-tick" style="left:calc(' + mpW.toFixed(1) + '% - 1px)"></i></div>'
-      + '<div class="dw-meter-cap"><span>Market ' + bpPct + '</span><span class="g">' + edgeStr + 'pp</span><span class="mdl">Model ' + mpPct + '</span></div>'
+    ? '<div class="dw-meter-cap"><span>Market <b>' + bpPct + '</b></span><span class="dw-arr">→</span><span>Model <b>' + mpPct + '</b></span><span class="g">Edge ' + edgeStr + '</span></div>'
+      + '<div class="dw-meter"><i class="m-mkt" style="width:' + bpW.toFixed(1) + '%"></i><i class="m-gap" style="left:' + bpW.toFixed(1) + '%;width:' + gapW.toFixed(1) + '%"></i><i class="m-tick" style="left:calc(' + mpW.toFixed(1) + '% - 1px)"></i></div>'
+      + '<div class="dw-cap">Bar shows implied win probability.</div>'
     : '';
-
   const adjs = (p.adj_breakdown && p.adj_breakdown.adjustments) || [];
-  const chips = adjs.slice().sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 8)
-    .map(a => '<span class="dw-chip ' + (a.positive ? 'pos' : 'neg') + '">' + a.label + ' <b>' + (a.pp >= 0 ? '+' : '') + a.pp.toFixed(1) + '</b></span>').join('');
-  const whyHTML = chips ? '<div class="dw-card"><div class="dw-h">Why it rates</div><div class="dw-chips">' + chips + '</div></div>' : '';
+  const pos = adjs.filter(a => a.positive).sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 5);
+  const neg = adjs.filter(a => !a.positive).sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 5);
+  const frow = a => '<div class="dw-frow"><b class="' + (a.positive ? 'good' : 'bad') + '">' + (a.pp >= 0 ? '+' : '') + a.pp.toFixed(1) + '</b><span>' + a.label + '</span></div>';
+  const driversCol = pos.length ? '<div class="dw-fcol"><div class="dw-fh good">Key Drivers</div>' + pos.map(frow).join('') + '</div>' : '';
+  const offsetsCol = neg.length ? '<div class="dw-fcol"><div class="dw-fh bad">Offsets</div>' + neg.map(frow).join('') + '</div>' : '';
+  const factorsHTML = (driversCol || offsetsCol) ? '<div class="dw-factors">' + driversCol + offsetsCol + '</div>' : '';
+  const listJoin = arr => arr.length <= 1 ? (arr[0] || '') : arr.slice(0, -1).join(', ') + ' and ' + arr[arr.length - 1];
+  const tp = pos.slice(0, 2).map(a => a.label.toLowerCase()), tn = neg.slice(0, 2).map(a => a.label.toLowerCase());
+  let readTxt = '';
+  if (tp.length) { readTxt = pickAbbr + ' is undervalued mainly on ' + listJoin(tp) + (tn.length ? ', partly offset by ' + listJoin(tn) : '') + '.'; }
+  const readHTML = readTxt ? '<div class="dw-h3">Model Read</div><div class="dw-read">' + readTxt + '</div>' : '';
+  const whyInner = '<div class="dw-h2">Why The Model Likes It</div>' + meterHTML + factorsHTML + readHTML;
 
-  const rs = p.raw_stats || {};
+  // ── Matchup data + status (right) ──────────────────────────────────────
+  const mqRows = [];
+  function mqAdd(label, dir, pv, ov, betterHigh, fmt) {
+    if (pv == null || ov == null || isNaN(pv) || isNaN(ov)) return;
+    const pBetter = betterHigh ? pv > ov : pv < ov;
+    mqRows.push('<tr><td class="dw-mt-metric">' + label + ' <span class="dw-dir">' + dir + '</span></td>'
+      + '<td>' + fmt(pv) + '</td><td>' + fmt(ov) + '</td>'
+      + '<td class="' + (pBetter ? 'good' : 'bad') + '">' + (pBetter ? pickAbbr : oppAbbr) + '</td></tr>');
+  }
+  mqAdd('Starter xFIP', 'lower better', rs.pick_xfip, rs.opp_xfip, false, x => x.toFixed(2));
+  mqAdd('K-BB%', 'higher better', rs.pick_kbb_pct != null ? rs.pick_kbb_pct * 100 : null, rs.opp_kbb_pct != null ? rs.opp_kbb_pct * 100 : null, true, x => x.toFixed(1) + '%');
+  mqAdd('Defense (OAA)', 'higher better', rs.pick_oaa, rs.opp_oaa, true, x => (x > 0 ? '+' : '') + x);
+  mqAdd('Arsenal fit', 'higher better', rs.pick_arsenal_fit, rs.opp_arsenal_fit, true, x => (x > 0 ? '+' : '') + x.toFixed(2));
+  mqAdd('Proj. IP', 'higher better', rs.pick_proj_ip, rs.opp_proj_ip, true, x => x.toFixed(1));
+  const pickPit = p.pitcher ? '<span>' + p.pitcher + '</span>' : '';
+  const oppPit = p.opp_pitcher ? '<span>' + p.opp_pitcher + '</span>' : '';
+  const tableHTML = mqRows.length
+    ? '<table class="dw-mtable"><thead><tr><th>Metric</th><th>' + pickAbbr + pickPit + '</th><th>' + oppAbbr + oppPit + '</th><th>Advantage</th></tr></thead><tbody>' + mqRows.join('') + '</tbody></table>'
+    : '<div class="dw-cap">No paired matchup metrics for this game.</div>';
+
   const lc = p.current_lineup_confirmed != null ? p.current_lineup_confirmed : rs.pick_lineup_confirmed;
-  const lineup = lc === true ? ['Confirmed', 'ok'] : ['Projected', 'warn'];
-  const starter = p.pitcher ? [p.pitcher, 'neu'] : ['—', 'neu'];
-  let weather;
-  if (p.is_domed) { weather = ['Roof closed', 'ok']; }
+  let weatherTxt;
+  if (p.is_domed) weatherTxt = 'Roof closed';
   else {
     const t = p.temp_f != null ? Math.round(p.temp_f) + '°F' : '';
     const w = p.wind_speed_mph != null ? ', wind ' + Math.round(p.wind_speed_mph) + ' mph' : '';
     const d = p.wind_dir_degrees != null ? ' ' + windCompass(p.wind_dir_degrees) : '';
-    weather = [((t + w + d).trim() || '—'), 'neu'];
+    weatherTxt = (t + w + d).trim() || '—';
   }
-  const riskHTML = '<div class="dw-card"><div class="dw-h">Risk checks</div>'
-    + '<div class="dw-rc"><span class="dw-rk">Lineup</span><span class="dw-rv ' + lineup[1] + '">' + lineup[0] + '</span></div>'
-    + '<div class="dw-rc"><span class="dw-rk">Starter</span><span class="dw-rv ' + starter[1] + '">' + starter[0] + '</span></div>'
-    + '<div class="dw-rc"><span class="dw-rk">Weather</span><span class="dw-rv ' + weather[1] + '">' + weather[0] + '</span></div>'
-    + '<div class="dw-rc"><span class="dw-rk">Market</span><span class="dw-rv ' + (over ? 'neu">Settled' : live ? 'neu">Line moved (live)' : 'warn">Re-check price') + '</span></div>'
+  const runEnv = [];
+  if (rs.park_factor != null) runEnv.push('Park ' + rs.park_factor.toFixed(2));
+  if (rs.ump_name) runEnv.push('HP ump ' + rs.ump_name);
+  // The pick's starter is already named in the table header — only repeat it here
+  // on sparse picks where the table isn't shown.
+  const starterRow = mqRows.length ? '' : '<div class="dw-rc"><span class="dw-rk">Starter</span><span class="dw-rv">' + (p.pitcher || '—') + '</span></div>';
+  const statusHTML = '<div class="dw-h3">Status &amp; Context</div><div class="dw-rows">'
+    + '<div class="dw-rc"><span class="dw-rk">Lineup</span><span class="dw-rv ' + (lc === true ? 'good' : '') + '">' + (lc === true ? 'Confirmed' : 'Projected') + '</span></div>'
+    + starterRow
+    + '<div class="dw-rc"><span class="dw-rk">Weather</span><span class="dw-rv">' + weatherTxt + '</span></div>'
+    + (runEnv.length ? '<div class="dw-rc"><span class="dw-rk">Run env.</span><span class="dw-rv">' + runEnv.join(' · ') + '</span></div>' : '')
     + '</div>';
+  const dataInner = '<div class="dw-h2">Matchup Data</div>' + tableHTML + statusHTML;
 
-  // Price section is game-state-aware. Pregame: the live-updating book_odds are
-  // the actionable current price → show best available. Live/Final: book_odds is
-  // in-game odds that have moved off the posted line and is NOT a bet you can make
-  // at this pick → show the logged price + a state note instead.
-  let priceHTML;
-  if (live || over) {
-    priceHTML = '<div class="dw-card"><div class="dw-h">Posted price</div>'
-      + '<div class="dw-pr"><span class="dw-pl">Logged at</span><span class="dw-pv">' + oddsStr + (p.best_book ? ' ' + p.best_book : '') + '</span></div>'
-      + '<div class="dw-pr-note">' + (over ? 'Game final' : 'Game in progress') + ' — live odds have moved off the posted line and no longer reflect this pick.</div>'
-      + '</div>';
-  } else {
-    const sb = sanitizeBookOdds(p);
-    const capImp = _impliedFromAmerican(p.odds);
-    const better = sb.best && capImp != null && sb.best.implied < capImp - 0.005;
-    let priceRows = '<div class="dw-pr"><span class="dw-pl">Captured</span><span class="dw-pv">' + oddsStr + (p.best_book ? ' ' + p.best_book : '') + '</span></div>';
-    if (sb.best) {
-      priceRows += '<div class="dw-pr"><span class="dw-pl">Current best</span><span class="dw-pv' + (better ? ' g' : '') + '">' + (sb.best.odds > 0 ? '+' + sb.best.odds : String(sb.best.odds)) + ' ' + sb.best.book + '</span></div>';
-      sb.entries.slice(1, 3).forEach(e => { priceRows += '<div class="dw-pr"><span class="dw-pl">' + e.book + '</span><span class="dw-pv">' + (e.odds > 0 ? '+' + e.odds : String(e.odds)) + '</span></div>'; });
-      if (sb.dropped > 0) priceRows += '<div class="dw-pr-note">' + sb.dropped + ' book' + (sb.dropped > 1 ? 's' : '') + ' hidden — off-market vs consensus</div>';
-    } else {
-      priceRows += '<div class="dw-pr-note">Live book prices unavailable right now — verify the current line before betting.</div>';
-    }
-    priceHTML = '<div class="dw-card"><div class="dw-h">Best available price</div>' + priceRows + '</div>';
+  // Two columns when there's a real matchup table; otherwise stack so the right
+  // side never sits empty.
+  const twoCol = mqRows.length > 0;
+  const bodyHTML = twoCol
+    ? '<div class="dw-cols"><div class="dw-col">' + whyInner + '</div><div class="dw-col">' + dataInner + '</div></div>'
+    : '<div class="dw-sec">' + whyInner + '</div><div class="dw-sec">' + dataInner + '</div>';
+
+  // ── Line movement — array-driven price graph + CLV ─────────────────────
+  const lgPts = [];
+  if (p.line_open != null) lgPts.push({ label: 'Opened', odds: p.line_open });
+  lgPts.push({ label: 'Posted', odds: p.odds });
+  if (!live && !over && sb.best) lgPts.push({ label: 'Current', odds: sb.best.odds });
+  else if ((live || over) && p.closing_prob != null) lgPts.push({ label: 'Closed', odds: _americanFromImplied(p.closing_prob) });
+  const graphHTML = prLineGraph(lgPts) || '<div class="dw-cap">Not enough line data to chart.</div>';
+  let clvHTML = '';
+  if (p.clv != null && (live || over)) {   // CLV only exists once the line has closed (first pitch)
+    const clvpp = p.clv * 100;
+    const cls = clvpp >= 0.5 ? 'g' : clvpp <= -0.5 ? 'r' : '';
+    const note = clvpp >= 0.5 ? 'beat the close' : clvpp <= -0.5 ? 'closed past us' : 'matched close';
+    clvHTML = '<div class="dw-clv"><span class="dw-clv-k">CLV</span><b class="' + cls + '">' + (clvpp >= 0 ? '+' : '') + clvpp.toFixed(1) + 'pp</b><span class="dw-clv-s">' + note + '</span></div>';
   }
+  const moveHTML = '<div class="dw-sec"><div class="dw-move-head"><div class="dw-h2">Line Movement</div>' + clvHTML + '</div>'
+    + '<div class="dw-lgwrap">' + graphHTML + '</div></div>';
 
-  const topPos = adjs.filter(a => a.positive).sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 3).map(a => a.label.toLowerCase());
-  let drivers = topPos.length ? topPos.join(', ') : 'a multi-factor model edge';
-  if (topPos.length > 1) drivers = drivers.replace(/, ([^,]*)$/, ', and $1');
-  const summaryHTML = (mp != null && bp != null)
-    ? '<div class="dw-summary">' + pickAbbr + ' is priced like a <b>' + bpPct + '</b> ' + (isDog ? 'underdog' : 'favorite') + ', but the model makes them <b>' + mpPct + '</b> — edge from ' + drivers + '.</div>'
-    : '';
-
-  const fullHTML = '<details class="dw-details"><summary>View full model rationale</summary><div class="dw-full">' + prFullRationaleHTML(p) + '</div></details>';
   const actionsHTML = '<div class="dw-actions">'
-    + '<button type="button" class="dw-act" onclick="sharePickCard(\'' + cardId + '\')">⬆ Share</button>'
-    + '<button type="button" class="dw-act" onclick="copyPick(\'' + cardId + '\')">⧉ Copy</button>'
+    + '<button type="button" class="dw-act" onclick="sharePickCard(\'' + cardId + '\')">Share</button>'
+    + '<button type="button" class="dw-act" onclick="copyPick(\'' + cardId + '\')">Copy</button>'
     + '</div>';
 
-  return '<div class="dw">'
-    + '<div class="dw-card dw-action"><div class="dw-h">Official play</div>'
-      + '<div class="dw-action-grid">'
-        + '<div><span class="dw-k">Bet</span><span class="dw-v dw-bet">' + pickAbbr + ' ' + typeLabel + ' ' + oddsStr + '</span></div>'
-        + '<div><span class="dw-k">Stake</span><span class="dw-v">' + stakeStr + '</span></div>'
-        + '<div><span class="dw-k">Edge</span><span class="dw-v g">' + edgeStr + 'pp</span></div>'
-        + '<div><span class="dw-k">Playable to</span><span class="dw-v a">' + ((live || over) ? '—' : ptStr) + '</span></div>'
-      + '</div>'
-      + '<div class="dw-status ' + st.cls + '"><span class="dw-sdot"></span>' + statusDetail + '</div>'
-    + '</div>'
-    + (meterHTML ? '<div class="dw-card"><div class="dw-h">Edge</div>' + meterHTML + '</div>' : '')
-    + whyHTML
-    + '<div class="dw-2col">' + riskHTML + priceHTML + '</div>'
-    + '<div class="dw-card">' + summaryHTML + fullHTML + '</div>'
-    + actionsHTML
-  + '</div>';
+  return '<div class="dw">' + headHTML + bandHTML + bodyHTML + moveHTML + actionsHTML + '</div>';
 }
 
 // ── Pick card HTML ────────────────────────────────────────────────────────────
@@ -1703,7 +1729,7 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
 //    · prRowHTML            → row wrapper = collapsed row + lazy-built drawer slot
 //    · prRows / prTableHead → rows + sortable column header
 //    · prToggle / prKey     → expand-collapse a row (builds prDrawerHTML on demand)
-//    · prDrawerHTML / prFullRationaleHTML → the expanded decision drawer
+//    · prDrawerHTML        → the expanded decision-first drawer
 // ════════════════════════════════════════════════════════════════════════════
 
 
@@ -1753,6 +1779,13 @@ function _oddsToCents(o) {
   return o > 0 ? o - 100 : -(Math.abs(o) - 100);
 }
 
+// Implied win probability → American odds (used for the closing-line point on the
+// movement graph). Inverse of _impliedFromAmerican.
+function _americanFromImplied(prob) {
+  if (prob == null || prob <= 0 || prob >= 1) return null;
+  return prob >= 0.5 ? -Math.round(prob / (1 - prob) * 100) : Math.round((1 - prob) / prob * 100);
+}
+
 // Cents of room between the current best price and the playable floor. Negative
 // means the price has already moved past the floor — the edge is gone. Returns
 // null when either input is missing.
@@ -1799,22 +1832,6 @@ function prTableHead() {
     + _prH('Stake', 'h-stake')
     + `<span class="pr-h h-chev"></span>`
     + `</div>`;
-}
-
-// Actionable status: Playable / Lineup pending / No longer playable / Live / Final.
-// Live & Final are NEUTRAL (we don't make live-betting recommendations). The
-// price-moved states light up only once the backend fills the current_* fields.
-function pickStatus(p, gameResult) {
-  if (isGameOver(p)) {
-    const sc = gameResult && gameResult.score ? ' ' + gameResult.score : '';
-    if (gameResult && gameResult.result === 'W') return { cls: 'won', label: 'Won' + sc };
-    if (gameResult && gameResult.result === 'L') return { cls: 'lost', label: 'Lost' + sc };
-    return { cls: 'final', label: 'Final' + sc };
-  }
-  if (isLiveGame(p)) { const sc = gameResult && gameResult.score ? ' ' + gameResult.score : ''; return { cls: 'live', label: 'Live' + sc }; }
-  if (p.current_edge != null && p.current_edge < 0.04) return { cls: 'stale', label: 'No longer playable' };
-  if (p.current_lineup_confirmed === false) return { cls: 'warn', label: 'Lineup pending' };
-  return { cls: 'ok', label: 'Playable' };
 }
 
 // One collapsed analytics row (simple, edge-sorted table).
