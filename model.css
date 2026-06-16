@@ -176,10 +176,15 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
   gap: 8px;
   margin-bottom: 18px;
   padding: 8px 14px;
-  background: rgba(255,255,255,0.02);
+  background: rgba(11,15,26,0.95);
   border: 1px solid rgba(255,255,255,0.05);
   border-radius: 8px;
   flex-wrap: wrap;
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 90;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 .pn-link {
   font-size: 11px;
@@ -238,6 +243,7 @@ body { background: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; fo
 
 /* ── MOBILE ── */
 @media (max-width: 700px) {
+  .page-nav { top: 0; }  /* global nav is position:relative on mobile, so stick to viewport top */
   .fbox { overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: pre; }
   .math-grid { grid-template-columns: 1fr; }
   .imp-grid { grid-template-columns: 1fr; }

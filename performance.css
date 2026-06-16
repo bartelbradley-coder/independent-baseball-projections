@@ -176,6 +176,10 @@
   .hero-val { font-size: 22px; }
 }
 
+/* Backtest stat pills — dashed amber border marks them as hypothetical/out-of-sample
+   (vs. solid-bordered live pills), so they can't be mistaken for 2026 live results */
+.bt-pill { border-style: dashed; border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.04); }
+
 /* Wide data tables scroll horizontally on small screens instead of squishing/clipping */
 @media (max-width: 640px) {
   .compare-table, .edge-table {
