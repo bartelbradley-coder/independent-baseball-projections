@@ -1136,10 +1136,10 @@ details[open] .faq-q::after { content: '−'; }
 
 /* current odds + book + ¢ movement vs the captured line */
 .pr-odds { text-align:right; min-width:0; }
-.pr-odds .pr-o-main { display:inline-flex; align-items:baseline; gap:6px; font-family:var(--font-mono); font-size:12.5px; font-weight:600; color:var(--text); font-variant-numeric:tabular-nums; white-space:nowrap; }
-.pr-odds .pr-o-book { color:var(--text-4); font-weight:400; font-size:10px; }
+.pr-odds .pr-o-main { display:flex; align-items:baseline; justify-content:flex-end; font-family:var(--font-mono); font-size:12.5px; font-weight:600; color:var(--text); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.pr-odds .pr-o-mv { min-width:50px; text-align:left; padding-left:7px; box-sizing:border-box; flex:none; }  /* reserved slot → odds stay aligned whether or not there's a chip */
 .pr-odds .pr-o-na { color:var(--text-4); font-weight:400; }  /* live/final — no actionable price */
-.pr-mv { font-size:10px; }   /* spacing now via .pr-o-main flex gap */
+.pr-mv { font-size:10px; }
 .pr-mv.ahead  { color:#5ea87f; }   /* muted green — we locked a better number than now (CLV+) */
 .pr-mv.behind { color:#cc7a7a; }   /* muted red — better price available now */
 

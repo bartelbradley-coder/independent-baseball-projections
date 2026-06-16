@@ -1613,7 +1613,7 @@ function prRowCollapsed(p, isBest, gameResult) {
   // Live/Final: the captured price (in-play odds aren't a bet you can make).
   let oddsCell;
   if (live || over) {
-    oddsCell = `<span class="pr-o-main pr-o-na">—</span>`;  // no actionable current price
+    oddsCell = `<span class="pr-o-main pr-o-na"><span class="pr-o-val">—</span><span class="pr-o-mv"></span></span>`;  // no actionable current price
   } else {
     const sb = sanitizeBookOdds(p);
     const cur  = sb.best ? sb.best.odds : (p.best_odds != null ? p.best_odds : p.odds);
@@ -1624,7 +1624,7 @@ function prRowCollapsed(p, isBest, gameResult) {
       if (val >= 1)       mv = `<span class="pr-mv ahead" title="You locked ${val}¢ better than the current line — you're ahead (positive CLV)">✓ +${val}¢</span>`;
       else if (val <= -1) mv = `<span class="pr-mv behind" title="A ${Math.abs(val)}¢ better price is available now than we locked">−${Math.abs(val)}¢</span>`;
     }
-    oddsCell = `<span class="pr-o-main">${fmtO(cur)}${mv}</span>`;  // book name shown in the expanded card's Current odds
+    oddsCell = `<span class="pr-o-main"><span class="pr-o-val">${fmtO(cur)}</span><span class="pr-o-mv">${mv}</span></span>`;  // book in the expanded card's Current odds
   }
 
   const ptStr = fmtO(p.playable_to);
