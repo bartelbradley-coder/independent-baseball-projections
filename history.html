@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=18">
+<link rel="stylesheet" href="style.css?v=19">
 <link rel="stylesheet" href="index.css?v=2">
 <link rel="stylesheet" href="history.css?v=1">
 <!-- Google tag (gtag.js) -->
@@ -110,7 +110,7 @@
     <div></div>
     <button class="filter-btn" id="pnl-toggle-btn" onclick="togglePnlMode()" title="Cycle: Flat Units → Kelly Units → Dollar amounts" style="font-size:10px">P&L: Flat</button>
   </div>
-  <div class="summary-row" id="summary-row">
+  <div class="summary-row" id="summary-row" aria-live="polite">
     <div class="loading">Loading…</div>
   </div>
 
@@ -130,13 +130,13 @@
     <div class="sec-lbl">All Settled Picks</div>
 
     <div class="filters" id="filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="W">Wins</button>
-      <button class="filter-btn" data-filter="L">Losses</button>
+      <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+      <button class="filter-btn" data-filter="W" aria-pressed="false">Wins</button>
+      <button class="filter-btn" data-filter="L" aria-pressed="false">Losses</button>
       <div class="filter-sep"></div>
-      <button class="filter-btn" data-filter="strong">8%+ Edge</button>
-      <button class="filter-btn" data-filter="value">5–8% Edge</button>
-      <button class="filter-btn" data-filter="marginal-edge">2–5% Edge</button>
+      <button class="filter-btn" data-filter="strong" aria-pressed="false">8%+ Edge</button>
+      <button class="filter-btn" data-filter="value" aria-pressed="false">5–8% Edge</button>
+      <button class="filter-btn" data-filter="marginal-edge" aria-pressed="false">2–5% Edge</button>
       <div class="filter-sep"></div>
       <select class="month-select" id="side-select" onchange="activeSideFilter=this.value;renderTable(allRows)" title="Filter by side" aria-label="Filter by side">
         <option value="all">All sides</option>
@@ -171,7 +171,7 @@
       <input class="ec-input" type="email" name="email_address" aria-label="Email address" placeholder="your@email.com" required autocomplete="email">
       <button class="ec-btn" type="submit">Get Daily Recap →</button>
     </form>
-    <div class="ec-success" id="ec-success">✓ You're on the list — recap coming your way.</div>
+    <div class="ec-success" id="ec-success" role="status">✓ You're on the list — recap coming your way.</div>
   </section>
 
 </div>
@@ -192,7 +192,7 @@
       <span class="fsm-lbl fsm-active">MLB</span>
     </div>
     <div class="fsm-sep"></div>
-    <span class="fsm-lbl" style="opacity:.55;font-weight:600">More sports coming for 2027</span>
+    <span class="fsm-lbl" style="font-weight:600">More sports coming for 2027</span>
   </div>
   <div class="footer-brand" style="display:none">Independent Baseball Projections · Bet the number, not the noise. · Every pick logged before first pitch.</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
@@ -643,6 +643,7 @@ document.getElementById('filters').addEventListener('click', e => {
   if (!btn) return;
   activeFilter = btn.dataset.filter;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+  document.querySelectorAll('.filter-btn[data-filter]').forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
   renderTable(allRows);
 });
 

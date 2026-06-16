@@ -428,15 +428,28 @@ function sharePickCard(id) {
   }
 
   // Show modal
+  _shareTrigger = document.activeElement;
   modal.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  modal.querySelector('.share-modal-close')?.focus();  // move focus into the dialog
 
-  // Escape key closes modal
+  // Escape closes; Tab is trapped within the dialog
   document.addEventListener('keydown', _shareModalEscHandler);
 }
 
+let _shareTrigger = null;
 function _shareModalEscHandler(e) {
-  if (e.key === 'Escape') closeShareModal();
+  if (e.key === 'Escape') { closeShareModal(); return; }
+  if (e.key === 'Tab') {
+    const modal = document.getElementById('share-modal');
+    if (!modal) return;
+    const focusable = Array.from(modal.querySelectorAll('button, [href], input, [tabindex]:not([tabindex=\"-1\"])'))
+      .filter(el => el.offsetParent !== null);
+    if (!focusable.length) return;
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
 }
 
 function closeShareModal() {
@@ -445,6 +458,7 @@ function closeShareModal() {
   document.body.style.overflow = '';
   document.removeEventListener('keydown', _shareModalEscHandler);
   _shareCardPickId = null;
+  if (_shareTrigger && _shareTrigger.focus) { _shareTrigger.focus(); _shareTrigger = null; }
 }
 
 function closeShareModalOnBackdrop(e) {

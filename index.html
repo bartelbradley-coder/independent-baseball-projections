@@ -60,7 +60,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=18">
+<link rel="stylesheet" href="style.css?v=19">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="index.css?v=2">
 <!-- Google tag (gtag.js) -->
@@ -106,7 +106,7 @@
   </header>
 
   <!-- STATUS STRIP: always-visible daily state indicator -->
-  <div id="status-strip" class="status-strip ss-pending" style="display:none">
+  <div id="status-strip" class="status-strip ss-pending" role="status" aria-live="polite" style="display:none">
     <span class="ss-badge ss-badge-pending">Loading…</span>
     <span class="ss-text"></span>
   </div>
@@ -171,7 +171,7 @@
              placeholder="your@email.com" required autocomplete="email">
       <button class="ec-btn" type="submit">Get Daily Recap →</button>
     </form>
-    <div class="ec-success" id="ec-success">✓ You're on the list — recap coming your way.</div>
+    <div class="ec-success" id="ec-success" role="status">✓ You're on the list — recap coming your way.</div>
   </section>
 
   <!-- MARGINAL PICKS (near-miss) -->
@@ -266,7 +266,7 @@
       <span class="fsm-lbl fsm-active">MLB</span>
     </div>
     <div class="fsm-sep"></div>
-    <span class="fsm-lbl" style="opacity:.55;font-weight:600">More sports coming for 2027</span>
+    <span class="fsm-lbl" style="font-weight:600">More sports coming for 2027</span>
   </div>
   <div class="footer-brand" style="display:none">Independent Baseball Projections · Bet the number, not the noise. · Every pick logged before first pitch.</div>
   <div class="site-disclaimer">For informational and educational purposes only. Not financial advice. Sports betting involves risk — past model performance does not guarantee future results. Always verify odds, starters, lineups, and bet availability before placing a wager. Never bet more than you can afford to lose. Must be of legal gambling age and located in a legal betting jurisdiction. Bet responsibly.</div>
@@ -276,10 +276,10 @@
 </footer>
 
 <!-- ── Share card modal ── -->
-<div id="share-modal" class="share-modal-overlay hidden" onclick="closeShareModalOnBackdrop(event)">
+<div id="share-modal" class="share-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="share-modal-title-el" onclick="closeShareModalOnBackdrop(event)">
   <div class="share-modal-box">
     <div class="share-modal-hdr">
-      <span class="share-modal-title">Share Card Preview</span>
+      <span class="share-modal-title" id="share-modal-title-el">Share Card Preview</span>
       <button class="share-modal-close" onclick="closeShareModal()">✕ Close</button>
     </div>
     <div class="share-modal-preview" id="share-modal-preview">
@@ -293,12 +293,14 @@
   </div>
 </div>
 
-<div id="floating-results" onclick="document.getElementById('picks-anchor')?.scrollIntoView({behavior:'smooth'})">
-  <span class="fr-dot" id="fr-dot"></span>
-  <span id="fr-text">—</span>
+<div id="floating-results" role="button" tabindex="0" aria-label="Jump to today's picks"
+     onclick="document.getElementById('picks-anchor')?.scrollIntoView({behavior:'smooth'})"
+     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('picks-anchor')?.scrollIntoView({behavior:'smooth'});}">
+  <span class="fr-dot" id="fr-dot" aria-hidden="true"></span>
+  <span id="fr-text" aria-live="polite">—</span>
 </div>
 
 <script src="ibp-utils.js?v=1"></script>
-<script src="index.js?v=8"></script>
+<script src="index.js?v=9"></script>
 </body>
 </html>
