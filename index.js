@@ -653,33 +653,7 @@ function _updatePhbHelper() {
 }
 
 /* ── Email capture: POST to Cloudflare Worker proxy → Beehiiv API ── */
-function handleEmailSubmit(e) {
-  e.preventDefault();
-  const form = document.getElementById('ec-form');
-  const success = document.getElementById('ec-success');
-  const btn = form ? form.querySelector('.ec-btn') : null;
-  if (!form || !success) return;
-
-  const email = (form.querySelector('input[type="email"]').value || '').trim();
-  if (!email) return;
-
-  if (btn) { btn.disabled = true; btn.textContent = 'Subscribing…'; }
-
-  fetch('https://ibp-subscribe.ibprojections.workers.dev/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email }),
-  })
-  .then(r => r.json())
-  .then(() => {
-    form.style.display = 'none';
-    success.style.display = 'block';
-  })
-  .catch(() => {
-    if (btn) { btn.disabled = false; btn.textContent = 'Get Daily Recap →'; }
-    alert('Something went wrong — please try again in a moment.');
-  });
-}
+// handleEmailSubmit → ibp-utils.js (shared across pages)
 
 window.addEventListener('DOMContentLoaded', () => {
   // Bankroll input is now in the picks-header-block (rendered by JS after data loads).
@@ -965,7 +939,7 @@ function renderEvidenceSection(data, perf, hist) {
   // before it's priced in" claim once the sample is meaningful (>=100 picks).
   // Below that, lead with the honest hit-rate + a "still building sample" caveat.
   const _clvDesc = clvCount >= 100
-    ? `On average, posted picks have closed better than the release price across the tracked sample — a signal that the model identifies edge before it's fully priced in.${posPct ? ' ' + posPct + ' of ' + clvCount + ' picks beat the close.' : ''} ${trendStr}`
+    ? `On average, posted picks have closed better than the release price across the tracked sample — an early sign the model may be finding edge before the market fully prices it.${posPct ? ' ' + posPct + ' of ' + clvCount + ' picks beat the close.' : ''} ${trendStr}`
     : `${posPct ? posPct + ' of ' + clvCount + ' picks have beaten the close so far' : 'Tracking whether our posted price beats the close'} — still building a sample before drawing conclusions about edge.${trendStr ? ' ' + trendStr : ''}`;
 
   grid.innerHTML = `
@@ -1244,6 +1218,10 @@ function renderEmptyState(data, hist, marginal = []) {
   const nowCT = new Date(new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}));
   const isPre9AM = nowCT.getHours() < 9;
 
+  const onwardCTA = `<div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:16px;font-size:12px">
+        <a href="performance.html" style="color:var(--indigo-lt);text-decoration:none;font-weight:600">📈 See the track record →</a>
+        <a href="#email-capture" onclick="event.preventDefault();document.getElementById('email-capture')?.scrollIntoView({behavior:'smooth'})" style="color:var(--indigo-lt);text-decoration:none;font-weight:600">✉️ Email me when picks post →</a>
+      </div>`;
   const emptyCard = isPre9AM
     ? `<div class="picks-pending-card">
         <div class="ppc-time">🕐</div>
@@ -1253,11 +1231,13 @@ function renderEmptyState(data, hist, marginal = []) {
           Picks are locked before first pitch and tracked to closing line value.
         </div>
         <a class="ppc-preview-link" href="preview.html">🔭 View tomorrow's opening line estimates →</a>
+        ${onwardCTA}
       </div>`
     : `<div class="state-card empty-state">
         <div class="state-icon">📊</div>
         <div class="state-title">No picks clear the edge threshold today.</div>
         <div class="state-sub">The model found no bets with sufficient edge vs. Pinnacle no-vig lines.</div>
+        ${onwardCTA}
       </div>`;
 
   document.getElementById('picks-container').innerHTML = `

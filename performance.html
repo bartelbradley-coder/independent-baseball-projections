@@ -383,6 +383,16 @@
     </div>
   </div><!-- end backtest collapsible -->
 
+  <!-- EMAIL CAPTURE -->
+  <section class="email-bar" id="email-capture">
+    <div class="eb-copy"><strong>Get the daily pick recap by email</strong> — free while we build the 2026 track record (it won't be free forever). One email a day, only on days with picks.</div>
+    <form class="ec-form eb-form" id="ec-form" onsubmit="handleEmailSubmit(event)">
+      <input class="ec-input" type="email" name="email_address" aria-label="Email address" placeholder="your@email.com" required autocomplete="email">
+      <button class="ec-btn" type="submit">Get Daily Recap →</button>
+    </form>
+    <div class="ec-success" id="ec-success">✓ You're on the list — recap coming your way.</div>
+  </section>
+
 </div>
 
 <footer>
@@ -410,7 +420,7 @@
   <div class="footer-byline">Built &amp; run by BB · an independent one-person project</div>
 </footer>
 
-<script src="ibp-utils.js"></script>
+<script src="ibp-utils.js?v=1"></script>
 <script>
 // pct, formatOdds, fetchESPNScores, computeTodaySettled,
 // extendPnlCurve, applyTodayToPerf, _showDebugBanner → ibp-utils.js

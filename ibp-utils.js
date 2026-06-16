@@ -175,3 +175,26 @@ window.addEventListener('unhandledrejection', e => _showDebugBanner(e.reason));
 window.addEventListener('error', e => _showDebugBanner(
   e.message + ' — ' + e.filename + ':' + e.lineno
 ));
+
+// ── Email capture (daily-recap signup) — shared across all pages with an .email-bar ──
+function handleEmailSubmit(e) {
+  e.preventDefault();
+  const form = document.getElementById('ec-form');
+  const success = document.getElementById('ec-success');
+  const btn = form ? form.querySelector('.ec-btn') : null;
+  if (!form || !success) return;
+  const email = (form.querySelector('input[type="email"]').value || '').trim();
+  if (!email) return;
+  if (btn) { btn.disabled = true; btn.textContent = 'Subscribing…'; }
+  fetch('https://ibp-subscribe.ibprojections.workers.dev/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  })
+  .then(r => r.json())
+  .then(() => { form.style.display = 'none'; success.style.display = 'block'; })
+  .catch(() => {
+    if (btn) { btn.disabled = false; btn.textContent = 'Get Daily Recap →'; }
+    alert('Something went wrong — please try again in a moment.');
+  });
+}
