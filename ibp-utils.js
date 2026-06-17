@@ -40,6 +40,7 @@ async function fetchESPNScores() {
     );
     const json = await r.json();
     const result = {};
+    Object.defineProperty(result, '__dh', { value: {}, enumerable: false });  // matchup → [entries]; non-enumerable so it never leaks into key lookups
     for (const ev of (json.events || [])) {
       const comp = (ev.competitions || [])[0];
       if (!comp) continue;
@@ -65,13 +66,37 @@ async function fetchESPNScores() {
                sn.includes('DELAY')       ||           // STATUS_DELAYED / STATUS_RAIN_DELAY
                sn === 'STATUS_SUSPENDED')              status = 'live';
       else                                             status = 'scheduled';
-      result[`${away} @ ${home}`] = { status, awayScore, homeScore, detail };
+      const key   = `${away} @ ${home}`;
+      const start = Date.parse(ev.date || comp.date || '') || null;   // first-pitch (UTC), for DH disambiguation
+      const entry = { status, awayScore, homeScore, detail, start };
+      // Doubleheaders return the same matchup twice. Keep ALL of them under __dh so
+      // a pick can be matched to the right game by start time; result[key] keeps the
+      // last one for back-compat callers that look up by matchup string alone.
+      (result.__dh[key] = result.__dh[key] || []).push(entry);
+      result[key] = entry;
     }
     _espnScoresCache = result;
     return result;
   } catch(e) {
     return _espnScoresCache; // return last known scores on network failure
   }
+}
+
+// Resolve the ESPN entry for a pick, disambiguating doubleheaders by start time.
+// Most matchups have one game → plain lookup. When ESPN returned two games for the
+// same matchup (a DH), pick the one whose first pitch is closest to the pick's
+// game_time so a game-1 pick never settles against game-2's score.
+function resolveScore(p, scores) {
+  if (!scores || !p) return null;
+  const dh = scores.__dh && scores.__dh[p.game];
+  if (dh && dh.length > 1 && p.game_time) {
+    const t = Date.parse(p.game_time);
+    if (!isNaN(t)) {
+      return dh.slice().sort((a, b) =>
+        Math.abs((a.start || 0) - t) - Math.abs((b.start || 0) - t))[0];
+    }
+  }
+  return scores[p.game] || null;
 }
 
 // ── Today's live data merge ───────────────────────────────────────────────────
@@ -84,7 +109,7 @@ async function fetchESPNScores() {
 function computeTodaySettled(picks, scores, todayDateStr) {
   return picks.map(p => {
     try {
-      const g = scores[p.game];
+      const g = resolveScore(p, scores);
       if (!g || g.status !== 'final') return null;
       const side = (p.side || '').toUpperCase();
       const pickWon = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;

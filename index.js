@@ -14,6 +14,7 @@ let _histRef  = null; // history data reference for tracker result lookup
 let _mainPicksRef = []; // today's main picks for share-all
 let _scoresRef = {};    // latest ESPN scores, for settled result share cards
 let _lastGameStatus = {};   // per-game ESPN status last seen — detects live/final transitions
+const _warnedNoMatch = new Set();   // games already warned about (no ESPN match) — avoids console spam
 let _perfRef = null;    // performance.json (edge tiers) for share-card credibility
 let _mdActiveId = null; // card whose details are currently expanded inline
 let _histContextFn = null;      // set in render() — returns hist-context HTML for a pick
@@ -443,7 +444,8 @@ function refreshKellyUSD() {
 // delayed games that look pregame-bettable. Falls back to the clock only when ESPN
 // has no entry for the game.
 function _espnStatus(p) {
-  const g = (typeof _scoresRef !== 'undefined' && _scoresRef) ? _scoresRef[p.game] : null;
+  const sr = (typeof _scoresRef !== 'undefined') ? _scoresRef : null;
+  const g = (typeof resolveScore === 'function') ? resolveScore(p, sr) : (sr ? sr[p.game] : null);
   return g && g.status ? g.status : null;
 }
 
@@ -1298,7 +1300,7 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   let pill, pCls, detail;
   if (postponed) { pill = 'Postponed'; pCls = 'neu'; detail = 'game postponed — no action'; }
   else if (over) { const r = gameResult && gameResult.result; pill = 'Final'; pCls = r === 'W' ? 'good' : r === 'L' ? 'bad' : 'neu'; detail = (r === 'W' ? 'Won' : r === 'L' ? 'Lost' : 'Settled') + scoreStr; }
-  else if (live) { pill = 'Live'; pCls = 'neu'; const inn = (gameResult && gameResult.detail) ? gameResult.detail : 'in-play'; detail = inn + scoreStr + ' — odds have moved off this pick'; }
+  else if (live) { pill = 'Live'; const _lead = gameResult && gameResult.lead; pCls = _lead === 'ahead' ? 'good' : _lead === 'behind' ? 'bad' : 'neu'; const inn = (gameResult && gameResult.detail) ? gameResult.detail : 'in-play'; detail = inn + scoreStr + ' — odds have moved off this pick'; }
   else if ((p.edge || 0) < 0.04) { pill = 'Below threshold'; pCls = 'neu'; detail = 'model edge is under our 4% cutoff — not a recommended bet'; }
   else if (!prActionable(p)) { pill = 'No longer playable'; pCls = 'bad'; detail = 'current ' + curStr + ' is past Play to ' + ptStr; }
   else if (p.current_lineup_confirmed === false) { pill = 'Playable'; pCls = 'neu'; detail = 'lineup not yet confirmed — re-check before betting'; }
@@ -2112,15 +2114,13 @@ function render(data, hist, scores = {}, perf = null) {
     let _stateInline = '';
     let _atNote = 'Odds &amp; starters captured at model run time — re-check current prices and lineups before betting.';
     if (liveGroup.length > 0 || completedGroup.length > 0) {
-      let fw = 0, fl = 0;
-      completedGroup.forEach(p => {
-        const g = scores[p.game];
-        if (!g || g.status !== 'final' || g.awayScore == null) return;
-        const won = (p.side || '').toUpperCase() === 'AWAY'
-          ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
-        won ? fw++ : fl++;
-      });
-      const rec = (fw + fl) ? ` · ${fw}–${fl}` : '';
+      const _settledMain = (typeof computeTodaySettled === 'function')
+        ? computeTodaySettled(completedGroup, scores, data.date || '') : [];
+      const fw = _settledMain.filter(r => r.result === 'W').length;
+      const fl = _settledMain.filter(r => r.result === 'L').length;
+      const fu = _settledMain.reduce((s, r) => s + (r.pnl_u || 0), 0);
+      // Record + running flat-stake units as games go final.
+      const rec = (fw + fl) ? ` · ${fw}–${fl} · ${fu >= 0 ? '+' : ''}${fu.toFixed(1)}u` : '';
       if (allDone) {
         _stateInline = `<span class="pss-up">Today's results</span><span class="pss-sep">·</span>`
           + `<span class="pss-final">${completedGroup.length} game${completedGroup.length !== 1 ? 's' : ''}${rec}</span>`;
@@ -2240,6 +2240,7 @@ function isLiveHour() {
   return false;
 }
 
+let _scorePollStarted = false;
 function startAutoRefresh() {
   _nextRefreshAt = Date.now() + REFRESH_MS;
   setTimeout(async () => {
@@ -2248,13 +2249,33 @@ function startAutoRefresh() {
   }, REFRESH_MS);
   updateRefreshUI();
 
-  // Lightweight score badge refresh every 5 minutes during live hours
-  setInterval(async () => {
-    if (!isLiveHour()) return;
-    const scores = await fetchESPNScores();
-    _scoresRef = scores;   // keep fresh so a state-change re-render uses latest scores
-    refreshScoreBadges(scores);
-  }, 5 * 60 * 1000);
+  // Start the score-badge poll exactly once (startAutoRefresh recurses every 30 min;
+  // a fresh setInterval here would accumulate overlapping pollers).
+  if (!_scorePollStarted) { _scorePollStarted = true; scheduleScorePoll(); }
+}
+
+// Score-badge poll cadence adapts to game state: ~75s while any game is in progress
+// (so a completion shows within ~1 min), 5 min otherwise. Self-scheduling so the gap
+// is recomputed from the freshest scores after every fetch.
+const _SCORE_POLL_LIVE_MS = 75 * 1000;
+const _SCORE_POLL_IDLE_MS = 5 * 60 * 1000;
+function _anyGameLive() {
+  return Object.values(picksMap).some(p => {
+    const g = (typeof resolveScore === 'function') ? resolveScore(p, _scoresRef)
+            : (_scoresRef ? _scoresRef[p.game] : null);
+    return g && g.status === 'live';
+  });
+}
+function scheduleScorePoll() {
+  const gap = _anyGameLive() ? _SCORE_POLL_LIVE_MS : _SCORE_POLL_IDLE_MS;
+  setTimeout(async () => {
+    if (isLiveHour()) {
+      const scores = await fetchESPNScores();
+      _scoresRef = scores;   // keep fresh so a state-change re-render uses latest scores
+      refreshScoreBadges(scores);
+    }
+    scheduleScorePoll();
+  }, gap);
 }
 
 function updateRefreshUI() {
@@ -2271,16 +2292,19 @@ function updateRefreshUI() {
 
 // ESPN_ABBR_MAP, _espnScoresCache, fetchESPNScores → ibp-utils.js
 
-// Returns { status, result:'W'|'L', score:'5–3' } or null
+// Returns { status, result:'W'|'L', score:'5–3', lead:'ahead'|'behind'|'tied' } or null
 function getPickResult(p, scores) {
-  const g = scores[p.game];
+  const g = (typeof resolveScore === 'function') ? resolveScore(p, scores) : (scores ? scores[p.game] : null);
   if (!g) return null;
   const side = (p.side || '').toUpperCase();
   // Pick-oriented score: our pick's team first, opponent second.
   const ps = side === 'AWAY' ? g.awayScore : g.homeScore;
   const os = side === 'AWAY' ? g.homeScore : g.awayScore;
   const score = (ps != null && os != null) ? `${ps}–${os}` : null;
-  if (g.status === 'live')      return { status: 'live', score, detail: g.detail || '' };
+  if (g.status === 'live') {
+    const lead = (ps != null && os != null) ? (ps > os ? 'ahead' : ps < os ? 'behind' : 'tied') : null;
+    return { status: 'live', score, detail: g.detail || '', lead };
+  }
   if (g.status === 'postponed') return { status: 'postponed' };
   if (g.status === 'scheduled') return { status: 'scheduled' };
   // final
@@ -2328,8 +2352,18 @@ function refreshScoreBadges(scores) {
   let transition = false;
   for (const p of Object.values(picksMap)) {
     const gr = getPickResult(p, scores);
-    const st = gr ? gr.status : null;
-    if (!st) continue;
+    if (!gr) {
+      // ESPN lists every game for the date (incl. scheduled), so no match means a
+      // team-abbr mapping gap or an unresolved doubleheader — the pick would never
+      // show live/final state. Surface it once for the dev.
+      if (!_warnedNoMatch.has(p.game)) {
+        _warnedNoMatch.add(p.game);
+        console.warn('[IBP] No ESPN scoreboard match for posted pick "' + p.game +
+          '" — check ESPN_ABBR_MAP or a doubleheader; this pick will not show live/final state.');
+      }
+      continue;
+    }
+    const st = gr.status;
     const prev = _lastGameStatus[p.game];
     if (prev !== undefined && prev !== st) transition = true;   // a real change, not first sighting
     _lastGameStatus[p.game] = st;
@@ -2362,7 +2396,8 @@ function refreshScoreBadges(scores) {
         // Surface the inning (and score) ESPN already gives us — e.g. "● LIVE · Top 9th · 4–6".
         const bits = [gr.detail, gr.score].filter(Boolean);
         badge.textContent = '● LIVE' + (bits.length ? ' · ' + bits.join(' · ') : '');
-        badge.className = 'live-badge';
+        // Color from the pick's perspective: ahead = green, behind = red, tied = neutral.
+        badge.className = 'live-badge' + (gr.lead ? ' live-' + gr.lead : '');
         badge.style.display = '';
       } else if (gr.status === 'postponed') {
         badge.textContent = 'PPD';
@@ -2393,8 +2428,19 @@ function _updateTodayTally(scores) {
   const losses = done.filter(r => r.result === 'L').length;
   if (done.length === 0) { tally.style.display = 'none'; return; }
   tally.style.display = '';
-  tally.querySelector('.tc-val').textContent = `${wins}W–${losses}L`;
-  const pending = picks.length - done.length;
+  // Running flat-stake units for today's finals (same basis as the table's flat mode).
+  let unitsHTML = '';
+  try {
+    const date = (_todayDataRef && _todayDataRef.date) || '';
+    const settled = (typeof computeTodaySettled === 'function') ? computeTodaySettled(picks, scores, date) : [];
+    if (settled.length) {
+      const u = settled.reduce((s, r) => s + (r.pnl_u || 0), 0);
+      unitsHTML = ` · <span style="color:${u >= 0 ? 'var(--green)' : 'var(--red)'}">${u >= 0 ? '+' : ''}${u.toFixed(1)}u</span>`;
+    }
+  } catch (e) {}
+  tally.querySelector('.tc-val').innerHTML = `${wins}W–${losses}L${unitsHTML}`;
+  const ppd = results.filter(r => r.status === 'postponed').length;
+  const pending = picks.length - done.length - ppd;
   tally.querySelector('.tc-lbl').textContent =
     `Today · ${pending > 0 ? pending + ' pending' : 'all done'}`;
 }
