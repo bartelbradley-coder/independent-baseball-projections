@@ -32,6 +32,10 @@
 .filter-btn.active { background: rgba(99,102,241,0.15); border-color: rgba(99,102,241,0.35); color: var(--indigo-lt); }
 .filter-sep { width: 1px; height: 20px; background: var(--border); }
 
+/* Desktop: clip the table to the card's rounded corners (was an inline style; moved
+   here so the mobile media query can override it to overflow:visible). */
+#table-wrap { overflow: hidden; }
+
 /* Sort headers */
 .picks-table th { cursor: pointer; user-select: none; }
 .picks-table th:hover { color: var(--text-3); }
@@ -162,10 +166,10 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
   .summary-row .stat-val { font-size: 17px; white-space: nowrap; }
 
   /* settled-picks table → stacked per-pick cards (no horizontal scroll) */
-  #table-wrap { background: transparent; border: none; }   /* the per-pick cards are the boxes */
-  .picks-table, .picks-table tbody, .picks-table tfoot { display: block; }   /* tfoot too — otherwise it stays a table-footer-group and forces a width overflow that clips every card */
+  #table-wrap { background: transparent; border: none; overflow: visible; }   /* the per-pick cards are the boxes; never clip them */
+  .picks-table, .picks-table tbody { display: block; }
+  .picks-table thead, .picks-table tfoot { display: none; }   /* mobile: hide the table totals row — the live-totals bar above already covers it (a table-footer-group here forces a width overflow that clips the cards) */
   .tsb-divider { display: none; }   /* vertical dividers look broken once the bar wraps on mobile */
-  .picks-table thead { display: none; }
   .picks-table tr { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; padding: 9px 12px; margin-bottom: 7px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card); }
   .picks-table tr:last-child { margin-bottom: 0; }
   .picks-table tr.row-strong { border-color: rgba(245,158,11,.25); background: rgba(245,158,11,.03); }
