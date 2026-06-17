@@ -163,7 +163,8 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
 
   /* settled-picks table → stacked per-pick cards (no horizontal scroll) */
   #table-wrap { background: transparent; border: none; }   /* the per-pick cards are the boxes */
-  .picks-table, .picks-table tbody { display: block; }
+  .picks-table, .picks-table tbody, .picks-table tfoot { display: block; }   /* tfoot too — otherwise it stays a table-footer-group and forces a width overflow that clips every card */
+  .tsb-divider { display: none; }   /* vertical dividers look broken once the bar wraps on mobile */
   .picks-table thead { display: none; }
   .picks-table tr { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; padding: 9px 12px; margin-bottom: 7px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card); }
   .picks-table tr:last-child { margin-bottom: 0; }
