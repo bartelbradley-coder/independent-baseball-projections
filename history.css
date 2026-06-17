@@ -176,3 +176,10 @@ tr.row-value  td { background: rgba(20,184,166,0.03); }
   .picks-table td[data-label="Pick"] { order: -1; grid-column: 1 / -1; border-bottom: 1px solid var(--border) !important; padding-bottom: 6px !important; margin-bottom: 1px; font-family: var(--font-display); font-size: 14px; font-weight: 700; }
   .picks-table td[data-label="Pick"]::before { display: none; }
 }
+
+/* P2/P3: recent-form rolling strip + table totals row */
+.rolling-strip { margin: 0 0 24px; }
+.rolling-lbl { font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text-4); margin: 0 0 8px; }
+.rolling-note { font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--text-4); opacity: .75; margin-left: 6px; }
+.rolling-strip .summary-row { margin-bottom: 0; }
+.picks-table tfoot .totals-row td { font-weight: 700; border-top: 2px solid var(--border); background: rgba(255,255,255,.025); color: var(--text-2); }

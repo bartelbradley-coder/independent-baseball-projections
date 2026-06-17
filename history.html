@@ -114,6 +114,9 @@
     <div class="loading">Loading…</div>
   </div>
 
+  <!-- P2: recent-form rolling windows (Last 7d / Last 30d vs season above) -->
+  <div id="rolling-strip" class="rolling-strip" aria-live="polite"></div>
+
   <!-- Streak + Breakdown stats (#4) — collapsible, collapsed by default -->
   <div class="section" id="breakdown-section" style="display:none">
     <div class="collapsible-header" id="streak-toggle" role="button" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleStreakSplits()">
@@ -137,6 +140,11 @@
       <button class="filter-btn" data-filter="strong" aria-pressed="false">8%+ Edge</button>
       <button class="filter-btn" data-filter="value" aria-pressed="false">5–8% Edge</button>
       <button class="filter-btn" data-filter="marginal-edge" aria-pressed="false">2–5% Edge</button>
+      <div class="filter-sep"></div>
+      <button class="filter-btn win-btn active" data-window="all" aria-pressed="true" title="All settled picks">All time</button>
+      <button class="filter-btn win-btn" data-window="7"  aria-pressed="false" title="Picks from the last 7 days">Last 7d</button>
+      <button class="filter-btn win-btn" data-window="14" aria-pressed="false" title="Picks from the last 14 days">Last 14d</button>
+      <button class="filter-btn win-btn" data-window="30" aria-pressed="false" title="Picks from the last 30 days">Last 30d</button>
       <div class="filter-sep"></div>
       <select class="month-select" id="side-select" onchange="activeSideFilter=this.value;renderTable(allRows)" title="Filter by side" aria-label="Filter by side">
         <option value="all">All sides</option>
@@ -211,6 +219,17 @@ let activeMonth = 'all';
 let activeSearch = '';
 let activeThreshold = 0;   // minimum edge (0 = no filter)
 let activeSideFilter = 'all';  // 'all' | 'dog' | 'fav' | 'home' | 'away'
+let activeWindow = 'all';  // 'all' | '7' | '14' | '30' — calendar-day recency window
+
+// ── Recency window helpers (calendar days, CT) ────────────────────────────────
+function _ctTodayStr() { return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' }); }
+function _windowCutoff(days) {
+  // YYYY-MM-DD for (today − (days−1)), inclusive of today. UTC date math on the
+  // date-only string avoids timezone drift; compared lexically against row.date.
+  const d = new Date(_ctTodayStr() + 'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() - (days - 1));
+  return d.toISOString().slice(0, 10);
+}
 let pnlMode = 'units';     // 'units' | 'kelly' | 'dollars'
 // Use ibp_bankroll (set on the Picks page). Legacy migration: if the old
 // ibp_unit_size key exists, convert it (unit_size × 10 = bankroll).
@@ -284,6 +303,7 @@ async function loadAll() {
     }
 
     renderSummary(allRows);
+    renderRollingStrip(allRows);
     renderBreakdowns(allRows);
     // Edge tiers, Kelly ROI, Monthly ROI, CLV, P&L curve, calibration, team/pitcher stats → Model Dashboard (performance.html)
     injectMonthFilter(allRows);
@@ -334,17 +354,37 @@ function renderSummary(rows) {
   `;
 }
 
-function renderThresholdSummary(rows) {
+// P1: live totals for the current filter set (window + result + edge + side + search).
+// Shown whenever any filter narrows the view; reflects exactly what's in the table.
+function _filterLabel() {
+  const lab = [];
+  if (activeWindow !== 'all') lab.push('Last ' + activeWindow + ' days');
+  if (activeMonth !== 'all') { const [y, m] = activeMonth.split('-'); lab.push(new Date(y, +m - 1, 1).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })); }
+  if (activeFilter === 'W') lab.push('Wins'); else if (activeFilter === 'L') lab.push('Losses');
+  else if (activeFilter === 'strong') lab.push('8%+ edge'); else if (activeFilter === 'value') lab.push('5–8% edge'); else if (activeFilter === 'marginal-edge') lab.push('2–5% edge');
+  if (activeSideFilter !== 'all') lab.push(({ dog: 'Dogs', fav: 'Favs', home: 'Home', away: 'Away' })[activeSideFilter] || activeSideFilter);
+  if (activeThreshold > 0) lab.push('≥' + (activeThreshold * 100).toFixed(activeThreshold % 0.01 < 0.001 ? 0 : 1) + '% edge');
+  if (activeSearch) lab.push('“' + activeSearch + '”');
+  return lab.join(' · ') || 'Filtered';
+}
+function resetFilters() {
+  activeWindow = 'all'; activeFilter = 'all'; activeMonth = 'all'; activeSideFilter = 'all'; activeThreshold = 0; activeSearch = '';
+  const ti = document.getElementById('threshold-input'); if (ti) ti.value = 0;
+  const si = document.getElementById('search-input');   if (si) si.value = '';
+  const ss = document.getElementById('side-select');     if (ss) ss.value = 'all';
+  const ms = document.getElementById('month-select');     if (ms) ms.value = 'all';
+  document.querySelectorAll('.filter-btn[data-filter]').forEach(b => { const on = b.dataset.filter === 'all'; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+  document.querySelectorAll('.win-btn').forEach(b => { const on = b.dataset.window === 'all'; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+  renderTable(allRows);
+}
+function renderLiveTotals(rows) {
   const bar = document.getElementById('threshold-summary-bar');
   if (!bar) return;
-  if (activeThreshold <= 0) { bar.style.display = 'none'; return; }
+  const anyFilter = activeWindow !== 'all' || activeFilter !== 'all' || activeMonth !== 'all'
+    || activeSideFilter !== 'all' || activeThreshold > 0 || !!activeSearch;
+  if (!anyFilter) { bar.style.display = 'none'; return; }
 
-  const settled = rows.filter(x => x.result === 'W' || x.result === 'L');
-  const all     = settled.length;
-  const shown   = settled.filter(x => (parseFloat(x.edge) || 0) >= activeThreshold).length;
-  const dropped = all - shown;
-
-  // Stats for the threshold subset
+  // Stats for the current filter set (getFilteredSorted applies window/edge/side/search)
   const sub  = getFilteredSorted(rows).filter(x => x.result === 'W' || x.result === 'L');
   const wins = sub.filter(x => x.result === 'W').length;
   const pnl  = sub.reduce((s, x) => s + (parseFloat(x.pnl_u || x.pnl) || 0), 0);
@@ -359,7 +399,7 @@ function renderThresholdSummary(rows) {
 
   bar.style.display = 'flex';
   bar.innerHTML = `
-    <span class="tsb-label">≥ ${(activeThreshold*100).toFixed(activeThreshold % 0.01 < 0.001 ? 0 : 1)}% edge</span>
+    <span class="tsb-label">${_filterLabel()}</span>
     <div class="tsb-stat"><div class="tsb-val white">${wins}–${sub.length-wins}</div><div class="tsb-sub">Record</div></div>
     <div class="tsb-divider"></div>
     <div class="tsb-stat"><div class="tsb-val white">${(wr*100).toFixed(1)}%</div><div class="tsb-sub">Win rate</div></div>
@@ -369,8 +409,34 @@ function renderThresholdSummary(rows) {
     <div class="tsb-stat"><div class="tsb-val" style="color:${roiCol}">${pnl>=0?'+':''}${pnl.toFixed(1)}u</div><div class="tsb-sub">Total P&L</div></div>
     ${avgClv != null ? `<div class="tsb-divider"></div>
     <div class="tsb-stat"><div class="tsb-val" style="color:${clvCol}">${pct(avgClv)}</div><div class="tsb-sub">Avg CLV</div></div>` : ''}
-    <span style="font-size:10px;color:var(--text-4);margin-left:4px">${shown} picks shown · ${dropped} below threshold hidden</span>
-    <span class="tsb-reset" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="document.getElementById('threshold-input').value=0;activeThreshold=0;renderThresholdSummary(allRows);renderTable(allRows);">Reset</span>`;
+    <span style="font-size:10px;color:var(--text-4);margin-left:4px">${sub.length} settled${sub.length > 0 && sub.length < 10 ? ' · small sample' : ''}</span>
+    <span class="tsb-reset" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="resetFilters()">Reset</span>`;
+}
+
+// P2: recent-form strip — Last 7d / 14d / 30d (settled only), shown above the table.
+function renderRollingStrip(rows) {
+  const el = document.getElementById('rolling-strip');
+  if (!el) return;
+  function stats(days) {
+    const cut = _windowCutoff(days);
+    const sub = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.date && String(r.date) >= cut);
+    const w = sub.filter(r => r.result === 'W').length, n = sub.length;
+    const pnl = sub.reduce((s, r) => s + (parseFloat(r.pnl_u) || 0), 0);
+    const roi = n ? pnl / n : 0;
+    const clvs = sub.filter(r => r.clv != null).map(r => parseFloat(r.clv));
+    const clv = clvs.length ? clvs.reduce((a, b) => a + b, 0) / clvs.length : null;
+    return { w, l: n - w, n, pnl, roi, clv };
+  }
+  function card(label, s) {
+    if (s.n === 0) return `<div class="stat-pill"><div class="stat-lbl">${label}</div><div class="stat-val white">—</div><div class="stat-sub">no settled picks</div></div>`;
+    const cls = s.pnl >= 0 ? 'green' : 'red';
+    const clvStr = s.clv != null ? ` · CLV ${s.clv >= 0 ? '+' : ''}${(s.clv * 100).toFixed(1)}%` : '';
+    return `<div class="stat-pill"><div class="stat-lbl">${label}</div><div class="stat-val white">${s.w}–${s.l}</div>
+      <div class="stat-sub" style="color:var(--${cls})">${s.pnl >= 0 ? '+' : ''}${s.pnl.toFixed(1)}u · ${(s.roi * 100).toFixed(1)}% ROI${clvStr}</div></div>`;
+  }
+  if (rows.filter(r => r.result === 'W' || r.result === 'L').length === 0) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="rolling-lbl">Recent form <span class="rolling-note">small windows are noisy — weigh CLV alongside ROI</span></div>
+    <div class="summary-row">${card('Last 7 days', stats(7))}${card('Last 14 days', stats(14))}${card('Last 30 days', stats(30))}</div>`;
 }
 
 function getFilteredSorted(rows) {
@@ -388,6 +454,10 @@ function getFilteredSorted(rows) {
   else if (activeSideFilter === 'home') r = r.filter(x => x.side && x.side.toUpperCase() === 'HOME');
   else if (activeSideFilter === 'away') r = r.filter(x => x.side && x.side.toUpperCase() === 'AWAY');
   if (activeMonth !== 'all') r = r.filter(x => x.date && x.date.slice(0,7) === activeMonth);
+  if (activeWindow !== 'all') {
+    const _cut = _windowCutoff(parseInt(activeWindow));
+    r = r.filter(x => x.date && String(x.date) >= _cut);
+  }
   if (activeSearch) {
     const q = activeSearch.toLowerCase();
     r = r.filter(x =>
@@ -474,10 +544,32 @@ function renderTable(rows) {
     </tr>`;
   }).join('');
 
+  // P3: totals row over the currently visible (filtered) rows
+  const _fS   = filtered.filter(r => r.result === 'W' || r.result === 'L');
+  const _fw   = _fS.filter(r => r.result === 'W').length;
+  const _fpnl = _fS.reduce((s, r) => s + (pnlMode === 'kelly' ? (r.kelly_units || 1) : 1) * (parseFloat(r.pnl_u) || 0), 0);
+  const _fe   = filtered.filter(r => r.edge != null).map(r => parseFloat(r.edge));
+  const _fae  = _fe.length ? _fe.reduce((a, b) => a + b, 0) / _fe.length : null;
+  const _fc   = filtered.filter(r => r.clv != null).map(r => parseFloat(r.clv));
+  const _fac  = _fc.length ? _fc.reduce((a, b) => a + b, 0) / _fc.length : null;
+  const tfootHTML = `<tfoot><tr class="totals-row">
+      <td data-label="">Totals</td>
+      <td class="hide-sm"></td>
+      <td data-label="Shown">${filtered.length} picks</td>
+      <td></td>
+      <td class="hide-sm"></td>
+      <td data-label="Avg edge" style="color:var(--amber)">${_fae != null ? '+' + (_fae * 100).toFixed(1) + 'pp' : '—'}</td>
+      <td class="hide-sm"></td>
+      <td data-label="Record">${_fw}–${_fS.length - _fw}</td>
+      <td data-label="Avg CLV" class="${_fac == null ? 'clv-neu' : _fac >= 0 ? 'clv-pos' : 'clv-neg'}">${_fac != null ? pct(_fac) : '—'}</td>
+      <td data-label="Total P&amp;L" class="${_fpnl >= 0 ? 'pnl-pos' : 'pnl-neg'}">${_fmtPnl(_fpnl)}</td>
+    </tr></tfoot>`;
+
   document.getElementById('table-wrap').innerHTML = `
     <table class="picks-table">
       <thead><tr>${thHTML}</tr></thead>
       <tbody>${trHTML}</tbody>
+      ${tfootHTML}
     </table>`;
 
   document.querySelectorAll('#table-wrap .picks-table th').forEach(th => {
@@ -490,6 +582,8 @@ function renderTable(rows) {
     th.addEventListener('click', doSort);
     th.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doSort(); } });
   });
+
+  renderLiveTotals(allRows);   // P1: keep the live-totals bar in sync with the table
 }
 
 // ── Streak + Breakdowns ───────────────────────────────────────────────────────
@@ -639,11 +733,18 @@ function injectMonthFilter(rows) {
 
 // ── Filter buttons ────────────────────────────────────────────────────────────
 document.getElementById('filters').addEventListener('click', e => {
-  const btn = e.target.closest('.filter-btn');
+  // Recency window buttons — independent toggle group from the result/edge filters
+  const wbtn = e.target.closest('.win-btn');
+  if (wbtn) {
+    activeWindow = wbtn.dataset.window;
+    document.querySelectorAll('.win-btn').forEach(b => { const on = b === wbtn; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    renderTable(allRows);
+    return;
+  }
+  const btn = e.target.closest('.filter-btn[data-filter]');
   if (!btn) return;
   activeFilter = btn.dataset.filter;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
-  document.querySelectorAll('.filter-btn[data-filter]').forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+  document.querySelectorAll('.filter-btn[data-filter]').forEach(b => { const on = b === btn; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
   renderTable(allRows);
 });
 
@@ -696,7 +797,7 @@ document.getElementById('threshold-input').addEventListener('input', e => {
   const v = parseFloat(e.target.value);
   activeThreshold = (!isNaN(v) && v > 0) ? v / 100 : 0;
   renderTable(allRows);
-  renderThresholdSummary(allRows);
+  renderLiveTotals(allRows);
 });
 document.getElementById('threshold-input').addEventListener('change', e => {
   // Clamp to valid range on blur/change
@@ -705,7 +806,7 @@ document.getElementById('threshold-input').addEventListener('change', e => {
     e.target.value = Math.max(0, Math.min(20, v));
     activeThreshold = e.target.value > 0 ? parseFloat(e.target.value) / 100 : 0;
     renderTable(allRows);
-    renderThresholdSummary(allRows);
+    renderLiveTotals(allRows);
   }
 });
 
