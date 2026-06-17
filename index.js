@@ -1661,9 +1661,64 @@ function prTableHead() {
     + `</div>`;
 }
 
+// ── Live/final state for the collapsed row ────────────────────────────────────
+// Once a game starts we surface a pick-oriented score chip in the empty space at
+// the right of the matchup column (the odds column keeps showing odds). The score
+// is already pick-first (getPickResult), so prefixing the pick's abbr → "LAA 1–0"
+// reads unambiguously: the number next to LAA is always LAA's, colour shows whether
+// the pick is ahead. The inning / Final label lives in the matchup subline.
+//   gr = getPickResult(p, scores) — may be null when ESPN has no match for the game.
+function prStateCellText(p, gr) {
+  if (!gr) return '';
+  const pickAbbr = (p.pick || '').toUpperCase();
+  const sc = gr.score ? pickAbbr + ' ' + gr.score : pickAbbr;
+  if (gr.status === 'live')      return sc;
+  if (gr.status === 'final')     return (gr.result === 'W' ? '✓ ' : gr.result === 'L' ? '✗ ' : '') + sc;
+  if (gr.status === 'postponed') return 'PPD';
+  return '';
+}
+function prStateMod(gr) {
+  if (!gr) return '';
+  if (gr.status === 'live')       return gr.lead === 'ahead' ? 'sc-ahead' : gr.lead === 'behind' ? 'sc-behind' : 'sc-tied';
+  if (gr.status === 'final')      return gr.result === 'W' ? 'sc-win' : gr.result === 'L' ? 'sc-loss' : 'sc-tied';
+  if (gr.status === 'postponed')  return 'sc-ppd';
+  return '';
+}
+// The live/final score chip, placed at the right edge of the matchup column.
+function prStateChipHTML(p, gr) {
+  if (!gr || (gr.status !== 'live' && gr.status !== 'final')) return '';
+  const _sa = prStateCellAria(p, gr);
+  return `<div class="pr-mu-score ${prStateMod(gr)}" data-live-state aria-live="polite"${_sa ? ` aria-label="${_sa}"` : ''}>${prStateCellText(p, gr)}</div>`;
+}
+function prStateCellAria(p, gr) {
+  if (!gr) return '';
+  const pickAbbr = (p.pick || '').toUpperCase();
+  if (gr.status === 'live')      return 'Live' + (gr.detail ? ', ' + gr.detail : '') + ', ' + pickAbbr + ' ' + (gr.score || '') + (gr.lead ? ', ' + gr.lead : '');
+  if (gr.status === 'final')     return 'Final, pick ' + (gr.result === 'W' ? 'won' : gr.result === 'L' ? 'lost' : 'settled') + ', ' + pickAbbr + ' ' + (gr.score || '');
+  if (gr.status === 'postponed') return 'Postponed, no action';
+  return '';
+}
+// Matchup subline shown in place of the (now-meaningless) start time.
+function prStateSub(gr) {
+  if (!gr) return null;
+  if (gr.status === 'live')      return { txt: '● ' + (gr.detail || 'Live'), cls: 'pr-sub pr-sub-live' };
+  if (gr.status === 'final')     return { txt: 'Final', cls: 'pr-sub pr-sub-final' };
+  if (gr.status === 'postponed') return { txt: 'Postponed', cls: 'pr-sub pr-sub-ppd' };
+  return null;
+}
+// Row modifier class: live/final get their own (un-faded, accented) treatment so
+// an in-play pick never looks like a "passed / edge-gone" row; ppd + edge-gone fade.
+// Final rows take a green/red left bar (from gr) so won/lost reads at a glance.
+function prRowStateClass(p, gr) {
+  if (isLiveGame(p))  return 'pr-state-live';
+  if (isGameOver(p))  return 'pr-state-final' + (gr && gr.result === 'W' ? ' pr-final-win' : gr && gr.result === 'L' ? ' pr-final-loss' : '');
+  if (isPostponed(p)) return 'pr-state-ppd';
+  return prActionable(p) ? '' : 'pr-faded';
+}
+
 // One collapsed analytics row (simple, edge-sorted table).
 // Columns: Matchup+time · Pick(team + captured line) · Mkt→Model · Edge ·
-// Current odds(+book, ¢move) · Play-to · Stake · chevron.
+// Status[odds / live score] · Play-to · Stake · chevron.
 function prRowCollapsed(p, isBest, gameResult) {
   const parts = String(p.game || '').split('@').map(s => s.trim());
   const away = parts[0] || '', home = parts[1] || '';
@@ -1719,19 +1774,29 @@ function prRowCollapsed(p, isBest, gameResult) {
     ? `<span class="pr-st-usd kelly-usd" data-units="${p.kelly_units || 0}"></span>`
     : '';  // flat mode: stake is 1.0u on every row — no need to repeat $100
 
-  // Accessible name — colour/position cues are invisible to assistive tech.
+  // Matchup subline — the start time is meaningless once a game starts, so live /
+  // final / postponed games show their state there (inning, Final, Postponed).
+  const _sub = inactive ? prStateSub(gameResult) : null;
+  const subHTML = _sub
+    ? `<div class="${_sub.cls}" data-live-sub>${_sub.txt.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>`
+    : `<div class="pr-time">${timeStr || '—'}</div>`;
+
+  // Accessible name — colour/position cues are invisible to assistive tech. For
+  // live/final games the play-to/stake tail is meaningless, so we read the state.
+  const _stateAria = inactive ? prStateCellAria(p, gameResult) : '';
   const ariaLabel = `${away} at ${home}, pick ${pickAbbr}${spread} ${fmtO(p.odds)}`
     + `${timeStr && !inactive ? ', ' + timeStr : ''}, market ${bpPct} percent, model ${mpPct} percent, edge ${edgeStr}`
-    + `, playable to ${ptStr}, stake ${units}.`;
+    + (inactive ? (_stateAria ? ', ' + _stateAria : '') : `, playable to ${ptStr}, stake ${units}.`);
 
-  return `<div class="pr-cols pr-row${prActionable(p) ? '' : ' pr-faded'}" role="button" tabindex="0" data-pr-card="${prCardId(p)}" `
+  const _rowState = prRowStateClass(p, gameResult);
+  return `<div class="pr-cols pr-row${_rowState ? ' ' + _rowState : ''}" role="button" tabindex="0" data-pr-card="${prCardId(p)}" `
     + `aria-expanded="false" aria-label="${ariaLabel}" onclick="prToggle(this)" onkeydown="prKey(event,this)">`
-    + `<div class="pr-mu"><div class="pr-match">${away} <span class="pr-at">@</span> ${home}</div><div class="pr-time">${timeStr || '—'}</div></div>`
+    + `<div class="pr-mu"><div class="pr-mu-main"><div class="pr-match">${away} <span class="pr-at">@</span> ${home}</div>${subHTML}</div>${prStateChipHTML(p, gameResult)}</div>`
     + `<div class="pr-pick">${pickCell}</div>`
     + `<div class="pr-mm"><span class="pr-mm-mkt">${bpPct}</span><span class="pr-mm-arr">→</span><span class="pr-mm-mdl">${mpPct}</span></div>`
     + `<div class="pr-edge ${edgeCls}">${edgeStr}</div>`
     + `<div class="pr-odds">${oddsCell}</div>`
-    + `<div class="pr-play">${ptStr}</div>`
+    + `<div class="pr-play">${inactive ? '—' : ptStr}</div>`
     + `<div class="pr-stake">${units}${stakeSub}</div>`
     + `<div class="pr-chev" aria-hidden="true">›</div></div>`;
 }
@@ -2431,7 +2496,28 @@ function refreshScoreBadges(scores) {
     // Fade the row live as a game starts or finishes (full re-sort happens on the
     // next render). Present even when the drawer was never expanded.
     const rowEl = document.querySelector('.pr-row[data-pr-card="' + cardId + '"]');
-    if (rowEl) rowEl.classList.toggle('pr-faded', !prActionable(p));
+    if (rowEl) {
+      // Keep the row's state class in sync (live/final un-fade; ppd/edge-gone fade).
+      rowEl.classList.remove('pr-faded', 'pr-state-live', 'pr-state-final', 'pr-state-ppd', 'pr-final-win', 'pr-final-loss');
+      const _rs = prRowStateClass(p, gr);
+      if (_rs) rowEl.classList.add(..._rs.split(' '));
+
+      // Repaint the repurposed Status cell + matchup subline in place, flashing the
+      // cell when the score/inning actually changes so a watcher catches the update.
+      const stEl = rowEl.querySelector('[data-live-state]');
+      if (stEl) {
+        const _txt = prStateCellText(p, gr);
+        const _changed = stEl.textContent !== _txt;
+        stEl.textContent = _txt;
+        stEl.className = 'pr-mu-score ' + prStateMod(gr) + (_changed ? ' pr-flash' : '');
+        if (_changed) setTimeout(() => stEl.classList.remove('pr-flash'), 900);
+        const _al = prStateCellAria(p, gr);
+        if (_al) stEl.setAttribute('aria-label', _al);
+      }
+      const subEl = rowEl.querySelector('[data-live-sub]');
+      const _sub2 = prStateSub(gr);
+      if (subEl && _sub2) { subEl.textContent = _sub2.txt; subEl.className = _sub2.cls; }
+    }
 
     const cardEl = document.getElementById(cardId);
     if (!cardEl) continue;

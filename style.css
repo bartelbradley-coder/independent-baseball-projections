@@ -1112,9 +1112,16 @@ details[open] .faq-q::after { content: '−'; }
 .pr-row.open { background:rgba(99,102,241,.06); }
 .pr-row.pr-faded { opacity:.62; }
 .pr-row.pr-faded:hover { opacity:.85; }
+/* live / final / postponed — distinct from the faded "skip" rows */
+.pr-row.pr-state-live  { opacity:1; box-shadow:inset 3px 0 0 var(--indigo-lt, #818cf8); }
+.pr-row.pr-state-final { opacity:.8; }
+.pr-row.pr-final-win   { box-shadow:inset 3px 0 0 var(--green); }
+.pr-row.pr-final-loss  { box-shadow:inset 3px 0 0 var(--red); }
+.pr-row.pr-state-ppd   { opacity:.55; }
 
 /* matchup + time — plain game label (the Pick column names the side) */
-.pr-mu { min-width:0; }
+.pr-mu { min-width:0; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.pr-mu-main { min-width:0; }
 .pr-match { font-family:var(--font-display); font-size:14px; font-weight:600; color:var(--text-2); line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pr-match .pr-at { color:var(--text-4); font-weight:400; margin:0 1px; }
 .pr-time { font-family:var(--font-mono); font-size:9.5px; color:var(--text-4); margin-top:2px; white-space:nowrap; }
@@ -1142,6 +1149,20 @@ details[open] .faq-q::after { content: '−'; }
 .pr-mv { font-size:10px; }
 .pr-mv.ahead  { color:#5ea87f; }   /* muted green — we locked a better number than now (CLV+) */
 .pr-mv.behind { color:#cc7a7a; }   /* muted red — better price available now */
+
+/* ── Live / final score chip — right edge of the matchup column ('LAA 1–0') ──── */
+.pr-mu-score { font-family:var(--font-mono); font-size:12.5px; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap; letter-spacing:.01em; flex:none; display:inline-block; transform-origin:right center; }
+.pr-mu-score.sc-ahead, .pr-mu-score.sc-win  { color:var(--green); }
+.pr-mu-score.sc-behind, .pr-mu-score.sc-loss { color:var(--red); }
+.pr-mu-score.sc-tied { color:var(--text-3, #94a3b8); }
+@keyframes prFlash { 0%{ transform:scale(1); } 28%{ transform:scale(1.14); } 100%{ transform:scale(1); } }
+.pr-mu-score.pr-flash { animation:prFlash .85s ease-out; }
+@media (prefers-reduced-motion:reduce) { .pr-mu-score.pr-flash { animation:none; } }
+
+/* matchup subline state (replaces the start time once a game is underway) */
+.pr-sub { font-family:var(--font-mono); font-size:9.5px; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:600; letter-spacing:.02em; }
+.pr-sub-live { color:var(--green); }
+.pr-sub-final, .pr-sub-ppd { color:var(--text-4); }
 
 /* play to — worst price still worth betting */
 .pr-play { text-align:right; font-family:var(--font-mono); font-size:12.5px; color:var(--text); font-variant-numeric:tabular-nums; white-space:nowrap; }
