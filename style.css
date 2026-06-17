@@ -1269,6 +1269,14 @@ details[open] .faq-q::after { content: '−'; }
 .dw-lg .dw-lg-lbl { font-family:var(--font-ui); font-size:15px; fill:var(--text-4); }
 .dw-lg .dw-lg-time { font-family:var(--font-mono); font-size:11px; fill:var(--text-4); opacity:0.85; }
 .dw-lg circle { cursor:default; }
+.dw-lg .dw-lg-hit { cursor:pointer; }
+.lg-tip {
+  position:fixed; z-index:2000; transform:translate(-50%,-100%);
+  background:#0f1623; color:var(--text); border:1px solid var(--border);
+  border-radius:6px; padding:5px 9px; font:600 12px/1 var(--font-mono);
+  white-space:nowrap; pointer-events:none; box-shadow:0 4px 14px rgba(0,0,0,0.45);
+}
+.lg-tip[hidden] { display:none; }
 .dw-lg-cap { font-size:10px; color:var(--text-4); margin-top:6px; line-height:1.5; }
 .dw-clv { display:flex; align-items:baseline; gap:6px; flex-shrink:0; }
 .dw-clv .dw-clv-k, .dw-clv .dw-clv-s { font-size:10px; color:var(--text-4); }

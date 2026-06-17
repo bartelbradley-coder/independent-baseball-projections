@@ -1247,8 +1247,49 @@ function prLineGraph(points) {
       if (p.clock) svg += '<text x="' + px + '" y="' + (H - 12) + '" class="dw-lg-time" text-anchor="middle">' + p.clock + '</text>';  // A: clock time under the anchor
     }
   });
+  // C: interactive hit targets, drawn last (on top) with a generous radius so each
+  // point is tappable on mobile; the delegated handler shows a "time · odds" tooltip.
+  pts.forEach((p, i) => {
+    const _od = (p.odds > 0 ? '+' + p.odds : '' + p.odds);
+    const _tip = (p.clock ? p.clock + ' · ' : '') + _od;
+    svg += '<circle class="dw-lg-hit" cx="' + xs[i].toFixed(1) + '" cy="' + y(cents[i]).toFixed(1) + '" r="18" fill="transparent" data-tip="' + _tip + '"/>';
+  });
   return svg + '</svg>';
 }
+
+// ── Line-movement point tooltip (tap on mobile / hover on desktop) ────────────
+// One shared element + one delegated listener (cards are built lazily, so we can't
+// bind per-graph). Each .dw-lg-hit circle carries data-tip = "time · odds".
+function _lgTipEl() {
+  let el = document.getElementById('lg-tip');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'lg-tip'; el.className = 'lg-tip'; el.hidden = true;
+    document.body.appendChild(el);
+  }
+  return el;
+}
+function _showLgTip(hit) {
+  const el = _lgTipEl();
+  el.textContent = hit.getAttribute('data-tip') || '';
+  el.hidden = false;
+  const r = hit.getBoundingClientRect();
+  el.style.left = (r.left + r.width / 2) + 'px';
+  el.style.top  = (r.top - 8) + 'px';
+  const t = el.getBoundingClientRect(), m = 6;          // clamp to viewport
+  if (t.left < m) el.style.left = (parseFloat(el.style.left) + (m - t.left)) + 'px';
+  else if (t.right > window.innerWidth - m) el.style.left = (parseFloat(el.style.left) - (t.right - (window.innerWidth - m))) + 'px';
+}
+function _hideLgTip() { const el = document.getElementById('lg-tip'); if (el) el.hidden = true; }
+(function _initLgTips() {
+  if (window._lgTipsInit) return; window._lgTipsInit = true;
+  const hitOf = e => (e.target && e.target.closest) ? e.target.closest('.dw-lg-hit') : null;
+  document.addEventListener('click', e => { const h = hitOf(e); if (h) _showLgTip(h); else _hideLgTip(); });
+  document.addEventListener('mouseover', e => { const h = hitOf(e); if (h) _showLgTip(h); });
+  document.addEventListener('mouseout',  e => { const h = hitOf(e); if (h && !('ontouchstart' in window)) _hideLgTip(); });
+  window.addEventListener('scroll', _hideLgTip, true);
+  window.addEventListener('resize', _hideLgTip);
+})();
 
 // odds_history timestamps are UTC (run_timestamp); format to a CT clock for labels.
 function _clockFromT(t) {
