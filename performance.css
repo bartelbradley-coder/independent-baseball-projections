@@ -50,6 +50,10 @@
 /* Two-col stats (team + pitcher grid) */
 .two-col-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
 @media (max-width: 700px) { .two-col-stats { grid-template-columns: 1fr; } }
+/* Team + Pitcher dashboards each already split into two cards (best | underperforming).
+   Stacking the two sections keeps it to 2 comfortable tables per row instead of 4
+   cramped ones that overflow the page to the right. */
+#team-pitcher-section { grid-template-columns: 1fr; }
 
 /* Bankroll chart */
 .bankroll-chart-wrap { position: relative; }
@@ -99,6 +103,9 @@
 .edge-table { width: 100%; border-collapse: collapse; }
 .edge-table th { font-size: 8.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
 .edge-table td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 12px; color: var(--text-3); }
+/* Numeric columns (W–L "4–2", Win%, ROI, Units) must never wrap; only the first
+   column (Team/Pitcher name) may wrap. Fixes the "4–2" break at the en-dash. */
+.edge-table th:not(:first-child), .edge-table td:not(:first-child) { white-space: nowrap; }
 .edge-table tr:last-child td { border-bottom: none; }
 .edge-table tr:hover td { background: rgba(255,255,255,0.02); }
 
