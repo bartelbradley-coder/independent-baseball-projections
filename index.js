@@ -1320,15 +1320,20 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   const scoreStr = gameResult && gameResult.score ? ' ' + gameResult.score : '';
   const sb = sanitizeBookOdds(p);
 
-  const mp = p.model_prob, bp = p.market_prob;
+  // Lead the drawer with the CURRENT model read (re-rated every ~30 min); fall back
+  // to posted before the first intraday refresh. Posted stays visible in the band/note.
+  const _c = prCur(p);
+  const mp = _c.mp, bp = _c.bp;
   const mpPct = mp != null ? (mp * 100).toFixed(1) + '%' : '—';
   const bpPct = bp != null ? (bp * 100).toFixed(1) + '%' : '—';
   const bpW = bp != null ? Math.max(2, Math.min(100, bp * 100)) : 0;
   const mpW = mp != null ? Math.max(2, Math.min(100, mp * 100)) : 0;
   const gapW = Math.max(0, mpW - bpW);
-  const ev = p.edge || 0;
+  const ev = _c.edge || 0;
   const edgeStr = (ev >= 0 ? '+' : '') + (ev * 100).toFixed(1) + 'pp';
-  const ptStr = fmtO(p.playable_to);
+  const _postedEv = _c.postedEdge;
+  const ptStr = fmtO(_c.playTo);
+  const _postedPtStr = fmtO(_c.postedPlayTo);
 
   // current best price + book
   let curStr, curBook = '', curGood = false;
@@ -1346,8 +1351,23 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   if (postponed) { pill = 'Postponed'; pCls = 'neu'; detail = 'game postponed — no action'; }
   else if (over) { const r = gameResult && gameResult.result; pill = 'Final'; pCls = r === 'W' ? 'good' : r === 'L' ? 'bad' : 'neu'; detail = (r === 'W' ? 'Won' : r === 'L' ? 'Lost' : 'Settled') + scoreStr; }
   else if (live) { pill = 'Live'; const _lead = gameResult && gameResult.lead; pCls = _lead === 'ahead' ? 'good' : _lead === 'behind' ? 'bad' : 'neu'; const inn = (gameResult && gameResult.detail) ? gameResult.detail : 'in-play'; detail = inn + scoreStr + ' — odds have moved off this pick'; }
-  else if ((p.edge || 0) < 0.04) { pill = 'Below threshold'; pCls = 'neu'; detail = 'model edge is under our 4% cutoff — not a recommended bet'; }
-  else if (!prActionable(p)) { pill = 'No longer playable'; pCls = 'bad'; detail = 'current ' + curStr + ' is past Play to ' + ptStr; }
+  else if (p.current_recommendation === 'flipped') {
+    pill = 'Model flipped'; pCls = 'bad';
+    detail = 'model now favors ' + (p.current_flipped_team || 'the other side')
+      + (p.current_flipped_edge != null ? ' (+' + (p.current_flipped_edge * 100).toFixed(1) + 'pp)' : '') + ' — pass';
+  }
+  else if (ev < 0.04) {
+    // Edge below threshold. Distinguish a live re-rate (was a play, model dropped it)
+    // from a pick that never cleared the bar — the price is NOT the reason here.
+    if (_c.hasCur && _postedEv >= 0.04) {
+      pill = 'No longer playable'; pCls = 'bad';
+      detail = 'model re-rated this pick — current edge ' + (ev * 100).toFixed(1) + 'pp is below our 4% cutoff (posted ' + (_postedEv >= 0 ? '+' : '') + (_postedEv * 100).toFixed(1) + 'pp)';
+    } else {
+      pill = 'Below threshold'; pCls = 'neu';
+      detail = 'model edge is under our 4% cutoff — not a recommended bet';
+    }
+  }
+  else if (cushion != null && cushion <= 0) { pill = 'No longer playable'; pCls = 'bad'; detail = 'current ' + curStr + ' is past Play to ' + ptStr; }
   else if (p.current_lineup_confirmed === false) { pill = 'Playable'; pCls = 'neu'; detail = 'lineup not yet confirmed — re-check before betting'; }
   else { pill = 'Still playable'; pCls = 'good'; detail = 'current ' + curStr + ' beats Play to ' + ptStr; }
 
@@ -1359,15 +1379,21 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   const bandHTML = '<div class="dw-band">'
     + '<div class="dw-bi"><span class="dw-bi-k">Current odds</span><span class="dw-bi-v' + (curGood ? ' good' : '') + '">' + (inactive ? '—' : curStr) + '</span>' + ((!inactive && curBook) ? '<span class="dw-bi-s">' + curBook + '</span>' : '') + '</div>'
     + '<div class="dw-bi"><span class="dw-bi-k">Posted line</span><span class="dw-bi-v">' + fmtO(p.odds) + '</span>' + (p.posted_at ? '<span class="dw-bi-s">at ' + p.posted_at + '</span>' : '') + '</div>'
-    + '<div class="dw-bi"><span class="dw-bi-k">Play to</span><span class="dw-bi-v">' + (inactive ? '—' : ptStr) + '</span></div>'
+    + '<div class="dw-bi"><span class="dw-bi-k">Play to</span><span class="dw-bi-v">' + (inactive ? '—' : ptStr) + '</span>' + ((!inactive && _c.moved && _postedPtStr !== ptStr) ? '<span class="dw-bi-s">posted ' + _postedPtStr + '</span>' : '') + '</div>'
     + '<div class="dw-bi"><span class="dw-bi-k">Stake</span><span class="dw-bi-v">' + stakeUnits + '</span><span class="dw-bi-s">' + stakeSub + '</span></div>'
     + '</div>';
 
   // ── Why the model likes it (left) ──────────────────────────────────────
+  // Freshness + posted→now note: when the live edge has moved off posted, say so
+  // explicitly (with the time of the last refresh); otherwise just stamp the refresh.
+  const _updNote = _c.moved
+    ? '<div class="dw-cap dw-upd">Re-rated ' + (p.current_refresh_time || 'intraday')
+        + ' · posted ' + (_postedEv >= 0 ? '+' : '') + (_postedEv * 100).toFixed(1) + 'pp → now ' + edgeStr + '</div>'
+    : (p.current_refresh_time ? '<div class="dw-cap">Model updated ' + p.current_refresh_time + '</div>' : '');
   const meterHTML = (mp != null && bp != null)
     ? '<div class="dw-meter-cap"><span>Market <b>' + bpPct + '</b></span><span class="dw-arr">→</span><span>Model <b>' + mpPct + '</b></span><span class="g">Edge ' + edgeStr + '</span></div>'
       + '<div class="dw-meter"><i class="m-mkt" style="width:' + bpW.toFixed(1) + '%"></i><i class="m-gap" style="left:' + bpW.toFixed(1) + '%;width:' + gapW.toFixed(1) + '%"></i><i class="m-tick" style="left:calc(' + mpW.toFixed(1) + '% - 1px)"></i></div>'
-      + '<div class="dw-cap">Bar shows implied win probability.</div>'
+      + '<div class="dw-cap">Bar shows implied win probability.</div>' + _updNote
     : '';
   const adjs = (p.adj_breakdown && p.adj_breakdown.adjustments) || [];
   const pos = adjs.filter(a => a.positive).sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp)).slice(0, 5);
@@ -1583,10 +1609,29 @@ function prSetSort(key) {
   rerenderPicks();
 }
 function prHeadKey(e, key) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prSetSort(key); } }
+// Current-vs-posted display set. The model re-rates picks every ~30 min; the row
+// and drawer LEAD with the current read so "which picks to take" reflects now.
+// The posted edge/line/timestamp are never altered (picks_log + CLV untouched) and
+// stay visible in the drawer. Falls back to posted before the first intraday refresh.
+// `bp` (current no-vig market prob) = model − edge, since edge is defined vs the
+// no-vig benchmark.
+function prCur(p) {
+  const hasCur = p.current_edge != null && p.current_model_prob != null;
+  const edge   = hasCur ? p.current_edge : (p.edge || 0);
+  const mp     = hasCur ? p.current_model_prob : p.model_prob;
+  const bp     = hasCur ? (p.current_model_prob - p.current_edge) : p.market_prob;
+  const playTo = (hasCur && p.current_playable_to != null) ? p.current_playable_to : p.playable_to;
+  const postedEdge = p.edge || 0;
+  const moved  = hasCur && p.edge != null && Math.abs(edge - postedEdge) >= 0.01;   // ≥1pp move
+  return { hasCur, edge, mp, bp, playTo, postedEdge, postedPlayTo: p.playable_to,
+           moved, dir: moved ? Math.sign(edge - postedEdge) : 0 };
+}
+function _curEdge(p) { return (p.current_edge != null ? p.current_edge : p.edge) || 0; }
+
 function prSortVal(p, key) {
-  if (key === 'model') return p.model_prob || 0;
+  if (key === 'model') return (p.current_model_prob != null ? p.current_model_prob : p.model_prob) || 0;
   if (key === 'time')  return p.game_time ? (Date.parse(p.game_time) || 0) : Number.POSITIVE_INFINITY;
-  return p.edge || 0;
+  return _curEdge(p);
 }
 function prSortPicks(arr) {
   const { key, dir } = _picksSort;
@@ -1594,7 +1639,7 @@ function prSortPicks(arr) {
     const aa = prActionable(a) ? 0 : 1, bb = prActionable(b) ? 0 : 1;
     if (aa !== bb) return aa - bb;                  // actionable plays lead
     const d = (prSortVal(a, key) - prSortVal(b, key)) * dir;
-    return d || ((b.edge || 0) - (a.edge || 0));    // then active key (default edge desc)
+    return d || (_curEdge(b) - _curEdge(a));        // then active key (default current edge desc)
   });
 }
 
@@ -1619,7 +1664,10 @@ function _americanFromImplied(prob) {
 function prCushion(p) {
   const sb = sanitizeBookOdds(p);
   const cur = sb.best ? sb.best.odds : (p.best_odds != null ? p.best_odds : p.odds);
-  const cc = _oddsToCents(cur), ptc = _oddsToCents(p.playable_to);
+  // Floor is the CURRENT model's playable price when available — a re-rated model
+  // tightens (or loosens) the floor, so a stale posted floor would mis-judge cushion.
+  const floor = p.current_playable_to != null ? p.current_playable_to : p.playable_to;
+  const cc = _oddsToCents(cur), ptc = _oddsToCents(floor);
   return (cc != null && ptc != null) ? Math.round(cc - ptc) : null;
 }
 
@@ -1738,14 +1786,19 @@ function prRowCollapsed(p, isBest, gameResult) {
   }
   const pickCell = `${pickAbbr}${spread}<span class="pr-bo">${fmtO(p.odds)}</span>`;
 
-  // Market → Model win probabilities.
-  const bp = p.market_prob, mp = p.model_prob;
+  // Market → Model win probabilities + edge — CURRENT read (falls back to posted).
+  const _cur = prCur(p);
+  const bp = _cur.bp, mp = _cur.mp;
   const bpPct = bp != null ? (bp * 100).toFixed(1) : '—';
   const mpPct = mp != null ? (mp * 100).toFixed(1) : '—';
 
-  const ev = p.edge || 0;
+  const ev = _cur.edge || 0;
   const edgeStr = (ev >= 0 ? '+' : '') + (ev * 100).toFixed(1) + 'pp';
   const edgeCls = ev >= 0 ? 'pos' : 'neg';
+  // "re-rated" marker when the live edge has moved ≥1pp off the posted edge.
+  const updMark = _cur.moved
+    ? `<span class="pr-upd" title="Model re-rated since posting — showing current edge (posted ${(_cur.postedEdge >= 0 ? '+' : '') + (_cur.postedEdge * 100).toFixed(1)}pp)">${_cur.dir < 0 ? '▾' : '▴'}</span>`
+    : '';
 
   // Current odds — pregame: best book price + ¢ movement vs the captured line.
   // Live/Final: the captured price (in-play odds aren't a bet you can make).
@@ -1765,7 +1818,7 @@ function prRowCollapsed(p, isBest, gameResult) {
     oddsCell = `<span class="pr-o-main"><span class="pr-o-val">${fmtO(cur)}</span><span class="pr-o-mv">${mv}</span></span>`;  // book in the expanded card's Current odds
   }
 
-  const ptStr = fmtO(p.playable_to);
+  const ptStr = fmtO(_cur.playTo);
 
   // Stake — units primary, $ secondary.
   const _isKellyMode = _indexPnlMode === 'kelly';
@@ -1786,6 +1839,7 @@ function prRowCollapsed(p, isBest, gameResult) {
   const _stateAria = inactive ? prStateCellAria(p, gameResult) : '';
   const ariaLabel = `${away} at ${home}, pick ${pickAbbr}${spread} ${fmtO(p.odds)}`
     + `${timeStr && !inactive ? ', ' + timeStr : ''}, market ${bpPct} percent, model ${mpPct} percent, edge ${edgeStr}`
+    + (_cur.moved ? ` (re-rated from posted ${(_cur.postedEdge * 100).toFixed(1)}pp)` : '')
     + (inactive ? (_stateAria ? ', ' + _stateAria : '') : `, playable to ${ptStr}, stake ${units}.`);
 
   const _rowState = prRowStateClass(p, gameResult);
@@ -1794,7 +1848,7 @@ function prRowCollapsed(p, isBest, gameResult) {
     + `<div class="pr-mu"><div class="pr-mu-main"><div class="pr-match">${away} <span class="pr-at">@</span> ${home}</div>${subHTML}</div>${prStateChipHTML(p, gameResult)}</div>`
     + `<div class="pr-pick">${pickCell}</div>`
     + `<div class="pr-mm"><span class="pr-mm-mkt">${bpPct}</span><span class="pr-mm-arr">→</span><span class="pr-mm-mdl">${mpPct}</span></div>`
-    + `<div class="pr-edge ${edgeCls}">${edgeStr}</div>`
+    + `<div class="pr-edge ${edgeCls}">${edgeStr}${updMark}</div>`
     + `<div class="pr-odds">${oddsCell}</div>`
     + `<div class="pr-play">${inactive ? '—' : ptStr}</div>`
     + `<div class="pr-stake">${units}${stakeSub}</div>`

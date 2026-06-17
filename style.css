@@ -1140,6 +1140,10 @@ details[open] .faq-q::after { content: '−'; }
 .pr-edge { font-family:var(--font-mono); font-size:15px; font-weight:700; text-align:right; font-variant-numeric:tabular-nums; line-height:1.05; white-space:nowrap; }
 .pr-edge.pos { color:var(--green); }
 .pr-edge.neg { color:var(--red); }
+/* re-rated marker — model moved the edge off the posted value since posting */
+.pr-edge .pr-upd { font-size:9px; margin-left:2px; vertical-align:1px; color:var(--text-4); font-weight:600; }
+/* drawer "posted → now" / re-rate note */
+.dw-upd { color:#fbbf24 !important; font-weight:600; }
 
 /* current odds + book + ¢ movement vs the captured line */
 .pr-odds { text-align:right; min-width:0; }
