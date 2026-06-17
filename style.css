@@ -1366,6 +1366,10 @@ details[open] .faq-q::after { content: '−'; }
 @media (max-width:760px) {
   .pr-play, .pr-head .h-play { display:none; }
   .pr-cols { grid-template-columns:minmax(100px,1.4fr) minmax(66px,.85fr) .8fr minmax(104px,1.4fr) 18px; }
+  /* matchup column is too narrow for the score chip beside the name — stack it
+     onto its own line below the matchup + inning so neither gets truncated. */
+  .pr-mu { flex-direction:column; align-items:stretch; justify-content:flex-start; gap:1px; }
+  .pr-mu-score { text-align:left; transform-origin:left center; }
 }
 @media (max-width:620px) {
   .pr-chev, .pr-head .h-chev { display:none; }
