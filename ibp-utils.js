@@ -22,12 +22,14 @@ let _espnScoresCache = {};
 // recently completed games (yesterday's when called before today's games start).
 // That would attach yesterday's final scores to today's same-series matchups.
 function _espnTodayDate() {
-  // Build YYYYMMDD in local time (not UTC — avoids rolling to next day after ~7 PM ET)
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}${m}${day}`;
+  // YYYYMMDD for the CT slate date — must match today.json's "date" (also CT).
+  // The browser's local date would fetch the wrong day's scoreboard for visitors
+  // in a later timezone (e.g. already past midnight in Europe) → no games match
+  // and live badges silently never appear. en-CA gives YYYY-MM-DD.
+  const ymd = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Chicago', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).format(new Date());
+  return ymd.replace(/-/g, '');
 }
 
 async function fetchESPNScores() {
@@ -50,10 +52,20 @@ async function fetchESPNScores() {
       }
       if (!away || !home) continue;
       const sn = ev.status?.type?.name || '';
-      const status = sn === 'STATUS_FINAL'      ? 'final'
-                   : sn.includes('IN_PROGRESS') ? 'live'
-                   : 'scheduled';
-      result[`${away} @ ${home}`] = { status, awayScore, homeScore };
+      const detail = ev.status?.type?.shortDetail || '';   // e.g. "Top 9th", "Delayed, Bot 2nd"
+      // A game that has started but is paused (delay / suspension) is still in-play —
+      // treat it as live, not scheduled, so it isn't shown as a bettable pregame.
+      // Postponed / canceled games won't be played today → their own no-action state.
+      let status;
+      if (sn === 'STATUS_FINAL')                       status = 'final';
+      else if (sn === 'STATUS_POSTPONED' ||
+               sn === 'STATUS_CANCELED'  ||
+               sn === 'STATUS_CANCELLED')              status = 'postponed';
+      else if (sn.includes('IN_PROGRESS') ||
+               sn.includes('DELAY')       ||           // STATUS_DELAYED / STATUS_RAIN_DELAY
+               sn === 'STATUS_SUSPENDED')              status = 'live';
+      else                                             status = 'scheduled';
+      result[`${away} @ ${home}`] = { status, awayScore, homeScore, detail };
     }
     _espnScoresCache = result;
     return result;

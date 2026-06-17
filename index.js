@@ -435,8 +435,21 @@ function refreshKellyUSD() {
 // ── Copy pick to clipboard ────────────────────────────────────────────────────
 // copyPick removed — the Copy button was retired (share now produces the full card image)
 
-// ── Is game currently live? ───────────────────────────────────────────────────
+// ── Game state — ESPN status is authoritative; the clock is only a fallback ────
+// _scoresRef (set in render() before rows are built, refreshed every 5 min) holds
+// real ESPN status. Trusting it avoids two failure modes the pure-clock heuristic
+// had: long/extra-inning games marked "Final" at +3.5h while still playing, and
+// delayed games that look pregame-bettable. Falls back to the clock only when ESPN
+// has no entry for the game.
+function _espnStatus(p) {
+  const g = (typeof _scoresRef !== 'undefined' && _scoresRef) ? _scoresRef[p.game] : null;
+  return g && g.status ? g.status : null;
+}
+
 function isLiveGame(p) {
+  const st = _espnStatus(p);
+  if (st) return st === 'live';
+  // Fallback: no ESPN data — first pitch → +3.5h window.
   if (!p.game_time) return false;
   const start = new Date(p.game_time).getTime();
   if (isNaN(start)) return false;
@@ -444,12 +457,20 @@ function isLiveGame(p) {
   return now > start && now < start + 3.5 * 60 * 60 * 1000;
 }
 
-// ── Is game finished? (>3.5h past start) ─────────────────────────────────────
 function isGameOver(p) {
+  const st = _espnStatus(p);
+  if (st) return st === 'final';
+  // Fallback: no ESPN data — >3.5h past first pitch.
   if (!p.game_time) return false;
   const start = new Date(p.game_time).getTime();
   if (isNaN(start)) return false;
   return Date.now() > start + 3.5 * 60 * 60 * 1000;
+}
+
+// Postponed / canceled — game won't be played today, so the pick is no-action.
+// Only knowable from ESPN; there's no clock fallback.
+function isPostponed(p) {
+  return _espnStatus(p) === 'postponed';
 }
 
 // ── Mini sparkline SVG ────────────────────────────────────────────────────────
@@ -1246,7 +1267,8 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   const oppAbbr = (away.toUpperCase() === pickAbbr ? home : away).toUpperCase();
   const typeLabel = p.pick_type === 'MONEYLINE' ? 'ML' : p.pick_type === 'RUN_LINE' ? 'RL' : (p.pick_type || '').replace(/_/g, ' ');
   const fmtO = o => (o == null ? '—' : (o > 0 ? '+' + o : String(o)));
-  const live = isLiveGame(p), over = isGameOver(p);
+  const live = isLiveGame(p), over = isGameOver(p), postponed = isPostponed(p);
+  const inactive = live || over || postponed;   // no actionable current price/play-to
   const scoreStr = gameResult && gameResult.score ? ' ' + gameResult.score : '';
   const sb = sanitizeBookOdds(p);
 
@@ -1262,7 +1284,7 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
 
   // current best price + book
   let curStr, curBook = '', curGood = false;
-  if (live || over) { curStr = '—'; }
+  if (inactive) { curStr = '—'; }
   else if (sb.best) { curStr = fmtO(sb.best.odds); curBook = sb.best.book; const capImp = _impliedFromAmerican(p.odds); curGood = capImp != null && sb.best.implied < capImp - 0.005; }
   else { curStr = fmtO(p.best_odds != null ? p.best_odds : p.odds); curBook = p.best_book || ''; }
 
@@ -1273,8 +1295,9 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   // ── verdict (cites the numbers) ────────────────────────────────────────
   const cushion = prCushion(p);
   let pill, pCls, detail;
-  if (over) { const r = gameResult && gameResult.result; pill = 'Final'; pCls = r === 'W' ? 'good' : r === 'L' ? 'bad' : 'neu'; detail = (r === 'W' ? 'Won' : r === 'L' ? 'Lost' : 'Settled') + scoreStr; }
-  else if (live) { pill = 'Live'; pCls = 'neu'; detail = 'in-play' + scoreStr + ' — odds have moved off this pick'; }
+  if (postponed) { pill = 'Postponed'; pCls = 'neu'; detail = 'game postponed — no action'; }
+  else if (over) { const r = gameResult && gameResult.result; pill = 'Final'; pCls = r === 'W' ? 'good' : r === 'L' ? 'bad' : 'neu'; detail = (r === 'W' ? 'Won' : r === 'L' ? 'Lost' : 'Settled') + scoreStr; }
+  else if (live) { pill = 'Live'; pCls = 'neu'; const inn = (gameResult && gameResult.detail) ? gameResult.detail : 'in-play'; detail = inn + scoreStr + ' — odds have moved off this pick'; }
   else if ((p.edge || 0) < 0.04) { pill = 'Below threshold'; pCls = 'neu'; detail = 'model edge is under our 4% cutoff — not a recommended bet'; }
   else if (!prActionable(p)) { pill = 'No longer playable'; pCls = 'bad'; detail = 'current ' + curStr + ' is past Play to ' + ptStr; }
   else if (p.current_lineup_confirmed === false) { pill = 'Playable'; pCls = 'neu'; detail = 'lineup not yet confirmed — re-check before betting'; }
@@ -1286,9 +1309,9 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
 
   // ── decision band: current · posted · play-to · stake ──────────────────
   const bandHTML = '<div class="dw-band">'
-    + '<div class="dw-bi"><span class="dw-bi-k">Current odds</span><span class="dw-bi-v' + (curGood ? ' good' : '') + '">' + ((live || over) ? '—' : curStr) + '</span>' + ((!live && !over && curBook) ? '<span class="dw-bi-s">' + curBook + '</span>' : '') + '</div>'
+    + '<div class="dw-bi"><span class="dw-bi-k">Current odds</span><span class="dw-bi-v' + (curGood ? ' good' : '') + '">' + (inactive ? '—' : curStr) + '</span>' + ((!inactive && curBook) ? '<span class="dw-bi-s">' + curBook + '</span>' : '') + '</div>'
     + '<div class="dw-bi"><span class="dw-bi-k">Posted line</span><span class="dw-bi-v">' + fmtO(p.odds) + '</span>' + (p.posted_at ? '<span class="dw-bi-s">at ' + p.posted_at + '</span>' : '') + '</div>'
-    + '<div class="dw-bi"><span class="dw-bi-k">Play to</span><span class="dw-bi-v">' + ((live || over) ? '—' : ptStr) + '</span></div>'
+    + '<div class="dw-bi"><span class="dw-bi-k">Play to</span><span class="dw-bi-v">' + (inactive ? '—' : ptStr) + '</span></div>'
     + '<div class="dw-bi"><span class="dw-bi-k">Stake</span><span class="dw-bi-v">' + stakeUnits + '</span><span class="dw-bi-s">' + stakeSub + '</span></div>'
     + '</div>';
 
@@ -1380,7 +1403,7 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
     lgPts = [];
     if (p.line_open != null) lgPts.push({ label: 'Opened', odds: p.line_open });
     lgPts.push({ label: 'Posted', odds: p.odds });
-    if (!live && !over && sb.best) lgPts.push({ label: 'Current', odds: sb.best.odds });
+    if (!inactive && sb.best) lgPts.push({ label: 'Current', odds: sb.best.odds });
     else if ((live || over) && p.closing_prob != null) lgPts.push({ label: 'Closed', odds: _americanFromImplied(p.closing_prob) });
   }
   const graphHTML = prLineGraph(lgPts) || '<div class="dw-cap">Not enough line data to chart.</div>';
@@ -1550,7 +1573,7 @@ function prCushion(p) {
 // its current price hasn't moved past the playable floor. Live, final, edge-gone,
 // and near-miss picks are informational — faded and sorted below the live plays.
 function prActionable(p) {
-  if (isLiveGame(p) || isGameOver(p)) return false;
+  if (isLiveGame(p) || isGameOver(p) || isPostponed(p)) return false;
   if ((p.edge || 0) < 0.04) return false;                                  // near-miss
   if (p.current_edge != null && p.current_edge < 0.04) return false;       // edge moved off
   const c = prCushion(p);
@@ -1591,7 +1614,8 @@ function prRowCollapsed(p, isBest, gameResult) {
   const parts = String(p.game || '').split('@').map(s => s.trim());
   const away = parts[0] || '', home = parts[1] || '';
   const pickAbbr = (p.pick || '').toUpperCase();
-  const live = isLiveGame(p), over = isGameOver(p);
+  const live = isLiveGame(p), over = isGameOver(p), postponed = isPostponed(p);
+  const inactive = live || over || postponed;
   const fmtO = o => (o == null ? '—' : (o > 0 ? '+' + o : String(o)));
 
   // Matchup — plain game label + time; the Pick column names the side.
@@ -1617,7 +1641,7 @@ function prRowCollapsed(p, isBest, gameResult) {
   // Current odds — pregame: best book price + ¢ movement vs the captured line.
   // Live/Final: the captured price (in-play odds aren't a bet you can make).
   let oddsCell;
-  if (live || over) {
+  if (inactive) {
     oddsCell = `<span class="pr-o-main pr-o-na"><span class="pr-o-val">—</span><span class="pr-o-mv"></span></span>`;  // no actionable current price
   } else {
     const sb = sanitizeBookOdds(p);
@@ -1643,7 +1667,7 @@ function prRowCollapsed(p, isBest, gameResult) {
 
   // Accessible name — colour/position cues are invisible to assistive tech.
   const ariaLabel = `${away} at ${home}, pick ${pickAbbr}${spread} ${fmtO(p.odds)}`
-    + `${timeStr && !live && !over ? ', ' + timeStr : ''}, market ${bpPct} percent, model ${mpPct} percent, edge ${edgeStr}`
+    + `${timeStr && !inactive ? ', ' + timeStr : ''}, market ${bpPct} percent, model ${mpPct} percent, edge ${edgeStr}`
     + `, playable to ${ptStr}, stake ${units}.`;
 
   return `<div class="pr-cols pr-row${prActionable(p) ? '' : ' pr-faded'}" role="button" tabindex="0" data-pr-card="${prCardId(p)}" `
@@ -2244,7 +2268,8 @@ function getPickResult(p, scores) {
   const ps = side === 'AWAY' ? g.awayScore : g.homeScore;
   const os = side === 'AWAY' ? g.homeScore : g.awayScore;
   const score = (ps != null && os != null) ? `${ps}–${os}` : null;
-  if (g.status === 'live')      return { status: 'live', score };
+  if (g.status === 'live')      return { status: 'live', score, detail: g.detail || '' };
+  if (g.status === 'postponed') return { status: 'postponed' };
   if (g.status === 'scheduled') return { status: 'scheduled' };
   // final
   const pickWon = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
@@ -2265,7 +2290,8 @@ function updateFloatingResults(scores) {
   const results  = picks.map(p => getPickResult(p, scores)).filter(Boolean);
   const settled  = results.filter(r => r.status === 'final');
   const live     = results.filter(r => r.status === 'live').length;
-  const pending  = picks.length - settled.length - live;
+  const ppd      = results.filter(r => r.status === 'postponed').length;
+  const pending  = picks.length - settled.length - live - ppd;
 
   if (settled.length === 0) { pill.style.display = 'none'; return; }
 
@@ -2304,8 +2330,14 @@ function refreshScoreBadges(scores) {
         badge.className = `result-badge result-badge-${gr.result === 'W' ? 'win' : 'loss'}`;
         badge.style.display = '';
       } else if (gr.status === 'live') {
-        badge.textContent = gr.score ? `● LIVE · ${gr.score}` : '● LIVE';
+        // Surface the inning (and score) ESPN already gives us — e.g. "● LIVE · Top 9th · 4–6".
+        const bits = [gr.detail, gr.score].filter(Boolean);
+        badge.textContent = '● LIVE' + (bits.length ? ' · ' + bits.join(' · ') : '');
         badge.className = 'live-badge';
+        badge.style.display = '';
+      } else if (gr.status === 'postponed') {
+        badge.textContent = 'PPD';
+        badge.className = 'ppd-badge';
         badge.style.display = '';
       }
     }
