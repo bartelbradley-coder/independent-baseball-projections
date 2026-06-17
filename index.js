@@ -1302,6 +1302,50 @@ function _clockFromT(t) {
   return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago' });
 }
 
+// "What changed since posting" — renders p.model_change (built server-side): the
+// exact prob-level decomposition (model side vs market side) plus the biggest
+// per-factor signal shifts. Returns '' when nothing material moved.
+function prWhatChanged(p) {
+  const mc = p.model_change;
+  if (!mc) return '';
+  const abbr = (p.pick || '').toUpperCase();
+  const pp  = v => (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + 'pp';
+  const pct = v => v != null ? (v * 100).toFixed(1) + '%' : '—';
+  const ppRaw = v => (v >= 0 ? '+' : '') + v.toFixed(1);
+
+  const ed = mc.edge_delta, md = mc.model_delta, kd = mc.market_delta;
+  // Market's contribution to EDGE = −Δ(market prob): a lower market prob on our side
+  // is a better price, which helps the edge.
+  const mktToEdge = kd != null ? -kd : null;
+
+  const headline = 'Edge <b>' + pp(mc.posted.edge) + '</b> → <b>' + pp(mc.current.edge) + '</b>'
+    + ' <span class="dwc-d ' + (ed < 0 ? 'bad' : 'good') + '">' + pp(ed) + '</span>';
+
+  const modelLine = (md != null)
+    ? '<div class="dwc-row"><span class="dwc-k">Model</span><span class="dwc-v">' + abbr + ' ' + pct(mc.posted.model_prob) + ' → ' + pct(mc.current.model_prob)
+      + ' <b class="' + (md < 0 ? 'bad' : 'good') + '">' + pp(md) + '</b></span></div>' : '';
+  const marketLine = (kd != null && mc.posted.market_prob != null)
+    ? '<div class="dwc-row"><span class="dwc-k">Market</span><span class="dwc-v">' + abbr + ' ' + pct(mc.posted.market_prob) + ' → ' + pct(mc.current.market_prob)
+      + ' <b class="' + (mktToEdge >= 0 ? 'good' : 'bad') + '">' + pp(mktToEdge) + ' to edge</b></span></div>' : '';
+  const starterLine = mc.starter_changed
+    ? '<div class="dwc-row"><span class="dwc-k">Starter</span><span class="dwc-v">' + mc.starter_changed.from + ' → ' + mc.starter_changed.to + '</span></div>' : '';
+
+  const fd = mc.factor_deltas || [];
+  const fdHTML = fd.length
+    ? '<div class="dwc-fh">Biggest signal shifts</div>'
+      + fd.map(f => '<div class="dwc-frow"><b class="' + (f.delta_pp < 0 ? 'bad' : 'good') + '">' + ppRaw(f.delta_pp) + '</b>'
+          + '<span class="dwc-fl">' + f.label + '</span>'
+          + '<span class="dwc-fdd">' + ppRaw(f.posted_pp) + ' → ' + ppRaw(f.current_pp) + '</span></div>').join('')
+      + '<div class="dw-cap">Approximate — signal shifts don’t sum exactly to the model move.</div>'
+    : '';
+
+  return '<details class="dwc"><summary class="dwc-sum"><span class="dwc-t">What changed since posting</span>'
+    + '<span class="dwc-hl">' + headline + '</span><span class="am-chevron">▾</span></summary>'
+    + '<div class="dwc-body">' + modelLine + marketLine + starterLine + fdHTML
+    + (mc.refreshed_at ? '<div class="dw-cap">Re-rated ' + mc.refreshed_at + '</div>' : '')
+    + '</div></details>';
+}
+
 // Expanded pick drawer — decision-first, in order: should I bet it? · price &
 // stake? · why does the model like it? · what data supports it? · did the line
 // move favourably? Two-column body (sparse picks collapse to one). Two accent
@@ -1506,7 +1550,8 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
     + '<button type="button" class="dw-act" onclick="sharePickCard(\'' + cardId + '\', ' + (isBest ? 1 : 0) + ')">Share</button>'
     + '</div>');
 
-  return '<div class="dw">' + headHTML + bandHTML + bodyHTML + moveHTML + actionsHTML + '</div>';
+  const changedHTML = prWhatChanged(p);
+  return '<div class="dw">' + headHTML + bandHTML + changedHTML + bodyHTML + moveHTML + actionsHTML + '</div>';
 }
 
 // ── Pick card HTML ────────────────────────────────────────────────────────────

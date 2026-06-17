@@ -1263,6 +1263,29 @@ details[open] .faq-q::after { content: '−'; }
 .dw-frow b.good { color:var(--green); } .dw-frow b.bad { color:var(--red); }
 .dw-read { font-size:12.5px; line-height:1.55; color:var(--text-3); }
 
+/* "What changed since posting" — collapsible re-rate explainer */
+.dwc { border:1px solid var(--border); border-radius:10px; background:rgba(251,191,36,.04); margin:2px 0 14px; }
+.dwc-sum { display:flex; align-items:center; gap:9px; flex-wrap:wrap; padding:9px 12px; cursor:pointer; list-style:none; }
+.dwc-sum::-webkit-details-marker { display:none; }
+.dwc-t { font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#fbbf24; }
+.dwc-hl { font-family:var(--font-mono); font-size:12px; color:var(--text-2); }
+.dwc-hl b { color:var(--text); font-weight:700; }
+.dwc-d { font-weight:700; }
+.dwc-d.good { color:var(--green); } .dwc-d.bad { color:var(--red); }
+.dwc .am-chevron { margin-left:auto; transition:transform .16s; color:var(--text-4); }
+.dwc[open] .am-chevron { transform:rotate(180deg); }
+.dwc-body { padding:2px 12px 11px; border-top:1px solid var(--border); }
+.dwc-row { display:flex; gap:8px; align-items:baseline; font-size:12px; color:var(--text-2); padding:5px 0 2px; }
+.dwc-row .dwc-k { font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--text-4); min-width:54px; }
+.dwc-row .dwc-v { font-family:var(--font-mono); }
+.dwc-row .dwc-v b.good { color:var(--green); } .dwc-row .dwc-v b.bad { color:var(--red); }
+.dwc-fh { font-size:11px; font-weight:700; color:var(--text-3); margin:10px 0 4px; }
+.dwc-frow { display:flex; gap:9px; align-items:baseline; font-size:12px; color:var(--text-2); padding:3px 0; }
+.dwc-frow b { font-family:var(--font-mono); font-weight:700; min-width:34px; }
+.dwc-frow b.good { color:var(--green); } .dwc-frow b.bad { color:var(--red); }
+.dwc-frow .dwc-fl { flex:1; min-width:0; }
+.dwc-frow .dwc-fdd { font-family:var(--font-mono); font-size:10.5px; color:var(--text-4); white-space:nowrap; }
+
 /* matchup data table */
 .dw-mtable { width:100%; border-collapse:collapse; table-layout:fixed; }
 .dw-mtable th { font-size:10px; font-weight:700; color:var(--text-4); text-align:right; padding:0 4px 8px; border-bottom:1px solid var(--border); vertical-align:bottom; }
