@@ -1267,6 +1267,8 @@ details[open] .faq-q::after { content: '−'; }
 .dw-lg { width:100%; height:auto; display:block; }
 .dw-lg .dw-lg-val { font-family:var(--font-mono); font-size:17px; font-weight:600; fill:var(--text); }
 .dw-lg .dw-lg-lbl { font-family:var(--font-ui); font-size:15px; fill:var(--text-4); }
+.dw-lg .dw-lg-time { font-family:var(--font-mono); font-size:11px; fill:var(--text-4); opacity:0.85; }
+.dw-lg circle { cursor:default; }
 .dw-lg-cap { font-size:10px; color:var(--text-4); margin-top:6px; line-height:1.5; }
 .dw-clv { display:flex; align-items:baseline; gap:6px; flex-shrink:0; }
 .dw-clv .dw-clv-k, .dw-clv .dw-clv-s { font-size:10px; color:var(--text-4); }
@@ -1295,6 +1297,7 @@ details[open] .faq-q::after { content: '−'; }
   /* line-movement graph: its 900-wide viewBox shrinks SVG text hard on phones — enlarge it */
   .dw-lg .dw-lg-val { font-size:28px; }
   .dw-lg .dw-lg-lbl { font-size:24px; }
+  .dw-lg .dw-lg-time { font-size:17px; }
 }
 
 /* ── Share card: always export the wide / desktop layout ─────────────────────
@@ -1310,6 +1313,7 @@ details[open] .faq-q::after { content: '−'; }
 .sc-wrap .dw-bi:first-child { border-left:none; padding-left:0; }
 .sc-wrap .dw-lg .dw-lg-val { font-size:17px; }
 .sc-wrap .dw-lg .dw-lg-lbl { font-size:15px; }
+.sc-wrap .dw-lg .dw-lg-time { font-size:11px; }
 
 /* collapsible sections (Marginal / Completed) */
 .pr-collapse { margin-bottom:14px; }

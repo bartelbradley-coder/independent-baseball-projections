@@ -1212,8 +1212,8 @@ function oneLineDriverV8(p) {
 function prLineGraph(points) {
   const pts = (points || []).filter(p => p.odds != null && !isNaN(p.odds));
   if (pts.length < 2) return '';
-  const W = 900, H = 124, padX = 64, padTop = 44, padBot = 42;  // wide viewBox → fills the section; tall enough that the
-                                                                // enlarged mobile value/label text clears the line (see style.css .dw-lg @media)
+  const W = 900, H = 160, padX = 64, padTop = 44, padBot = 78;  // wide viewBox → fills the section; padBot leaves room for a
+                                                                // two-line x-axis (label + clock time) at mobile font sizes (see style.css .dw-lg @media)
   const plotW = W - padX * 2, plotH = H - padTop - padBot;
   const cents = pts.map(p => _oddsToCents(p.odds));
   let lo = Math.min(...cents), hi = Math.max(...cents);
@@ -1237,10 +1237,14 @@ function prLineGraph(points) {
   pts.forEach((p, i) => {
     const px = xs[i].toFixed(1), py = y(cents[i]);
     const labeled = !!p.label;   // only key points get a dot label; the rest are plain vertices
-    svg += '<circle cx="' + px + '" cy="' + py.toFixed(1) + '" r="' + (labeled ? '3.4' : '1.8') + '" fill="' + col + '"/>';
+    // C: native tooltip on every point (hover desktop / long-press) — "time · odds"
+    const _od = (p.odds > 0 ? '+' + p.odds : '' + p.odds);
+    const _tip = (p.clock ? p.clock + ' · ' : '') + _od;
+    svg += '<circle cx="' + px + '" cy="' + py.toFixed(1) + '" r="' + (labeled ? '3.4' : '1.8') + '" fill="' + col + '"><title>' + _tip + '</title></circle>';
     if (labeled) {
-      svg += '<text x="' + px + '" y="' + (py - 20).toFixed(1) + '" class="dw-lg-val" text-anchor="middle">' + (p.odds > 0 ? '+' + p.odds : p.odds) + '</text>';
-      svg += '<text x="' + px + '" y="' + (H - 12) + '" class="dw-lg-lbl" text-anchor="middle">' + p.label + '</text>';
+      svg += '<text x="' + px + '" y="' + (py - 20).toFixed(1) + '" class="dw-lg-val" text-anchor="middle">' + _od + '</text>';
+      svg += '<text x="' + px + '" y="' + (H - 36) + '" class="dw-lg-lbl" text-anchor="middle">' + p.label + '</text>';
+      if (p.clock) svg += '<text x="' + px + '" y="' + (H - 12) + '" class="dw-lg-time" text-anchor="middle">' + p.clock + '</text>';  // A: clock time under the anchor
     }
   });
   return svg + '</svg>';
@@ -1396,18 +1400,24 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   //    Opened → Posted → Current/Closed 3-point graph when the series is absent.
   let lgPts;
   const _hist = Array.isArray(p.odds_history) ? p.odds_history.filter(h => h && h.odds != null) : [];
+  const _endLabel = (live || over) ? 'Close' : 'Now';
   if (_hist.length >= 2) {
-    const _endLabel = (live || over) ? 'Close' : 'Now';   // label only the endpoints; intermediate points stay plain
+    // Anchor "Posted" at the snapshot when we locked the line (match posted_at's CT
+    // clock); fall back to the start of the tracked curve. Last point = Now/Close.
+    // Every point carries its CT clock for the axis time + per-point tooltip.
+    const _postClock = String(p.posted_at || '').replace(/\s*CT$/i, '').trim();
+    let _postedIdx = _postClock ? _hist.findIndex(h => _clockFromT(h.t) === _postClock) : -1;
+    if (_postedIdx < 0) _postedIdx = 0;
     lgPts = _hist.map((h, i) => ({
-      odds: h.odds, t: h.t,
-      label: i === 0 ? 'Open' : i === _hist.length - 1 ? _endLabel : ''
+      odds: h.odds, t: h.t, clock: _clockFromT(h.t),
+      label: i === _hist.length - 1 ? _endLabel : (i === _postedIdx ? 'Posted' : '')
     }));
   } else {
-    lgPts = [];
-    if (p.line_open != null) lgPts.push({ label: 'Opened', odds: p.line_open });
-    lgPts.push({ label: 'Posted', odds: p.odds });
-    if (!inactive && sb.best) lgPts.push({ label: 'Current', odds: sb.best.odds });
-    else if ((live || over) && p.closing_prob != null) lgPts.push({ label: 'Closed', odds: _americanFromImplied(p.closing_prob) });
+    // Fallback (no real series): Posted → Now/Close only — no "Open"/Pinnacle point.
+    const _nowClock = String(p.current_refresh_time || '').replace(/\s*CT$/i, '').trim();
+    lgPts = [{ label: 'Posted', odds: p.odds, clock: String(p.posted_at || '').replace(/\s*CT$/i, '').trim() }];
+    if (!inactive && sb.best) lgPts.push({ label: _endLabel, odds: sb.best.odds, clock: _nowClock });
+    else if ((live || over) && p.closing_prob != null) lgPts.push({ label: _endLabel, odds: _americanFromImplied(p.closing_prob), clock: _nowClock });
   }
   const graphHTML = prLineGraph(lgPts) || '<div class="dw-cap">Not enough line data to chart.</div>';
   let lgCap = '';
