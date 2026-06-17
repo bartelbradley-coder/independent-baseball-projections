@@ -13,6 +13,7 @@ let _unitSize = _bankroll / 100;  // kept for any legacy references; derived fro
 let _histRef  = null; // history data reference for tracker result lookup
 let _mainPicksRef = []; // today's main picks for share-all
 let _scoresRef = {};    // latest ESPN scores, for settled result share cards
+let _lastGameStatus = {};   // per-game ESPN status last seen — detects live/final transitions
 let _perfRef = null;    // performance.json (edge tiers) for share-card credibility
 let _mdActiveId = null; // card whose details are currently expanded inline
 let _histContextFn = null;      // set in render() — returns hist-context HTML for a pick
@@ -2225,7 +2226,18 @@ function isLiveHour() {
   const h = parseInt(new Date().toLocaleString('en-US', {
     hour: 'numeric', hour12: false, timeZone: 'America/New_York'
   }));
-  return h >= 9 && h <= 23;  // extended to midnight to catch late games
+  if (h >= 9 && h <= 23) return true;       // daytime / evening slate
+  // Past midnight ET: keep polling only if ESPN confirms a game is still going
+  // (a West-coast start can run past midnight ET). Bounded to ≤ 2 AM ET, and we
+  // require an actual ESPN entry so a name mismatch can't cause overnight polling.
+  if (h <= 2) {
+    const picks = Object.values(picksMap);
+    if (picks.length && _scoresRef && picks.some(p => {
+      const g = _scoresRef[p.game];
+      return g && (g.status === 'live' || g.status === 'scheduled');
+    })) return true;
+  }
+  return false;
 }
 
 function startAutoRefresh() {
@@ -2308,8 +2320,25 @@ function updateFloatingResults(scores) {
   pill.style.display = 'inline-flex';
 }
 
-// Lightweight DOM update — refreshes result badges and card classes without re-rendering
+// Lightweight DOM update — refreshes result badges and card classes without re-rendering.
+// On a *status transition* (scheduled→live→final / postponed) it does a full
+// rerenderPicks instead, since that changes sort order, actionability, and the
+// contents of any open drawer — none of which the lightweight badge update touches.
 function refreshScoreBadges(scores) {
+  let transition = false;
+  for (const p of Object.values(picksMap)) {
+    const gr = getPickResult(p, scores);
+    const st = gr ? gr.status : null;
+    if (!st) continue;
+    const prev = _lastGameStatus[p.game];
+    if (prev !== undefined && prev !== st) transition = true;   // a real change, not first sighting
+    _lastGameStatus[p.game] = st;
+  }
+  // rerenderPicks re-sorts (live/final/postponed drop below actionable plays) and
+  // rebuilds open drawers with fresh state; statuses are already recorded above so
+  // the badge repaint below won't re-trigger it.
+  if (transition) rerenderPicks();
+
   for (const [cardId, p] of Object.entries(picksMap)) {
     const gr = getPickResult(p, scores);
     if (!gr) continue;
