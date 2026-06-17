@@ -213,7 +213,7 @@ window.addEventListener('error', e => _showDebugBanner(
   e.message + ' — ' + e.filename + ':' + e.lineno
 ));
 
-// ── Email capture (daily-recap signup) — shared across all pages with an .email-bar ──
+// ── Email capture (daily-picks signup) — shared across all pages with an .email-bar ──
 function handleEmailSubmit(e) {
   e.preventDefault();
   const form = document.getElementById('ec-form');
@@ -231,7 +231,7 @@ function handleEmailSubmit(e) {
   .then(r => r.json())
   .then(() => { form.style.display = 'none'; success.style.display = 'block'; })
   .catch(() => {
-    if (btn) { btn.disabled = false; btn.textContent = 'Get Daily Recap →'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Get Daily Picks →'; }
     alert('Something went wrong — please try again in a moment.');
   });
 }
