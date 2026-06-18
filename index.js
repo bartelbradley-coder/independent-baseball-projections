@@ -1550,7 +1550,10 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
     + '<button type="button" class="dw-act" onclick="sharePickCard(\'' + cardId + '\', ' + (isBest ? 1 : 0) + ')">Share</button>'
     + '</div>');
 
-  const changedHTML = prWhatChanged(p);
+  // Omit from share cards: the "What changed" block is a collapsed <details>, which
+  // html2canvas lays out incorrectly (its body overlaps the sections below), and the
+  // intraday re-rate detail isn't share-card material anyway.
+  const changedHTML = forShare ? '' : prWhatChanged(p);
   return '<div class="dw">' + headHTML + bandHTML + changedHTML + bodyHTML + moveHTML + actionsHTML + '</div>';
 }
 
