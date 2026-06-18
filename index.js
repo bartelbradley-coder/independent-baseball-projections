@@ -1546,7 +1546,11 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   const moveHTML = '<div class="dw-sec"><div class="dw-move-head"><div class="dw-h2">Line Movement</div>' + clvHTML + '</div>'
     + '<div class="dw-lgwrap">' + graphHTML + lgCap + '</div></div>';
 
-  const actionsHTML = forShare ? '' : ('<div class="dw-actions">'
+  // Hide Share for a PREGAME pick re-rated below the 4% threshold (or whose price
+  // moved past the floor) — promoting a downgraded pick is odd. Live/final/postponed
+  // keep Share (those are legitimate result cards).
+  const _notShareable = !inactive && !prActionable(p);
+  const actionsHTML = (forShare || _notShareable) ? '' : ('<div class="dw-actions">'
     + '<button type="button" class="dw-act" onclick="sharePickCard(\'' + cardId + '\', ' + (isBest ? 1 : 0) + ')">Share</button>'
     + '</div>');
 
