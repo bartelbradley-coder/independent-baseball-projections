@@ -1,7 +1,7 @@
 {
   "date": "2026-06-18",
-  "generated_at": "6:04 PM CT \u00b7 Jun 18",
-  "generated_at_utc": "2026-06-18T23:04:54Z",
+  "generated_at": "6:34 PM CT \u00b7 Jun 18",
+  "generated_at_utc": "2026-06-18T23:34:33Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -9,7 +9,7 @@
       "pick": "CHW",
       "side": "AWAY",
       "pick_type": "MONEYLINE",
-      "meta": "SP: Bryan Hudson",
+      "meta": "SP: Sean Burke",
       "posted_at": "7:05 AM CT",
       "game_time": "2026-06-18T23:05:00Z",
       "temp_f": 76.2,
@@ -82,25 +82,22 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 142,
-        "Novig": 153,
-        "BetOnline": 145,
-        "LowVig": 145,
-        "ESPN Bet": 140,
-        "DraftKings": 146,
-        "BetMGM": 140,
-        "Hard Rock": 145,
-        "MyBookie": 147,
-        "Betway": 145,
-        "BetUS": 145,
-        "Bovada": 140,
-        "Pinnacle": 152,
-        "ProphetX": 154,
-        "BetRivers": 133
+        "FanDuel": 112,
+        "Novig": 115,
+        "ESPN Bet": 105,
+        "DraftKings": 111,
+        "BetMGM": 115,
+        "Hard Rock": 115,
+        "MyBookie": -111,
+        "Betway": 110,
+        "Bovada": 120,
+        "Pinnacle": 179,
+        "ProphetX": 129,
+        "BetRivers": 108
       },
-      "pitcher": "Bryan Hudson",
+      "pitcher": "Sean Burke",
       "opp_pitcher": "Ryan Weathers",
-      "starter_swapped": true,
+      "starter_swapped": false,
       "factors": [
         {
           "label": "Pitcher Quality (xFIP)",
@@ -112,28 +109,28 @@
         }
       ],
       "raw_stats": {
-        "pick_xfip": 4.108,
-        "opp_xfip": 4.618,
+        "pick_xfip": 4.236,
+        "opp_xfip": 4.612,
         "pick_oaa": 11,
         "opp_oaa": -3,
         "pick_bp_pitches": 150,
         "opp_bp_pitches": 150,
         "pick_bp_xfip": 4.35,
         "opp_bp_xfip": 4.35,
-        "pick_xera": 3.59,
-        "opp_xera": 4.28,
-        "pick_xera_pct": 66.0,
-        "opp_xera_pct": 42.0,
-        "pick_whiff_pct": 36.0,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 22.0,
         "opp_whiff_pct": 60.0,
         "pick_kbb_pct": 0.1438,
         "opp_kbb_pct": 0.1967,
         "pick_bvp_shift": 0.0,
-        "pick_arsenal_fit": 0.1582,
-        "opp_arsenal_fit": -0.0931,
+        "pick_arsenal_fit": 0.1593,
+        "opp_arsenal_fit": -0.0941,
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
-        "pick_proj_ip": 6.1,
+        "pick_proj_ip": 6.0,
         "opp_proj_ip": 5.5,
         "pick_era": 4.15,
         "opp_era": 4.36,
@@ -174,7 +171,7 @@
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "Model identifies a meaningful starter quality gap: Sean Burke (4.24 xFIP) has a measurable edge over Ryan Weathers (4.61 xFIP) \u2014 model prices CHW at 47.0% to win; Pinnacle implies 41.1% (+142) \u2014 a 5.9-point gap. Further evidence: arsenal matchup: Sean Burke's pitch mix maps favorably against the opposing lineup's RHH-heavy profile today \u2014 a contact-quality signal xFIP doesn't fully capture. Model inputs solid, no critical gaps.",
+      "narrative": "Pitching matchup creates the primary edge: Sean Burke (4.24 xFIP) has a measurable edge over Ryan Weathers (4.61 xFIP) \u2014 model prices CHW at 47.0% to win; Pinnacle implies 41.1% (+142) \u2014 a 5.9-point gap. This is reinforced by arsenal matchup: Sean Burke's pitch mix maps favorably against the opposing lineup's RHH-heavy profile today \u2014 a contact-quality signal xFIP doesn't fully capture. Model inputs solid, no critical gaps.",
       "run_line": {
         "spread": "1.5",
         "model_prob": 0.6682,
@@ -183,68 +180,19 @@
         "edge": 0.0831
       },
       "total": null,
-      "current_edge": 0.0511,
-      "current_model_prob": 0.4448,
-      "current_refresh_time": "6:03 PM CT",
-      "current_recommendation": "same",
+      "current_edge": null,
+      "current_model_prob": null,
+      "current_refresh_time": "6:34 PM CT",
+      "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Bryan Hudson",
-      "current_fair_odds": "+125",
-      "current_playable_to": 147,
-      "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": true,
-      "current_top_factors": [
-        {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 0.48,
-          "positive": true
-        },
-        {
-          "label": "Defense (OAA)",
-          "pp": 0.37,
-          "positive": true
-        },
-        {
-          "label": "Lineup quality",
-          "pp": -0.34,
-          "positive": false
-        }
-      ],
-      "model_change": {
-        "edge_delta": -0.0058,
-        "model_delta": -0.0253,
-        "market_delta": -0.0223,
-        "posted": {
-          "model_prob": 0.4701,
-          "market_prob": 0.411,
-          "edge": 0.0569
-        },
-        "current": {
-          "model_prob": 0.4448,
-          "market_prob": 0.3887,
-          "edge": 0.0511
-        },
-        "factor_deltas": [
-          {
-            "label": "Lineup quality",
-            "posted_pp": 0.0,
-            "current_pp": -0.34,
-            "delta_pp": -0.34
-          },
-          {
-            "label": "Arsenal fit",
-            "posted_pp": 0.0,
-            "current_pp": 0.25,
-            "delta_pp": 0.25
-          }
-        ],
-        "starter_changed": {
-          "from": "Sean Burke",
-          "to": "Bryan Hudson"
-        },
-        "refreshed_at": "6:03 PM CT"
-      },
+      "current_pitcher": null,
+      "current_fair_odds": null,
+      "current_playable_to": null,
+      "current_lineup_confirmed": null,
+      "current_opp_lineup_confirmed": null,
+      "current_top_factors": [],
+      "model_change": null,
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -399,7 +347,7 @@
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "Home field weight leads the model's probability gap: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for MIL. Model prices MIL at 62.1% to win; Pinnacle implies 57.4% (-138) \u2014 a 4.7-point gap. A second angle confirms this: arsenal matchup: Shane Drohan's breaking-ball-heavy arsenal maps favorably against the opposing lineup's RHH-heavy profile today \u2014 a contact-quality signal xFIP doesn't fully capture. Model inputs solid, no critical gaps.",
+      "narrative": "2026 park and home-game data drive the edge: 2026 park data and home-game performance generate a log-odds boost the market's flat moneyline underweights for MIL. Model prices MIL at 62.1% to win; Pinnacle implies 57.4% (-138) \u2014 a 4.7-point gap. A second angle confirms this: arsenal matchup: Shane Drohan's breaking-ball-heavy arsenal maps favorably against the opposing lineup's RHH-heavy profile today \u2014 a contact-quality signal xFIP doesn't fully capture. Model inputs solid, no critical gaps.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.4879,
@@ -410,7 +358,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "6:03 PM CT",
+      "current_refresh_time": "6:34 PM CT",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -430,7 +378,7 @@
   ],
   "signal_count": 2,
   "posted_count": 2,
-  "games_today": 4,
+  "games_today": 2,
   "yesterday_picks": [
     {
       "game": "MIA @ PHI",
