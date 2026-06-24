@@ -1,7 +1,7 @@
 {
   "date": "2026-06-24",
-  "generated_at": "2:22 PM CT \u00b7 Jun 24",
-  "generated_at_utc": "2026-06-24T19:22:27Z",
+  "generated_at": "3:21 PM CT \u00b7 Jun 24",
+  "generated_at_utc": "2026-06-24T20:21:20Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -9,12 +9,12 @@
       "pick": "WSH",
       "side": "HOME",
       "pick_type": "MONEYLINE",
-      "meta": "SP: Miles Mikolas",
+      "meta": "SP: Carson Palmquist",
       "posted_at": "8:06 AM CT",
       "game_time": "2026-06-24T22:45:00Z",
-      "temp_f": 72.0,
-      "wind_speed_mph": 5.0,
-      "wind_dir_degrees": 180.0,
+      "temp_f": 70.6,
+      "wind_speed_mph": 4.9,
+      "wind_dir_degrees": 150.0,
       "is_domed": false,
       "model_prob": 0.5429,
       "market_prob": 0.4537,
@@ -45,6 +45,10 @@
         {
           "t": "2026-06-24T19:19",
           "odds": 111
+        },
+        {
+          "t": "2026-06-24T20:18",
+          "odds": 112
         }
       ],
       "clv": null,
@@ -65,17 +69,17 @@
         "Betway": 105,
         "Hard Rock": 105,
         "BetUS": 108,
-        "ProphetX": 111,
-        "Pinnacle": 109,
-        "Bovada": 106,
-        "BetRivers": 108
+        "ProphetX": 112,
+        "Pinnacle": 108,
+        "Bovada": 105,
+        "BetRivers": 104
       },
-      "pitcher": "Miles Mikolas",
+      "pitcher": "Carson Palmquist",
       "opp_pitcher": "Aaron Nola",
-      "starter_swapped": false,
+      "starter_swapped": true,
       "factors": [],
       "raw_stats": {
-        "pick_xfip": 4.489,
+        "pick_xfip": 4.2,
         "opp_xfip": 4.562,
         "pick_oaa": -8,
         "opp_oaa": -18,
@@ -84,19 +88,19 @@
         "pick_bp_xfip": 4.35,
         "opp_bp_xfip": 4.35,
         "pick_xera": null,
-        "opp_xera": null,
+        "opp_xera": 4.25,
         "pick_xera_pct": null,
-        "opp_xera_pct": null,
+        "opp_xera_pct": 41.0,
         "pick_whiff_pct": 1.0,
         "opp_whiff_pct": 48.0,
         "pick_kbb_pct": null,
         "opp_kbb_pct": 0.1562,
         "pick_bvp_shift": 0.0,
-        "pick_arsenal_fit": -0.3307,
+        "pick_arsenal_fit": 0.0,
         "opp_arsenal_fit": -0.2053,
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
-        "pick_proj_ip": 7.2,
+        "pick_proj_ip": 5.3,
         "opp_proj_ip": 5.1,
         "pick_era": null,
         "opp_era": 5.71,
@@ -131,7 +135,7 @@
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "A multi-factor convergence edge: an even pitching matchup (Miles Mikolas 4.49 vs. Aaron Nola 4.56 xFIP). No single signal dominates \u2014 the probability gap of 8.9pp reflects several independent inputs each pushing in the same direction. The model's fair price is -119 vs. the +122 available. Model prices WSH at 54.3% to win; Pinnacle implies 45.4% (+122) \u2014 a 8.9-point gap. A complicating factor: arsenal matchup: the opposing lineup's handedness profile creates a modest pitch-type headwind for Miles Mikolas \u2014 factored in, but not enough to erase the overall edge. Key risk: Miles Mikolas is projected to work deep (7.2 IP) \u2014 the times-through-order penalty applies from the 3rd cycle onward. If the lineup adjusts late, the starter quality edge compresses.",
+      "narrative": "A multi-factor convergence edge: an even pitching matchup (Miles Mikolas 4.49 vs. Aaron Nola 4.56 xFIP). No single signal dominates \u2014 the probability gap of 8.9pp reflects several independent inputs each pushing in the same direction. The model's fair price is -119 vs. the +122 available. Model prices WSH at 54.3% to win; Pinnacle implies 45.4% (+122) \u2014 a 8.9-point gap. One caution: arsenal matchup: the opposing lineup's handedness profile creates a modest pitch-type headwind for Miles Mikolas \u2014 factored in, but not enough to erase the overall edge. Key risk: Miles Mikolas is projected to work deep (7.2 IP) \u2014 the times-through-order penalty applies from the 3rd cycle onward. If the lineup adjusts late, the starter quality edge compresses.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.4042,
@@ -140,51 +144,67 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0729,
-      "current_model_prob": 0.5468,
-      "current_refresh_time": "2:19 PM CT",
+      "current_edge": 0.1145,
+      "current_model_prob": 0.5862,
+      "current_refresh_time": "3:18 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Miles Mikolas",
-      "current_fair_odds": "-121",
-      "current_playable_to": -103,
+      "current_pitcher": "Carson Palmquist",
+      "current_fair_odds": "-142",
+      "current_playable_to": -120,
       "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
+          "label": "Lineup quality",
+          "pp": 0.64,
+          "positive": true
+        },
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 0.33,
+          "positive": true
+        },
+        {
           "label": "Defense (OAA)",
-          "pp": 0.3,
+          "pp": 0.29,
           "positive": true
-        },
-        {
-          "label": "Home field",
-          "pp": 0.27,
-          "positive": true
-        },
-        {
-          "label": "TTO penalty",
-          "pp": -0.13,
-          "positive": false
         }
       ],
       "model_change": {
-        "edge_delta": -0.0195,
-        "model_delta": 0.0039,
-        "market_delta": 0.0155,
+        "edge_delta": 0.0221,
+        "model_delta": 0.0433,
+        "market_delta": 0.0177,
         "posted": {
           "model_prob": 0.5429,
           "market_prob": 0.4537,
           "edge": 0.0924
         },
         "current": {
-          "model_prob": 0.5468,
-          "market_prob": 0.4692,
-          "edge": 0.0729
+          "model_prob": 0.5862,
+          "market_prob": 0.4714,
+          "edge": 0.1145
         },
-        "factor_deltas": [],
-        "starter_changed": null,
-        "refreshed_at": "2:19 PM CT"
+        "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": 0.64,
+            "delta_pp": 0.64
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "posted_pp": 0.0,
+            "current_pp": 0.33,
+            "delta_pp": 0.33
+          }
+        ],
+        "starter_changed": {
+          "from": "Miles Mikolas",
+          "to": "Carson Palmquist"
+        },
+        "refreshed_at": "3:18 PM CT"
       },
       "verdict": "\u2705 STRONG",
       "kelly_multiplier": 1.0,
@@ -200,9 +220,9 @@
       "meta": "SP: Ryan Weathers",
       "posted_at": "8:06 AM CT",
       "game_time": "2026-06-24T22:40:00Z",
-      "temp_f": 72.0,
-      "wind_speed_mph": 5.0,
-      "wind_dir_degrees": 180.0,
+      "temp_f": 68.2,
+      "wind_speed_mph": 2.6,
+      "wind_dir_degrees": 160.0,
       "is_domed": false,
       "model_prob": 0.5019,
       "market_prob": 0.4281,
@@ -237,6 +257,10 @@
         {
           "t": "2026-06-24T19:19",
           "odds": 117
+        },
+        {
+          "t": "2026-06-24T20:18",
+          "odds": 117
         }
       ],
       "clv": null,
@@ -247,16 +271,16 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 114,
-        "BetOnline": 114,
-        "LowVig": 114,
+        "BetOnline": 105,
+        "LowVig": 104,
         "Novig": 117,
-        "ESPN Bet": 115,
-        "DraftKings": 109,
-        "BetMGM": 110,
+        "ESPN Bet": 110,
+        "DraftKings": 108,
+        "BetMGM": 105,
         "MyBookie": 111,
         "Betway": 110,
         "Hard Rock": 110,
-        "BetUS": 115,
+        "BetUS": 114,
         "ProphetX": 115,
         "Pinnacle": 113,
         "Bovada": 108,
@@ -338,7 +362,7 @@
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "Tarik Skubal (3.44 xFIP) has a quality edge over Ryan Weathers (4.22), yet the market has over-discounted NYY: model prices NYY at 50.2% to win; Pinnacle implies 42.8% (+130) \u2014 a 7.4-point gap. Further evidence: rest advantage: NYY is the fresher team \u2014 the opponent played yesterday with 150 bullpen pitches in the last 3 days, a fatigue factor moneylines price more slowly than run lines. Key risk: Tarik Skubal (3.44 xFIP) is the sharper starter \u2014 a 0.78-point gap that has to be overcome by NYY's other model signals. This pick requires those signals to hold.",
+      "narrative": "Tarik Skubal (3.44 xFIP) has a quality edge over Ryan Weathers (4.22), yet the market has over-discounted NYY: model prices NYY at 50.2% to win; Pinnacle implies 42.8% (+130) \u2014 a 7.4-point gap. Supporting this: rest advantage: NYY is the fresher team \u2014 the opponent played yesterday with 150 bullpen pitches in the last 3 days, a fatigue factor moneylines price more slowly than run lines. Key risk: Tarik Skubal (3.44 xFIP) is the sharper starter \u2014 a 0.78-point gap that has to be overcome by NYY's other model signals. This pick requires those signals to hold.",
       "run_line": {
         "spread": "1.5",
         "model_prob": 0.7319,
@@ -347,17 +371,17 @@
         "edge": 0.1023
       },
       "total": null,
-      "current_edge": 0.0485,
-      "current_model_prob": 0.5093,
-      "current_refresh_time": "2:19 PM CT",
+      "current_edge": 0.0324,
+      "current_model_prob": 0.4932,
+      "current_refresh_time": "3:18 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Ryan Weathers",
-      "current_fair_odds": "-104",
-      "current_playable_to": 113,
-      "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_fair_odds": "+103",
+      "current_playable_to": 121,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
@@ -370,14 +394,14 @@
           "positive": true
         },
         {
-          "label": "Arsenal fit",
-          "pp": -0.22,
+          "label": "Lineup quality",
+          "pp": -0.28,
           "positive": false
         }
       ],
       "model_change": {
-        "edge_delta": -0.0186,
-        "model_delta": 0.0074,
+        "edge_delta": -0.0347,
+        "model_delta": -0.0087,
         "market_delta": 0.0317,
         "posted": {
           "model_prob": 0.5019,
@@ -385,13 +409,26 @@
           "edge": 0.0671
         },
         "current": {
-          "model_prob": 0.5093,
+          "model_prob": 0.4932,
           "market_prob": 0.4598,
-          "edge": 0.0485
+          "edge": 0.0324
         },
-        "factor_deltas": [],
+        "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.28,
+            "delta_pp": -0.28
+          },
+          {
+            "label": "BvP matchup",
+            "posted_pp": 0.0,
+            "current_pp": -0.25,
+            "delta_pp": -0.25
+          }
+        ],
         "starter_changed": null,
-        "refreshed_at": "2:19 PM CT"
+        "refreshed_at": "3:18 PM CT"
       },
       "verdict": "\u2b07\ufe0f REDUCED CONF.",
       "kelly_multiplier": 1.0,
@@ -444,6 +481,10 @@
         {
           "t": "2026-06-24T19:19",
           "odds": 138
+        },
+        {
+          "t": "2026-06-24T20:18",
+          "odds": 135
         }
       ],
       "clv": null,
@@ -456,18 +497,18 @@
         "FanDuel": 124,
         "LowVig": 131,
         "BetOnline": 131,
-        "Novig": 138,
+        "Novig": 135,
         "ESPN Bet": 125,
-        "DraftKings": 129,
+        "DraftKings": 123,
         "BetMGM": 125,
-        "MyBookie": 127,
+        "MyBookie": 124,
         "Betway": 125,
         "Hard Rock": 125,
         "BetUS": 130,
-        "ProphetX": 136,
-        "Pinnacle": 131,
-        "Bovada": 132,
-        "BetRivers": 120
+        "ProphetX": 132,
+        "Pinnacle": 129,
+        "Bovada": 129,
+        "BetRivers": 125
       },
       "pitcher": "Noah Cameron",
       "opp_pitcher": "Griffin Jax",
@@ -555,7 +596,7 @@
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "Pitching matchup creates the primary edge: Noah Cameron (4.02 xFIP) has a measurable edge over Griffin Jax (4.25 xFIP) \u2014 model prices KC at 48.5% to win; Pinnacle implies 42.6% (+136) \u2014 a 5.9-point gap. Further evidence: rest advantage: KC is the fresher team \u2014 the opponent played yesterday with 150 bullpen pitches in the last 3 days, a fatigue factor moneylines price more slowly than run lines. Lineup risk: KC's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
+      "narrative": "The market is mispricing a modest starter advantage: Noah Cameron (4.02 xFIP) has a measurable edge over Griffin Jax (4.25 xFIP) \u2014 model prices KC at 48.5% to win; Pinnacle implies 42.6% (+136) \u2014 a 5.9-point gap. Supporting this: rest advantage: KC is the fresher team \u2014 the opponent played yesterday with 150 bullpen pitches in the last 3 days, a fatigue factor moneylines price more slowly than run lines. Model inputs solid, no critical gaps.",
       "run_line": {
         "spread": "1.5",
         "model_prob": 0.7103,
@@ -564,9 +605,9 @@
         "edge": 0.0949
       },
       "total": null,
-      "current_edge": 0.082,
-      "current_model_prob": 0.5022,
-      "current_refresh_time": "2:19 PM CT",
+      "current_edge": 0.0776,
+      "current_model_prob": 0.5031,
+      "current_refresh_time": "3:18 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -593,18 +634,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0208,
-        "model_delta": 0.0173,
-        "market_delta": -0.0025,
+        "edge_delta": 0.0164,
+        "model_delta": 0.0182,
+        "market_delta": 0.0011,
         "posted": {
           "model_prob": 0.4849,
           "market_prob": 0.4263,
           "edge": 0.0612
         },
         "current": {
-          "model_prob": 0.5022,
-          "market_prob": 0.4238,
-          "edge": 0.082
+          "model_prob": 0.5031,
+          "market_prob": 0.4274,
+          "edge": 0.0776
         },
         "factor_deltas": [
           {
@@ -621,7 +662,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:19 PM CT"
+        "refreshed_at": "3:18 PM CT"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -676,8 +717,8 @@
           "odds": -111
         },
         {
-          "t": "2026-06-24T19:19",
-          "odds": -111
+          "t": "2026-06-24T20:18",
+          "odds": -107
         }
       ],
       "clv": null,
@@ -690,7 +731,7 @@
         "FanDuel": -116,
         "LowVig": -111,
         "BetOnline": -111,
-        "Novig": -113,
+        "Novig": -108,
         "ESPN Bet": -120,
         "DraftKings": -118,
         "BetMGM": -118,
@@ -698,10 +739,10 @@
         "Betway": -120,
         "Hard Rock": -115,
         "BetUS": -111,
-        "ProphetX": -111,
-        "Pinnacle": -114,
+        "ProphetX": -107,
+        "Pinnacle": -113,
         "Bovada": -120,
-        "BetRivers": -115
+        "BetRivers": -118
       },
       "pitcher": "Braxton Ashcraft",
       "opp_pitcher": "Bryan Woo",
@@ -779,7 +820,7 @@
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "Pitching matchup creates the primary edge: Braxton Ashcraft (3.25 xFIP, with a 20.3% K-BB% (elite command)) has a measurable edge over Bryan Woo (3.61 xFIP) \u2014 model prices PIT at 58.2% to win; Pinnacle implies 51.5% (-109) \u2014 a 6.7-point gap. Further evidence: arsenal matchup: Braxton Ashcraft's breaking-ball-heavy arsenal maps favorably against the opposing lineup's RHH-heavy profile today \u2014 a contact-quality signal xFIP doesn't fully capture. Lineup risk: PIT's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
+      "narrative": "The market is mispricing a clear starter advantage: Braxton Ashcraft (3.25 xFIP, with a 20.3% K-BB% (elite command)) has a measurable edge over Bryan Woo (3.61 xFIP) \u2014 model prices PIT at 58.2% to win; Pinnacle implies 51.5% (-109) \u2014 a 6.7-point gap. Supporting this: arsenal matchup: Braxton Ashcraft's breaking-ball-heavy arsenal maps favorably against the opposing lineup's RHH-heavy profile today \u2014 a contact-quality signal xFIP doesn't fully capture. Model inputs solid, no critical gaps.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.4354,
@@ -788,58 +829,64 @@
         "edge": 0.0882
       },
       "total": null,
-      "current_edge": 0.0525,
-      "current_model_prob": 0.5786,
-      "current_refresh_time": "2:19 PM CT",
+      "current_edge": 0.0791,
+      "current_model_prob": 0.596,
+      "current_refresh_time": "3:18 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Braxton Ashcraft",
-      "current_fair_odds": "-137",
-      "current_playable_to": -117,
-      "current_lineup_confirmed": false,
+      "current_fair_odds": "-148",
+      "current_playable_to": -125,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
       "current_top_factors": [
+        {
+          "label": "Lineup quality",
+          "pp": 0.61,
+          "positive": true
+        },
         {
           "label": "Defense (OAA)",
           "pp": 0.4,
           "positive": true
         },
         {
-          "label": "Home field",
-          "pp": 0.32,
-          "positive": true
-        },
-        {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 0.32,
+          "label": "Arsenal fit",
+          "pp": 0.36,
           "positive": true
         }
       ],
       "model_change": {
-        "edge_delta": -0.0083,
-        "model_delta": -0.0037,
-        "market_delta": 0.0068,
+        "edge_delta": 0.0183,
+        "model_delta": 0.0137,
+        "market_delta": 0.0058,
         "posted": {
           "model_prob": 0.5823,
           "market_prob": 0.5152,
           "edge": 0.0608
         },
         "current": {
-          "model_prob": 0.5786,
-          "market_prob": 0.522,
-          "edge": 0.0525
+          "model_prob": 0.596,
+          "market_prob": 0.521,
+          "edge": 0.0791
         },
         "factor_deltas": [
           {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": 0.61,
+            "delta_pp": 0.61
+          },
+          {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
-            "current_pp": 0.31,
-            "delta_pp": 0.31
+            "current_pp": 0.36,
+            "delta_pp": 0.36
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:19 PM CT"
+        "refreshed_at": "3:18 PM CT"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -888,6 +935,10 @@
         {
           "t": "2026-06-24T19:19",
           "odds": 156
+        },
+        {
+          "t": "2026-06-24T20:18",
+          "odds": 152
         }
       ],
       "clv": null,
@@ -897,20 +948,20 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 148,
-        "Novig": 156,
-        "BetOnline": 154,
-        "LowVig": 154,
-        "MyBookie": 147,
-        "Betway": 145,
-        "Hard Rock": 150,
-        "BetRivers": 143,
-        "ProphetX": 154,
-        "DraftKings": 148,
-        "BetMGM": 145,
+        "FanDuel": 136,
+        "Novig": 147,
+        "BetOnline": 142,
+        "LowVig": 142,
+        "MyBookie": 131,
+        "Betway": 135,
+        "Hard Rock": 140,
+        "BetRivers": 148,
+        "ProphetX": 150,
+        "DraftKings": 134,
+        "BetMGM": 135,
         "Pinnacle": 152,
-        "Bovada": 144,
-        "ESPN Bet": 155,
+        "Bovada": 132,
+        "ESPN Bet": 140,
         "BetUS": 152
       },
       "pitcher": "Joe Ryan",
@@ -983,7 +1034,7 @@
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "Shohei Ohtani (3.17 xFIP) has a quality edge over Joe Ryan (3.31), yet the market has over-discounted MIN: model prices MIN at 43.6% to win; Pinnacle implies 38.1% (+158) \u2014 a 5.5-point gap. Further evidence: arsenal matchup: Joe Ryan's breaking-ball-heavy arsenal maps favorably against the opposing lineup's RHH-heavy profile today \u2014 a contact-quality signal xFIP doesn't fully capture. Lineup risk: MIN's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
+      "narrative": "Shohei Ohtani (3.17 xFIP) has a quality edge over Joe Ryan (3.31), yet the market has over-discounted MIN: model prices MIN at 43.6% to win; Pinnacle implies 38.1% (+158) \u2014 a 5.5-point gap. Supporting this: arsenal matchup: Joe Ryan's breaking-ball-heavy arsenal maps favorably against the opposing lineup's RHH-heavy profile today \u2014 a contact-quality signal xFIP doesn't fully capture. Lineup risk: MIN's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.2517,
@@ -992,9 +1043,9 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0512,
-      "current_model_prob": 0.4418,
-      "current_refresh_time": "2:19 PM CT",
+      "current_edge": 0.0451,
+      "current_model_prob": 0.4419,
+      "current_refresh_time": "3:18 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1021,18 +1072,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0027,
-        "model_delta": 0.0057,
-        "market_delta": 0.0078,
+        "edge_delta": -0.0034,
+        "model_delta": 0.0058,
+        "market_delta": 0.0083,
         "posted": {
           "model_prob": 0.4361,
           "market_prob": 0.3809,
           "edge": 0.0485
         },
         "current": {
-          "model_prob": 0.4418,
-          "market_prob": 0.3887,
-          "edge": 0.0512
+          "model_prob": 0.4419,
+          "market_prob": 0.3892,
+          "edge": 0.0451
         },
         "factor_deltas": [
           {
@@ -1043,7 +1094,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:19 PM CT"
+        "refreshed_at": "3:18 PM CT"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1060,8 +1111,8 @@
       "posted_at": "8:06 AM CT",
       "game_time": "2026-06-24T19:10:00Z",
       "temp_f": 85.7,
-      "wind_speed_mph": 14.1,
-      "wind_dir_degrees": 2.0,
+      "wind_speed_mph": 4.9,
+      "wind_dir_degrees": 5.0,
       "is_domed": false,
       "model_prob": 0.4466,
       "market_prob": 0.3984,
@@ -1109,21 +1160,18 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 142,
-        "LowVig": 147,
-        "BetOnline": 147,
-        "Novig": 153,
-        "ESPN Bet": 145,
-        "DraftKings": 144,
-        "Betway": 145,
-        "MyBookie": 144,
-        "BetMGM": 145,
-        "Hard Rock": 145,
-        "ProphetX": 150,
-        "Pinnacle": 152,
-        "Bovada": 141,
-        "BetUS": 146,
-        "BetRivers": 150
+        "FanDuel": 215,
+        "Novig": 208,
+        "ESPN Bet": 210,
+        "DraftKings": 214,
+        "Betway": 130,
+        "MyBookie": 195,
+        "BetMGM": 210,
+        "Hard Rock": 200,
+        "ProphetX": 200,
+        "Pinnacle": 395,
+        "Bovada": 180,
+        "BetRivers": 215
       },
       "pitcher": "Kyle Freeland",
       "opp_pitcher": "Ranger Suarez",
@@ -1211,7 +1259,7 @@
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "Ranger Suarez (3.31 xFIP) has a quality edge over Kyle Freeland (4.42), yet the market has over-discounted COL: model prices COL at 44.7% to win; Pinnacle implies 39.8% (+150) \u2014 a 4.8-point gap. Against this: arsenal matchup: the opposing lineup's handedness profile creates a modest pitch-type headwind for Kyle Freeland \u2014 factored in, but not enough to erase the overall edge. Key risk: Ranger Suarez (3.31 xFIP) is the sharper starter \u2014 a 1.11-point gap that has to be overcome by COL's other model signals. This pick requires those signals to hold.",
+      "narrative": "Ranger Suarez (3.31 xFIP) has a quality edge over Kyle Freeland (4.42), yet the market has over-discounted COL: model prices COL at 44.7% to win; Pinnacle implies 39.8% (+150) \u2014 a 4.8-point gap. One caution: arsenal matchup: the opposing lineup's handedness profile creates a modest pitch-type headwind for Kyle Freeland \u2014 factored in, but not enough to erase the overall edge. Key risk: Ranger Suarez (3.31 xFIP) is the sharper starter \u2014 a 1.11-point gap that has to be overcome by COL's other model signals. This pick requires those signals to hold.",
       "run_line": {
         "spread": "-1.5",
         "model_prob": 0.2646,
@@ -1222,7 +1270,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "2:19 PM CT",
+      "current_refresh_time": "3:18 PM CT",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1247,9 +1295,9 @@
       "meta": "SP: Shane Drohan",
       "posted_at": "8:06 AM CT",
       "game_time": "2026-06-24T23:10:00Z",
-      "temp_f": 69.4,
-      "wind_speed_mph": 2.6,
-      "wind_dir_degrees": 20.0,
+      "temp_f": 72.0,
+      "wind_speed_mph": 5.0,
+      "wind_dir_degrees": 180.0,
       "is_domed": false,
       "model_prob": 0.6165,
       "market_prob": 0.5693,
@@ -1284,6 +1332,10 @@
         {
           "t": "2026-06-24T19:19",
           "odds": -125
+        },
+        {
+          "t": "2026-06-24T20:18",
+          "odds": -125
         }
       ],
       "clv": null,
@@ -1296,18 +1348,18 @@
         "FanDuel": -136,
         "LowVig": -126,
         "BetOnline": -126,
-        "Novig": -125,
-        "ESPN Bet": -135,
+        "Novig": -127,
+        "ESPN Bet": -130,
         "DraftKings": -140,
-        "BetMGM": -130,
+        "BetMGM": -135,
         "MyBookie": -132,
         "Betway": -135,
-        "Hard Rock": -145,
+        "Hard Rock": -140,
         "BetUS": -128,
         "ProphetX": -125,
         "Pinnacle": -126,
-        "Bovada": -130,
-        "BetRivers": -148
+        "Bovada": -132,
+        "BetRivers": -143
       },
       "pitcher": "Shane Drohan",
       "opp_pitcher": "Rhett Lowder",
@@ -1385,7 +1437,7 @@
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "The market is mispricing a significant starter advantage: Shane Drohan (3.90 xFIP, with a 12.4% swinging-strike rate (above-average)) has a measurable edge over Rhett Lowder (5.34 xFIP, 4.82 ERA \u2014 outperforming their process stats) \u2014 model prices MIL at 61.7% to win; Pinnacle implies 56.9% (-133) \u2014 a 4.7-point gap. Further evidence: arsenal matchup: Shane Drohan's breaking-ball-heavy arsenal maps favorably against the opposing lineup's RHH-heavy profile today \u2014 a contact-quality signal xFIP doesn't fully capture. Lineup risk: MIL's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
+      "narrative": "Starter quality differential drives this pick: Shane Drohan (3.90 xFIP, with a 12.4% swinging-strike rate (above-average)) has a measurable edge over Rhett Lowder (5.34 xFIP, 4.82 ERA \u2014 outperforming their process stats) \u2014 model prices MIL at 61.7% to win; Pinnacle implies 56.9% (-133) \u2014 a 4.7-point gap. Supporting this: arsenal matchup: Shane Drohan's breaking-ball-heavy arsenal maps favorably against the opposing lineup's RHH-heavy profile today \u2014 a contact-quality signal xFIP doesn't fully capture. Lineup risk: MIL's lineup is not yet confirmed. The model uses a projected estimate \u2014 verify the actual starting nine before wagering, as lineup changes can shift the edge.",
       "run_line": {
         "spread": "1.5",
         "model_prob": 0.8357,
@@ -1394,21 +1446,21 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0442,
-      "current_model_prob": 0.5998,
-      "current_refresh_time": "2:19 PM CT",
+      "current_edge": 0.0508,
+      "current_model_prob": 0.6064,
+      "current_refresh_time": "3:18 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Shane Drohan",
-      "current_fair_odds": "-150",
-      "current_playable_to": -127,
-      "current_lineup_confirmed": false,
+      "current_fair_odds": "-154",
+      "current_playable_to": -131,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": 1.3,
+          "pp": 1.32,
           "positive": true
         },
         {
@@ -1423,8 +1475,8 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0015,
-        "model_delta": -0.0167,
+        "edge_delta": 0.0051,
+        "model_delta": -0.0101,
         "market_delta": -0.0218,
         "posted": {
           "model_prob": 0.6165,
@@ -1432,9 +1484,9 @@
           "edge": 0.0457
         },
         "current": {
-          "model_prob": 0.5998,
+          "model_prob": 0.6064,
           "market_prob": 0.5475,
-          "edge": 0.0442
+          "edge": 0.0508
         },
         "factor_deltas": [
           {
@@ -1446,12 +1498,12 @@
           {
             "label": "Lineup quality",
             "posted_pp": 0.0,
-            "current_pp": -0.46,
-            "delta_pp": -0.46
+            "current_pp": -0.44,
+            "delta_pp": -0.44
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:19 PM CT"
+        "refreshed_at": "3:18 PM CT"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1462,7 +1514,7 @@
   ],
   "signal_count": 7,
   "posted_count": 7,
-  "games_today": 12,
+  "games_today": 11,
   "yesterday_picks": [
     {
       "game": "HOU @ TOR",
