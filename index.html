@@ -173,11 +173,11 @@
 
   <!-- EMAIL CAPTURE — slim inline bar (full pitch demoted; list growth is secondary) -->
   <section class="email-bar" id="email-capture">
-    <div class="eb-copy"><strong>Get the daily picks by email</strong> — free while we build the 2026 track record (it won't be free forever). One email a day, only on days with picks.</div>
+    <div class="eb-copy"><strong>Get tomorrow's card by email</strong> — free all 2026 season while we build the public track record. <strong>Founding subscribers</strong> lock in priority access &amp; early pricing before paid tiers launch in 2027. One email a day, only on days with picks.</div>
     <form class="ec-form eb-form" id="ec-form" onsubmit="handleEmailSubmit(event)">
       <input class="ec-input" type="email" name="email_address" aria-label="Email address"
              placeholder="your@email.com" required autocomplete="email">
-      <button class="ec-btn" type="submit">Get Daily Picks →</button>
+      <button class="ec-btn" type="submit">Email me the daily picks →</button>
     </form>
     <div class="ec-success" id="ec-success" role="status">✓ You're on the list — picks coming your way.</div>
   </section>
@@ -256,6 +256,17 @@
     </div>
   </details>
 
+  <!-- SECOND EMAIL CAPTURE — catches readers who scrolled the full slate -->
+  <section class="email-bar" id="email-capture-2">
+    <div class="eb-copy"><strong>Like what you see?</strong> Get tomorrow's card the moment it posts — free for the 2026 season, with founding-subscriber pricing locked in before paid tiers launch in 2027.</div>
+    <form class="ec-form eb-form" onsubmit="handleEmailSubmit(event)">
+      <input class="ec-input" type="email" name="email_address" aria-label="Email address"
+             placeholder="your@email.com" required autocomplete="email">
+      <button class="ec-btn" type="submit">Email me the daily picks →</button>
+    </form>
+    <div class="ec-success" role="status">✓ You're on the list — picks coming your way.</div>
+  </section>
+
 </div>
 
 <footer>
@@ -308,7 +319,7 @@
   <span id="fr-text" aria-live="polite">—</span>
 </div>
 
-<script src="ibp-utils.js?v=2"></script>
-<script src="index.js?v=22"></script>
+<script src="ibp-utils.js?v=3"></script>
+<script src="index.js?v=23"></script>
 </body>
 </html>

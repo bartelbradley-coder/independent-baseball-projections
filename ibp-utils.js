@@ -216,11 +216,16 @@ window.addEventListener('error', e => _showDebugBanner(
 // ── Email capture (daily-picks signup) — shared across all pages with an .email-bar ──
 function handleEmailSubmit(e) {
   e.preventDefault();
-  const form = document.getElementById('ec-form');
-  const success = document.getElementById('ec-success');
-  const btn = form ? form.querySelector('.ec-btn') : null;
-  if (!form || !success) return;
-  const email = (form.querySelector('input[type="email"]').value || '').trim();
+  // Form-relative (supports multiple capture points on one page): the submitted form is
+  // e.target; its success message is the sibling .ec-success. Falls back to the legacy ids.
+  const form = (e.target && e.target.tagName === 'FORM') ? e.target : document.getElementById('ec-form');
+  if (!form) return;
+  const scope = form.parentElement || document;
+  const success = scope.querySelector('.ec-success') || document.getElementById('ec-success');
+  const btn = form.querySelector('.ec-btn');
+  const origLabel = btn ? btn.textContent : '';
+  const input = form.querySelector('input[type="email"]');
+  const email = ((input && input.value) || '').trim();
   if (!email) return;
   if (btn) { btn.disabled = true; btn.textContent = 'Subscribing…'; }
   fetch('https://ibp-subscribe.ibprojections.workers.dev/', {
@@ -229,9 +234,9 @@ function handleEmailSubmit(e) {
     body: JSON.stringify({ email }),
   })
   .then(r => r.json())
-  .then(() => { form.style.display = 'none'; success.style.display = 'block'; })
+  .then(() => { form.style.display = 'none'; if (success) success.style.display = 'block'; })
   .catch(() => {
-    if (btn) { btn.disabled = false; btn.textContent = 'Get Daily Picks →'; }
+    if (btn) { btn.disabled = false; btn.textContent = origLabel || 'Get Daily Picks →'; }
     alert('Something went wrong — please try again in a moment.');
   });
 }

@@ -78,6 +78,15 @@ function sanitizeBookOdds(p, opts) {
 }
 
 // ── Share on X/Twitter ────────────────────────────────────────────────────────
+// Open an X share with the post text PLUS a UTM-tagged link back to the site, so every
+// share renders a link card (OG image) and the click-throughs are attributable in GA.
+function _shareIntent(text, campaign) {
+  const url = 'https://independentbaseballprojections.net/?utm_source=twitter&utm_medium=social&utm_campaign=' + campaign;
+  window.open(
+    `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+    '_blank', 'width=550,height=420');
+}
+
 function shareOnX(id) {
   const p = picksMap[id];
   if (!p) return;
@@ -87,8 +96,7 @@ function shareOnX(id) {
   let text = `🎯 Independent Baseball Projections: ${p.pick} ${formatOdds(p.odds)} (+${edge}% edge)`;
   if (model && mkt) text += `\nModel ${model}% vs. Pinnacle ${mkt}%`;
   if (p.pitcher) text += `\n⚾ ${p.pitcher}`;
-  text += `\n📊 independentbaseballprojections.net/`;
-  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank', 'width=550,height=420');
+  _shareIntent(text, 'pick_share');
 }
 
 // ── Share card: state ────────────────────────────────────────────────────────
@@ -330,8 +338,7 @@ function shareAllPicks() {
   if (!picks || picks.length === 0) return;
   const lines = picks.map(p => `• ${p.pick} ${formatOdds(p.odds)} +${(p.edge*100).toFixed(1)}% edge`);
   let text = `⚾ Independent Baseball Projections Picks:\n` + lines.join('\n');
-  text += `\n📊 independentbaseballprojections.net/`;
-  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank', 'width=550,height=420');
+  _shareIntent(text, 'slate_share');
 }
 
 // Bankroll widget init
@@ -1959,6 +1966,32 @@ function prKey(e, row) {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prToggle(row); }
 }
 
+// Inject schema.org ItemList of today's posted picks for SEO rich-result eligibility.
+// Rebuilt each render; no-ops (and clears) when there are no posted picks.
+function renderItemListSchema(data) {
+  const prev = document.getElementById('picks-itemlist');
+  if (prev) prev.remove();
+  const picks = (data && Array.isArray(data.picks)) ? data.picks.filter(p => (p.edge || 0) >= 0.04) : [];
+  if (!picks.length) return;
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": `Independent Baseball Projections — today's MLB value picks${data.date ? ' (' + data.date + ')' : ''}`,
+    "numberOfItems": picks.length,
+    "itemListElement": picks.map((p, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": `${p.pick || p.team || ''} ${formatOdds(p.odds)} — ${p.game || ''}`.trim(),
+      "description": `Model edge +${((p.edge || 0) * 100).toFixed(1)}% vs the market on ${p.game || 'this game'}.`
+    }))
+  };
+  const s = document.createElement('script');
+  s.type = 'application/ld+json';
+  s.id = 'picks-itemlist';
+  s.textContent = JSON.stringify(ld);
+  document.head.appendChild(s);
+}
+
 function render(data, hist, scores = {}, perf = null) {
   // Staleness guard: before the morning pipeline run, today.json still holds the
   // PRIOR day's picks. If its date is behind "today" in CT, the new day's picks
@@ -2253,6 +2286,7 @@ function render(data, hist, scores = {}, perf = null) {
   renderPicksHeaderBlock(data, hist);
   renderHeroProof(data);
   renderYesterdayRecap(data);
+  renderItemListSchema(data);
   // Track-record evidence grid + calibration chart now live on the Model
   // Dashboard (performance.html). renderEvidenceSection(data, perf, hist);
 
