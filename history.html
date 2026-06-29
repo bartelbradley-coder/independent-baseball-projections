@@ -350,7 +350,7 @@ function renderSummary(rows) {
     <div class="stat-pill"><div class="stat-lbl">Season P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${_fmtPnl(totalPnl)}</div><div class="stat-sub">${pnlMode==='kelly'?'fractional Kelly sized':pnlMode==='dollars'&&_bankroll>0?`$${_bankroll} bankroll`:'flat $100/bet'}</div></div>
     <div class="stat-pill"><div class="stat-lbl">ROI / Bet</div><div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${pct(roi)}</div><div class="stat-sub">per settled bet</div></div>
     <div class="stat-pill"><div class="stat-lbl">Win Rate</div><div class="stat-val white">${winRate != null ? (winRate*100).toFixed(1)+'%' : '—'}</div><div class="stat-sub">~52% break-even</div></div>
-    ${avgClv != null ? `<div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${avgClv >= 0 ? 'green' : 'red'}">${pct(avgClv)}</div><div class="stat-sub">n=${clvRows.length}</div></div>` : ''}
+    ${avgClv != null ? `<div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${(t=>t==='pos'?'green':t==='neg'?'red':'white')(_clvTone(clvRows.map(r=>r.clv)))}">${pct(avgClv)}</div><div class="stat-sub">n=${clvRows.length}</div></div>` : ''}
   `;
 }
 
@@ -395,7 +395,7 @@ function renderLiveTotals(rows) {
 
   const pct = t => (t >= 0 ? '+' : '') + (t * 100).toFixed(1) + '%';
   const roiCol  = roi  >= 0 ? 'var(--green)' : 'var(--red)';
-  const clvCol  = avgClv != null && avgClv >= 0 ? 'var(--green)' : 'var(--red)';
+  const clvCol  = (t => t === 'pos' ? 'var(--green)' : t === 'neg' ? 'var(--red)' : 'var(--text-2)')(_clvTone(clvs));
 
   bar.style.display = 'flex';
   bar.innerHTML = `
@@ -531,7 +531,7 @@ function renderTable(rows) {
     // Row tinting: Strong (≥8pp) or Value (≥4pp, current posting threshold)
     const rowClass = edgeVal >= 0.08 ? 'row-strong' : edgeVal >= 0.04 ? 'row-value' : '';
     return `<tr class="${rowClass}">
-      <td data-label="Date" style="color:var(--text-4);font-family:var(--font-mono);font-size:11px">${dateStr}</td>
+      <td data-label="Date" style="color:var(--text-4);font-family:var(--font-mono);font-size:11px">${dateStr}${r.posted_at_ct ? `<div style="font-size:9px;color:var(--text-4);opacity:.7" title="Timestamp this pick was logged, before first pitch${r.posted_at ? ' (UTC: ' + _escAttr(r.posted_at) + ')' : ''}">📌 ${_escAttr(r.posted_at_ct)}</div>` : ''}</td>
       <td data-label="Game" class="hide-sm" style="color:var(--text-2);font-weight:500">${r.game || '—'}</td>
       <td data-label="Pick">${r.pick || '—'}</td>
       <td data-label="Odds" style="font-family:var(--font-mono);font-size:11px">${formatOdds(r.odds)}</td>
@@ -561,7 +561,7 @@ function renderTable(rows) {
       <td data-label="Avg edge" style="color:var(--amber)">${_fae != null ? '+' + (_fae * 100).toFixed(1) + 'pp' : '—'}</td>
       <td class="hide-sm"></td>
       <td data-label="Record">${_fw}–${_fS.length - _fw}</td>
-      <td data-label="Avg CLV" class="${_fac == null ? 'clv-neu' : _fac >= 0 ? 'clv-pos' : 'clv-neg'}">${_fac != null ? pct(_fac) : '—'}</td>
+      <td data-label="Avg CLV" class="${_fac == null ? 'clv-neu' : 'clv-' + _clvTone(_fc)}">${_fac != null ? pct(_fac) : '—'}</td>
       <td data-label="Total P&amp;L" class="${_fpnl >= 0 ? 'pnl-pos' : 'pnl-neg'}">${_fmtPnl(_fpnl)}</td>
     </tr></tfoot>`;
 
@@ -679,10 +679,30 @@ function toggleStreakSplits() {
 }
 
 // ── CSV export ────────────────────────────────────────────────────────────────
+// Escape a value for safe interpolation into HTML / a double-quoted attribute.
+function _escAttr(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+// CLV color verdict (matches the Model Dashboard): green ONLY when the 95% CI is above 0
+// AND a majority of picks beat the close — a near-zero CLV reads neutral, not green.
+function _clvTone(arr) {
+  const xs = (arr || []).filter(v => typeof v === 'number' && !isNaN(v));
+  const n = xs.length;
+  if (n < 20) return 'neu';
+  const m = xs.reduce((a, b) => a + b, 0) / n;
+  const v = xs.reduce((a, b) => a + (b - m) ** 2, 0) / (n - 1);
+  const se = Math.sqrt(v / n);
+  const posShare = xs.filter(x => x > 0).length / n;
+  if (m - 1.96 * se > 0 && posShare >= 0.5) return 'pos';
+  if (m + 1.96 * se < 0) return 'neg';
+  return 'neu';
+}
+
 function exportCSV() {
   const filtered = getFilteredSorted(allRows);
   if (filtered.length === 0) return;
-  const cols = ['date','game','pick','odds','edge','model_prob','side','result','clv','pnl_u','kelly_units','pitcher'];
+  const cols = ['date','posted_at','game','pick','odds','edge','model_prob','side','result','clv','pnl_u','kelly_units','pitcher'];
   const header = cols.join(',');
   const rows = filtered.map(r =>
     cols.map(c => {

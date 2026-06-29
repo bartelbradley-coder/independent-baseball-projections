@@ -499,7 +499,7 @@ async function loadAll() {
     renderBankrollChart(hAugmented);
     renderNaiveCallout(pAugmented);
     const hRows = (hAugmented && hAugmented.rows) ? hAugmented.rows : [];
-    renderCLV(pAugmented);
+    renderCLV(pAugmented, hAugmented);
     renderMonthly(pAugmented);
     renderRollingWinRate(hRows);
     renderEdgeTiers(pAugmented);
@@ -525,24 +525,59 @@ async function loadAll() {
 }
 
 // CHANGE 1: Hero stats row
+// Mean + 95% CI of a numeric array (Welford-free; fine at this n).
+function _meanCI(vals) {
+  const xs = (vals || []).filter(v => typeof v === 'number' && !isNaN(v));
+  const n = xs.length;
+  if (n < 2) return { n, mean: n ? xs[0] : null, lo: null, hi: null };
+  const mean = xs.reduce((a, b) => a + b, 0) / n;
+  const variance = xs.reduce((a, b) => a + (b - mean) ** 2, 0) / (n - 1);
+  const se = Math.sqrt(variance / n);
+  return { n, mean, lo: mean - 1.96 * se, hi: mean + 1.96 * se };
+}
+// CLV verdict from the FULL settled history (history.json rows), NOT the 30-pt sparkline.
+// Honest coloring: green ONLY when the 95% CI is entirely above 0 (genuinely beats the
+// close); red only when entirely below; otherwise neutral — a near-zero/flat CLV must not
+// read as a proven edge.
+function clvVerdict(h) {
+  const rows = (h && h.rows) || [];
+  const clvs = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.clv != null)
+                   .map(r => parseFloat(r.clv));
+  const ci = _meanCI(clvs);
+  const posShare = clvs.length ? clvs.filter(v => v > 0).length / clvs.length : null;
+  // GREEN requires BOTH a mean 95% CI above 0 AND a majority of picks beating the close.
+  // The mean CLV can sit just above 0 on a right-skewed distribution while <50% of picks
+  // actually beat the close — that is NOT a clean proven edge, so it reads neutral, not green.
+  let tone = 'neu';
+  if (ci.n >= 20 && ci.lo != null) {
+    if (ci.lo > 0 && posShare != null && posShare >= 0.5) tone = 'pos';
+    else if (ci.hi < 0) tone = 'neg';
+  }
+  return Object.assign({ tone, posShare }, ci);
+}
+// 95% CI on ROI/bet (mean of pnl_u at flat stake) from the full settled history.
+function roiCIFromHistory(h) {
+  const rows = (h && h.rows) || [];
+  return _meanCI(rows.filter(r => r.result === 'W' || r.result === 'L').map(r => parseFloat(r.pnl_u) || 0));
+}
+
 function renderHeroStats(p, h) {
   const s   = (p && p.season) || {};
   const clv = p && p.avg_clv;
   if (!s.bets) return;
 
-  // Compute CLV positive %
-  const series = (p && p.clv_series) || [];
-  let clvPctStr = '—';
-  if (series.length > 0) {
-    const posCount = series.filter(v => v > 0).length;
-    clvPctStr = Math.round(posCount / series.length * 100) + '%';
-  }
+  // CLV beat-close % over the FULL settled history (not the 30-pt sparkline) so it matches
+  // the headline verdict — a last-30 window can read >50% while the full sample is below it.
+  const _cvHero = clvVerdict(h);
+  const clvPctStr = _cvHero.posShare != null ? Math.round(_cvHero.posShare * 100) + '%' : '—';
 
   const roiStr    = s.roi != null ? pct(s.roi) : '—';
   const recordStr = `${s.wins || 0}–${s.losses || 0}`;
   const clvStr    = clv != null ? pct(clv) : '—';
   const roiColor  = s.roi != null && s.roi >= 0 ? 'green' : 'red';
-  const clvColor  = clv != null && clv >= 0 ? 'green' : 'red';
+  // CLV color reflects statistical significance, not just sign — near-zero CLV reads neutral,
+  // not green (it isn't a proven edge yet). Reuses _cvHero computed above.
+  const clvColor  = _cvHero.tone === 'pos' ? 'green' : _cvHero.tone === 'neg' ? 'red' : '';
 
   document.getElementById('hero-roi').textContent  = roiStr;
   document.getElementById('hero-roi').className     = 'hero-val ' + roiColor;
@@ -565,6 +600,16 @@ function renderHeadline(p, h) {
   const currentBank5k = currentBank;
   const bankGrowth5k  = parseFloat(bankGrowth);
 
+  // Significance-aware framing for the marquee stats (full settled history).
+  const _cv      = clvVerdict(h);
+  const _roiCI   = roiCIFromHistory(h);
+  const _roiCIStr = _roiCI.lo != null ? ` · likely ${pct(_roiCI.lo)} to ${pct(_roiCI.hi)}` : '';
+  const _clvFeat = _cv.tone === 'pos' ? 'featured' : '';
+  const _clvCol  = _cv.tone === 'pos' ? 'green' : _cv.tone === 'neg' ? 'red' : 'white';
+  const _clvSub  = _cv.tone === 'pos' ? 'beats close (95% CI &gt; 0)'
+                 : _cv.tone === 'neg' ? 'trails close'
+                 : 'flat / still proving';
+
   document.getElementById('headline-stats').innerHTML = `
     <div class="hl-stat">
       <div class="hl-val white">${s.wins || 0}W–${s.losses || 0}L</div>
@@ -574,12 +619,12 @@ function renderHeadline(p, h) {
     <div class="hl-stat featured">
       <div class="hl-val green">${fmtU(s.units)}</div>
       <div class="hl-lbl">Units P&amp;L</div>
-      <div class="hl-sub">${pct(s.roi)} ROI / bet</div>
+      <div class="hl-sub" title="${_roiCI.lo != null ? 'The likely range for our true long-run ROI per bet (95% confidence over ' + _roiCI.n + ' bets) — the exact figure will move as the sample grows.' : ''}">${pct(s.roi)} ROI / bet${_roiCIStr}</div>
     </div>
-    <div class="hl-stat ${clv != null && clv >= 0 ? 'featured' : ''}">
-      <div class="hl-val ${clv != null && clv >= 0 ? 'green' : 'white'}">${pct(clv)}</div>
+    <div class="hl-stat ${_clvFeat}">
+      <div class="hl-val ${_clvCol}">${pct(clv)}</div>
       <div class="hl-lbl">Avg CLV</div>
-      <div class="hl-sub">n=${p && p.clv_count || 0} picks</div>
+      <div class="hl-sub">n=${p && p.clv_count || 0} · ${_clvSub}</div>
     </div>
     <div class="hl-stat">
       <div class="hl-val amber">$${Math.round(currentBank5k).toLocaleString()}</div>
@@ -696,13 +741,15 @@ function renderBankrollChart(h) {
     </div>`;
 }
 
-function renderCLV(p) {
+function renderCLV(p, h) {
   if (!p) return;
   const clv = p.avg_clv;
   if (clv != null) {
     const el = document.getElementById('clv-big-num');
     el.textContent = pct(clv);
-    el.style.color = clv >= 0 ? 'var(--green)' : 'var(--red)';
+    // Significance-aware: green only when CLV is a proven edge (see clvVerdict), else neutral.
+    const _t = clvVerdict(h).tone;
+    el.style.color = _t === 'pos' ? 'var(--green)' : _t === 'neg' ? 'var(--red)' : 'var(--text-2)';
   }
   const series = p.clv_series || [];
   const el = document.getElementById('clv-chart');
