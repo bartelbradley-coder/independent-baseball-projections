@@ -1451,7 +1451,15 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   let readTxt = '';
   if (tp.length) { readTxt = pickAbbr + ' is undervalued mainly on ' + listJoin(tp) + (tn.length ? ', partly offset by ' + listJoin(tn) : '') + '.'; }
   const readHTML = readTxt ? '<div class="dw-h3">Model Read</div><div class="dw-read">' + readTxt + '</div>' : '';
-  const whyInner = '<div class="dw-h2">Why The Model Likes It</div>' + meterHTML + factorsHTML + readHTML;
+  // Plain-English thesis (already in the feed) — the most newcomer-friendly content. Strip
+  // any tags and trim to the first ~2 sentences so it leads the section without dominating it.
+  let _narr = String(p.narrative || '').trim().replace(/<[^>]+>/g, '');
+  if (_narr.length > 300) {
+    _narr = _narr.split('. ').slice(0, 2).join('. ');
+    if (!/[.!?]$/.test(_narr)) _narr += '.';
+  }
+  const narrativeHTML = _narr ? '<div class="dw-narrative">' + _narr + '</div>' : '';
+  const whyInner = '<div class="dw-h2">Why The Model Likes It</div>' + narrativeHTML + meterHTML + factorsHTML + readHTML;
 
   // ── Matchup data + status (right) ──────────────────────────────────────
   const mqRows = [];
@@ -1739,24 +1747,25 @@ function prSortArrow(key) {
   if (_picksSort.key !== key) return `<span class="pr-sortarr inactive">↕</span>`;  // persistent "sortable" cue
   return `<span class="pr-sortarr">${_picksSort.dir < 0 ? '▾' : '▴'}</span>`;
 }
-function _prHsort(key, label, cls) {
+function _prHsort(key, label, cls, title) {
   const active = _picksSort.key === key ? ' active' : '';
   const sort = active ? (_picksSort.dir < 0 ? 'descending' : 'ascending') : 'none';
   return `<span class="pr-h ${cls} sortable${active}" role="button" tabindex="0" aria-sort="${sort}" `
+    + (title ? `title="${title}" ` : '')
     + `onclick="prSetSort('${key}')" onkeydown="prHeadKey(event,'${key}')">${label}${prSortArrow(key)}</span>`;
 }
-function _prH(label, cls) {
-  return `<span class="pr-h ${cls}">${label}</span>`;
+function _prH(label, cls, title) {
+  return `<span class="pr-h ${cls}"${title ? ` title="${title}"` : ''}>${label}</span>`;
 }
 function prTableHead() {
   return `<div class="pr-cols pr-head">`
     + _prHsort('time', 'Matchup', 'h-mu')
     + _prH('Pick', 'h-pick')
-    + _prHsort('model', 'Mkt → Model', 'h-mm')
-    + _prHsort('edge', 'Edge', 'h-edge')
-    + _prH('Current odds', 'h-odds')
-    + _prH('Play to', 'h-play')
-    + _prH('Stake', 'h-stake')
+    + _prHsort('model', 'Mkt → Model', 'h-mm', "The market's implied win probability vs our model's. We bet when our number is higher.")
+    + _prHsort('edge', 'Edge', 'h-edge', 'How much higher our win probability is than the price implies — our expected advantage, in percentage points.')
+    + _prH('Current odds', 'h-odds', 'Best moneyline price we currently see across books, and where.')
+    + _prH('Play to', 'h-play', "The worst price still worth betting — below this the edge is gone. Don't chase past it.")
+    + _prH('Stake', 'h-stake', 'Suggested bet size — flat 1 unit, or Kelly-scaled when the Kelly toggle is on. A unit is whatever you choose it to be.')
     + `<span class="pr-h h-chev"></span>`
     + `</div>`;
 }
@@ -2050,6 +2059,25 @@ function render(data, hist, scores = {}, perf = null) {
     renderHeroDemo(data);
   };
 
+  // Yesterday's settled result — recency proof. Reads today.json `yesterday_picks`
+  // (each {result, pnl_u}); shows W–L and net units, links to the full record. Honest
+  // on losing days too. Hidden when nothing settled yet.
+  window.renderYesterdayRecap = function(data) {
+    const el = document.getElementById('yesterday-recap');
+    if (!el) return;
+    const yp = data && Array.isArray(data.yesterday_picks) ? data.yesterday_picks : [];
+    const settled = yp.filter(p => p && (p.result === 'W' || p.result === 'L' || p.result === 'P'));
+    if (!settled.length) { el.hidden = true; return; }
+    const w = settled.filter(p => p.result === 'W').length;
+    const l = settled.filter(p => p.result === 'L').length;
+    const u = settled.reduce((s, p) => s + (typeof p.pnl_u === 'number' ? p.pnl_u : 0), 0);
+    const uStr = (u >= 0 ? '+' : '−') + Math.abs(u).toFixed(1) + 'u';
+    const uCls = u > 0 ? 'yr-pos' : u < 0 ? 'yr-neg' : 'yr-neu';
+    el.innerHTML = `<span class="yr-lbl">Yesterday</span> <span class="yr-rec">${w}–${l}</span>`
+      + ` <span class="yr-u ${uCls}">${uStr}</span><span class="yr-link">see full record →</span>`;
+    el.hidden = false;
+  };
+
   // Populate the hero edge-bar demo with today's strongest RECOMMENDED pick.
   // "Recommended" = highest edge among non-flagged picks (the flagged/reduced
   // play can have the biggest raw edge but is a poor thing to lead with).
@@ -2224,6 +2252,7 @@ function render(data, hist, scores = {}, perf = null) {
 
   renderPicksHeaderBlock(data, hist);
   renderHeroProof(data);
+  renderYesterdayRecap(data);
   // Track-record evidence grid + calibration chart now live on the Model
   // Dashboard (performance.html). renderEvidenceSection(data, perf, hist);
 
