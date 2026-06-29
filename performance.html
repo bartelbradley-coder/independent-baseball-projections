@@ -234,24 +234,29 @@
     <div class="card" style="padding:16px 20px">
       <div class="collapsible-section" id="naive-collapsible">
         <div class="collapsible-trigger" role="button" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleSection('naive-body', 'naive-collapsible')">
-          Model vs. Naive Strategies — 2026 Season <span class="coll-arrow">▾</span>
+          Skill vs. luck — could a no-edge bettor have matched this? <span class="coll-arrow">▾</span>
         </div>
         <div id="naive-body" class="collapsible-content">
           <div style="font-size:12px;color:var(--text-2);line-height:1.7;margin-bottom:14px">
-            Independent Baseball Projections picks returned <strong id="naive-model-roi" style="color:var(--green)">—</strong> ROI vs. approximately −4.0% for a naive flat-bet-every-game approach — a meaningful advantage driven by selectivity and edge. Picking only mispriced games beats the vig.
+            We re-ran our exact <strong id="lb-nbets">—</strong> settled bets <strong>10,000 times</strong>, keeping every price the same and drawing each outcome at the market's implied win rate — i.e. a bettor with <em>no edge</em> taking these same lines. That no-edge bettor finishes around <strong id="lb-median">—</strong> on average (middle 90% land between <strong id="lb-range">—</strong>). We actually finished <strong id="lb-actual" style="color:var(--green)">—</strong> — better than <strong id="lb-pct" style="color:var(--green)">—</strong> of those no-edge seasons.
           </div>
           <div class="naive-callout">
             <div class="naive-pill">
-              <div class="naive-pill-val" id="naive-pill-model" style="color:var(--green)">—</div>
-              <div class="naive-pill-lbl">Model ROI / Bet</div>
+              <div class="naive-pill-val" id="lb-actual2" style="color:var(--green)">—</div>
+              <div class="naive-pill-lbl">Our result (units)</div>
             </div>
             <div class="naive-pill">
-              <div class="naive-pill-val" style="color:var(--red)">−4.0%</div>
-              <div class="naive-pill-lbl">Naive (Bet All) ROI</div>
+              <div class="naive-pill-val" id="lb-median2" style="color:var(--text-2)">—</div>
+              <div class="naive-pill-lbl">No-edge median</div>
+            </div>
+            <div class="naive-pill">
+              <div class="naive-pill-val" id="lb-pct2" style="color:var(--green)">—</div>
+              <div class="naive-pill-lbl">Percentile vs luck</div>
             </div>
           </div>
+          <div id="lb-band" style="margin-top:14px"></div>
           <div style="font-size:9px;color:var(--text-4);margin-top:10px;line-height:1.5">
-            Naive estimate based on historical MLB vig drain (~−4% to −5% per game). Our model results are live 2026 data.
+            Monte Carlo over our exact bets and prices — only the outcomes are randomized, each at its line's market-implied probability. A genuine same-sample test of selection skill vs. luck; makes no assumptions about games we didn't bet.
           </div>
         </div>
       </div>
@@ -497,7 +502,7 @@ async function loadAll() {
     renderHeroStats(pAugmented, hAugmented);
     renderInsight(pAugmented);
     renderBankrollChart(hAugmented);
-    renderNaiveCallout(pAugmented);
+    renderLuckBand(hAugmented);
     const hRows = (hAugmented && hAugmented.rows) ? hAugmented.rows : [];
     renderCLV(pAugmented, hAugmented);
     renderMonthly(pAugmented);
@@ -646,14 +651,74 @@ function renderInsight(p) {
 }
 
 // CHANGE 5: Populate naive callout
-function renderNaiveCallout(p) {
-  const s = (p && p.season) || {};
-  const roiStr = s.roi != null ? pct(s.roi) : '—';
-  const roiColor = s.roi != null && s.roi >= 0 ? 'var(--green)' : 'var(--red)';
-  const naiveModelRoi = document.getElementById('naive-model-roi');
-  const naivePillModel = document.getElementById('naive-pill-model');
-  if (naiveModelRoi) { naiveModelRoi.textContent = roiStr; naiveModelRoi.style.color = roiColor; }
-  if (naivePillModel) { naivePillModel.textContent = roiStr; naivePillModel.style.color = roiColor; }
+// Same-sample "luck band": hold our exact bets + prices fixed, randomize only the
+// outcomes (each at its line's market-implied win rate = a no-edge bettor), 10k times.
+// Shows where our real result lands vs that luck distribution — a genuine skill-vs-variance
+// test on the same bets, replacing the old hand-waved "~−4% naive" estimate.
+function renderLuckBand(h) {
+  const all = (h && h.rows) || [];
+  const settled = all.filter(r => r.result === 'W' || r.result === 'L');
+  // ONE validated set — sims AND `actual` both come from it, so they're the same sample.
+  // Require finite non-zero odds + present model_prob/edge; skip rows that can't be simulated.
+  const bets = [];
+  for (const r of settled) {
+    const o = Number(r.odds);
+    if (!Number.isFinite(o) || o === 0 || r.model_prob == null || r.edge == null) continue;
+    const b = o > 0 ? o / 100 : 100 / Math.abs(o);            // profit (units) on a 1u win
+    let pm = r.model_prob - r.edge;                            // market-implied win rate for our side
+    pm = Math.max(0.01, Math.min(0.99, pm));
+    bets.push({ b, pm, pnl: parseFloat(r.pnl_u) || 0 });
+  }
+  if (bets.length < 30) return;
+  const actual = bets.reduce((s, x) => s + x.pnl, 0);          // same validated set as the sims
+
+  const N = 10000;
+  const totals = new Float64Array(N);
+  for (let s = 0; s < N; s++) {
+    let t = 0;
+    for (let i = 0; i < bets.length; i++) t += Math.random() < bets[i].pm ? bets[i].b : -1;
+    totals[s] = t;
+  }
+  totals.sort((a, b) => a - b);
+  const q = p => totals[Math.min(N - 1, Math.max(0, Math.floor(p * N)))];
+  const median = q(0.5), p5 = q(0.05), p95 = q(0.95);
+  let below = 0;
+  for (let s = 0; s < N; s++) if (totals[s] < actual) below++;
+  const pctile = below / N;
+
+  const set = (id, txt, col) => { const e = document.getElementById(id); if (e) { e.textContent = txt; if (col) e.style.color = col; } };
+  const pctStr = (pctile >= 0.999 ? '>99.9%' : (pctile * 100).toFixed(1) + '%');
+  set('lb-nbets', bets.length.toLocaleString());
+  set('lb-median', fmtU(median));
+  set('lb-range', `${fmtU(p5)} and ${fmtU(p95)}`);
+  set('lb-actual', fmtU(actual));
+  set('lb-pct', pctStr);
+  set('lb-actual2', fmtU(actual), 'var(--green)');
+  set('lb-median2', fmtU(median), 'var(--text-2)');
+  set('lb-pct2', pctStr, pctile >= 0.95 ? 'var(--green)' : 'var(--text-2)');
+
+  // Compact band visual: shaded 5th–95th band, median tick, our-result marker.
+  const el = document.getElementById('lb-band');
+  if (el) {
+    const W = 800, H = 54, padX = 4, axisY = 34;
+    const lo = Math.min(p5, actual), hi = Math.max(p95, actual);
+    const span = (hi - lo) || 1, dom0 = lo - span * 0.08, dom1 = hi + span * 0.08;
+    const X = v => padX + (v - dom0) / (dom1 - dom0) * (W - 2 * padX);
+    const bandX = X(p5), bandW = X(p95) - X(p5), medX = X(median), actX = X(actual);
+    el.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Our result versus the no-edge luck distribution" style="display:block;width:100%;height:${H}px">
+        <line x1="${padX}" y1="${axisY}" x2="${W - padX}" y2="${axisY}" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <rect x="${bandX.toFixed(1)}" y="${axisY - 7}" width="${Math.max(1, bandW).toFixed(1)}" height="14" rx="3" fill="rgba(148,163,184,0.22)"/>
+        <line x1="${medX.toFixed(1)}" y1="${axisY - 9}" x2="${medX.toFixed(1)}" y2="${axisY + 9}" stroke="var(--text-2)" stroke-width="1.5"/>
+        <line x1="${actX.toFixed(1)}" y1="14" x2="${actX.toFixed(1)}" y2="${axisY + 9}" stroke="var(--green)" stroke-width="2"/>
+        <circle cx="${actX.toFixed(1)}" cy="14" r="3.5" fill="var(--green)"/>
+        <text x="${Math.min(W - 60, Math.max(40, actX)).toFixed(1)}" y="9" text-anchor="middle" font-size="10" fill="var(--green)">us ${fmtU(actual)}</text>
+      </svg>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-4);margin-top:2px">
+        <span>no-edge 5th–95th: ${fmtU(p5)} to ${fmtU(p95)}</span>
+        <span>median ${fmtU(median)}</span>
+      </div>`;
+  }
 }
 
 function renderBankrollChart(h) {
