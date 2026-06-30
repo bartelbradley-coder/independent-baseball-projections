@@ -1192,6 +1192,18 @@ details[open] .faq-q::after { content: '−'; }
 .pr-chev { justify-self:end; color:var(--text-4); font-size:15px; line-height:1; transition:transform .16s; }
 .pr-row.open .pr-chev { transform:rotate(90deg); color:var(--indigo-lt); }
 
+/* ── Group divider — separates actionable plays from no-longer-playable / near-miss ── */
+.pr-group-label {
+  display:flex; align-items:center; gap:8px;
+  padding:10px 16px 7px; margin-top:5px;
+  border-top:1px solid var(--border);
+  font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-4);
+}
+.pr-group-label .pgl-n {
+  font-family:var(--font-mono); font-weight:600; letter-spacing:0; font-size:10px;
+  color:var(--text-4); background:rgba(255,255,255,.05); padding:1px 6px; border-radius:10px;
+}
+
 /* ── Recap (all-done) variant — replaces current-odds/play-to with results ───── */
 .pr-cols.pr-recap {
   grid-template-columns:

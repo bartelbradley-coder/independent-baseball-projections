@@ -2077,6 +2077,13 @@ function prRowHTML(p, isBest, gameResult) {
 function prRows(ordered, scores) {
   return ordered.map(p => prRowHTML(p, false, getPickResult(p, scores))).join('');
 }
+
+// Full-width divider label between row groups (actionable / no-longer-playable /
+// near-miss). Sits between .pr-wrap rows in the table flow.
+function prGroupLabel(text, n) {
+  return `<div class="pr-group-label" role="separator" aria-label="${text}">`
+    + `<span>${text}</span>${n ? `<span class="pgl-n">${n}</span>` : ''}</div>`;
+}
 function prToggle(row) {
   const det = row.parentElement && row.parentElement.querySelector('.pr-details');
   if (!det) return;
@@ -2379,7 +2386,9 @@ function render(data, hist, scores = {}, perf = null) {
     // helper, bankroll mode, and exposure stay in sync on mode change.
     const sizingEl = document.getElementById('sizing-bar');
     if (sizingEl) {
-      const _smain = (data.picks || []).filter(p => (p.edge || 0) >= 0.04);
+      // Exposure = what you can still place right now → actionable picks only,
+      // matching the headline count (posted-but-inactive picks aren't bettable).
+      const _smain = (data.picks || []).filter(p => (p.edge || 0) >= 0.04).filter(prActionable);
       let _sstake, _savgStr, _sShow;
       if (isKelly) {
         const _stotKU  = _smain.reduce((s, p) => s + (p.kelly_units || 0), 0);
@@ -2518,8 +2527,6 @@ function render(data, hist, scores = {}, perf = null) {
   if (main.length === 0) {
     renderEmptyState(data, hist, marginal);
   } else {
-    _mainPicksRef = main;
-
     // ── Game-state counts ─────────────────────────────────────────────────────
     // POSTPONED is "done" for actionability — exclude it from "upcoming" so an
     // all-final (plus any PPD) slate correctly reaches allDone and shows the recap.
@@ -2529,9 +2536,17 @@ function render(data, hist, scores = {}, perf = null) {
     const allDone = main.length > 0 && upcomingGroup.length === 0 && liveGroup.length === 0;
     const _isKelly = _indexPnlMode === 'kelly';
 
-    // Share-all is hidden once the card is graded (recap mode).
-    const shareAllHTML = (!allDone && main.length >= 2)
-      ? `<div class="share-all-row"><button class="share-all-btn" onclick="shareAllPicks()">𝕏 Share All ${main.length} Picks</button></div>`
+    // Currently-actionable subset drives the headline metrics (count, top edge,
+    // exposure, share) so posted-but-no-longer-playable picks (live / final /
+    // edge-gone) aren't presented as live recommendations. `main` stays the
+    // posted record for control flow (allDone / groups / rendered set / picksMap).
+    const actionableMain = main.filter(prActionable);
+    const inactivePosted = main.filter(p => !prActionable(p));
+    _mainPicksRef = actionableMain;   // share-all shares only what's still playable
+
+    // Share-all is hidden once the card is graded; offered only when ≥2 plays remain.
+    const shareAllHTML = (!allDone && actionableMain.length >= 2)
+      ? `<div class="share-all-row"><button class="share-all-btn" onclick="shareAllPicks()">𝕏 Share All ${actionableMain.length} Picks</button></div>`
       : '';
 
     let _stateInline = '';
@@ -2566,16 +2581,32 @@ function render(data, hist, scores = {}, perf = null) {
     if (allDone) {
       picksHTML = `<div class="pr-table is-recap">${prTableHeadRecap()}${prRecapRows(main, scores, data.date || '', _isKelly)}</div>`;
     } else {
-      const ordered = prSortPicks(main.concat(marginal));
-      picksHTML = `<div class="pr-table">${prTableHead()}${prRows(ordered, scores)}</div>`;
+      // Actionable plays lead; posted-but-inactive and near-miss picks follow under
+      // their own labels so "what to bet now" is never mixed with what's no longer playable.
+      let _rows = prRows(prSortPicks(actionableMain), scores);
+      if (inactivePosted.length) {
+        _rows += prGroupLabel('Posted earlier — no longer playable', inactivePosted.length);
+        _rows += prRows(prSortPicks(inactivePosted), scores);
+      }
+      if (marginal.length) {
+        _rows += prGroupLabel('Near-miss — below 4pp threshold', marginal.length);
+        _rows += prRows(prSortPicks(marginal), scores);
+      }
+      picksHTML = `<div class="pr-table">${prTableHead()}${_rows}</div>`;
     }
 
-    // ── Action Today strip — counts, top edge, live state, model-run time ─────
-    const _strongN = main.filter(p => p.edge >= 0.08).length;
-    const _best    = main[0];
-    const _metaBits = [`<strong>${main.length}</strong> pick${main.length !== 1 ? 's' : ''}`];
+    // ── Action Today strip — counts reflect what's PLAYABLE now, not just posted ─
+    const _strongN = actionableMain.filter(p => p.edge >= 0.08).length;
+    const _best    = actionableMain[0];
+    // Graded card carries its summary in _stateInline ("Today's results…"), so the
+    // "playable now / no longer playable" framing only applies while picks are live.
+    const _hasInactive = !allDone && inactivePosted.length > 0;
+    const _metaBits = [ _hasInactive
+      ? `<strong>${actionableMain.length}</strong> playable now`
+      : `<strong>${main.length}</strong> pick${main.length !== 1 ? 's' : ''}` ];
     if (_strongN) _metaBits.push(`<strong class="at-strong">${_strongN}</strong> strong`);
     if (_best) _metaBits.push(`top edge <strong class="g">+${(_best.edge * 100).toFixed(1)}pp</strong> <span class="at-bt">${_best.pick}</span>`);
+    if (_hasInactive) _metaBits.push(`<span class="at-dim">${inactivePosted.length} no longer playable</span>`);
     if (data.games_today) _metaBits.push(`<span class="at-dim">${data.games_today} games analyzed</span>`);
     const _upd = data.generated_at ? `Updated ${String(data.generated_at).split(' · ')[0]}` : '';
     const _summaryEl = document.getElementById('picks-summary');
