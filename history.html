@@ -137,9 +137,9 @@
       <button class="filter-btn" data-filter="W" aria-pressed="false">Wins</button>
       <button class="filter-btn" data-filter="L" aria-pressed="false">Losses</button>
       <div class="filter-sep"></div>
-      <button class="filter-btn" data-filter="strong" aria-pressed="false">8%+ Edge</button>
-      <button class="filter-btn" data-filter="value" aria-pressed="false">5–8% Edge</button>
-      <button class="filter-btn" data-filter="marginal-edge" aria-pressed="false">2–5% Edge</button>
+      <button class="filter-btn" data-filter="strong" aria-pressed="false">8pp+ Edge</button>
+      <button class="filter-btn" data-filter="value" aria-pressed="false">5–8pp Edge</button>
+      <button class="filter-btn" data-filter="marginal-edge" aria-pressed="false">2–5pp Edge</button>
       <div class="filter-sep"></div>
       <button class="filter-btn win-btn active" data-window="all" aria-pressed="true" title="All settled picks">All time</button>
       <button class="filter-btn win-btn" data-window="7"  aria-pressed="false" title="Picks from the last 7 days">Last 7d</button>
@@ -158,8 +158,8 @@
       <div class="filter-sep"></div>
       <div class="threshold-wrap" title="Show only picks where model edge ≥ this value">
         <span class="threshold-lbl">Min edge</span>
-        <input class="threshold-input" id="threshold-input" type="number" min="0" max="20" step="0.5" value="0" autocomplete="off" aria-label="Minimum edge percentage">
-        <span class="threshold-pct">%</span>
+        <input class="threshold-input" id="threshold-input" type="number" min="0" max="20" step="0.5" value="0" autocomplete="off" aria-label="Minimum edge in percentage points">
+        <span class="threshold-pct">pp</span>
       </div>
       <button class="filter-btn" id="csv-export-btn" style="margin-left:auto" onclick="exportCSV()">⬇ CSV</button>
     </div>
@@ -361,9 +361,9 @@ function _filterLabel() {
   if (activeWindow !== 'all') lab.push('Last ' + activeWindow + ' days');
   if (activeMonth !== 'all') { const [y, m] = activeMonth.split('-'); lab.push(new Date(y, +m - 1, 1).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })); }
   if (activeFilter === 'W') lab.push('Wins'); else if (activeFilter === 'L') lab.push('Losses');
-  else if (activeFilter === 'strong') lab.push('8%+ edge'); else if (activeFilter === 'value') lab.push('5–8% edge'); else if (activeFilter === 'marginal-edge') lab.push('2–5% edge');
+  else if (activeFilter === 'strong') lab.push('8pp+ edge'); else if (activeFilter === 'value') lab.push('5–8pp edge'); else if (activeFilter === 'marginal-edge') lab.push('2–5pp edge');
   if (activeSideFilter !== 'all') lab.push(({ dog: 'Dogs', fav: 'Favs', home: 'Home', away: 'Away' })[activeSideFilter] || activeSideFilter);
-  if (activeThreshold > 0) lab.push('≥' + (activeThreshold * 100).toFixed(activeThreshold % 0.01 < 0.001 ? 0 : 1) + '% edge');
+  if (activeThreshold > 0) lab.push('≥' + (activeThreshold * 100).toFixed(activeThreshold % 0.01 < 0.001 ? 0 : 1) + 'pp edge');
   if (activeSearch) lab.push('“' + activeSearch + '”');
   return lab.join(' · ') || 'Filtered';
 }

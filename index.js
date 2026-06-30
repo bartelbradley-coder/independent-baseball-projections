@@ -2339,7 +2339,10 @@ function render(data, hist, scores = {}, perf = null) {
     // CLV — always flat
     const clvStr  = data.avg_clv != null
       ? (data.avg_clv >= 0 ? '+' : '') + (data.avg_clv * 100).toFixed(2) + '%' : null;
-    const clvCol  = (data.avg_clv || 0) >= 0 ? 'green' : 'red';
+    // NEUTRAL on Today — a flat/near-zero average CLV is not a proven edge, and the
+    // homepage lacks the per-pick CLV sample to run the dashboard's significance test.
+    // Never colour it green by sign (that would imply "we beat the market").
+    const clvCol  = 'clv-flat';
 
     // Streak removed from Row 1 per user request
 
@@ -2372,8 +2375,8 @@ function render(data, hist, scores = {}, perf = null) {
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
             <span class="phb-stat-label">Avg CLV</span>
-            <span class="phb-stat-val ${clvStr ? clvCol : 'muted'}">${clvStr || '—'}</span>
-            <span class="phb-stat-sub">${clvStr ? (data.clv_count || '') + ' picks' : 'pending'}</span>
+            <span class="phb-stat-val ${clvStr ? clvCol : 'muted'}" title="Average closing-line value — tracked as live closing data accumulates; not treated as a proven edge unless the significance test on the Model Dashboard clears.">${clvStr || '—'}</span>
+            <span class="phb-stat-sub">${clvStr ? (data.clv_count || '') + ' picks tracked' : 'pending'}</span>
           </div>
           <div class="phb-right-group">
             ${todayChip}
@@ -2432,82 +2435,11 @@ function render(data, hist, scores = {}, perf = null) {
   // Track-record evidence grid + calibration chart now live on the Model
   // Dashboard (performance.html). renderEvidenceSection(data, perf, hist);
 
-  // ── CLV validation banner ────────────────────────────────────────────────
-  // Rendered below the record strip. Only shown when avg_clv data is present.
-  // Uses perf.clv_series to compute trend direction.
-  function renderCLVBanner(data, perf) {
-    const container = document.getElementById('clv-banner-container');
-    if (!container || data.avg_clv == null) return;
-
-    const clv     = data.avg_clv;
-    const count   = data.clv_count || 0;
-    const posPct  = data.clv_positive_pct;
-    const isPos   = clv >= 0;
-    const clvStr  = (clv >= 0 ? '+' : '') + (clv * 100).toFixed(2) + '%';
-    const posPctStr = posPct != null ? Math.round(posPct * 100) + '%' : null;
-
-    // Compute CLV trend from monthly series in perf
-    let trendStr = '';
-    if (perf && perf.clv_series && perf.clv_series.length >= 3) {
-      const s  = perf.clv_series;
-      const n  = s.length;
-      // Compare last third vs first third
-      const firstAvg = s.slice(0, Math.floor(n/3)).reduce((a,b)=>a+b,0) / Math.floor(n/3);
-      const lastAvg  = s.slice(-Math.floor(n/3)).reduce((a,b)=>a+b,0) / Math.floor(n/3);
-      const slope = lastAvg - firstAvg;
-      if      (slope > 0.002)  trendStr = '↑ improving';
-      else if (slope < -0.002) trendStr = '↓ declining';
-      else                     trendStr = '→ stable';
-    }
-
-    // Update trust strip validation card dynamically
-    const trustClvEl = document.getElementById('trust-clv-val');
-    if (trustClvEl) {
-      trustClvEl.textContent = isPos
-        ? `Positive CLV ${clvStr} · market confirms edge`
-        : `CLV ${clvStr} · monitor market alignment`;
-    }
-
-    if (!isPos && Math.abs(clv) < 0.005) {
-      // Near-zero CLV — neutral, don't show banner
-      return;
-    }
-
-    const icon = isPos ? '✅' : '⚠️';
-    const titleText = isPos ? 'Closing Line Value Confirmed Positive' : 'Closing Line Value Negative';
-    const desc = isPos
-      ? `The market consistently prices picks <strong>higher</strong> after they're posted — meaning we're identifying edge <strong>before</strong> it's fully priced in. This is the strongest independent signal that the model finds genuine value, separate from whether bets win or lose on a given day.`
-      : `The market has moved against posted picks on average. This is the key signal to monitor — negative CLV means the market disagrees with the model's direction after posting. Continue tracking.`;
-
-    const pills = [
-      { val: clvStr,   lbl: 'Avg CLV' },
-      ...(posPctStr ? [{ val: posPctStr, lbl: 'Beat close' }] : []),
-      ...(count      ? [{ val: count,    lbl: 'Picks tracked' }] : []),
-      ...(trendStr   ? [{ val: trendStr, lbl: 'Trend' }] : []),
-    ];
-
-    container.innerHTML = `
-      <div class="clv-banner ${isPos ? '' : 'negative'}">
-        <span class="clv-banner-icon">${icon}</span>
-        <div class="clv-banner-body">
-          <div class="clv-banner-headline">
-            <span class="clv-banner-title ${isPos ? '' : 'negative'}">${titleText}</span>
-            <span class="clv-banner-stat ${isPos ? '' : 'negative'}">${clvStr}</span>
-            <span class="clv-banner-meta">season average across ${count} tracked picks</span>
-          </div>
-          <div class="clv-banner-desc">${desc}</div>
-          <div class="clv-banner-pills">
-            ${pills.map(p => `
-              <div class="clv-mini-pill">
-                <span class="cmp-val">${p.val}</span>
-                <span class="cmp-lbl">${p.lbl}</span>
-              </div>`).join('')}
-          </div>
-        </div>
-      </div>`;
-  }
-
-  // renderCLVBanner removed — CLV is now in the picks header block (Row 1)
+  // CLV lives in the picks header block (Row 1), shown NEUTRAL — a flat/near-zero
+  // average is not a proven edge. The significance-aware verdict (green only when a
+  // 95% CI clears 0) lives on the Model Dashboard. The old renderCLVBanner() (which
+  // claimed "market confirms edge") was dead code and has been removed to prevent
+  // that overselling from regressing.
 
   const _mainForTracking = (data.picks || []).filter(p => (p.edge || 0) >= 0.04);
 

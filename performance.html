@@ -172,7 +172,7 @@
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
         <div>
           <div class="card-title" style="margin-bottom:4px">Edge Tier Performance — 2026 Season</div>
-          <div class="card-sub" style="margin-bottom:0">Higher model edge should produce higher ROI — this validates the model's probability estimates</div>
+          <div class="card-sub" style="margin-bottom:0">If the model is well-calibrated, higher-edge picks should pay more over time. The live 2026 tiers aren't cleanly monotonic yet — watch whether higher edge keeps paying as the sample grows</div>
         </div>
       </div>
       <div id="edge-bars" style="margin-bottom:16px"></div>
@@ -205,7 +205,7 @@
     <div class="sec-lbl">Performance by Minimum Edge Threshold — 2026 Season</div>
     <div class="card" style="padding:16px 20px">
       <div class="card-sub" style="margin-bottom:14px">
-        ROI per bet rises as the threshold increases — but fewer picks qualify.
+        ROI per bet tends to rise as the threshold increases (clearly in the backtest; the live tiers aren't cleanly monotonic yet) — but fewer picks qualify.
         Use this to find the selectivity level that fits your bankroll strategy.
       </div>
       <table class="compare-table" id="threshold-table">
@@ -222,8 +222,8 @@
       <div style="font-size:10px;color:var(--text-4);margin-top:12px;line-height:1.6;border-top:1px solid var(--border);padding-top:10px">
         <strong style="color:var(--text-3)">How to read this:</strong>
         Each row shows cumulative performance for picks <em>at or above</em> that edge.
-        The ≥ 4% row is your full official pick set. As threshold rises, ROI/bet improves
-        but volume drops — fewer picks means more variance. The optimal threshold
+        The ≥ 4pp row is your full official pick set. As the threshold rises, ROI/bet tends to improve while volume drops
+        (clearly in the backtest; the live tiers aren't cleanly monotonic yet) — fewer picks means more variance. The optimal threshold
         balances ROI/bet against the number of bets needed to realise the edge.
       </div>
     </div>
@@ -369,7 +369,7 @@
               <div class="stat-pill bt-pill"><div class="stat-lbl">Sharpe Ratio</div><div class="stat-val amber">1.82</div><div class="stat-sub">backtested · annualized</div></div>
               <div class="stat-pill bt-pill"><div class="stat-lbl">Brier Score</div><div class="stat-val white">0.234</div><div class="stat-sub">vs. 0.250 market</div></div>
               <div class="stat-pill bt-pill"><div class="stat-lbl">Max Drawdown</div><div class="stat-val red">−12.4u</div><div class="stat-sub">backtested</div></div>
-              <div class="stat-pill bt-pill"><div class="stat-lbl">Edge Threshold</div><div class="stat-val white">4%</div><div class="stat-sub">min to post</div></div>
+              <div class="stat-pill bt-pill"><div class="stat-lbl">Edge Threshold</div><div class="stat-val white">4pp</div><div class="stat-sub">min to post</div></div>
             </div>
             <div class="backtest-note">
               All figures above are <strong style="color:var(--text-2)">out-of-sample backtest results</strong> (2022–2024). Each year trained on prior seasons only — no lookahead bias. Live 2026 results appear in the sections above as picks settle.
@@ -1051,7 +1051,7 @@ function renderCalendar(rows) {
 function renderEdgeTiers(p) {
   const tiers = (p && p.edge_tiers) || [];
   if (tiers.length === 0) {
-    document.getElementById('edge-bars').innerHTML = '<div style="color:var(--text-4);font-size:11px;padding:8px 0">Populates as 2026 picks settle.<br><span style="color:var(--text-3)">Backtest: 8%+ tier → +14.2% ROI across 312 bets.</span></div>';
+    document.getElementById('edge-bars').innerHTML = '<div style="color:var(--text-4);font-size:11px;padding:8px 0">Populates as 2026 picks settle.<br><span style="color:var(--text-3)">Backtest: 8pp+ tier → +14.2% ROI across 312 bets.</span></div>';
     return;
   }
   const maxAbs = Math.max(...tiers.map(t => Math.abs(t.roi || 0)), 0.01);
@@ -1225,7 +1225,7 @@ function renderThresholdAnalysis(rows) {
   const bestRoiIdx = data.reduce((bi, d, i) => d.roi > data[bi].roi ? i : bi, 0);
 
   document.getElementById('threshold-tbody').innerHTML = data.map((d, i) => {
-    const pct   = `≥ ${(d.t * 100).toFixed(0)}%`;
+    const pct   = `≥ ${(d.t * 100).toFixed(0)}pp`;
     const wl    = `${d.wins}–${d.losses}`;
     const wr    = (d.wins / d.n * 100).toFixed(1) + '%';
     const roi   = (d.roi >= 0 ? '+' : '') + (d.roi * 100).toFixed(1) + '%';

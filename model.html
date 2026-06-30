@@ -92,7 +92,7 @@
     <li>Projects expected runs for each team using a <strong>Dual-Poisson model</strong> calibrated on park, weather, pitcher quality, and lineup data</li>
     <li><strong>30+ signals</strong> refine the base win probability through three pathways — run-environment inputs to the run rates, log-odds adjustments to the win probability, and confidence-shrinkage multipliers (pitcher quality, lineup confirmation, bullpen form, BvP, precipitation, line movement, and more)</li>
     <li><strong>Platt-scaled</strong> on a 7,359-game 2022–24 out-of-sample backtest, lightly blended with 2026 live results as the live sample grows</li>
-    <li><strong>Edge = blended model probability − Pinnacle no-vig price.</strong> Only picks where the model sees ≥4% mispricing are posted as official plays. <em>Pure model probability</em> (no market input) is tracked separately for calibration — never using market-blended numbers to evaluate model skill.</li>
+    <li><strong>Edge = blended model probability − Pinnacle no-vig price.</strong> Only picks where the model sees ≥4pp mispricing are posted as official plays. <em>Pure model probability</em> (no market input) is tracked separately for calibration — never using market-blended numbers to evaluate model skill.</li>
     <li>Every pick logged with timestamp before first pitch. <strong>CLV tracked to closing line</strong> to validate the signal is real, not luck</li>
   </ul>
 </div>
@@ -148,7 +148,7 @@
   </div>
   <div class="msig-cell">
     <div class="msig-lbl">Bet Filter</div>
-    <div class="msig-val">edge ≥ 4%</div>
+    <div class="msig-val">edge ≥ 4pp</div>
     <div class="msig-sub">vs. no-vig Pinnacle</div>
   </div>
   <div class="msig-cell">
@@ -549,7 +549,7 @@
         <div class="ex-num">4</div>
         <div class="ex-content">
           <div class="ex-title">Market comparison</div>
-          <div class="ex-text">Pinnacle no-vig says home team wins <strong>50.3%</strong>. Model says 54.5%. Gap = <strong>+4.2% edge</strong> → pick is posted at +148 best available odds.</div>
+          <div class="ex-text">Pinnacle no-vig says home team wins <strong>50.3%</strong>. Model says 54.5%. Gap = <strong>+4.2pp edge</strong> → pick is posted at +148 best available odds.</div>
         </div>
       </div>
     </div>
@@ -559,7 +559,7 @@
 
 <!-- VALIDATION -->
 <div class="section" id="section-validation">
-  <h2 class="sec-lbl">Out-of-Sample Backtest (Hypothetical) — 2022–2024 · Flat $100/Bet · 4%+ Edge</h2>
+  <h2 class="sec-lbl">Out-of-Sample Backtest (Hypothetical) — 2022–2024 · Flat $100/Bet · 4pp+ Edge</h2>
   <div style="font-size:11px;color:var(--text-3);line-height:1.6;margin:0 0 14px;padding:9px 12px;border:1px solid rgba(245,158,11,0.18);background:rgba(245,158,11,0.05);border-radius:8px"><strong style="color:#fbbf24">These are hypothetical backtest results.</strong> The 2022–2024 figures are simulated on historical data with the current model design — not money actually wagered — and the model was developed knowing this period, so live results will differ. For the real, forward-tested record see <a href="performance.html" style="color:var(--text-2)">Model Dashboard</a> and <a href="history.html" style="color:var(--text-2)">Pick History</a>. Past performance does not guarantee future results.</div>
   <div class="val-wrap">
 
@@ -588,7 +588,7 @@
 
     <div class="roi-block">
       <div class="roi-title">Backtested ROI by Season — 2022–2024 (Hypothetical)</div>
-      <div class="roi-sub">Hypothetical backtest. Flat $100/bet · 4%+ edge signals only · vs. −4.0% baseline (bet every game, full vig)</div>
+      <div class="roi-sub">Hypothetical backtest. Flat $100/bet · 4pp+ edge signals only · vs. −4.0% baseline (bet every game, full vig)</div>
       <div class="roi-row">
         <div class="roi-year">2022</div>
         <div class="roi-bar-wrap"><div class="roi-fill pos" style="width:6.7%"></div></div>
@@ -639,16 +639,16 @@
       <div class="fbox">Home cover rate:  <span class="n">35.7%</span> actual vs <span class="n">35.6%</span> model
 Direction acc.:   <span class="n">64.7%</span>  <span class="cm">(better side predicted)</span>
 
-Away <span class="op">+</span><span class="n">1.5</span>, <span class="op">≥</span><span class="n">5%</span> edge, <span class="op">−</span><span class="n">130</span> juice:
+Away <span class="op">+</span><span class="n">1.5</span>, <span class="op">≥</span><span class="n">5pp</span> edge, <span class="op">−</span><span class="n">130</span> juice:
   Model ROI:   <span class="v">+22.3%</span>   <span class="cm">// vs +13.8% blind baseline</span>
-  Win rate:    <span class="v">67.2%</span>    <span class="cm">// vs 65.5% at ≥0% edge</span>
+  Win rate:    <span class="v">67.2%</span>    <span class="cm">// vs 65.5% at ≥0pp edge</span>
 
 Away <span class="op">+</span><span class="n">1.5</span> win rate vs model edge:
-  <span class="op">≥</span> <span class="n">0%</span> edge <span class="op">→</span> <span class="n">65.5%</span>
-  <span class="op">≥</span> <span class="n">5%</span> edge <span class="op">→</span> <span class="n">67.2%</span>
-  <span class="op">≥</span> <span class="n">8%</span> edge <span class="op">→</span> <span class="n">68.4%</span>
-  <span class="op">≥</span><span class="n">10%</span> edge <span class="op">→</span> <span class="n">69.6%</span>   <span class="cm">// genuine discriminatory power</span></div>
-      <div class="math-note">RL edge = p_rl_cal − p_nv_Pinnacle_RL. Logged at edge ≥ 2% — a deliberately low gate that keeps the calibration sample full; run-line ROI uplift concentrates at ≥ 5% edge. CLV tracked separately via Pinnacle spreads pre-game closing line snapshot. Home −1.5 volume is low (&lt;40 bets at ≥8% edge over 3 seasons) — treated as a specialty bet requiring high model confidence.</div>
+  <span class="op">≥</span> <span class="n">0pp</span> edge <span class="op">→</span> <span class="n">65.5%</span>
+  <span class="op">≥</span> <span class="n">5pp</span> edge <span class="op">→</span> <span class="n">67.2%</span>
+  <span class="op">≥</span> <span class="n">8pp</span> edge <span class="op">→</span> <span class="n">68.4%</span>
+  <span class="op">≥</span><span class="n">10pp</span> edge <span class="op">→</span> <span class="n">69.6%</span>   <span class="cm">// genuine discriminatory power</span></div>
+      <div class="math-note">RL edge = p_rl_cal − p_nv_Pinnacle_RL. Logged at edge ≥ 2pp — a deliberately low gate that keeps the calibration sample full; run-line ROI uplift concentrates at ≥ 5pp edge. CLV tracked separately via Pinnacle spreads pre-game closing line snapshot. Home −1.5 volume is low (&lt;40 bets at ≥8pp edge over 3 seasons) — treated as a specialty bet requiring high model confidence.</div>
     </div>
 
     <div class="math-block cv">
@@ -665,8 +665,8 @@ Away <span class="op">+</span><span class="n">1.5</span> win rate vs model edge:
 <span class="hl">B_ou</span> <span class="op">&lt;</span> <span class="n">0</span> <span class="cm">// corrects systematic over-prediction
                //   on high-scoring games</span></div>
       <div class="f-lbl">Status — informational, not separately bet</div>
-      <div class="fbox">Synthetic-line ROI <span class="op">@</span> <span class="op">≥</span><span class="n">0%</span> edge:  <span class="v">+3.0%</span>
-Synthetic-line ROI <span class="op">@</span> <span class="op">≥</span><span class="n">2%</span> edge: <span class="op">−</span><span class="n">1.4%</span>
+      <div class="fbox">Synthetic-line ROI <span class="op">@</span> <span class="op">≥</span><span class="n">0pp</span> edge:  <span class="v">+3.0%</span>
+Synthetic-line ROI <span class="op">@</span> <span class="op">≥</span><span class="n">2pp</span> edge: <span class="op">−</span><span class="n">1.4%</span>
 
 Bias by total line:
   <span class="op">&lt;</span> <span class="n">7.5</span> runs:  <span class="op">−</span><span class="n">1.06</span> run underestimate

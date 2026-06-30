@@ -1528,6 +1528,8 @@
 .phb-stat-val.green { color: var(--green); }
 .phb-stat-val.red   { color: var(--red);   }
 .phb-stat-val.muted { color: var(--text-4); font-size: 16px; }
+/* CLV shown neutral on Today — flat/near-zero is not a proven edge (never green-by-sign) */
+.phb-stat-val.clv-flat { color: var(--text); }
 .phb-stat-sub {
   font-size: 9px; color: var(--text-4); margin-top: 2px;
 }
