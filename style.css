@@ -1232,10 +1232,8 @@ details[open] .faq-q::after { content: '−'; }
    so the recap grid must drop those tracks too or its cells misalign. (Phase 4
    delivers the full mobile ticket; this just keeps the recap aligned meanwhile.) */
 @media (max-width:1024px) {
+  /* 760–1024 (tablet): recap drops its stake column. Below 760 the mobile ticket takes over. */
   .pr-cols.pr-recap { grid-template-columns:minmax(112px,1.5fr) minmax(70px,.85fr) minmax(64px,.8fr) minmax(74px,1fr) minmax(54px,.8fr) 18px; }
-}
-@media (max-width:620px) {
-  .pr-cols.pr-recap { grid-template-columns:minmax(96px,1.6fr) minmax(58px,.9fr) minmax(56px,.8fr) minmax(68px,1fr) minmax(50px,.8fr); }
 }
 
 /* Action Today strip — one consolidated band: counts · top edge · state · updated */
@@ -1452,16 +1450,68 @@ details[open] .faq-q::after { content: '−'; }
   .pr-cols { grid-template-columns:minmax(108px,1.45fr) minmax(68px,.8fr) .75fr minmax(112px,1.45fr) minmax(52px,.72fr) 18px; }
 }
 @media (max-width:760px) {
-  .pr-play, .pr-head .h-play { display:none; }
-  .pr-cols { grid-template-columns:minmax(100px,1.4fr) minmax(66px,.85fr) .8fr minmax(104px,1.4fr) 18px; }
-  /* matchup column is too narrow for the score chip beside the name — stack it
-     onto its own line below the matchup + inning so neither gets truncated. */
+  /* ── Mobile bet-ticket ──────────────────────────────────────────────────────
+     Below 760px (phones; real tablets are ≥768) each row reflows into a 3-line
+     ticket so the decision fields (play-to / stake, and recap last / P&L) are
+     never dropped. Column header is hidden and the cells carry inline labels.
+     The SAME DOM serves the live table and the Phase 2 recap — no JS, no second
+     row builder. Must come after the ≤900/≤1024 rules so it re-shows what they hide. */
+  .pr-head { display:none; }
+  .pr-chev, .pr-head .h-chev { display:none; }
+  .pr-row { padding:11px 13px; }
+  /* minmax(0,1fr) — NOT 1fr (=minmax(auto,1fr)) — so the nowrap matchup/odds
+     content can't hold the tracks open and overflow-clip the right column on phones. */
+  .pr-cols { grid-template-columns:repeat(3, minmax(0,1fr)); gap:7px 10px; align-items:start; }
+  .pr-cols > * { min-width:0; }
+
+  /* matchup stacks its name + inning/Final onto their own lines */
   .pr-mu { flex-direction:column; align-items:stretch; justify-content:flex-start; gap:1px; }
   .pr-mu-score { text-align:left; transform-origin:left center; }
+
+  /* live / actionable ticket */
+  .pr-cols:not(.pr-recap) {
+    grid-template-areas:
+      "mu   mu   edge"
+      "pick pick pick"
+      "odds play stake";
+  }
+  .pr-cols:not(.pr-recap) .pr-mm { display:none; }
+  .pr-cols:not(.pr-recap) .pr-play,
+  .pr-cols:not(.pr-recap) .pr-stake { display:block; }   /* re-show — earlier rules hid these */
+  .pr-mu{grid-area:mu;} .pr-pick{grid-area:pick;} .pr-edge{grid-area:edge;}
+  .pr-odds{grid-area:odds;} .pr-play{grid-area:play;} .pr-stake{grid-area:stake;}
+
+  /* recap ticket */
+  .pr-cols.pr-recap {
+    grid-template-areas:
+      "mu   mu   result"
+      "pick pick pick"
+      "last pnl  stake";
+  }
+  .pr-cols.pr-recap .pr-stake { display:block; }
+  .pr-recap .pr-result-cell{grid-area:result;} .pr-recap .pr-last{grid-area:last;} .pr-recap .pr-pnl-cell{grid-area:pnl;}
+
+  /* edge (live) / result (recap) stay the prominent top-right element */
+  .pr-edge { font-size:17px; justify-self:end; }
+  .pr-recap .pr-result-cell { justify-self:end; }
+
+  /* decision chips — small uppercase label above a left-aligned value */
+  .pr-odds, .pr-play, .pr-stake, .pr-last, .pr-pnl-cell { text-align:left; }
+  .pr-odds::before, .pr-play::before, .pr-stake::before, .pr-last::before, .pr-pnl-cell::before {
+    display:block; font-size:8.5px; font-weight:700; letter-spacing:.07em;
+    text-transform:uppercase; color:var(--text-4); margin-bottom:2px; line-height:1;
+  }
+  .pr-odds::before     { content:"Now"; }
+  .pr-play::before     { content:"Play to"; }
+  .pr-stake::before    { content:"Stake"; }
+  .pr-last::before     { content:"Last"; }
+  .pr-pnl-cell::before { content:"P&L"; }
+
+  /* current-odds: left-align the value and tighten the movement-chip slot */
+  .pr-odds .pr-o-main { justify-content:flex-start; }
+  .pr-odds .pr-o-mv { min-width:0; padding-left:6px; }
 }
 @media (max-width:620px) {
-  .pr-chev, .pr-head .h-chev { display:none; }
-  .pr-cols { grid-template-columns:minmax(92px,1.5fr) minmax(60px,.85fr) .85fr minmax(96px,1.3fr); gap:10px; }
-  .pr-row { padding:10px 13px; }
-  .pr-edge { font-size:16px; }
+  /* The ≤760 ticket already owns the row layout; just tighten padding on small phones. */
+  .pr-row { padding:11px 12px; }
 }
