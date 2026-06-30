@@ -38,7 +38,7 @@
       "@type": "FAQPage",
       "mainEntity": [
         { "@type": "Question", "name": "How does the model price each game?", "acceptedAnswer": { "@type": "Answer", "text": "It converts the model's win probability into American odds with no margin — the theoretical price at which neither side has an edge. Edge is the gap between that model price and the market." } },
-        { "@type": "Question", "name": "How is edge calculated?", "acceptedAnswer": { "@type": "Answer", "text": "Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). Independent Baseball Projections only posts picks with at least 4% edge vs. Pinnacle's no-vig line." } },
+        { "@type": "Question", "name": "How is edge calculated?", "acceptedAnswer": { "@type": "Answer", "text": "Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). Independent Baseball Projections only posts picks with at least a 4pp edge vs. Pinnacle's no-vig line." } },
         { "@type": "Question", "name": "Does past performance guarantee future results?", "acceptedAnswer": { "@type": "Answer", "text": "No. Sports betting involves risk and variance. The model identifies positive expected value — not certainty. Never bet more than you can afford to lose." } }
       ]
     }
@@ -60,9 +60,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=33">
+<link rel="stylesheet" href="style.css?v=35">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link rel="stylesheet" href="index.css?v=3">
+<link rel="stylesheet" href="index.css?v=4">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DTTFTBVZJN"></script>
 <script>
@@ -108,6 +108,11 @@
       <a class="hero-btn hero-btn-primary" href="#picks-anchor">See today's picks ↓</a>
       <a class="hero-btn hero-btn-secondary" href="performance.html">View track record →</a>
     </div>
+    <ul class="hero-trust" aria-label="How we keep this honest">
+      <li>Logged before first pitch</li>
+      <li>Never deleted after a loss</li>
+      <li>Closing-line value tracked</li>
+    </ul>
   </header>
 
   <!-- YESTERDAY RECAP: recency proof, rendered from today.json yesterday_picks -->
@@ -184,7 +189,7 @@
 
   <!-- MARGINAL PICKS (near-miss) -->
   <div class="section" id="marginal-section" style="display:none">
-    <h2 class="sec-lbl">Near-Miss Signals — Below 4% Threshold</h2>
+    <h2 class="sec-lbl">Near-Miss Signals — Below 4pp Threshold</h2>
     <div class="sec-note">Model found edge below the posting threshold. Tracked for transparency — not recommended bets.</div>
     <div id="marginal-container"></div>
   </div>
@@ -219,7 +224,7 @@
       <p class="am-p">
         Pitcher quality, lineup status, park factors, weather, bullpen quality, BvP career matchup, arsenal fit, market audit, and more — applied as model adjustments before the market edge comparison.
         The final Independent Baseball Projections probability is compared against the no-vig Pinnacle probability to identify pricing gaps.
-        Only picks with ≥4% edge vs. Pinnacle are posted.
+        Only picks with ≥4pp edge vs. Pinnacle are posted.
       </p>
       <div class="trust-strip am-mb">
         <div class="trust-card"><div class="trust-label">Model</div><div class="trust-val">Dual-Poisson + log-odds</div></div>
@@ -240,7 +245,7 @@
       </details>
       <details class="faq-item">
         <summary class="faq-q">How is edge calculated?</summary>
-        <div class="faq-a">Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). Independent Baseball Projections only posts picks with at least 4% edge vs. Pinnacle's no-vig line.</div>
+        <div class="faq-a">Edge is the difference between the model's win probability and the market's implied probability (after removing the vig). Independent Baseball Projections only posts picks with at least a 4pp edge vs. Pinnacle's no-vig line.</div>
       </details>
       <details class="faq-item">
         <summary class="faq-q">Does past performance guarantee future results?</summary>
@@ -319,7 +324,7 @@
   <span id="fr-text" aria-live="polite">—</span>
 </div>
 
-<script src="ibp-utils.js?v=3"></script>
-<script src="index.js?v=24"></script>
+<script src="ibp-utils.js?v=4"></script>
+<script src="index.js?v=26"></script>
 </body>
 </html>

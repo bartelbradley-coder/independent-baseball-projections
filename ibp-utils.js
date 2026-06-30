@@ -112,15 +112,16 @@ function computeTodaySettled(picks, scores, todayDateStr) {
       const g = resolveScore(p, scores);
       if (!g || g.status !== 'final') return null;
       const side = (p.side || '').toUpperCase();
+      const push = g.awayScore != null && g.awayScore === g.homeScore;  // tie → push (stake returned)
       const pickWon = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
       const odds  = p.odds;
-      const pnl_u = pickWon
-        ? (odds > 0 ? odds / 100 : 100 / Math.abs(odds))
+      const pnl_u = push ? 0
+        : pickWon ? (odds > 0 ? odds / 100 : 100 / Math.abs(odds))
         : -1.0;
       return {
         date: todayDateStr, game: p.game, pick: p.pick, side: p.side,
         odds, edge: p.edge, model_prob: p.model_prob,
-        result: pickWon ? 'W' : 'L',
+        result: push ? 'P' : pickWon ? 'W' : 'L',
         pnl_u: Math.round(pnl_u * 1000) / 1000,
         kelly_units: p.kelly_units || null,
       };

@@ -699,6 +699,20 @@ footer a:hover { color: var(--text-2); }
   text-decoration: none; transition: background 0.15s;
 }
 .hero-btn-secondary:hover { background: rgba(255,255,255,0.09); }
+/* Always-visible credibility line (hero-proof is JS-gated; this never is) */
+.hero-trust {
+  display: flex; flex-wrap: wrap; gap: 7px 16px;
+  list-style: none; margin: 16px 0 0; padding: 0;
+}
+.hero-trust li {
+  position: relative; padding-left: 15px;
+  font-size: 11px; font-weight: 500; color: var(--text-3);
+  letter-spacing: 0.01em;
+}
+.hero-trust li::before {
+  content: "✓"; position: absolute; left: 0; top: 0;
+  color: var(--green); font-weight: 700; font-size: 10px;
+}
 
 /* ── Trust strip ──────────────────────────────────────────────────────── */
 .trust-strip {
@@ -1177,6 +1191,40 @@ details[open] .faq-q::after { content: '−'; }
 
 .pr-chev { justify-self:end; color:var(--text-4); font-size:15px; line-height:1; transition:transform .16s; }
 .pr-row.open .pr-chev { transform:rotate(90deg); color:var(--indigo-lt); }
+
+/* ── Recap (all-done) variant — replaces current-odds/play-to with results ───── */
+.pr-cols.pr-recap {
+  grid-template-columns:
+    minmax(116px,1.5fr)   /* matchup */
+    minmax(74px,.85fr)    /* pick */
+    minmax(70px,.8fr)     /* last tracked */
+    minmax(78px,1fr)      /* result */
+    minmax(58px,.8fr)     /* P&L */
+    minmax(58px,.8fr)     /* stake */
+    20px;                 /* chevron */
+}
+.pr-head .pr-h.h-last, .pr-head .pr-h.h-result, .pr-head .pr-h.h-pnl { justify-content:flex-end; }
+.pr-recap .pr-last { text-align:right; font-family:var(--font-mono); font-size:12.5px; color:var(--text-3); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.pr-recap .pr-result-cell, .pr-recap .pr-pnl-cell { text-align:right; }
+.pr-result { font-family:var(--font-mono); font-size:12.5px; font-weight:700; white-space:nowrap; }
+.pr-result.win { color:var(--green); }
+.pr-result.loss { color:var(--red); }
+.pr-result.ppd { color:var(--text-4); font-weight:600; }
+.pr-pnl { font-family:var(--font-mono); font-size:12.5px; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap; color:var(--text-4); }
+.pr-pnl.pos { color:var(--green); }
+.pr-pnl.neg { color:var(--red); }
+/* graded-card forward link in the Action Today note */
+.at-note .at-tmr { color:var(--indigo-lt); text-decoration:none; font-weight:600; white-space:nowrap; }
+.at-note .at-tmr:hover { text-decoration:underline; }
+/* Recap responsive — the global rules hide .pr-stake (≤1024) and .pr-chev (≤620),
+   so the recap grid must drop those tracks too or its cells misalign. (Phase 4
+   delivers the full mobile ticket; this just keeps the recap aligned meanwhile.) */
+@media (max-width:1024px) {
+  .pr-cols.pr-recap { grid-template-columns:minmax(112px,1.5fr) minmax(70px,.85fr) minmax(64px,.8fr) minmax(74px,1fr) minmax(54px,.8fr) 18px; }
+}
+@media (max-width:620px) {
+  .pr-cols.pr-recap { grid-template-columns:minmax(96px,1.6fr) minmax(58px,.9fr) minmax(56px,.8fr) minmax(68px,1fr) minmax(50px,.8fr); }
+}
 
 /* Action Today strip — one consolidated band: counts · top edge · state · updated */
 .action-today { background:rgba(255,255,255,.022); border:1px solid var(--border); border-radius:12px; padding:11px 14px; margin:2px 0 12px; }

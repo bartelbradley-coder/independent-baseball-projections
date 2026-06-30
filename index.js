@@ -963,15 +963,15 @@ function renderEmptyState(data, hist, marginal = []) {
         <span style="font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text-2)">${p.pick}</span>
         <span style="color:var(--text-4)">${p.game}</span>
         <span style="margin-left:auto;font-family:var(--font-mono);color:var(--amber)">${formatOdds(p.odds)}</span>
-        <span style="font-weight:600;color:var(--text-4)">+${(p.edge*100).toFixed(1)}% edge</span>
+        <span style="font-weight:600;color:var(--text-4)">+${(p.edge*100).toFixed(1)}pp edge</span>
       </div>`).join('');
     nearMissHTML = `
       <div style="margin-top:20px;padding:14px 16px;background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.15);border-radius:10px">
         <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);margin-bottom:8px">
-          ⚠️ ${marginal.length} Signal${marginal.length > 1 ? 's' : ''} Below 4% Threshold
+          ⚠️ ${marginal.length} Signal${marginal.length > 1 ? 's' : ''} Below 4pp Threshold
         </div>
         ${rows}
-        <div style="font-size:10px;color:var(--text-4);margin-top:8px">Model found signals — none cleared the 4% minimum edge for a recommended bet.</div>
+        <div style="font-size:10px;color:var(--text-4);margin-top:8px">Model found signals — none cleared the 4pp minimum edge for a recommended bet.</div>
       </div>`;
   }
 
@@ -1447,10 +1447,10 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
     // from a pick that never cleared the bar — the price is NOT the reason here.
     if (_c.hasCur && _postedEv >= 0.04) {
       pill = 'No longer playable'; pCls = 'bad';
-      detail = 'model re-rated this pick — current edge ' + (ev * 100).toFixed(1) + 'pp is below our 4% cutoff (posted ' + (_postedEv >= 0 ? '+' : '') + (_postedEv * 100).toFixed(1) + 'pp)';
+      detail = 'model re-rated this pick — current edge ' + (ev * 100).toFixed(1) + 'pp is below our 4pp cutoff (posted ' + (_postedEv >= 0 ? '+' : '') + (_postedEv * 100).toFixed(1) + 'pp)';
     } else {
       pill = 'Below threshold'; pCls = 'neu';
-      detail = 'model edge is under our 4% cutoff — not a recommended bet';
+      detail = 'model edge is under our 4pp cutoff — not a recommended bet';
     }
   }
   else if (cushion != null && cushion <= 0) { pill = 'No longer playable'; pCls = 'bad'; detail = 'current ' + curStr + ' is past Play to ' + ptStr; }
@@ -1625,8 +1625,6 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
   const strip = document.getElementById('status-strip');
   if (!strip) return;
   strip.style.display = 'flex';
-  const gamesStr = (gamesToday != null && gamesToday > 0)
-    ? ` · ${gamesToday} game${gamesToday !== 1 ? 's' : ''} modeled` : '';
 
   if (noPicksYet || !picks || picks.length === 0) {
     const nowCT  = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Chicago'}));
@@ -1634,46 +1632,31 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
     strip.className = 'status-strip ss-pending';
     strip.innerHTML = `
       <span class="ss-badge ss-badge-pending">${pre9 ? '🕐 PENDING' : '📊 NO PICKS'}</span>
-      <span class="ss-text">${pre9 ? 'Picks post at 9:00 AM CT after lineup confirmation' : 'No picks clear the 4% edge threshold today'}</span>
+      <span class="ss-text">${pre9 ? 'Picks post at 9:00 AM CT after lineup confirmation' : 'No picks clear the 4pp edge threshold today'}</span>
       <a class="ss-link" href="preview.html">Tomorrow's opening lines →</a>`;
     return;
   }
 
-  const liveCount    = picks.filter(p => isLiveGame(p)).length;
-  const doneCount    = picks.filter(p => isGameOver(p)).length;
-  const pendingCount = picks.length - liveCount - doneCount;
-  const firstPitch   = picks
-    .filter(p => !isLiveGame(p) && !isGameOver(p))
-    .map(p => p.game_time).filter(Boolean).sort()[0];
-  const fpStr = firstPitch
-    ? ' · First pitch ' + (new Date(firstPitch).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/Chicago'})) + ' CT'
-    : '';
-  const postedStr = picks[0]?.posted_at ? ' · Posted ' + picks[0].posted_at : '';
+  // Match the recap's allDone basis: posted picks (≥4pp), counting POSTPONED as
+  // graded so a PPD pick doesn't suppress the FINAL strip.
+  const posted      = (picks || []).filter(p => (p.edge || 0) >= 0.04);
+  const gradedCount = posted.filter(p => isGameOver(p) || isPostponed(p)).length;
+  const ppdCount    = posted.filter(p => isPostponed(p)).length;
 
   // Active days (locked / live / partial) are now covered by the consolidated
   // summary line under the picks heading — only surface the strip for the
-  // all-complete recap (pending / no-picks are handled above).
-  if (doneCount !== picks.length) { strip.style.display = 'none'; return; }
+  // all-graded recap (pending / no-picks are handled above). With the card
+  // graded, route forward to tomorrow (mirrors the no-picks branch).
+  if (!posted.length || gradedCount !== posted.length) { strip.style.display = 'none'; return; }
 
-  if (liveCount > 0) {
-    strip.className = 'status-strip ss-active';
-    strip.innerHTML = `
-      <span class="ss-badge ss-badge-live">● LIVE</span>
-      <span class="ss-text">${liveCount} active · ${doneCount} final · ${pendingCount} upcoming</span>
-      <span class="ss-time">${postedStr.replace(' · ','')}</span>`;
-  } else if (doneCount === picks.length) {
-    strip.className = 'status-strip ss-done';
-    strip.innerHTML = `
-      <span class="ss-badge ss-badge-done">✓ FINAL</span>
-      <span class="ss-text">All ${picks.length} game${picks.length !== 1 ? 's' : ''} complete</span>
-      <span class="ss-time">${postedStr.replace(' · ','')}</span>`;
-  } else {
-    strip.className = 'status-strip ss-locked';
-    strip.innerHTML = `
-      <span class="ss-badge ss-badge-locked">✓ LOCKED</span>
-      <span class="ss-text">${picks.length} pick${picks.length !== 1 ? 's' : ''} for today${gamesStr}${fpStr}</span>
-      <span class="ss-time">${postedStr.replace(' · ','')}</span>`;
-  }
+  const _txt = ppdCount > 0
+    ? 'All posted picks graded'
+    : `All ${posted.length} game${posted.length !== 1 ? 's' : ''} complete`;
+  strip.className = 'status-strip ss-done';
+  strip.innerHTML = `
+    <span class="ss-badge ss-badge-done">✓ FINAL</span>
+    <span class="ss-text">${_txt}</span>
+    <a class="ss-link" href="preview.html">Tomorrow's opening lines →</a>`;
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -1958,6 +1941,121 @@ function prRowCollapsed(p, isBest, gameResult) {
     + `<div class="pr-chev" aria-hidden="true">›</div></div>`;
 }
 
+// ── Last-tracked price — honest "close" fallback. clv/closing_prob are null in
+// the feed, so we show the most recent price we polled before the game, clearly
+// labeled "Last tracked" (NOT an official closing line / CLV).
+function prLastTracked(p) {
+  const h = Array.isArray(p.odds_history) ? p.odds_history.filter(x => x && x.odds != null) : [];
+  return h.length ? h[h.length - 1].odds : null;
+}
+
+// ── Recap (all-done) table ────────────────────────────────────────────────────
+// Once every posted pick is final/postponed the live decision columns (current
+// odds, play-to) are dead "—". This view replaces them with a results recap:
+// posted line · last-tracked price · result · P&L · stake. Same drawer on expand.
+function prTableHeadRecap() {
+  return `<div class="pr-cols pr-recap pr-head">`
+    + _prH('Matchup', 'h-mu')
+    + _prH('Pick', 'h-pick')
+    + _prH('Last tracked', 'h-last', 'Most recent price we tracked before the game — not an official closing line.')
+    + _prH('Result', 'h-result')
+    + _prH('P&L', 'h-pnl', 'Profit/loss in units — flat 1u per pick, or Kelly-scaled when the Kelly toggle is on.')
+    + _prH('Stake', 'h-stake', 'Suggested bet size — flat 1 unit, or Kelly-scaled when the Kelly toggle is on.')
+    + `<span class="pr-h h-chev"></span>`
+    + `</div>`;
+}
+
+function prRowRecap(p, gr, settled, isKelly) {
+  const parts = String(p.game || '').split('@').map(s => s.trim());
+  const away = parts[0] || '', home = parts[1] || '';
+  const pickAbbr = (p.pick || '').toUpperCase();
+  const fmtO = o => (o == null ? '—' : (o > 0 ? '+' + o : String(o)));
+
+  let spread = '';
+  if (p.pick_type === 'RUN_LINE' && p.run_line && p.run_line.spread) {
+    const sp = String(p.run_line.spread);
+    spread = ' ' + (sp.charAt(0) === '-' ? sp : '+' + sp);
+  }
+  const pickCell = `${pickAbbr}${spread}<span class="pr-bo">${fmtO(p.odds)}</span>`;
+  const lastTracked = fmtO(prLastTracked(p));
+
+  // Result + P&L. P&L follows the Flat/Kelly toggle: flat = settled.pnl_u (1-unit
+  // basis); Kelly = pnl_u × kelly_units (same basis as _kellyStatsFromHist).
+  const ppd  = isPostponed(p) || (gr && gr.status === 'postponed');
+  // getPickResult / computeTodaySettled grade the raw game winner, not the spread,
+  // so a run-line pick would be mis-graded — leave it ungraded here rather than
+  // publish a wrong W/L. (RUN_LINE isn't currently posted to the public main.)
+  const isRL = p.pick_type === 'RUN_LINE';
+  let resultHTML, pnlHTML, pnlAria;
+  if (ppd) {
+    resultHTML = `<span class="pr-result ppd">PPD</span>`;
+    pnlHTML    = `<span class="pr-pnl">—</span>`;
+    pnlAria    = 'no action';
+  } else if (isRL && gr && gr.status === 'final') {
+    resultHTML = `<span class="pr-result">—</span>`;
+    pnlHTML    = `<span class="pr-pnl">—</span>`;
+    pnlAria    = 'run line, see card';
+  } else if (gr && gr.status === 'final' && settled && gr.result === 'P') {
+    resultHTML = `<span class="pr-result ppd">P${gr.score ? ' ' + gr.score : ''}</span>`;
+    pnlHTML    = `<span class="pr-pnl">0.0u</span>`;
+    pnlAria    = 'push, stake returned';
+  } else if (gr && gr.status === 'final' && settled) {
+    const won  = gr.result === 'W';
+    resultHTML = `<span class="pr-result ${won ? 'win' : 'loss'}">${won ? '✓ W' : '✗ L'}${gr.score ? ' ' + gr.score : ''}</span>`;
+    const pnlU = isKelly ? settled.pnl_u * (p.kelly_units || 0) : settled.pnl_u;
+    const cls  = pnlU >= 0 ? 'pos' : 'neg';
+    pnlHTML    = `<span class="pr-pnl ${cls}">${pnlU >= 0 ? '+' : ''}${pnlU.toFixed(1)}u</span>`;
+    pnlAria    = `P&L ${pnlU >= 0 ? 'plus' : 'minus'} ${Math.abs(pnlU).toFixed(1)} units`;
+  } else {
+    resultHTML = `<span class="pr-result">—</span>`;
+    pnlHTML    = `<span class="pr-pnl">—</span>`;
+    pnlAria    = '';
+  }
+
+  // Stake per toggle (mirrors the collapsed row).
+  const units = isKelly ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') : '1.0u';
+  const stakeSub = isKelly ? `<span class="pr-st-usd kelly-usd" data-units="${p.kelly_units || 0}"></span>` : '';
+
+  // Matchup subline = Final / Postponed state.
+  const _sub = prStateSub(gr);
+  const subHTML = _sub
+    ? `<div class="${_sub.cls}" data-live-sub>${_sub.txt.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>`
+    : `<div class="pr-time">—</div>`;
+
+  const resultWord = ppd ? 'postponed'
+    : (gr && gr.status === 'final' ? (gr.result === 'W' ? 'won' : gr.result === 'P' ? 'push' : 'lost') : 'settled');
+  const ariaLabel = `${away} at ${home}, pick ${pickAbbr}${spread} ${fmtO(p.odds)}, ${resultWord}`
+    + (gr && gr.score ? ', ' + pickAbbr + ' ' + gr.score : '')
+    + `, last tracked ${lastTracked}${pnlAria ? ', ' + pnlAria : ''}, stake ${units}.`;
+
+  const _rowState = prRowStateClass(p, gr);
+  return `<div class="pr-cols pr-recap pr-row${_rowState ? ' ' + _rowState : ''}" role="button" tabindex="0" data-pr-card="${prCardId(p)}" `
+    + `aria-expanded="false" aria-label="${ariaLabel}" onclick="prToggle(this)" onkeydown="prKey(event,this)">`
+    + `<div class="pr-mu"><div class="pr-mu-main"><div class="pr-match">${away} <span class="pr-at">@</span> ${home}</div>${subHTML}</div>${prStateChipHTML(p, gr)}</div>`
+    + `<div class="pr-pick">${pickCell}</div>`
+    + `<div class="pr-last">${lastTracked}</div>`
+    + `<div class="pr-result-cell">${resultHTML}</div>`
+    + `<div class="pr-pnl-cell">${pnlHTML}</div>`
+    + `<div class="pr-stake">${units}${stakeSub}</div>`
+    + `<div class="pr-chev" aria-hidden="true">›</div></div>`;
+}
+
+function prRecapRows(main, scores, date, isKelly) {
+  // Mirror prRowHTML: register picksMap (floating results / today-tally / score
+  // refresh read it) and wrap each row in the pr-wrap + pr-details drawer shell
+  // so prToggle finds .pr-details and the expand still works.
+  return main.map(p => {
+    const cardId = prCardId(p);
+    picksMap[cardId] = p;
+    // Settle this pick alone (not via a game-keyed map) so doubleheaders don't
+    // collide — resolveScore inside computeTodaySettled is game_time-aware.
+    const settled = (typeof computeTodaySettled === 'function')
+      ? ((computeTodaySettled([p], scores, date) || [])[0] || null) : null;
+    return `<div class="pr-wrap">${prRowRecap(p, getPickResult(p, scores), settled, isKelly)}`
+      + `<div class="pr-details" hidden data-card-id="${cardId}" data-best=""></div></div>`;
+  }).join('');
+}
+
 // cardId mirrors pickCardHTML's own formula so picksMap stays populated WITHOUT
 // eagerly building every (expensive, ~1000-line) card up front. We register the
 // pick here so global consumers of picksMap (floating pill, score refresh, copy/
@@ -2017,7 +2115,7 @@ function renderItemListSchema(data) {
       "@type": "ListItem",
       "position": i + 1,
       "name": `${p.pick || p.team || ''} ${formatOdds(p.odds)} — ${p.game || ''}`.trim(),
-      "description": `Model edge +${((p.edge || 0) * 100).toFixed(1)}% vs the market on ${p.game || 'this game'}.`
+      "description": `Model edge +${((p.edge || 0) * 100).toFixed(1)}pp vs the market on ${p.game || 'this game'}.`
     }))
   };
   const s = document.createElement('script');
@@ -2421,19 +2519,24 @@ function render(data, hist, scores = {}, perf = null) {
     renderEmptyState(data, hist, marginal);
   } else {
     _mainPicksRef = main;
-    const shareAllHTML = main.length >= 2
+
+    // ── Game-state counts ─────────────────────────────────────────────────────
+    // POSTPONED is "done" for actionability — exclude it from "upcoming" so an
+    // all-final (plus any PPD) slate correctly reaches allDone and shows the recap.
+    const liveGroup      = main.filter(p => isLiveGame(p));
+    const completedGroup = main.filter(p => isGameOver(p));
+    const upcomingGroup  = main.filter(p => !isLiveGame(p) && !isGameOver(p) && !isPostponed(p));
+    const allDone = main.length > 0 && upcomingGroup.length === 0 && liveGroup.length === 0;
+    const _isKelly = _indexPnlMode === 'kelly';
+
+    // Share-all is hidden once the card is graded (recap mode).
+    const shareAllHTML = (!allDone && main.length >= 2)
       ? `<div class="share-all-row"><button class="share-all-btn" onclick="shareAllPicks()">𝕏 Share All ${main.length} Picks</button></div>`
       : '';
 
-    // ── Game-state counts (drive the Action Today summary line only) ──────────
-    const liveGroup      = main.filter(p => isLiveGame(p));
-    const completedGroup = main.filter(p => isGameOver(p));
-    const upcomingGroup  = main.filter(p => !isLiveGame(p) && !isGameOver(p));
-    const allDone = main.length > 0 && upcomingGroup.length === 0 && liveGroup.length === 0;
-
     let _stateInline = '';
     let _atNote = 'Odds &amp; starters captured at model run time — re-check current prices and lineups before betting.';
-    if (liveGroup.length > 0 || completedGroup.length > 0) {
+    if (liveGroup.length > 0 || completedGroup.length > 0 || allDone) {
       const _settledMain = (typeof computeTodaySettled === 'function')
         ? computeTodaySettled(completedGroup, scores, data.date || '') : [];
       const fw = _settledMain.filter(r => r.result === 'W').length;
@@ -2442,9 +2545,11 @@ function render(data, hist, scores = {}, perf = null) {
       // Record + running flat-stake units as games go final.
       const rec = (fw + fl) ? ` · ${fw}–${fl} · ${fu >= 0 ? '+' : ''}${fu.toFixed(1)}u` : '';
       if (allDone) {
-        _stateInline = `<span class="pss-up">Today's results</span><span class="pss-sep">·</span>`
-          + `<span class="pss-final">${completedGroup.length} game${completedGroup.length !== 1 ? 's' : ''}${rec}</span>`;
-        _atNote = 'All of today\'s games have started — new picks post tomorrow morning.';
+        const _label = completedGroup.length
+          ? `${completedGroup.length} game${completedGroup.length !== 1 ? 's' : ''}${rec}`
+          : 'all games postponed';
+        _stateInline = `<span class="pss-up">Today's results</span><span class="pss-sep">·</span><span class="pss-final">${_label}</span>`;
+        _atNote = 'Today\'s card is graded. <a class="at-tmr" href="preview.html">See tomorrow\'s opening lines →</a>';
       } else {
         const parts = [];
         if (upcomingGroup.length)  parts.push(`<span class="pss-up">${upcomingGroup.length} Upcoming</span>`);
@@ -2454,19 +2559,23 @@ function render(data, hist, scores = {}, perf = null) {
       }
     }
 
-    // ── One flat, edge-sorted table ──────────────────────────────────────────
-    // Near-miss picks (edge < 4%) fold in too. prSortPicks leads with the
-    // actionable plays (sorted by the active key, default edge desc); live, final,
-    // edge-gone, and near-miss picks are faded and sorted below.
-    const ordered = prSortPicks(main.concat(marginal));
-    const picksHTML = `<div class="pr-table">${prTableHead()}${prRows(ordered, scores)}</div>`;
+    // ── Picks table — results recap once the card is graded, else the live ────
+    // actionable table. Recap drops the dead current-odds/play-to columns and the
+    // near-miss rows (those were never bets); same drawer expands on each row.
+    let picksHTML;
+    if (allDone) {
+      picksHTML = `<div class="pr-table is-recap">${prTableHeadRecap()}${prRecapRows(main, scores, data.date || '', _isKelly)}</div>`;
+    } else {
+      const ordered = prSortPicks(main.concat(marginal));
+      picksHTML = `<div class="pr-table">${prTableHead()}${prRows(ordered, scores)}</div>`;
+    }
 
     // ── Action Today strip — counts, top edge, live state, model-run time ─────
     const _strongN = main.filter(p => p.edge >= 0.08).length;
     const _best    = main[0];
     const _metaBits = [`<strong>${main.length}</strong> pick${main.length !== 1 ? 's' : ''}`];
     if (_strongN) _metaBits.push(`<strong class="at-strong">${_strongN}</strong> strong`);
-    if (_best) _metaBits.push(`top edge <strong class="g">+${(_best.edge * 100).toFixed(1)}%</strong> <span class="at-bt">${_best.pick}</span>`);
+    if (_best) _metaBits.push(`top edge <strong class="g">+${(_best.edge * 100).toFixed(1)}pp</strong> <span class="at-bt">${_best.pick}</span>`);
     if (data.games_today) _metaBits.push(`<span class="at-dim">${data.games_today} games analyzed</span>`);
     const _upd = data.generated_at ? `Updated ${String(data.generated_at).split(' · ')[0]}` : '';
     const _summaryEl = document.getElementById('picks-summary');
@@ -2627,7 +2736,8 @@ function getPickResult(p, scores) {
   }
   if (g.status === 'postponed') return { status: 'postponed' };
   if (g.status === 'scheduled') return { status: 'scheduled' };
-  // final
+  // final — tie (suspended/called game) is a push, not a loss
+  if (g.awayScore != null && g.awayScore === g.homeScore) return { status: 'final', result: 'P', score };
   const pickWon = side === 'AWAY' ? g.awayScore > g.homeScore : g.homeScore > g.awayScore;
   return { status: 'final', result: pickWon ? 'W' : 'L', score };
 }
@@ -2652,7 +2762,7 @@ function updateFloatingResults(scores) {
   if (settled.length === 0) { pill.style.display = 'none'; return; }
 
   const wins   = settled.filter(r => r.result === 'W').length;
-  const losses = settled.length - wins;
+  const losses = settled.filter(r => r.result === 'L').length;  // exclude pushes (result 'P')
 
   let text = `${wins}W–${losses}L`;
   if (live > 0)          text += ` · ${live} live`;
@@ -2731,7 +2841,7 @@ function refreshScoreBadges(scores) {
     if (badge) {
       if (gr.status === 'final') {
         badge.textContent = `${gr.result} ${gr.score}`;
-        badge.className = `result-badge result-badge-${gr.result === 'W' ? 'win' : 'loss'}`;
+        badge.className = `result-badge result-badge-${gr.result === 'W' ? 'win' : gr.result === 'P' ? 'push' : 'loss'}`;
         badge.style.display = '';
       } else if (gr.status === 'live') {
         // Surface the inning (and score) ESPN already gives us — e.g. "● LIVE · Top 9th · 4–6".
