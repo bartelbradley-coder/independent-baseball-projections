@@ -34,7 +34,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=29">
 <link rel="stylesheet" href="index.css?v=3">
-<link rel="stylesheet" href="performance.css?v=3">
+<link rel="stylesheet" href="performance.css?v=4">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DTTFTBVZJN"></script>
 <script>
@@ -84,9 +84,8 @@
   <div class="live-metrics-note">
     <span>📊 Live results reflect posted picks only. Backtested validation is shown separately below.</span>
   </div>
-  <!-- Mini Record/Win-Rate/Picks/Updated strip removed — Record, ROI, CLV &
-       Beat-Close live in the hero stats below (Picks Logged = wins+losses =
-       the record), and Last Updated is in the nav (deduped). -->
+  <!-- Record, ROI, CLV, beat-close & risk metrics live in the validation header
+       below; Last Updated is in the nav (deduped). -->
 
 
   <!-- Today's pick status → see Today's Picks tab -->
@@ -102,25 +101,8 @@
     <div class="ib-body" id="insight-body"></div>
   </div>
 
-  <!-- CHANGE 1: Hero stats row -->
-  <div class="hero-stats-row" id="hero-stats-row" style="display:none">
-    <div class="hero-stat">
-      <div class="hero-val green" id="hero-roi">—</div>
-      <div class="hero-lbl">Season ROI / Bet</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-val white" id="hero-record">—</div>
-      <div class="hero-lbl">2026 Record</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-val green" id="hero-clv">—</div>
-      <div class="hero-lbl">Avg CLV</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-val green" id="hero-clv-pct">—</div>
-      <div class="hero-lbl">Picks Beat Close</div>
-    </div>
-  </div>
+  <!-- Hero stats row removed — consolidated into the single validation header
+       (headline-stats) above; it duplicated record / ROI / CLV. -->
 
   <!-- Bankroll growth chart -->
   <div class="section">
@@ -498,8 +480,7 @@ async function loadAll() {
     }
 
     // Today's pick status shown on Today's Picks tab — not duplicated here
-    renderHeadline(pAugmented, hAugmented);
-    renderHeroStats(pAugmented, hAugmented);
+    renderValidationHeader(pAugmented, hAugmented);
     renderInsight(pAugmented);
     renderBankrollChart(hAugmented);
     renderLuckBand(hAugmented);
@@ -529,7 +510,7 @@ async function loadAll() {
   }
 }
 
-// CHANGE 1: Hero stats row
+// Significance / CI helpers for the validation header.
 // Mean + 95% CI of a numeric array (Welford-free; fine at this n).
 function _meanCI(vals) {
   const xs = (vals || []).filter(v => typeof v === 'number' && !isNaN(v));
@@ -566,54 +547,38 @@ function roiCIFromHistory(h) {
   return _meanCI(rows.filter(r => r.result === 'W' || r.result === 'L').map(r => parseFloat(r.pnl_u) || 0));
 }
 
-function renderHeroStats(p, h) {
-  const s   = (p && p.season) || {};
-  const clv = p && p.avg_clv;
-  if (!s.bets) return;
-
-  // CLV beat-close % over the FULL settled history (not the 30-pt sparkline) so it matches
-  // the headline verdict — a last-30 window can read >50% while the full sample is below it.
-  const _cvHero = clvVerdict(h);
-  const clvPctStr = _cvHero.posShare != null ? Math.round(_cvHero.posShare * 100) + '%' : '—';
-
-  const roiStr    = s.roi != null ? pct(s.roi) : '—';
-  const recordStr = `${s.wins || 0}–${s.losses || 0}`;
-  const clvStr    = clv != null ? pct(clv) : '—';
-  const roiColor  = s.roi != null && s.roi >= 0 ? 'green' : 'red';
-  // CLV color reflects statistical significance, not just sign — near-zero CLV reads neutral,
-  // not green (it isn't a proven edge yet). Reuses _cvHero computed above.
-  const clvColor  = _cvHero.tone === 'pos' ? 'green' : _cvHero.tone === 'neg' ? 'red' : '';
-
-  document.getElementById('hero-roi').textContent  = roiStr;
-  document.getElementById('hero-roi').className     = 'hero-val ' + roiColor;
-  document.getElementById('hero-record').textContent = recordStr;
-  document.getElementById('hero-clv').textContent   = clvStr;
-  document.getElementById('hero-clv').className      = 'hero-val ' + clvColor;
-  document.getElementById('hero-clv-pct').textContent = clvPctStr;
-  document.getElementById('hero-stats-row').style.display = 'flex';
-}
-
-function renderHeadline(p, h) {
+// One consolidated validation header — replaces the old renderHeadline +
+// renderHeroStats (which duplicated record/ROI/CLV). Four outcome tiles plus a
+// risk/validation strip that surfaces beat-close %, max drawdown, and longest
+// losing streak (previously buried in the Model Validation section).
+function renderValidationHeader(p, h) {
   const s    = (p && p.season) || {};
   const clv  = p && p.avg_clv;
   const rows = h && h.rows ? h.rows.filter(r => r.result === 'W' || r.result === 'L') : [];
-  const totalPnlDollars = rows.reduce((s, r) => s + (r.pnl_u || 0) * 100, 0);
+  const totalPnlDollars = rows.reduce((a, r) => a + (r.pnl_u || 0) * 100, 0);
   const startBank = 5000;   // $100/bet = 2% of $5,000 — realistic flat-bet sizing
   const currentBank = startBank + totalPnlDollars;
   const bankGrowth = ((currentBank - startBank) / startBank * 100).toFixed(1);
-  // Aliases used in template below
-  const currentBank5k = currentBank;
-  const bankGrowth5k  = parseFloat(bankGrowth);
 
   // Significance-aware framing for the marquee stats (full settled history).
   const _cv      = clvVerdict(h);
   const _roiCI   = roiCIFromHistory(h);
-  const _roiCIStr = _roiCI.lo != null ? ` · likely ${pct(_roiCI.lo)} to ${pct(_roiCI.hi)}` : '';
   const _clvFeat = _cv.tone === 'pos' ? 'featured' : '';
   const _clvCol  = _cv.tone === 'pos' ? 'green' : _cv.tone === 'neg' ? 'red' : 'white';
   const _clvSub  = _cv.tone === 'pos' ? 'beats close (95% CI &gt; 0)'
                  : _cv.tone === 'neg' ? 'trails close'
                  : 'flat / still proving';
+  const beatClose = _cv.posShare != null ? Math.round(_cv.posShare * 100) + '%' : '—';
+
+  // Risk — max drawdown + longest losing streak (chronological, oldest→newest).
+  const settled = rows.slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
+  let cum = 0, peak = 0, maxDD = 0, runLoss = 0, longestLoss = 0;
+  settled.forEach(r => {
+    cum += (parseFloat(r.pnl_u) || 0);
+    peak = Math.max(peak, cum);
+    maxDD = Math.min(maxDD, cum - peak);
+    if (r.result === 'L') { runLoss++; longestLoss = Math.max(longestLoss, runLoss); } else runLoss = 0;
+  });
 
   document.getElementById('headline-stats').innerHTML = `
     <div class="hl-stat">
@@ -624,7 +589,7 @@ function renderHeadline(p, h) {
     <div class="hl-stat featured">
       <div class="hl-val green">${fmtU(s.units)}</div>
       <div class="hl-lbl">Units P&amp;L</div>
-      <div class="hl-sub" title="${_roiCI.lo != null ? 'The likely range for our true long-run ROI per bet (95% confidence over ' + _roiCI.n + ' bets) — the exact figure will move as the sample grows.' : ''}">${pct(s.roi)} ROI / bet${_roiCIStr}</div>
+      <div class="hl-sub" title="${_roiCI.lo != null ? 'Likely true long-run ROI/bet: ' + pct(_roiCI.lo) + ' to ' + pct(_roiCI.hi) + ' (95% CI over ' + _roiCI.n + ' bets) — see the risk strip below.' : ''}">${pct(s.roi)} ROI / bet</div>
     </div>
     <div class="hl-stat ${_clvFeat}">
       <div class="hl-val ${_clvCol}">${pct(clv)}</div>
@@ -632,9 +597,15 @@ function renderHeadline(p, h) {
       <div class="hl-sub">n=${p && p.clv_count || 0} · ${_clvSub}</div>
     </div>
     <div class="hl-stat">
-      <div class="hl-val amber">$${Math.round(currentBank5k).toLocaleString()}</div>
+      <div class="hl-val amber">$${Math.round(currentBank).toLocaleString()}</div>
       <div class="hl-lbl">$5,000 Bankroll (flat)</div>
-      <div class="hl-sub">${bankGrowth5k >= 0 ? '+' : ''}${bankGrowth5k}% · $100/bet = 2% of bankroll</div>
+      <div class="hl-sub">${parseFloat(bankGrowth) >= 0 ? '+' : ''}${bankGrowth}% · $100/bet = 2% of bankroll</div>
+    </div>
+    <div class="hl-risk-strip" role="group" aria-label="Risk and validation metrics">
+      <span class="hri"><span class="hri-lbl">Beat close</span><span class="hri-val">${beatClose}</span></span>
+      <span class="hri"><span class="hri-lbl">ROI 95% CI</span><span class="hri-val">${_roiCI.lo != null ? pct(_roiCI.lo) + ' … ' + pct(_roiCI.hi) : '—'}</span></span>
+      <span class="hri"><span class="hri-lbl">Max drawdown</span><span class="hri-val">${fmtU(maxDD)}</span></span>
+      <span class="hri"><span class="hri-lbl">Longest losing streak</span><span class="hri-val">${longestLoss || '—'}</span></span>
     </div>`;
 }
 
@@ -1061,7 +1032,7 @@ function renderEdgeTiers(p) {
     const roiStr = pct(t.roi);
     return `<div class="edge-bar-row">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;font-size:10px">
-        <span style="color:var(--text-3);font-weight:600">${t.label}</span>
+        <span style="color:var(--text-3);font-weight:600">${(t.label||'').replace(/%/g,'pp')}</span>
         <span style="font-family:var(--font-mono);color:${col};font-weight:700">${roiStr} ROI</span>
       </div>
       <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:100px;overflow:hidden">
@@ -1073,7 +1044,7 @@ function renderEdgeTiers(p) {
 
   document.getElementById('edge-tbody').innerHTML = tiers.map(t => `
     <tr>
-      <td style="font-weight:600;color:var(--text-2)">${t.label}</td>
+      <td style="font-weight:600;color:var(--text-2)">${(t.label||'').replace(/%/g,'pp')}</td>
       <td>${t.bets}</td>
       <td>${t.wins}–${t.losses}</td>
       <td>${(t.win_rate*100).toFixed(1)}%</td>
@@ -1084,7 +1055,11 @@ function renderEdgeTiers(p) {
 
 // ── Model validation: skill vs variance, risk, significance, segments ──────────
 function renderModelValidation(rows) {
-  const settled = (rows || []).filter(r => (r.result === 'W' || r.result === 'L'));
+  // history.json is newest-first; sort ascending so the drawdown / current-streak
+  // computations below are chronological (they were previously computed on the
+  // reverse-ordered series — a latent bug). Matches renderValidationHeader.
+  const settled = (rows || []).filter(r => (r.result === 'W' || r.result === 'L'))
+                              .sort((a, b) => String(a.date).localeCompare(String(b.date)));
   if (settled.length < 20) return;
   const n = settled.length;
   const actWins = settled.filter(r => r.result === 'W').length;

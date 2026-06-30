@@ -21,16 +21,26 @@
 .hl-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-4); }
 .hl-sub { font-size: 10px; color: var(--text-4); margin-top: 4px; }
 
-/* Hero stats row */
-.hero-stats-row { display: flex; gap: 0; margin-bottom: 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-.hero-stat { flex: 1; padding: 18px 20px; border-right: 1px solid var(--border); text-align: center; }
-.hero-stat:last-child { border-right: none; }
-.hero-val { font-family: var(--font-display); font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
-.hero-val.green { color: var(--green); }
-.hero-val.white { color: var(--text-1); }
-.hero-val.red { color: var(--red); }
-.hero-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); }
-@media (max-width: 600px) { .hero-stats-row { flex-wrap: wrap; } .hero-stat { flex: 1 1 50%; border-bottom: 1px solid var(--border); } }
+/* Risk & validation strip — spans the headline grid, below the outcome tiles.
+   Surfaces beat-close %, ROI 95% CI, max drawdown, longest losing streak. */
+.hl-risk-strip {
+  grid-column: 1 / -1;
+  display: flex; flex-wrap: wrap; gap: 10px 0;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 12px 6px; margin-top: 2px;
+}
+.hl-risk-strip .hri {
+  flex: 1; min-width: 130px; text-align: center;
+  display: flex; flex-direction: column; gap: 3px;
+  border-right: 1px solid var(--border);
+}
+.hl-risk-strip .hri:last-child { border-right: none; }
+.hri-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); }
+.hri-val { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--text-2); }
+@media (max-width: 600px) {
+  .hl-risk-strip .hri { flex: 1 1 50%; min-width: 0; }
+  .hl-risk-strip .hri:nth-child(2) { border-right: none; }
+}
 
 /* Two-col grid */
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
@@ -165,21 +175,6 @@
 .naive-pill { flex: 1; min-width: 120px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: center; }
 .naive-pill-val { font-family: var(--font-display); font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
 .naive-pill-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-4); }
-
-@media (max-width: 600px) {
-  .hero-stats-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-  .hero-stat {
-    border-right: none !important;
-    border-bottom: 1px solid var(--border);
-    padding: 14px 14px;
-  }
-  .hero-stat:nth-child(odd) { border-right: 1px solid var(--border) !important; }
-  .hero-stat:nth-last-child(-n+2) { border-bottom: none; }
-  .hero-val { font-size: 22px; }
-}
 
 /* Backtest stat pills — dashed amber border marks them as hypothetical/out-of-sample
    (vs. solid-bordered live pills), so they can't be mistaken for 2026 live results */
