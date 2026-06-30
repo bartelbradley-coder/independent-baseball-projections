@@ -983,8 +983,40 @@ function renderEmptyState(data, hist, marginal = []) {
         <a href="performance.html" style="color:var(--indigo-lt);text-decoration:none;font-weight:600">📈 See the track record →</a>
         <a href="#email-capture" onclick="event.preventDefault();document.getElementById('email-capture')?.scrollIntoView({behavior:'smooth'})" style="color:var(--indigo-lt);text-decoration:none;font-weight:600">✉️ Email me when picks post →</a>
       </div>`;
-  const emptyCard = isPre9AM
-    ? `<div class="picks-pending-card">
+  // ── Season-aware empty state ──────────────────────────────────────────────
+  // No-games / off-season / stale-delay all outrank the pre-9AM and no-edge cards,
+  // which are misleading when there's no baseball. Trigger on an EXPLICIT
+  // games_today===0 on a fresh slate, OR a stale feed inside the off-season window
+  // (covers a pipeline paused over winter). A calendar window decides only the
+  // WORDING (off-season vs in-season off-day), never the trigger. Absent games_today
+  // is treated as unknown (not zero) → falls through to the existing logic.
+  const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const ctToday  = ymd(nowCT);
+  const dataDate = (data && data.date) ? String(data.date) : null;
+  const games    = (data && typeof data.games_today === 'number') ? data.games_today : null;
+  const isStale  = !!(dataDate && dataDate < ctToday);
+  const staleDays = isStale ? Math.round((new Date(ctToday) - new Date(dataDate)) / 86400000) : 0;
+  const _m = nowCT.getMonth() + 1, _d = nowCT.getDate();
+  const offseasonWindow = (_m === 12) || (_m === 1) || (_m === 2) || (_m === 11 && _d >= 10) || (_m === 3 && _d < 25);
+
+  const noGamesFresh   = (games === 0 && (!dataDate || dataDate === ctToday));
+  const offseasonStale = (isStale && offseasonWindow && staleDays >= 2);
+  const staleDelayed   = (isStale && !offseasonStale);   // pipeline lag mid-season ≠ off-season
+
+  const card = (icon, title, sub, extra = '') =>
+    `<div class="state-card empty-state">
+        <div class="state-icon">${icon}</div>
+        <div class="state-title">${title}</div>
+        <div class="state-sub">${sub}</div>
+        ${extra}${onwardCTA}
+      </div>`;
+  const offseasonCard = card('⚾', 'MLB is between seasons.',
+    'Daily value picks return for the 2027 season. The full 2026 track record stays public — and founding subscribers lock in early pricing before then.');
+  const offDayCard = card('⚾', 'No MLB games scheduled today.',
+    'The slate is empty today — value picks resume on the next game day.');
+  const delayedCard = card('⏳', "Today's slate is still updating.",
+    'Fresh picks are taking a little longer than usual to post — check back shortly.');
+  const pendingCard = `<div class="picks-pending-card">
         <div class="ppc-time">🕐</div>
         <div class="ppc-title">Today's Picks Post at 9:00 AM CT</div>
         <div class="ppc-sub">
@@ -993,13 +1025,16 @@ function renderEmptyState(data, hist, marginal = []) {
         </div>
         <a class="ppc-preview-link" href="preview.html">🔭 View tomorrow's opening line estimates →</a>
         ${onwardCTA}
-      </div>`
-    : `<div class="state-card empty-state">
-        <div class="state-icon">📊</div>
-        <div class="state-title">No picks clear the edge threshold today.</div>
-        <div class="state-sub">The model found no bets with sufficient edge vs. Pinnacle no-vig lines.</div>
-        ${onwardCTA}
       </div>`;
+  const noEdgeCard = card('📊', 'No picks clear the edge threshold today.',
+    'The model found no bets with sufficient edge vs. Pinnacle no-vig lines.');
+
+  let emptyCard;
+  if (noGamesFresh)        emptyCard = offseasonWindow ? offseasonCard : offDayCard;
+  else if (offseasonStale) emptyCard = offseasonCard;
+  else if (staleDelayed)   emptyCard = delayedCard;
+  else if (isPre9AM)       emptyCard = pendingCard;
+  else                     emptyCard = noEdgeCard;
 
   document.getElementById('picks-container').innerHTML = `
     ${emptyCard}
