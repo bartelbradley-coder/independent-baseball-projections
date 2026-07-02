@@ -1493,11 +1493,15 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   let readTxt = '';
   if (tp.length) { readTxt = pickAbbr + ' is undervalued mainly on ' + listJoin(tp) + (tn.length ? ', partly offset by ' + listJoin(tn) : '') + '.'; }
   const readHTML = readTxt ? '<div class="dw-h3">Model Read</div><div class="dw-read">' + readTxt + '</div>' : '';
-  // Plain-English thesis (already in the feed) — the most newcomer-friendly content. Strip
-  // any tags and trim to the first ~2 sentences so it leads the section without dominating it.
+  // Engine prose (already in the feed) — the most newcomer-friendly content. Strip any
+  // tags. The live drawer shows the full prose: the explanation engine caps itself at
+  // 6 sentences (~700 chars today), so the 1200-char guard only trips on a runaway feed
+  // value. The share card keeps the short ~2-sentence lead so the exported PNG stays
+  // compact (matches forShare stripping actions + "What changed").
   let _narr = String(p.narrative || '').trim().replace(/<[^>]+>/g, '');
-  if (_narr.length > 300) {
-    _narr = _narr.split('. ').slice(0, 2).join('. ');
+  const _narrCap = forShare ? [300, 2] : [1200, 6];
+  if (_narr.length > _narrCap[0]) {
+    _narr = _narr.split('. ').slice(0, _narrCap[1]).join('. ');
     if (!/[.!?]$/.test(_narr)) _narr += '.';
   }
   const narrativeHTML = _narr ? '<div class="dw-narrative">' + _narr + '</div>' : '';
