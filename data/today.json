@@ -1,7 +1,7 @@
 {
   "date": "2026-07-02",
-  "generated_at": "2:16 PM CT \u00b7 Jul 2",
-  "generated_at_utc": "2026-07-02T19:16:17Z",
+  "generated_at": "3:16 PM CT \u00b7 Jul 2",
+  "generated_at_utc": "2026-07-02T20:16:05Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -35,7 +35,7 @@
           "odds": 194
         },
         {
-          "t": "2026-07-02T19:16",
+          "t": "2026-07-02T20:16",
           "odds": 194
         }
       ],
@@ -215,9 +215,9 @@
         "edge": 0.1217
       },
       "total": null,
-      "current_edge": 0.0886,
-      "current_model_prob": 0.4287,
-      "current_refresh_time": "2:16 PM CT",
+      "current_edge": 0.0885,
+      "current_model_prob": 0.4286,
+      "current_refresh_time": "3:16 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -244,8 +244,8 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0015,
-        "model_delta": -0.0015,
+        "edge_delta": -0.0016,
+        "model_delta": -0.0016,
         "market_delta": -0.0061,
         "posted": {
           "model_prob": 0.4302,
@@ -253,9 +253,9 @@
           "edge": 0.0901
         },
         "current": {
-          "model_prob": 0.4287,
+          "model_prob": 0.4286,
           "market_prob": 0.3411,
-          "edge": 0.0886
+          "edge": 0.0885
         },
         "factor_deltas": [
           {
@@ -266,7 +266,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:16 PM CT"
+        "refreshed_at": "3:16 PM CT"
       },
       "verdict": "\u26a0\ufe0f FLAGGED",
       "kelly_multiplier": 1.0,
@@ -319,6 +319,10 @@
         {
           "t": "2026-07-02T19:16",
           "odds": 101
+        },
+        {
+          "t": "2026-07-02T20:16",
+          "odds": 101
         }
       ],
       "clv": null,
@@ -330,19 +334,19 @@
       "book_odds": {
         "FanDuel": -108,
         "Novig": 100,
-        "BetOnline": -101,
-        "LowVig": -101,
+        "BetOnline": -102,
+        "LowVig": -102,
         "Hard Rock": -110,
-        "BetMGM": -110,
-        "DraftKings": -107,
-        "BetUS": -104,
-        "ESPN Bet": -110,
-        "MyBookie": -105,
-        "Betway": -110,
+        "BetMGM": -105,
+        "DraftKings": -105,
+        "BetUS": -103,
+        "ESPN Bet": -105,
+        "MyBookie": -103,
+        "Betway": -105,
         "BetRivers": -113,
         "ProphetX": 101,
-        "Pinnacle": 101,
-        "Bovada": -105
+        "Pinnacle": 100,
+        "Bovada": -106
       },
       "pitcher": "Davis Martin",
       "opp_pitcher": "Slade Cecconi",
@@ -483,58 +487,64 @@
         "edge": 0.0782
       },
       "total": null,
-      "current_edge": 0.0437,
-      "current_model_prob": 0.5412,
-      "current_refresh_time": "2:16 PM CT",
+      "current_edge": 0.0664,
+      "current_model_prob": 0.5639,
+      "current_refresh_time": "3:16 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Davis Martin",
-      "current_fair_odds": "-118",
-      "current_playable_to": -100,
-      "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_fair_odds": "-129",
+      "current_playable_to": -110,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Home field",
-          "pp": -1.12,
+          "pp": -1.11,
           "positive": false
         },
         {
-          "label": "Arsenal fit",
-          "pp": 0.45,
+          "label": "Lineup quality",
+          "pp": 0.9,
           "positive": true
         },
         {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 0.39,
+          "label": "Arsenal fit",
+          "pp": 0.49,
           "positive": true
         }
       ],
       "model_change": {
-        "edge_delta": -0.0031,
-        "model_delta": -0.0006,
-        "market_delta": -0.0024,
+        "edge_delta": 0.0196,
+        "model_delta": 0.0221,
+        "market_delta": 0.0,
         "posted": {
           "model_prob": 0.5418,
           "market_prob": 0.4906,
           "edge": 0.0468
         },
         "current": {
-          "model_prob": 0.5412,
-          "market_prob": 0.4882,
-          "edge": 0.0437
+          "model_prob": 0.5639,
+          "market_prob": 0.4906,
+          "edge": 0.0664
         },
         "factor_deltas": [
           {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": 0.9,
+            "delta_pp": 0.9
+          },
+          {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
-            "current_pp": 0.45,
-            "delta_pp": 0.45
+            "current_pp": 0.49,
+            "delta_pp": 0.49
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:16 PM CT"
+        "refreshed_at": "3:16 PM CT"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -589,7 +599,7 @@
           "odds": -102
         },
         {
-          "t": "2026-07-02T19:16",
+          "t": "2026-07-02T20:16",
           "odds": -102
         }
       ],
@@ -611,9 +621,9 @@
         "Hard Rock": -115,
         "BetRivers": -117,
         "MyBookie": -110,
-        "ProphetX": -105,
-        "Pinnacle": -106,
-        "Bovada": -112,
+        "ProphetX": -104,
+        "Pinnacle": -104,
+        "Bovada": -110,
         "Betway": -110
       },
       "pitcher": "Nathan Eovaldi",
@@ -772,14 +782,14 @@
         "edge": 0.0334
       },
       "total": null,
-      "current_edge": 0.052,
-      "current_model_prob": 0.557,
-      "current_refresh_time": "2:16 PM CT",
+      "current_edge": 0.0508,
+      "current_model_prob": 0.5558,
+      "current_refresh_time": "3:16 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Nathan Eovaldi",
-      "current_fair_odds": "-126",
+      "current_fair_odds": "-125",
       "current_playable_to": -107,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -801,18 +811,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0059,
-        "model_delta": -0.0038,
-        "market_delta": -0.0151,
+        "edge_delta": 0.0047,
+        "model_delta": -0.005,
+        "market_delta": -0.0198,
         "posted": {
           "model_prob": 0.5608,
           "market_prob": 0.5198,
           "edge": 0.0462
         },
         "current": {
-          "model_prob": 0.557,
-          "market_prob": 0.5047,
-          "edge": 0.052
+          "model_prob": 0.5558,
+          "market_prob": 0.5,
+          "edge": 0.0508
         },
         "factor_deltas": [
           {
@@ -823,7 +833,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:16 PM CT"
+        "refreshed_at": "3:16 PM CT"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -870,7 +880,7 @@
           "odds": -182
         },
         {
-          "t": "2026-07-02T19:16",
+          "t": "2026-07-02T20:16",
           "odds": -182
         }
       ],
@@ -889,7 +899,7 @@
         "ProphetX": -184,
         "LowVig": -185,
         "BetOnline": -185,
-        "Bovada": -195,
+        "Bovada": -196,
         "BetMGM": -200,
         "Pinnacle": -185,
         "BetUS": -190,
@@ -1087,7 +1097,7 @@
       "total": null,
       "current_edge": 0.0447,
       "current_model_prob": 0.6901,
-      "current_refresh_time": "2:16 PM CT",
+      "current_refresh_time": "3:16 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1136,7 +1146,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:16 PM CT"
+        "refreshed_at": "3:16 PM CT"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1185,20 +1195,7 @@
       "steam_move": false,
       "model_total": null,
       "market_total": null,
-      "book_odds": {
-        "FanDuel": -500,
-        "Novig": -545,
-        "Betway": -500,
-        "MyBookie": -286,
-        "Hard Rock": -500,
-        "BetMGM": -650,
-        "DraftKings": -599,
-        "ESPN Bet": -600,
-        "BetRivers": -625,
-        "ProphetX": -470,
-        "Pinnacle": -300,
-        "Bovada": -550
-      },
+      "book_odds": {},
       "pitcher": "Jared Jones",
       "opp_pitcher": "Alan Rangel",
       "starter_swapped": false,
@@ -1368,7 +1365,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "2:16 PM CT",
+      "current_refresh_time": "3:16 PM CT",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1443,21 +1440,18 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 118,
-        "Betway": 115,
-        "MyBookie": 115,
-        "Novig": 125,
-        "BetRivers": 108,
-        "ESPN Bet": 115,
-        "Hard Rock": 120,
-        "ProphetX": 126,
-        "DraftKings": 113,
-        "BetMGM": 118,
-        "LowVig": 117,
-        "BetOnline": 117,
-        "BetUS": 118,
-        "Bovada": 115,
-        "Pinnacle": 119
+        "FanDuel": -125,
+        "Betway": -145,
+        "MyBookie": 170,
+        "Novig": -120,
+        "BetRivers": -125,
+        "ESPN Bet": 135,
+        "Hard Rock": -115,
+        "ProphetX": -117,
+        "DraftKings": -136,
+        "BetMGM": 125,
+        "Bovada": -120,
+        "Pinnacle": 245
       },
       "pitcher": "Michael Lorenzen",
       "opp_pitcher": "Ryan Gusto",
@@ -1614,7 +1608,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "2:16 PM CT",
+      "current_refresh_time": "3:16 PM CT",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1719,18 +1713,18 @@
   ],
   "correlated_warning": null,
   "season": {
-    "wins": 318,
+    "wins": 319,
     "losses": 282,
-    "units": 80.17,
-    "bets": 600,
-    "roi": 0.1336
+    "units": 81.37,
+    "bets": 601,
+    "roi": 0.1354
   },
   "last7": {
-    "wins": 28,
+    "wins": 29,
     "losses": 27,
-    "units": 3.44,
-    "roi": 0.0625,
-    "bets": 55
+    "units": 4.64,
+    "roi": 0.0829,
+    "bets": 56
   },
   "week_picks": [
     {
@@ -1827,7 +1821,7 @@
   "last30": {
     "wins": 14,
     "losses": 16,
-    "units": -0.97
+    "units": -0.64
   },
   "avg_clv": 0.0024,
   "clv_count": 517,
