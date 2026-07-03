@@ -1,7 +1,7 @@
 {
   "date": "2026-07-03",
-  "generated_at": "3:17 PM CT \u00b7 Jul 3",
-  "generated_at_utc": "2026-07-03T20:17:00Z",
+  "generated_at": "4:16 PM CT \u00b7 Jul 3",
+  "generated_at_utc": "2026-07-03T21:16:35Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -53,6 +53,10 @@
         {
           "t": "2026-07-03T20:16",
           "odds": 199
+        },
+        {
+          "t": "2026-07-03T21:16",
+          "odds": 203
         }
       ],
       "clv": null,
@@ -62,20 +66,20 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 176,
-        "BetOnline": 183,
-        "LowVig": 183,
-        "Novig": 199,
+        "FanDuel": 184,
+        "BetOnline": 187,
+        "LowVig": 187,
+        "Novig": 203,
         "DraftKings": 179,
         "Hard Rock": 180,
-        "Pinnacle": 193,
-        "ESPN Bet": 175,
-        "MyBookie": 181,
+        "Pinnacle": 195,
+        "ESPN Bet": 180,
+        "MyBookie": 179,
         "Betway": 175,
-        "BetUS": 185,
-        "ProphetX": 198,
-        "Bovada": 185,
-        "BetRivers": 163,
+        "BetUS": 184,
+        "ProphetX": 200,
+        "Bovada": 190,
+        "BetRivers": 170,
         "BetMGM": 180
       },
       "pitcher": "Mike Paredes",
@@ -230,15 +234,15 @@
         "edge": 0.1141
       },
       "total": null,
-      "current_edge": 0.1067,
-      "current_model_prob": 0.4411,
-      "current_refresh_time": "3:16 PM CT",
+      "current_edge": 0.1105,
+      "current_model_prob": 0.4405,
+      "current_refresh_time": "4:16 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Mike Paredes",
       "current_fair_odds": "+127",
-      "current_playable_to": 149,
+      "current_playable_to": 150,
       "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
       "current_top_factors": [
@@ -259,18 +263,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0293,
-        "model_delta": -0.0094,
-        "market_delta": -0.0395,
+        "edge_delta": 0.0331,
+        "model_delta": -0.01,
+        "market_delta": -0.042,
         "posted": {
           "model_prob": 0.4505,
           "market_prob": 0.3735,
           "edge": 0.0774
         },
         "current": {
-          "model_prob": 0.4411,
-          "market_prob": 0.334,
-          "edge": 0.1067
+          "model_prob": 0.4405,
+          "market_prob": 0.3315,
+          "edge": 0.1105
         },
         "factor_deltas": [
           {
@@ -281,17 +285,301 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "3:16 PM CT"
+        "refreshed_at": "4:16 PM CT"
       },
       "verdict": "\u2b07\ufe0f REDUCED CONF.",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "away_worse_sp_fip",
       "is_flagged": true,
       "projected_starter": false
+    },
+    {
+      "game": "SF @ COL",
+      "pick": "COL",
+      "side": "HOME",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Ryan Feltner",
+      "posted_at": "4:16 PM CT",
+      "game_time": "2026-07-04T00:10:00Z",
+      "temp_f": 89.0,
+      "wind_speed_mph": 9.0,
+      "wind_dir_degrees": 45.0,
+      "is_domed": false,
+      "model_prob": 0.4645,
+      "market_prob": 0.4245,
+      "edge": 0.0443,
+      "ev_per_100": 10.55,
+      "odds": 138,
+      "best_odds": 138,
+      "best_book": "Novig",
+      "fair_odds": "+115",
+      "playable_to": 136,
+      "break_even": 0.4202,
+      "kelly_units": 0.96,
+      "line_open": 131,
+      "line_current": 131,
+      "odds_history": [
+        {
+          "t": "2026-07-03T13:02",
+          "odds": 138
+        },
+        {
+          "t": "2026-07-03T15:16",
+          "odds": 136
+        },
+        {
+          "t": "2026-07-03T19:16",
+          "odds": 138
+        },
+        {
+          "t": "2026-07-03T21:16",
+          "odds": 138
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 130,
+        "ESPN Bet": 130,
+        "ProphetX": 136,
+        "MyBookie": 130,
+        "BetRivers": 125,
+        "Hard Rock": 130,
+        "Betway": 130,
+        "Novig": 138,
+        "DraftKings": 132,
+        "Bovada": 131,
+        "LowVig": 131,
+        "BetOnline": 131,
+        "BetMGM": 125,
+        "Pinnacle": 131,
+        "BetUS": 130
+      },
+      "pitcher": "Ryan Feltner",
+      "opp_pitcher": "Logan Webb",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": -1.62
+        },
+        {
+          "label": "Home Field",
+          "value": 0.045
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 5.032,
+        "opp_xfip": 3.319,
+        "pick_oaa": -4,
+        "opp_oaa": -5,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 41.0,
+        "opp_whiff_pct": 15.0,
+        "pick_kbb_pct": 0.0682,
+        "opp_kbb_pct": 0.1496,
+        "pick_bvp_shift": 0.01,
+        "pick_arsenal_fit": -0.533,
+        "opp_arsenal_fit": 0.3198,
+        "pick_lineup_confirmed": true,
+        "opp_lineup_confirmed": true,
+        "pick_proj_ip": 5.0,
+        "opp_proj_ip": 6.0,
+        "pick_era": 4.42,
+        "opp_era": 3.09,
+        "pick_k_pct": 0.1591,
+        "opp_k_pct": 0.2105,
+        "ump_name": "Ron Kulpa",
+        "pick_home_w": 20,
+        "pick_home_l": 24,
+        "pinnacle_ml_open": 131.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 1.14
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": -1.62,
+            "positive": false,
+            "group": "pitcher"
+          },
+          {
+            "label": "Home field",
+            "pp": 1.12,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Lineup quality",
+            "pp": -0.85,
+            "positive": false,
+            "group": "lineup"
+          }
+        ],
+        "total_adj_pp": -1.35,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Model and market disagree on COL by 4.4pp \u2014 46.5% fair against a 42.4% price. The largest lift is home field (~+1.1pp): Home-park and 2026 home-game context add a modest edge for COL. The main pushback is pitcher quality (xfip) (~-1.6pp): Ryan Feltner 5.03 xFIP vs Logan Webb 3.32 xFIP. With a headwind that size, this is not a clean all-signal read. The market has drifted against the pick since posting, widening the available price \u2014 the current +138 still sits inside the playable range (to +136). This is value in the number more than the matchup \u2014 the model just makes COL a better side than the price does.",
+      "explanation": {
+        "explanation_type": "market_dislocation",
+        "risk_level": "medium",
+        "model_prob": 0.4645,
+        "market_prob": 0.4245,
+        "edge_pp": 4.4,
+        "fair_odds": "+115",
+        "current_odds": "+138",
+        "playable_to": "+136",
+        "positive_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": 1.12,
+            "tier": "primary",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for COL.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": -1.62,
+            "tier": "primary",
+            "group": "pitcher",
+            "detail": "Ryan Feltner 5.03 xFIP vs Logan Webb 3.32 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Lineup quality",
+            "impact_pp": -0.85,
+            "tier": "secondary",
+            "group": "lineup",
+            "detail": "COL lineup projects below its season baseline against this pitcher handedness.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+131",
+          "current_odds": "+138",
+          "movement_summary": "the market has drifted against the pick since posting, widening the available price"
+        },
+        "sections": {
+          "edge_thesis": "Model and market disagree on COL by 4.4pp \u2014 46.5% fair against a 42.4% price.",
+          "whats_driving_it": "The largest lift is home field (~+1.1pp): Home-park and 2026 home-game context add a modest edge for COL.",
+          "what_pushes_back": "The main pushback is pitcher quality (xfip) (~-1.6pp): Ryan Feltner 5.03 xFIP vs Logan Webb 3.32 xFIP. With a headwind that size, this is not a clean all-signal read.",
+          "bvp_note": null,
+          "betting_note": "The market has drifted against the pick since posting, widening the available price \u2014 the current +138 still sits inside the playable range (to +136).",
+          "route_to_win": "This is value in the number more than the matchup \u2014 the model just makes COL a better side than the price does.",
+          "read": "This is a price-driven read more than a matchup edge."
+        },
+        "read_label": "This is a price-driven read more than a matchup edge.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Home field",
+          "top_positive_pp": 1.12,
+          "top_negative_label": "Pitcher quality (xFIP)",
+          "top_negative_pp": -1.62,
+          "has_primary_driver": true,
+          "has_material_headwind": true,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 1
+        },
+        "prose": "Model and market disagree on COL by 4.4pp \u2014 46.5% fair against a 42.4% price. The largest lift is home field (~+1.1pp): Home-park and 2026 home-game context add a modest edge for COL. The main pushback is pitcher quality (xfip) (~-1.6pp): Ryan Feltner 5.03 xFIP vs Logan Webb 3.32 xFIP. With a headwind that size, this is not a clean all-signal read. The market has drifted against the pick since posting, widening the available price \u2014 the current +138 still sits inside the playable range (to +136). This is value in the number more than the matchup \u2014 the model just makes COL a better side than the price does."
+      },
+      "run_line": {
+        "spread": "-1.5",
+        "model_prob": 0.2905,
+        "fair_odds": "+244",
+        "book_odds": null,
+        "edge": null
+      },
+      "total": null,
+      "current_edge": 0.0443,
+      "current_model_prob": 0.4645,
+      "current_refresh_time": "4:16 PM CT",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Ryan Feltner",
+      "current_fair_odds": "+115",
+      "current_playable_to": 136,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": -1.62,
+          "positive": false
+        },
+        {
+          "label": "Home field",
+          "pp": 1.12,
+          "positive": true
+        },
+        {
+          "label": "Lineup quality",
+          "pp": -0.85,
+          "positive": false
+        }
+      ],
+      "model_change": {
+        "edge_delta": 0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.4645,
+          "market_prob": 0.4245,
+          "edge": 0.0443
+        },
+        "current": {
+          "model_prob": 0.4645,
+          "market_prob": 0.4245,
+          "edge": 0.0443
+        },
+        "factor_deltas": [
+          {
+            "label": "BvP matchup",
+            "posted_pp": 0.0,
+            "current_pp": 0.62,
+            "delta_pp": 0.62
+          },
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": -0.5,
+            "delta_pp": -0.5
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "4:16 PM CT"
+      },
+      "verdict": "\ud83d\udfe1 CONDITIONAL",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
     }
   ],
-  "signal_count": 1,
-  "posted_count": 1,
+  "signal_count": 2,
+  "posted_count": 2,
   "games_today": 12,
   "yesterday_picks": [
     {
