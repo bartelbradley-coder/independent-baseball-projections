@@ -399,10 +399,11 @@ function _updatePhbHelper() {
     el.innerHTML = 'Each pick sized at <strong>$100 flat</strong> regardless of edge size.';
     if (bkWrap) bkWrap.classList.add('flat-mode');
   } else if (_bankroll > 0) {
-    // Find a representative kelly_units from today's picks to show the conversion
-    const samplePick = Object.values(picksMap).find(p => p.kelly_units);
-    const exUnits = samplePick ? samplePick.kelly_units.toFixed(1) : '1.3';
-    const exDollar = samplePick ? Math.round(samplePick.kelly_units * _bankroll / 100) : Math.round(1.3 * _bankroll / 100);
+    // Find a representative Kelly stake from today's picks to show the conversion
+    const samplePick = Object.values(picksMap).find(p => kellyStakeUnits(p) != null);
+    const _exU = samplePick ? kellyStakeUnits(samplePick) : 1.3;
+    const exUnits = _exU.toFixed(1);
+    const exDollar = Math.round(_exU * _bankroll / 100);
     el.innerHTML = `<strong>${exUnits}u = $${exDollar}</strong> at $${_bankroll.toLocaleString()} bankroll`;
     if (bkWrap) bkWrap.classList.remove('flat-mode');
   } else {
@@ -529,7 +530,7 @@ function toggleBet(id) {
   } else {
     _myBets[key] = {
       pick: p.pick, game: p.game, odds: p.odds,
-      kelly: p.kelly_units, edge: p.edge, date: _TODAY_KEY,
+      kelly: kellyStakeUnits(p), edge: p.edge, date: _TODAY_KEY,
     };
   }
   // Prune entries older than 14 days to avoid unbounded localStorage growth
@@ -791,6 +792,37 @@ let _indexPnlMode = 'flat';  // 'flat' | 'kelly'
 let _todayDataRef = null;    // saved so toggle can re-render without re-fetching
 let _histDataRef  = null;
 
+// Kelly stake for one pick/settled row, in UNITS — the single derivation shared by
+// every Kelly-mode P&L computation on this page. kelly_units preferred: it's
+// pre-calculated by calculate_stake_sizing() in model.py with all fractions
+// applied — used directly, no multiplier. Legacy fallback: kelly_pct =
+// final_kelly_pct (base × verdict_multiplier, display_fraction NOT yet applied)
+// → × 0.5 × 100 converts to half-Kelly units. Returns null when neither exists —
+// callers must surface "—" (or fall back EXPLICITLY), never treat missing sizing
+// as 0u or 1u.
+function kellyStakeUnits(r) {
+  if (!r) return null;
+  if (r.kelly_units != null) return r.kelly_units;
+  if (r.kelly_pct   != null) return Math.round(r.kelly_pct * 0.5 * 100 * 1000) / 1000;
+  return null;
+}
+
+// Kelly-sized P&L (units) across settled rows ({result, pnl_u, kelly_units…}).
+// Pushes / zero-pnl rows contribute 0 without needing a stake; any W/L row with no
+// derivable stake makes the whole aggregate null so callers show "—" instead of a
+// silently-understated number (the "Kelly secretly flat" bug class).
+function kellyPnlUnits(rows) {
+  let u = 0;
+  for (const r of rows || []) {
+    const pnl = (typeof r.pnl_u === 'number') ? r.pnl_u : 0;
+    if (!pnl) continue;
+    const st = kellyStakeUnits(r);
+    if (st == null) return null;
+    u += pnl * st;
+  }
+  return u;
+}
+
 // Compute Kelly-sized season/last30/last7 stats from history.json rows.
 // Uses all settled rows — same population as flat mode, just different sizing.
 function _kellyStatsFromHist(histRows) {
@@ -801,16 +833,7 @@ function _kellyStatsFromHist(histRows) {
     .sort((a, b) => a.date.localeCompare(b.date));   // oldest → newest
   const season  = settled.filter(r => r.date && r.date.startsWith('2026'));
 
-  // Derive Kelly units from stored kelly_units (preferred) or legacy kelly_pct.
-  // kelly_units is pre-calculated by calculate_stake_sizing() in model.py and
-  // already has all fractions applied — use it directly, no multiplier.
-  // Legacy fallback: kelly_pct = final_kelly_pct (base × verdict_multiplier,
-  // display_fraction NOT yet applied). Apply 0.5 × 100 to convert to units.
-  function getKu(r) {
-    if (r.kelly_units != null) return r.kelly_units;
-    if (r.kelly_pct  != null) return Math.round(r.kelly_pct * 0.5 * 100 * 1000) / 1000;
-    return null;
-  }
+  const getKu = kellyStakeUnits;   // shared derivation (see kellyStakeUnits above)
 
   function kellySum(rows) {
     return rows.reduce((s, r) => {
@@ -1428,8 +1451,9 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   else { curStr = fmtO(p.best_odds != null ? p.best_odds : p.odds); curBook = p.best_book || ''; }
 
   const isKelly = _indexPnlMode === 'kelly';
-  const stakeUnits = isKelly ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') : '1.0u';
-  const stakeSub = isKelly ? '<span class="kelly-usd" data-units="' + (p.kelly_units || 0) + '"></span>' : '$100';
+  const _dwStakeU = kellyStakeUnits(p);   // shared derivation incl. kelly_pct fallback
+  const stakeUnits = isKelly ? (_dwStakeU != null ? _dwStakeU.toFixed(1) + 'u' : '—') : '1.0u';
+  const stakeSub = isKelly ? '<span class="kelly-usd" data-units="' + (_dwStakeU || 0) + '"></span>' : '$100';
 
   // ── verdict (cites the numbers) ────────────────────────────────────────
   const cushion = prCushion(p);
@@ -1912,9 +1936,10 @@ function prRowCollapsed(p, isBest, gameResult) {
 
   // Stake — units primary, $ secondary.
   const _isKellyMode = _indexPnlMode === 'kelly';
-  const units = _isKellyMode ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') : '1.0u';
+  const _rowStakeU = kellyStakeUnits(p);   // shared derivation incl. kelly_pct fallback
+  const units = _isKellyMode ? (_rowStakeU != null ? _rowStakeU.toFixed(1) + 'u' : '—') : '1.0u';
   const stakeSub = _isKellyMode
-    ? `<span class="pr-st-usd kelly-usd" data-units="${p.kelly_units || 0}"></span>`
+    ? `<span class="pr-st-usd kelly-usd" data-units="${_rowStakeU || 0}"></span>`
     : '';  // flat mode: stake is 1.0u on every row — no need to repeat $100
 
   // Matchup subline — the start time is meaningless once a game starts, so live /
@@ -2006,19 +2031,29 @@ function prRowRecap(p, gr, settled, isKelly) {
   } else if (gr && gr.status === 'final' && settled) {
     const won  = gr.result === 'W';
     resultHTML = `<span class="pr-result ${won ? 'win' : 'loss'}">${won ? '✓ W' : '✗ L'}${gr.score ? ' ' + gr.score : ''}</span>`;
-    const pnlU = isKelly ? settled.pnl_u * (p.kelly_units || 0) : settled.pnl_u;
-    const cls  = pnlU >= 0 ? 'pos' : 'neg';
-    pnlHTML    = `<span class="pr-pnl ${cls}">${pnlU >= 0 ? '+' : ''}${pnlU.toFixed(1)}u</span>`;
-    pnlAria    = `P&L ${pnlU >= 0 ? 'plus' : 'minus'} ${Math.abs(pnlU).toFixed(1)} units`;
+    // Kelly stake via the shared helper — an unsized bet shows "—", never a fake
+    // 0.0u (the old `p.kelly_units || 0` multiplied missing sizing into zero P&L).
+    const _st  = isKelly ? kellyStakeUnits(p) : 1;
+    if (_st == null) {
+      pnlHTML  = `<span class="pr-pnl">—</span>`;
+      pnlAria  = 'Kelly stake unavailable';
+    } else {
+      const pnlU = settled.pnl_u * _st;
+      const cls  = pnlU >= 0 ? 'pos' : 'neg';
+      pnlHTML    = `<span class="pr-pnl ${cls}">${pnlU >= 0 ? '+' : ''}${pnlU.toFixed(1)}u</span>`;
+      pnlAria    = `P&L ${pnlU >= 0 ? 'plus' : 'minus'} ${Math.abs(pnlU).toFixed(1)} units`;
+    }
   } else {
     resultHTML = `<span class="pr-result">—</span>`;
     pnlHTML    = `<span class="pr-pnl">—</span>`;
     pnlAria    = '';
   }
 
-  // Stake per toggle (mirrors the collapsed row).
-  const units = isKelly ? (p.kelly_units ? p.kelly_units.toFixed(1) + 'u' : '—') : '1.0u';
-  const stakeSub = isKelly ? `<span class="pr-st-usd kelly-usd" data-units="${p.kelly_units || 0}"></span>` : '';
+  // Stake per toggle (mirrors the collapsed row). Shared helper so the stake
+  // column can never show '—' while the P&L column computes from a fallback.
+  const _stakeU = kellyStakeUnits(p);
+  const units = isKelly ? (_stakeU != null ? _stakeU.toFixed(1) + 'u' : '—') : '1.0u';
+  const stakeSub = isKelly ? `<span class="pr-st-usd kelly-usd" data-units="${_stakeU || 0}"></span>` : '';
 
   // Matchup subline = Final / Postponed state.
   const _sub = prStateSub(gr);
@@ -2247,9 +2282,18 @@ function render(data, hist, scores = {}, perf = null) {
     if (!settled.length) { el.hidden = true; return; }
     const w = settled.filter(p => p.result === 'W').length;
     const l = settled.filter(p => p.result === 'L').length;
-    const u = settled.reduce((s, p) => s + (typeof p.pnl_u === 'number' ? p.pnl_u : 0), 0);
-    const uStr = (u >= 0 ? '+' : '−') + Math.abs(u).toFixed(1) + 'u';
-    const uCls = u > 0 ? 'yr-pos' : u < 0 ? 'yr-neg' : 'yr-neu';
+    // Units follow the Flat/Kelly toggle (W–L never changes with mode). Kelly
+    // applies only when the feed carries sizing for at least one pick — a feed
+    // with NO sizing at all (pre-kelly_units export) keeps flat silently for
+    // compatibility; PARTIAL sizing shows "—" rather than a silently-short sum.
+    let u = settled.reduce((s, p) => s + (typeof p.pnl_u === 'number' ? p.pnl_u : 0), 0);
+    let uStr = null;
+    if (_indexPnlMode === 'kelly' && settled.some(p => kellyStakeUnits(p) != null)) {
+      const ku = kellyPnlUnits(settled);
+      if (ku == null) uStr = '—'; else u = ku;
+    }
+    const uCls = uStr ? 'yr-neu' : u > 0 ? 'yr-pos' : u < 0 ? 'yr-neg' : 'yr-neu';
+    if (!uStr) uStr = (u >= 0 ? '+' : '−') + Math.abs(u).toFixed(1) + 'u';
     el.innerHTML = `<span class="yr-lbl">Yesterday</span> <span class="yr-rec">${w}–${l}</span>`
       + ` <span class="yr-u ${uCls}">${uStr}</span><span class="yr-link">see full record →</span>`;
     el.hidden = false;
@@ -2398,7 +2442,7 @@ function render(data, hist, scores = {}, perf = null) {
       const _smain = (data.picks || []).filter(p => (p.edge || 0) >= 0.04).filter(prActionable);
       let _sstake, _savgStr, _sShow;
       if (isKelly) {
-        const _stotKU  = _smain.reduce((s, p) => s + (p.kelly_units || 0), 0);
+        const _stotKU  = _smain.reduce((s, p) => s + (kellyStakeUnits(p) || 0), 0);
         const _savgKU  = _smain.length ? _stotKU / _smain.length : 0;
         const _stotDol = _bankroll > 0 ? Math.round(_stotKU * _bankroll / 100) : null;
         _sstake  = _stotDol != null ? '$' + _stotDol.toLocaleString() : _stotKU.toFixed(1) + 'u';
@@ -2492,9 +2536,13 @@ function render(data, hist, scores = {}, perf = null) {
         ? computeTodaySettled(completedGroup, scores, data.date || '') : [];
       const fw = _settledMain.filter(r => r.result === 'W').length;
       const fl = _settledMain.filter(r => r.result === 'L').length;
-      const fu = _settledMain.reduce((s, r) => s + (r.pnl_u || 0), 0);
-      // Record + running flat-stake units as games go final.
-      const rec = (fw + fl) ? ` · ${fw}–${fl} · ${fu >= 0 ? '+' : ''}${fu.toFixed(1)}u` : '';
+      // Record + running units as games go final. Units follow the Flat/Kelly
+      // toggle (record never changes with mode): flat = 1u/pick; Kelly = pnl_u ×
+      // kelly stake, "—" if any settled bet is unsized (never a silently-flat sum).
+      const fu = _isKelly ? kellyPnlUnits(_settledMain)
+                          : _settledMain.reduce((s, r) => s + (r.pnl_u || 0), 0);
+      const _fuTxt = fu == null ? '—' : `${fu >= 0 ? '+' : ''}${fu.toFixed(1)}u`;
+      const rec = (fw + fl) ? ` · ${fw}–${fl} · ${_fuTxt}` : '';
       if (allDone) {
         const _label = completedGroup.length
           ? `${completedGroup.length} game${completedGroup.length !== 1 ? 's' : ''}${rec}`
@@ -2716,8 +2764,11 @@ function updateFloatingResults(scores) {
   const textEl  = document.getElementById('fr-text');
   if (!pill || !dotEl || !textEl) return;
 
-  // Only consider today's picks (main-tier)
-  const picks = Object.values(picksMap);
+  // Only consider today's picks (main-tier) — same population as the today tally,
+  // so the two W–L readouts can never disagree. picksMap fallback pre-data-load.
+  const picks = (_todayDataRef && Array.isArray(_todayDataRef.picks))
+    ? _todayDataRef.picks.filter(p => (p.edge || 0) >= 0.04)
+    : Object.values(picksMap);
   if (picks.length === 0) { pill.style.display = 'none'; return; }
 
   const results  = picks.map(p => getPickResult(p, scores)).filter(Boolean);
@@ -2839,21 +2890,31 @@ function refreshScoreBadges(scores) {
 function _updateTodayTally(scores) {
   const tally = document.getElementById('today-score-tally');
   if (!tally) return;
-  const picks = Object.values(picksMap);
+  // Main posted picks only (same population as the header strip): near-miss rows
+  // are registered in picksMap for their drawers but were never bets, so they
+  // don't belong in a W–L / P&L tally. picksMap fallback pre-data-load only.
+  const picks = (_todayDataRef && Array.isArray(_todayDataRef.picks))
+    ? _todayDataRef.picks.filter(p => (p.edge || 0) >= 0.04)
+    : Object.values(picksMap);
   const results = picks.map(p => getPickResult(p, scores)).filter(Boolean);
   const done = results.filter(r => r.status === 'final');
   const wins = done.filter(r => r.result === 'W').length;
   const losses = done.filter(r => r.result === 'L').length;
   if (done.length === 0) { tally.style.display = 'none'; return; }
   tally.style.display = '';
-  // Running flat-stake units for today's finals (same basis as the table's flat mode).
+  // Running units for today's finals — follows the Flat/Kelly toggle (same basis
+  // and "—"-on-unsized rule as the header strip).
   let unitsHTML = '';
   try {
     const date = (_todayDataRef && _todayDataRef.date) || '';
     const settled = (typeof computeTodaySettled === 'function') ? computeTodaySettled(picks, scores, date) : [];
     if (settled.length) {
-      const u = settled.reduce((s, r) => s + (r.pnl_u || 0), 0);
-      unitsHTML = ` · <span style="color:${u >= 0 ? 'var(--green)' : 'var(--red)'}">${u >= 0 ? '+' : ''}${u.toFixed(1)}u</span>`;
+      const u = _indexPnlMode === 'kelly'
+        ? kellyPnlUnits(settled)
+        : settled.reduce((s, r) => s + (r.pnl_u || 0), 0);
+      unitsHTML = u == null
+        ? ' · <span style="color:var(--text-4)">—</span>'
+        : ` · <span style="color:${u >= 0 ? 'var(--green)' : 'var(--red)'}">${u >= 0 ? '+' : ''}${u.toFixed(1)}u</span>`;
     }
   } catch (e) {}
   tally.querySelector('.tc-val').innerHTML = `${wins}W–${losses}L${unitsHTML}`;

@@ -123,7 +123,10 @@ function computeTodaySettled(picks, scores, todayDateStr) {
         odds, edge: p.edge, model_prob: p.model_prob,
         result: push ? 'P' : pickWon ? 'W' : 'L',
         pnl_u: Math.round(pnl_u * 1000) / 1000,
-        kelly_units: p.kelly_units || null,
+        // Pass sizing through untouched (`!= null`, not `||` — a real 0-stake must
+        // survive) incl. the legacy kelly_pct so kellyStakeUnits() can fall back.
+        kelly_units: p.kelly_units != null ? p.kelly_units : null,
+        kelly_pct:   p.kelly_pct   != null ? p.kelly_pct   : null,
       };
     } catch(e) {
       console.error('[Independent Baseball Projections] computeTodaySettled pick error:', e, p);
