@@ -1,7 +1,7 @@
 {
   "date": "2026-07-04",
-  "generated_at": "3:16 PM CT \u00b7 Jul 4",
-  "generated_at_utc": "2026-07-04T20:16:25Z",
+  "generated_at": "4:17 PM CT \u00b7 Jul 4",
+  "generated_at_utc": "2026-07-04T21:17:19Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -47,7 +47,7 @@
           "odds": -147
         },
         {
-          "t": "2026-07-04T20:16",
+          "t": "2026-07-04T21:17",
           "odds": -147
         }
       ],
@@ -59,8 +59,8 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": -154,
-        "LowVig": -155,
-        "BetOnline": -155,
+        "LowVig": -160,
+        "BetOnline": -160,
         "Novig": -147,
         "DraftKings": -162,
         "Hard Rock": -160,
@@ -70,7 +70,7 @@
         "ProphetX": -148,
         "Bovada": -158,
         "MyBookie": -158,
-        "BetUS": -155,
+        "BetUS": -160,
         "BetRivers": -159,
         "Betway": -160
       },
@@ -227,22 +227,22 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0588,
-      "current_model_prob": 0.6539,
-      "current_refresh_time": "3:16 PM CT",
+      "current_edge": 0.055,
+      "current_model_prob": 0.6501,
+      "current_refresh_time": "4:17 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Brandon Woodruff",
-      "current_fair_odds": "-189",
-      "current_playable_to": -159,
+      "current_fair_odds": "-186",
+      "current_playable_to": -156,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": 2.36,
+          "pp": 2.37,
           "positive": true
         },
         {
@@ -257,8 +257,8 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0092,
-        "model_delta": 0.0008,
+        "edge_delta": -0.013,
+        "model_delta": -0.003,
         "market_delta": 0.0033,
         "posted": {
           "model_prob": 0.6531,
@@ -266,9 +266,9 @@
           "edge": 0.068
         },
         "current": {
-          "model_prob": 0.6539,
+          "model_prob": 0.6501,
           "market_prob": 0.5881,
-          "edge": 0.0588
+          "edge": 0.055
         },
         "factor_deltas": [
           {
@@ -276,10 +276,16 @@
             "posted_pp": 0.0,
             "current_pp": 0.45,
             "delta_pp": 0.45
+          },
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.34,
+            "delta_pp": -0.34
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "3:16 PM CT"
+        "refreshed_at": "4:17 PM CT"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -337,18 +343,9 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -400,
-        "MyBookie": -333,
-        "Betway": -300,
-        "Novig": -388,
-        "Hard Rock": -350,
-        "ESPN Bet": -400,
-        "Pinnacle": -125,
-        "ProphetX": -370,
-        "BetRivers": -715,
-        "Bovada": -300,
-        "DraftKings": -318,
-        "BetMGM": -350
+        "Betway": -10000,
+        "Novig": -99900,
+        "BetMGM": -10000
       },
       "pitcher": "Zebby Matthews",
       "opp_pitcher": "Brendan Beck",
@@ -519,7 +516,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "3:16 PM CT",
+      "current_refresh_time": "4:17 PM CT",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -586,6 +583,10 @@
         {
           "t": "2026-07-04T20:16",
           "odds": 120
+        },
+        {
+          "t": "2026-07-04T21:17",
+          "odds": 120
         }
       ],
       "clv": null,
@@ -597,12 +598,12 @@
       "book_odds": {
         "FanDuel": 114,
         "MyBookie": 114,
-        "ProphetX": 117,
-        "Novig": 120,
-        "BetRivers": 115,
+        "ProphetX": 120,
+        "Novig": 117,
+        "BetRivers": 112,
         "Hard Rock": 115,
         "DraftKings": 118,
-        "BetMGM": 120,
+        "BetMGM": 115,
         "BetOnline": 115,
         "LowVig": 115,
         "ESPN Bet": 110,
@@ -629,7 +630,7 @@
         }
       ],
       "raw_stats": {
-        "pick_xfip": 6.927,
+        "pick_xfip": 6.929,
         "opp_xfip": 4.575,
         "pick_oaa": -5,
         "opp_oaa": -5,
@@ -646,7 +647,7 @@
         "pick_kbb_pct": 0.0366,
         "opp_kbb_pct": 0.0985,
         "pick_bvp_shift": 0.0,
-        "pick_arsenal_fit": -0.1458,
+        "pick_arsenal_fit": -0.1928,
         "opp_arsenal_fit": -0.4109,
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
@@ -768,22 +769,22 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0614,
-      "current_model_prob": 0.5159,
-      "current_refresh_time": "3:16 PM CT",
+      "current_edge": 0.0438,
+      "current_model_prob": 0.4983,
+      "current_refresh_time": "4:17 PM CT",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Sean Sullivan",
-      "current_fair_odds": "-107",
-      "current_playable_to": 110,
+      "current_fair_odds": "+101",
+      "current_playable_to": 118,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": -2.23,
+          "pp": -2.24,
           "positive": false
         },
         {
@@ -792,37 +793,37 @@
           "positive": true
         },
         {
-          "label": "Arsenal fit",
-          "pp": 0.26,
-          "positive": true
+          "label": "Lineup quality",
+          "pp": -0.66,
+          "positive": false
         }
       ],
       "model_change": {
-        "edge_delta": 0.0147,
-        "model_delta": 0.0084,
-        "market_delta": 0.0006,
+        "edge_delta": -0.0029,
+        "model_delta": -0.0092,
+        "market_delta": -0.0003,
         "posted": {
           "model_prob": 0.5075,
           "market_prob": 0.458,
           "edge": 0.0467
         },
         "current": {
-          "model_prob": 0.5159,
-          "market_prob": 0.4586,
-          "edge": 0.0614
+          "model_prob": 0.4983,
+          "market_prob": 0.4577,
+          "edge": 0.0438
         },
         "factor_deltas": [
           {
             "label": "Pitcher quality (xFIP)",
             "posted_pp": -1.22,
-            "current_pp": -2.23,
-            "delta_pp": -1.01
+            "current_pp": -2.24,
+            "delta_pp": -1.02
           },
           {
-            "label": "Arsenal fit",
+            "label": "Lineup quality",
             "posted_pp": 0.0,
-            "current_pp": 0.26,
-            "delta_pp": 0.26
+            "current_pp": -0.66,
+            "delta_pp": -0.66
           },
           {
             "label": "Starter rest",
@@ -835,7 +836,7 @@
           "from": "Tomoyuki Sugano",
           "to": "Sean Sullivan"
         },
-        "refreshed_at": "3:16 PM CT"
+        "refreshed_at": "4:17 PM CT"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -901,21 +902,18 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 106,
-        "BetOnline": 110,
-        "LowVig": 110,
-        "Novig": 111,
-        "DraftKings": 100,
-        "MyBookie": 104,
-        "Betway": 100,
-        "Hard Rock": 100,
-        "ESPN Bet": 105,
-        "Pinnacle": 110,
-        "BetUS": 109,
-        "BetMGM": 105,
-        "ProphetX": 111,
-        "BetRivers": 102,
-        "Bovada": 105
+        "FanDuel": 450,
+        "Novig": 441,
+        "DraftKings": 406,
+        "MyBookie": 425,
+        "Betway": 450,
+        "Hard Rock": 400,
+        "ESPN Bet": 475,
+        "Pinnacle": 386,
+        "BetMGM": 475,
+        "ProphetX": 385,
+        "BetRivers": 475,
+        "Bovada": 425
       },
       "pitcher": "Cal Quantrill",
       "opp_pitcher": "Jack Flaherty",
@@ -1104,7 +1102,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "3:16 PM CT",
+      "current_refresh_time": "4:17 PM CT",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1163,18 +1161,18 @@
   ],
   "correlated_warning": null,
   "season": {
-    "wins": 324,
+    "wins": 325,
     "losses": 286,
-    "units": 82.56,
-    "bets": 610,
-    "roi": 0.1353
+    "units": 83.97,
+    "bets": 611,
+    "roi": 0.1374
   },
   "last7": {
-    "wins": 29,
+    "wins": 30,
     "losses": 22,
-    "units": 9.1,
-    "roi": 0.1784,
-    "bets": 51
+    "units": 10.51,
+    "roi": 0.2021,
+    "bets": 52
   },
   "week_picks": [
     {
@@ -1239,12 +1237,21 @@
       "edge": 0.078,
       "result": "L",
       "pnl_u": -1.0
+    },
+    {
+      "date": "2026-07-04",
+      "pick": "MIN",
+      "game": "MIN @ NYY",
+      "odds": 141,
+      "edge": 0.068,
+      "result": "W",
+      "pnl_u": 1.41
     }
   ],
   "last30": {
-    "wins": 14,
-    "losses": 16,
-    "units": -1.31
+    "wins": 15,
+    "losses": 15,
+    "units": 1.1
   },
   "avg_clv": 0.0022,
   "clv_count": 527,
