@@ -83,7 +83,7 @@
     <div class="section-sub">Tracked results from picks posted on the site before first pitch.</div>
   </div>
   <div class="live-metrics-note">
-    <span>📊 Live results reflect posted picks only. Backtested validation is shown separately below.</span>
+    <span>📊 Live results reflect posted picks only. Backtested validation lives on the <a href="performance.html">Model Dashboard</a>.</span>
   </div>
   <!-- Mini Record/Win-Rate/Updated strip removed — Record & Win Rate are shown in
        the richer summary pills below, and Last Updated is in the nav (deduped). -->
@@ -783,8 +783,20 @@ document.getElementById('search-input').addEventListener('input', e => {
 });
 
 // ── P&L mode toggle: Flat Units → Kelly Units → Dollar amounts ────────────────
+// Kelly mode is only offered when the data actually carries per-row kelly_units.
+// Without this guard the (r.kelly_units || 1) fallbacks make "Kelly" silently
+// identical to flat while the label claims "fractional Kelly sized".
+function _kellyDataAvailable() {
+  // Majority coverage required: today's client-side-settled rows carry kelly_units
+  // even when the exported history doesn't, and a handful of sized rows must not
+  // unlock a "Kelly" view that is ~flat for the other 600.
+  if (!Array.isArray(allRows) || !allRows.length) return false;
+  const n = allRows.filter(r => r && r.kelly_units != null).length;
+  return n / allRows.length >= 0.5;
+}
 function togglePnlMode() {
-  const cycle = ['units', 'kelly', 'dollars'];
+  const cycle = _kellyDataAvailable() ? ['units', 'kelly', 'dollars'] : ['units', 'dollars'];
+  if (!cycle.includes(pnlMode)) pnlMode = 'units';
   pnlMode = cycle[(cycle.indexOf(pnlMode) + 1) % cycle.length];
   const btn = document.getElementById('pnl-toggle-btn');
   if (btn) {

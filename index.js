@@ -350,7 +350,6 @@ function _onBankrollChange(val) {
   _unitSize = _bankroll / 100;
   localStorage.setItem('ibp_bankroll', String(_bankroll));
   refreshKellyUSD();
-  refreshPersonalTracker();
   _updateTotalDollarStat();   // update Total $ value in place
   _updatePhbHelper();          // update helper text in place
 }
@@ -423,7 +422,6 @@ window.addEventListener('DOMContentLoaded', () => {
       _onBankrollChange(e.target.value);
     }
   });
-  refreshPersonalTracker();
 });
 
 function refreshKellyUSD() {
@@ -517,97 +515,9 @@ function computeStreak(hist) {
   return { dir, count };
 }
 
-// ── "I bet this" personal tracker ────────────────────────────────────────────
-let _myBets = JSON.parse(localStorage.getItem('ibp_my_bets') || '{}');
-const _TODAY_KEY = new Date().toISOString().slice(0, 10);
-
-function toggleBet(id) {
-  const p = picksMap[id];
-  if (!p) return;
-  const key = `${_TODAY_KEY}::${id}`;
-  if (_myBets[key]) {
-    delete _myBets[key];
-  } else {
-    _myBets[key] = {
-      pick: p.pick, game: p.game, odds: p.odds,
-      kelly: kellyStakeUnits(p), edge: p.edge, date: _TODAY_KEY,
-    };
-  }
-  // Prune entries older than 14 days to avoid unbounded localStorage growth
-  for (const k of Object.keys(_myBets)) {
-    const d = k.split('::')[0];
-    if (d && d < new Date(Date.now() - 14 * 86400000).toISOString().slice(0, 10)) {
-      delete _myBets[k];
-    }
-  }
-  localStorage.setItem('ibp_my_bets', JSON.stringify(_myBets));
-  refreshBetButtons();
-  refreshPersonalTracker();
-}
-
-function refreshBetButtons() {
-  document.querySelectorAll('.bet-toggle').forEach(btn => {
-    const id  = btn.dataset.betId;
-    const key = `${_TODAY_KEY}::${id}`;
-    const on  = !!_myBets[key];
-    btn.textContent = on ? '✓ Tracking' : 'Track';
-    btn.classList.toggle('tracking', on);
-  });
-}
-
-function refreshPersonalTracker() {
-  const todayBets = Object.entries(_myBets)
-    .filter(([k]) => k.startsWith(_TODAY_KEY + '::'))
-    .map(([, v]) => ({ ...v }));
-
-  const panel = document.getElementById('personal-tracker');
-  if (!panel) return;
-
-  if (todayBets.length === 0) {
-    panel.style.display = 'none';
-    return;
-  }
-  panel.style.display = 'block';
-
-  // Cross-reference with history to show settled results
-  if (_histRef && _histRef.rows) {
-    todayBets.forEach(b => {
-      const match = _histRef.rows.find(r =>
-        r.date === b.date && r.pick === b.pick && r.game === b.game
-      );
-      if (match && (match.result === 'W' || match.result === 'L')) {
-        b.result = match.result;
-        b.pnl_u  = match.pnl_u;
-      }
-    });
-  }
-
-  const settledBets = todayBets.filter(b => b.result);
-  const totalKelly  = todayBets.reduce((s, b) => s + (b.kelly || 0), 0);
-  const settledPnl  = settledBets.reduce((s, b) => s + (b.pnl_u || 0), 0);
-  const usdStr      = (_bankroll > 0 && totalKelly > 0)
-    ? ` · <strong style="color:var(--green)">$${Math.round(totalKelly * _bankroll / 100)} risked</strong>` : '';
-  const pnlStr      = settledBets.length > 0
-    ? ` · settled: <strong style="color:${settledPnl>=0?'var(--green)':'var(--red)'}">${settledPnl>=0?'+':''}${settledPnl.toFixed(1)}u</strong>`
-    : '';
-
-  document.getElementById('pt-summary').innerHTML =
-    `${todayBets.length} bet${todayBets.length > 1 ? 's' : ''} tracked · ${totalKelly.toFixed(1)}u${usdStr}${pnlStr}`;
-
-  document.getElementById('pt-rows').innerHTML = todayBets.map(b => {
-    const resultHTML = b.result
-      ? `<span class="pt-result ${b.result}">${b.result}${b.pnl_u != null ? ' ' + (b.pnl_u>=0?'+':'') + b.pnl_u.toFixed(1) + 'u' : ''}</span>`
-      : `<span style="margin-left:auto;color:var(--text-4);font-size:10px">⏳ pending</span>`;
-    const kellyStr = b.kelly ? `<span style="color:var(--green)">${b.kelly.toFixed(1)}u</span>` : '';
-    return `<div class="pt-row">
-      <span style="font-weight:600;color:var(--text-2)">${b.pick}</span>
-      <span style="color:var(--amber);font-family:var(--font-mono)">${formatOdds(b.odds)}</span>
-      <span style="color:var(--text-4);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.game}</span>
-      ${kellyStr}
-      ${resultHTML}
-    </div>`;
-  }).join('');
-}
+// (Removed: personal 'I bet this' tracker — its Track buttons were no longer
+// rendered by any code path, so the panel could never populate. If a bet
+// journal returns, rebuild it as a first-class feature, not a leftover.)
 
 // (Removed: renderTodayTrackingIndex — dead code. Its target DOM nodes
 // (#idx-tracking-section / #idx-tracking-card) never existed in the page, so it
@@ -1262,7 +1172,7 @@ function oneLineDriverV8(p) {
 // Card-based decision view: Official play → Edge → Why it rates → Risk checks +
 // Best price → short summary, with the FULL existing card tucked behind a
 // "View full model rationale" toggle (preserves all its hooks: kelly-$, bet
-// buttons, share/copy — refreshKellyUSD/refreshBetButtons use querySelectorAll).
+// buttons, share/copy — refreshKellyUSD uses querySelectorAll).
 // Lean "full model rationale" for the drawer — ONLY net-new content vs the
 // drawer's own cards: full narrative prose, Matchup Quality (raw starter/defense
 // metrics, distinct from the model adjustments in "Why it rates"), and line
@@ -2132,8 +2042,7 @@ function prToggle(row) {
       if (p) {
         det.innerHTML = prDrawerHTML(p, det.dataset.best === '1', getPickResult(p, _scoresRef || {}));
         det.dataset.built = '1';
-        refreshKellyUSD();                    // wire up the newly-injected card's $ + bet state
-        refreshBetButtons();
+        refreshKellyUSD();                    // wire up the newly-injected card's $ amounts
       }
     }
     det.removeAttribute('hidden'); row.classList.add('open'); row.setAttribute('aria-expanded', 'true');
@@ -2225,26 +2134,8 @@ function render(data, hist, scores = {}, perf = null) {
   }
 
   // Freshness row
-  if (data.generated_at) {
-    const fr = document.getElementById('freshness-row');
-    if (fr) {
-      document.getElementById('fr-model-run').textContent = 'Last model run: ' + data.generated_at + ' CT';
-      fr.style.display = 'flex';
-    }
-  }
-  if (data.signal_count != null) {
-    const _sc = document.getElementById('signal-count');
-    if (_sc) _sc.textContent = data.signal_count;
-  }
-  if (data.games_today != null) {
-    const _gs = document.getElementById('games-scanned');
-    if (_gs) _gs.textContent = data.games_today;
-    // Also update the strip if games_today differs from signal_count
-    const strip = document.getElementById('games-scanned-strip');
-    if (strip && data.games_today > 0) {
-      strip.textContent = ` · Today: ${data.games_today} games analyzed.`;
-    }
-  }
+  // (Removed: freshness-row / signal-count / games-scanned updaters — their DOM
+  // targets never existed on this page; the Action Today strip carries this info.)
 
   // Save refs for the P&L mode toggle
   _todayDataRef = data;
@@ -2264,13 +2155,7 @@ function render(data, hist, scores = {}, perf = null) {
         + ` — we track closing-line value too, and we won't call the edge proven until it agrees.`;
       el.hidden = false;
     }
-    const cnt = document.getElementById('hero-pick-count');
-    if (cnt && data && Array.isArray(data.picks)) {
-      const n = data.picks.filter(p => (p.edge || 0) >= 0.04).length;
-      if (n > 0) cnt.textContent = String(n);
-    }
 
-    renderHeroDemo(data);
   };
 
   // Yesterday's settled result — recency proof. Reads today.json `yesterday_picks`
@@ -2301,44 +2186,7 @@ function render(data, hist, scores = {}, perf = null) {
     el.hidden = false;
   };
 
-  // Populate the hero edge-bar demo with today's strongest RECOMMENDED pick.
-  // "Recommended" = highest edge among non-flagged picks (the flagged/reduced
-  // play can have the biggest raw edge but is a poor thing to lead with).
-  // Falls back to the static generic markup when no qualifying pick exists.
-  window.renderHeroDemo = function(data) {
-    if (!data || !Array.isArray(data.picks)) return;
-    const cand = data.picks
-      .filter(p => !p.is_flagged && (p.edge || 0) >= 0.04 && p.model_prob != null && p.market_prob != null)
-      .sort((a, b) => (b.edge || 0) - (a.edge || 0))[0];
-    if (!cand) return; // keep generic sample
-
-    const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-    const o = cand.best_odds != null ? cand.best_odds : cand.odds;
-    const oddsStr = o == null ? '—' : (o > 0 ? '+' + o : '−' + Math.abs(o));
-    const mktV = cand.market_prob * 100;
-    const mdlV = cand.model_prob * 100;
-    const edgePp = (cand.edge * 100);
-
-    set('hd-label', "Today's top edge · " + (cand.game || ''));
-    set('hd-team', cand.pick || cand.side || '—');
-    set('hd-odds', oddsStr);
-    set('hd-mkt', 'Market ' + mktV.toFixed(0) + '%');
-    set('hd-mdl', 'Model ' + mdlV.toFixed(0) + '%');
-    set('hd-edge', '+' + edgePp.toFixed(1) + 'pp');
-
-    // Same zoomed scale the pick cards use, so the gap reads identically.
-    const lo = Math.max(0, mktV - 12);
-    const hi = Math.min(100, mdlV + 12);
-    const range = (hi - lo) || 1;
-    const mktF  = (mktV - lo) / range * 100;
-    const edgeF = edgePp / range * 100;
-    const mf = document.getElementById('hd-mkt-fill');
-    const ef = document.getElementById('hd-edge-fill');
-    const tk = document.getElementById('hd-tick');
-    if (mf) mf.style.width = mktF.toFixed(1) + '%';
-    if (ef) { ef.style.left = mktF.toFixed(1) + '%'; ef.style.width = edgeF.toFixed(1) + '%'; }
-    if (tk) tk.style.left = 'calc(' + (mktF + edgeF).toFixed(1) + '% - 1px)';
-  };
+  // (Removed: renderHeroDemo — its #hd-* DOM targets never existed on this page.)
 
   // Record strip: season stats + streak + mini sparkline
   // Extracted into renderRecordStrip() so the Flat/Kelly toggle can re-render it.
@@ -2612,8 +2460,6 @@ function render(data, hist, scores = {}, perf = null) {
 
     document.getElementById('picks-container').innerHTML = shareAllHTML + picksHTML;
     refreshKellyUSD();
-    refreshBetButtons();
-    refreshPersonalTracker();
     _updateTodayTally(scores);
     updateFloatingResults(scores);
   }
