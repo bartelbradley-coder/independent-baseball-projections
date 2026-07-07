@@ -195,6 +195,90 @@ function pct(v, d = 1) {
   return (v >= 0 ? '+' : '') + (v * 100).toFixed(d) + '%';
 }
 
+// ── Shared odds stack (moved verbatim from index.js, 2026-07-07) ──────────────
+// Used by index.js (pick table + drawer) AND bets.js ("For Z & Kream" page).
+// Book-odds sanitizer (trust fix): shared by every place that renders per-book
+// lines. Fixes two long-standing display bugs: (1) raw book_odds were shown
+// unfiltered, so a stale / wrong-signed line (e.g. a MyBookie -833 on a +183
+// underdog) rendered verbatim and looked like a data error; (2) "best price" was
+// picked with a raw descending-American sort / Math.max, which is only valid when
+// every line has the same sign. Here we convert to implied probability, drop books
+// that are off-market vs the field median (robust to a single bad book), and rank
+// by payout (lowest implied prob = best).
+const _BOOK_NAMES = {novig:'Novig',prophetx:'ProphetX',pinnacle:'Pinnacle',lowvig:'LowVig',
+  betonlineag:'BetOnline',draftkings:'DraftKings',fanduel:'FanDuel',betmgm:'BetMGM',
+  betrivers:'BetRivers',espnbet:'ESPN Bet',hardrockbet:'Hard Rock',betway:'Betway',
+  bovada:'Bovada',mybookieag:'MyBookie',betus:'BetUS'};
+function _impliedFromAmerican(ml) {
+  const n = typeof ml === 'number' ? ml : parseInt(ml);
+  if (!isFinite(n) || n === 0) return null;
+  return n > 0 ? 100 / (n + 100) : (-n) / ((-n) + 100);
+}
+// Returns { entries:[{book,odds,implied}], best:{...}|null, dropped:N }, entries
+// ranked best-payout-first. Two filters: (1) ANCHOR — drop books whose implied
+// prob is far from the pick's OWN posted price (opts.anchorPp, default 0.22);
+// catches a whole field quoting the wrong side / corrupted values (e.g. -1275
+// books on a +183 underdog). (2) MEDIAN — drop a lone outlier within an
+// otherwise-consistent field (opts.outlierPp, default 0.15).
+function sanitizeBookOdds(p, opts) {
+  const outlierPp = (opts && opts.outlierPp != null) ? opts.outlierPp : 0.15;
+  const anchorPp  = (opts && opts.anchorPp  != null) ? opts.anchorPp  : 0.22;
+  const raw = (() => {
+    const src = (typeof p.book_odds === 'object' && p.book_odds) ? p.book_odds
+              : (typeof p.books === 'object' && p.books) ? p.books : null;
+    if (src) return src;
+    try { return JSON.parse(p.book_odds || p.books || '{}'); } catch (e) { return {}; }
+  })();
+  let entries = Object.entries(raw || {})
+    .map(([k, v]) => {
+      const odds = typeof v === 'number' ? v : parseInt(v);
+      return { book: _BOOK_NAMES[k.toLowerCase()] || k, odds: odds, implied: _impliedFromAmerican(odds) };
+    })
+    .filter(e => !isNaN(e.odds) && e.implied != null);
+  const total = entries.length;
+  // (1) anchor against the pick's own posted price; if the whole field is wrong-
+  //     side/corrupted, this leaves entries empty → no (bad) current price shown.
+  const anchor = _impliedFromAmerican(p.odds);
+  if (anchor != null && entries.length) {
+    entries = entries.filter(e => Math.abs(e.implied - anchor) <= anchorPp);
+  }
+  // (2) median filter for a lone outlier within an otherwise-consistent field.
+  if (entries.length >= 3) {
+    const imp = entries.map(e => e.implied).slice().sort((a, b) => a - b);
+    const mid = Math.floor(imp.length / 2);
+    const median = imp.length % 2 ? imp[mid] : (imp[mid - 1] + imp[mid]) / 2;
+    entries = entries.filter(e => Math.abs(e.implied - median) <= outlierPp);
+  }
+  entries.sort((a, b) => a.implied - b.implied);   // best payout first
+  return { entries: entries, best: entries.length ? entries[0] : null, dropped: total - entries.length };
+}
+
+// American odds → a continuous "cents" scale where +100 and -100 both map to 0 and
+// higher = a better price for the bettor. Lets us measure line movement and cushion
+// cleanly, even across the +/- boundary. (Moved verbatim from index.js.)
+function _oddsToCents(o) {
+  if (o == null || isNaN(o)) return null;
+  return o > 0 ? o - 100 : -(Math.abs(o) - 100);
+}
+
+// ── "For Z & Kream" (bets.html) playability helpers ───────────────────────────
+// These mirror index.js prCur()/prCushion()/prActionable() semantics EXACTLY:
+// the current re-rated read leads with posted fallback, and a pick is only
+// rejected on price when the cushion is KNOWN-negative (null cushion = missing
+// data, never treated as 0). If index.js prActionable() changes, change these
+// to match — same data, same verdicts, one presentation simpler.
+function ibpZkFloor(p) {
+  return p.current_playable_to != null ? p.current_playable_to : p.playable_to;
+}
+function ibpZkPrice(p) {
+  const sb = sanitizeBookOdds(p);
+  return sb.best ? sb.best.odds : (p.best_odds != null ? p.best_odds : p.odds);
+}
+function ibpZkCushion(p) {
+  const cc = _oddsToCents(ibpZkPrice(p)), ptc = _oddsToCents(ibpZkFloor(p));
+  return (cc != null && ptc != null) ? Math.round(cc - ptc) : null;
+}
+
 // ── Dev-only debug banner ─────────────────────────────────────────────────────
 // Shows a red dismissible banner at top of page when a JS error is thrown.
 // No-ops automatically on any non-localhost origin.
