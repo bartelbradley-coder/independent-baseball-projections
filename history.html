@@ -32,9 +32,9 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='5' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='white'>IB</text><text x='16' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='%2360a5fa'>P</text><line x1='21' y1='23' x2='25' y2='18' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='25' cy='18' r='1.4' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=38">
-<link rel="stylesheet" href="index.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=39">
+<link rel="stylesheet" href="index.css?v=6">
 <link rel="stylesheet" href="history.css?v=7">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DTTFTBVZJN"></script>
@@ -83,7 +83,7 @@
     <div class="section-sub">Tracked results from picks posted on the site before first pitch.</div>
   </div>
   <div class="live-metrics-note">
-    <span>📊 Live results reflect posted picks only. Backtested validation lives on the <a href="performance.html">Model Dashboard</a>.</span>
+    <span><svg class="ibp-ic" style="font-size:12px" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-6"/></svg> Live results reflect posted picks only. Backtested validation lives on the <a href="performance.html">Model Dashboard</a>.</span>
   </div>
   <!-- Mini Record/Win-Rate/Updated strip removed — Record & Win Rate are shown in
        the richer summary pills below, and Last Updated is in the nav (deduped). -->
@@ -92,7 +92,7 @@
   <!-- Transparency Standards -->
   <section class="transparency-section">
     <div class="ts-header">
-      <span class="ts-icon">🔒</span>
+      <span class="ts-icon"><svg class="ibp-ic" style="font-size:15px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
       <span class="ts-title">Transparency Standards</span>
     </div>
     <ul class="ts-list">
@@ -104,7 +104,7 @@
       <li>Past performance does not guarantee future results.</li>
     </ul>
     <div style="margin-top:10px;font-size:11px;color:var(--text-2);background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.16);border-radius:8px;padding:8px 12px;line-height:1.6">
-      <strong>Verify it yourself:</strong> the <strong>⬇ CSV</strong> button below the filters exports the rows currently shown — date, posted time, odds, edge, model probability, result, CLV, P&amp;L. Leave the filters on "All" (the default) to export the complete log, and diff it against any snapshot of this page: rows are added, never removed.
+      <strong>Verify it yourself:</strong> the <strong><svg class="ibp-ic" style="font-size:12px" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 11l5 5 5-5M5 21h14"/></svg> CSV</strong> button below the filters exports the rows currently shown — date, posted time, odds, edge, model probability, result, CLV, P&amp;L. Leave the filters on "All" (the default) to export the complete log, and diff it against any snapshot of this page: rows are added, never removed.
     </div>
     <details class="record-notes" style="margin-top:10px;font-size:11px;color:var(--text-3);line-height:1.55">
       <summary style="cursor:pointer;font-weight:600;color:var(--text-2)">Record notes — known imperfections in this data</summary>
@@ -159,20 +159,20 @@
       <div class="filter-sep"></div>
       <select class="month-select" id="side-select" onchange="activeSideFilter=this.value;renderTable(allRows)" title="Filter by side" aria-label="Filter by side">
         <option value="all">All sides</option>
-        <option value="dog">🐶 Dogs</option>
+        <option value="dog">Dogs</option>
         <option value="fav">Favs</option>
         <option value="home">Home</option>
         <option value="away">Away</option>
       </select>
       <div class="filter-sep"></div>
-      <input class="search-input" id="search-input" type="text" placeholder="🔍 Team or pitcher…" autocomplete="off" aria-label="Search by team or pitcher">
+      <input class="search-input" id="search-input" type="text" placeholder="Search team or pitcher…" autocomplete="off" aria-label="Search by team or pitcher">
       <div class="filter-sep"></div>
       <div class="threshold-wrap" title="Show only picks where model edge ≥ this value">
         <span class="threshold-lbl">Min edge</span>
         <input class="threshold-input" id="threshold-input" type="number" min="0" max="20" step="0.5" value="0" autocomplete="off" aria-label="Minimum edge in percentage points">
         <span class="threshold-pct">pp</span>
       </div>
-      <button class="filter-btn" id="csv-export-btn" style="margin-left:auto" onclick="exportCSV()">⬇ CSV</button>
+      <button class="filter-btn" id="csv-export-btn" style="margin-left:auto" onclick="exportCSV()"><svg class="ibp-ic" style="font-size:12px" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 11l5 5 5-5M5 21h14"/></svg> CSV</button>
     </div>
 
     <div id="threshold-summary-bar" class="threshold-summary-bar" style="display:none"></div>
@@ -220,7 +220,7 @@
   <div class="footer-byline">Built &amp; run by BB · an independent one-person project</div>
 </footer>
 
-<script src="ibp-utils.js?v=2"></script>
+<script src="ibp-utils.js?v=7"></script>
 <script>
 let allRows = [];
 let sortCol = 'date';

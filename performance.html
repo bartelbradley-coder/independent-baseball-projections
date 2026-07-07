@@ -31,9 +31,9 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='5' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='white'>IB</text><text x='16' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='%2360a5fa'>P</text><line x1='21' y1='23' x2='25' y2='18' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='25' cy='18' r='1.4' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=38">
-<link rel="stylesheet" href="index.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=39">
+<link rel="stylesheet" href="index.css?v=6">
 <link rel="stylesheet" href="performance.css?v=4">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DTTFTBVZJN"></script>
@@ -82,7 +82,7 @@
     <div class="section-sub">Tracked results from picks posted on the site before first pitch.</div>
   </div>
   <div class="live-metrics-note">
-    <span>📊 Live results reflect posted picks only. Backtested validation is shown separately below.</span>
+    <span><svg class="ibp-ic" style="font-size:12px" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-6"/></svg> Live results reflect posted picks only. Backtested validation is shown separately below.</span>
   </div>
   <!-- Record, ROI, CLV, beat-close & risk metrics live in the validation header
        below; Last Updated is in the nav (deduped). -->
@@ -97,7 +97,7 @@
 
   <!-- Key insight callout -->
   <div class="insight-box" id="insight-box" style="display:none">
-    <div class="ib-head">📈 What CLV Tells Us</div>
+    <div class="ib-head"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg> What CLV Tells Us</div>
     <div class="ib-body" id="insight-body"></div>
   </div>
 
@@ -118,7 +118,7 @@
   <div class="section">
     <div class="two-col">
       <div class="card">
-        <div class="card-title">📈 Closing Line Value — Season Average</div>
+        <div class="card-title"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg> Closing Line Value — Season Average</div>
         <div class="card-sub">Last 30 picks shown · positive = market confirmed the pick</div>
         <div class="clv-big">
           <div class="clv-big-num" id="clv-big-num">—</div>
@@ -130,7 +130,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-title">📅 Monthly ROI — 2026 Season</div>
+        <div class="card-title"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg> Monthly ROI — 2026 Season</div>
         <div class="card-sub">Flat $100/bet · consistency matters as much as overall ROI</div>
         <div id="monthly-section">
           <div class="loading">Loading…</div>
@@ -282,7 +282,7 @@
       <div class="sec-lbl">Performance by Team — 2026 Season (min. 3 picks)</div>
       <div class="two-col">
         <div class="card">
-          <div class="card-title">🏆 Best Teams by ROI</div>
+          <div class="card-title"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3"/></svg> Best Teams by ROI</div>
           <div class="card-sub">Teams the model has found the most value on</div>
           <table class="edge-table" id="top-teams-table">
             <thead><tr><th scope="col">Team</th><th scope="col">W–L</th><th scope="col">Win%</th><th scope="col">ROI</th><th scope="col">Units</th></tr></thead>
@@ -290,7 +290,7 @@
           </table>
         </div>
         <div class="card">
-          <div class="card-title">📉 Underperforming Teams</div>
+          <div class="card-title"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l6 6 4-4 7 7"/><path d="M14 16h6v-6"/></svg> Underperforming Teams</div>
           <div class="card-sub">Teams where model picks have underdelivered</div>
           <table class="edge-table" id="bot-teams-table">
             <thead><tr><th scope="col">Team</th><th scope="col">W–L</th><th scope="col">Win%</th><th scope="col">ROI</th><th scope="col">Units</th></tr></thead>
@@ -305,7 +305,7 @@
       <div class="sec-lbl">Pitcher Performance — 2026 Season (min. 3 picks)</div>
       <div class="two-col">
         <div class="card">
-          <div class="card-title">📈 Top Pitchers by ROI</div>
+          <div class="card-title"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg> Top Pitchers by ROI</div>
           <div class="card-sub">Best-performing starters when model picks them</div>
           <table class="edge-table" id="top-pitchers-table">
             <thead><tr><th scope="col">Pitcher</th><th scope="col">W–L</th><th scope="col">Win%</th><th scope="col">ROI</th><th scope="col">Units</th></tr></thead>
@@ -313,7 +313,7 @@
           </table>
         </div>
         <div class="card">
-          <div class="card-title">📉 Underperforming Pitchers</div>
+          <div class="card-title"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l6 6 4-4 7 7"/><path d="M14 16h6v-6"/></svg> Underperforming Pitchers</div>
           <div class="card-sub">Starters the model over-rated this season</div>
           <table class="edge-table" id="bot-pitchers-table">
             <thead><tr><th scope="col">Pitcher</th><th scope="col">W–L</th><th scope="col">Win%</th><th scope="col">ROI</th><th scope="col">Units</th></tr></thead>
@@ -418,7 +418,7 @@
   <div class="footer-byline">Built &amp; run by BB · an independent one-person project</div>
 </footer>
 
-<script src="ibp-utils.js?v=2"></script>
+<script src="ibp-utils.js?v=7"></script>
 <script>
 // pct, formatOdds, fetchESPNScores, computeTodaySettled,
 // extendPnlCurve, applyTodayToPerf, _showDebugBanner → ibp-utils.js

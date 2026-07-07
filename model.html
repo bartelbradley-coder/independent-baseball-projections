@@ -31,10 +31,10 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='5' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='white'>IB</text><text x='16' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='%2360a5fa'>P</text><line x1='21' y1='23' x2='25' y2='18' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='25' cy='18' r='1.4' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="model.css?v=1">
-<link rel="stylesheet" href="style.css?v=38">
-<link rel="stylesheet" href="index.css?v=3">
+<link rel="stylesheet" href="style.css?v=39">
+<link rel="stylesheet" href="index.css?v=6">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DTTFTBVZJN"></script>
 <script>
@@ -171,7 +171,7 @@
 
 <!-- MARKET-INFORMED MODEL NOTE -->
 <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(99,102,241,0.05);border:1px solid rgba(99,102,241,0.15);border-radius:10px;padding:16px 18px;margin-bottom:22px">
-  <div style="font-size:18px;flex-shrink:0;margin-top:2px">ℹ️</div>
+  <div style="flex-shrink:0;margin-top:2px"><svg class="ibp-ic" style="font-size:16px" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 11v5"/></svg></div>
   <div>
     <div style="font-size:12px;font-weight:700;color:#818cf8;margin-bottom:6px">Independent Baseball Projections is a market-informed model</div>
     <p style="font-size:11.5px;color:var(--text-3);line-height:1.65;margin-bottom:6px">Raw team strength, pitching, lineup, park, weather, and situational signals generate the baseline projection. Market information — specifically the book O/U total and Pinnacle no-vig probability — is used as a stabilizing input (via the <code style="font-family:var(--font-mono);font-size:10px;color:#c7d2fe">book_total_constraint</code> factor, α₁₆) to reduce extreme run-total outputs and align the model with the sharp betting market's run environment. After Platt calibration, the final Independent Baseball Projections probability is compared against the no-vig Pinnacle market probability to identify remaining pricing gaps where the model and market diverge.</p>
@@ -336,7 +336,7 @@
     <div class="pipe-stage">
       <div class="pipe-top">
         <div class="pipe-num">04</div>
-        <div class="pipe-glyph">📊</div>
+        <div class="pipe-glyph"><svg class="ibp-ic" style="font-size:15px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-6"/></svg></div>
         <div class="pipe-name">Poisson Win Prob</div>
       </div>
       <div class="pipe-io">
@@ -372,7 +372,7 @@
     <div class="pipe-stage">
       <div class="pipe-top">
         <div class="pipe-num">07</div>
-        <div class="pipe-glyph">⚡</div>
+        <div class="pipe-glyph"><svg class="ibp-ic" style="font-size:15px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div>
         <div class="pipe-name">Edge Detection</div>
       </div>
       <div class="pipe-io">
@@ -419,7 +419,7 @@
     </div>
 
     <div class="math-block cv">
-      <div class="math-hdr">📊  Poisson Distribution &amp; Win Probability</div>
+      <div class="math-hdr"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-6"/></svg>  Poisson Distribution &amp; Win Probability</div>
       <div class="f-lbl">Run distributions — modeled independently</div>
       <div class="fbox"><span class="v">R_home</span> <span class="op">~</span> <span class="fn">Poisson</span>(<span class="v">λ_home</span>)
 <span class="v">R_away</span> <span class="op">~</span> <span class="fn">Poisson</span>(<span class="v">λ_away</span>)
@@ -447,7 +447,7 @@
     </div>
 
     <div class="math-block cs">
-      <div class="math-hdr">⚖️  No-Vig Market Probability Strip</div>
+      <div class="math-hdr"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-6"/></svg>  No-Vig Market Probability Strip</div>
       <div class="f-lbl">American odds → raw implied probability</div>
       <div class="fbox"><span class="fn">p_raw</span>(<span class="v">ml</span>) <span class="op">=</span> {
   <span class="op">|</span><span class="v">ml</span><span class="op">|</span> <span class="op">/</span> (<span class="op">|</span><span class="v">ml</span><span class="op">|</span> <span class="op">+</span> <span class="n">100</span>)   <span class="cm">if ml &lt; 0  (favorite)</span>
@@ -463,7 +463,7 @@
     </div>
 
     <div class="math-block ca">
-      <div class="math-hdr">⚡  Edge Detection &amp; Stake Sizing</div>
+      <div class="math-hdr"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>  Edge Detection &amp; Stake Sizing</div>
       <div class="f-lbl">Model edge vs. no-vig Pinnacle</div>
       <div class="fbox"><span class="v">edge</span> <span class="op">=</span> <span class="v">p_cal</span> <span class="op">−</span> <span class="v">p_nv_Pinnacle</span>
 <span class="cm">// Bet flagged if edge ≥ 0.04</span></div>
@@ -477,7 +477,7 @@
     </div>
 
     <div class="math-block ce">
-      <div class="math-hdr">📈  Closing Line Value — Process Validation</div>
+      <div class="math-hdr"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg>  Closing Line Value — Process Validation</div>
       <div class="f-lbl">Definition — Pinnacle no-vig both sides</div>
       <div class="fbox"><span class="v">CLV</span> <span class="op">=</span> <span class="v">p_close_nv</span> <span class="op">−</span> <span class="v">p_open_nv</span>
 <span class="cm">// Snapshot: pre-game closing line (CT)</span></div>
@@ -505,7 +505,7 @@
 
     <div class="imp-group ig-ind">
       <div class="imp-ghdr">
-        <div class="imp-gtitle">⚾ Pitcher</div>
+        <div class="imp-gtitle"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.5 6a12 12 0 0 1 0 12M18.5 6a12 12 0 0 0 0 12"/></svg> Pitcher</div>
         <div class="imp-gcount">5 factors · α₁–α₅</div>
       </div>
       <div class="sig-row"><div class="sig-idx">α₁</div><div class="sig-name">Starter xFIP matchup</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:100%"></div></div><div class="sig-val">0.18</div></div>
@@ -517,7 +517,7 @@
 
     <div class="imp-group ig-tea">
       <div class="imp-ghdr">
-        <div class="imp-gtitle">🌤 Situational</div>
+        <div class="imp-gtitle"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg> Situational</div>
         <div class="imp-gcount">6 factors · α₆–α₁₁</div>
       </div>
       <div class="sig-row"><div class="sig-idx">α₆</div><div class="sig-name">Park factor</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:67%"></div></div><div class="sig-val">0.12</div></div>
@@ -530,7 +530,7 @@
 
     <div class="imp-group ig-amb">
       <div class="imp-ghdr">
-        <div class="imp-gtitle">📈 Market &amp; Lineup</div>
+        <div class="imp-gtitle"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg> Market &amp; Lineup</div>
         <div class="imp-gcount">7 factors · α₁₂–α₁₈</div>
       </div>
       <div class="sig-row"><div class="sig-idx">α₁₂</div><div class="sig-name">Lineup OPS split (hand)</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:61%"></div></div><div class="sig-val">0.11</div></div>
@@ -544,7 +544,7 @@
 
     <div class="imp-group" style="border-color:rgba(99,102,241,0.3);background:rgba(99,102,241,0.04)">
       <div class="imp-ghdr">
-        <div class="imp-gtitle" style="color:var(--indigo-lt)">⚡ Advanced Signals</div>
+        <div class="imp-gtitle" style="color:var(--indigo-lt)"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg> Advanced Signals</div>
         <div class="imp-gcount">15 factors · α₁₉–α₃₃</div>
       </div>
       <div class="sig-row"><div class="sig-idx">α₁₉</div><div class="sig-name">Baserunning quality (BsR) — lambda multiplier</div><div class="sig-bar-wrap"><div class="sig-bar" style="width:17%;background:rgba(99,102,241,0.6)"></div></div><div class="sig-val">0.03</div></div>
@@ -576,7 +576,7 @@
 
     <div class="feat-col">
       <div class="feat-col-hdr">
-        <div class="feat-col-icon">⚾</div>
+        <div class="feat-col-icon"><svg class="ibp-ic" style="font-size:15px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.5 6a12 12 0 0 1 0 12M18.5 6a12 12 0 0 0 0 12"/></svg></div>
         <div>
           <div class="feat-col-title">Pitcher</div>
           <div class="feat-col-src">MLB Stats API · Baseball Savant</div>
@@ -601,7 +601,7 @@
 
     <div class="feat-col">
       <div class="feat-col-hdr">
-        <div class="feat-col-icon">🌤</div>
+        <div class="feat-col-icon"><svg class="ibp-ic" style="font-size:15px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></div>
         <div>
           <div class="feat-col-title">Situational</div>
           <div class="feat-col-src">Savant · Open-Meteo · UmpScoreCards</div>
@@ -617,7 +617,7 @@
 
     <div class="feat-col">
       <div class="feat-col-hdr">
-        <div class="feat-col-icon">📈</div>
+        <div class="feat-col-icon"><svg class="ibp-ic" style="font-size:15px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg></div>
         <div>
           <div class="feat-col-title">Lineup &amp; Market</div>
           <div class="feat-col-src">MLB Stats API · Pinnacle / Odds API</div>
@@ -646,7 +646,7 @@
   <div class="math-grid">
 
     <div class="math-block ci">
-      <div class="math-hdr">🏃  Run Line Calibration</div>
+      <div class="math-hdr"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="14" cy="5" r="2"/><path d="M6 21l3-6 3 2 2-5-3-2 2-4 4 3h3"/></svg>  Run Line Calibration</div>
       <div class="f-lbl">Platt scaling — RL-specific constants, fitted OOS 2022–2024</div>
       <div class="fbox"><span class="v">p_rl_cal</span> <span class="op">=</span> <span class="fn">σ</span>(<span class="v">A_rl</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_rl_raw</span>) <span class="op">+</span> <span class="v">B_rl</span>)
 
@@ -673,7 +673,7 @@ Away <span class="op">+</span><span class="n">1.5</span> win rate vs model edge:
     </div>
 
     <div class="math-block cv">
-      <div class="math-hdr">📊  Over/Under Calibration</div>
+      <div class="math-hdr"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-6"/></svg>  Over/Under Calibration</div>
       <div class="f-lbl">Platt scaling — O/U constants, fitted OOS 2022–2024</div>
       <div class="fbox"><span class="v">p_over_cal</span> <span class="op">=</span> <span class="fn">σ</span>(<span class="v">A_ou</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_over_raw</span>) <span class="op">+</span> <span class="v">B_ou</span>)
 
@@ -742,7 +742,7 @@ Bias by total line:
   <div class="footer-byline">Built &amp; run by BB · an independent one-person project</div>
 </footer>
 
-<script src="ibp-utils.js?v=2"></script>
+<script src="ibp-utils.js?v=7"></script>
 <script>
 // ── Nav hamburger ──
 function toggleNav() {

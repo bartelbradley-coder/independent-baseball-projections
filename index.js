@@ -227,7 +227,7 @@ async function downloadShareCard() {
   }
 
   btn.disabled = true;
-  btn.textContent = '⏳ Rendering…';
+  btn.textContent = 'Rendering…';
   if (hint) hint.textContent = 'Generating PNG…';
 
   try {
@@ -261,13 +261,13 @@ async function downloadShareCard() {
     if (hint) hint.textContent = 'PNG saved';
     setTimeout(() => {
       btn.disabled = false;
-      btn.textContent = '⬇ Download PNG';
+      btn.innerHTML = ibpIcon('download', 13) + ' Download PNG';
       if (hint) hint.textContent = 'Ready to share';
     }, 2500);
   } catch (err) {
     console.error('[Independent Baseball Projections] html2canvas error:', err);
     btn.disabled = false;
-    btn.textContent = '⬇ Download PNG';
+    btn.innerHTML = ibpIcon('download', 13) + ' Download PNG';
     if (hint) hint.textContent = 'Error — try again';
   }
 }
@@ -280,7 +280,7 @@ async function nativeShareCard() {
   if (typeof html2canvas === 'undefined') { alert('html2canvas not loaded.'); return; }
 
   btn.disabled = true;
-  btn.textContent = '⏳ Preparing…';
+  btn.textContent = 'Preparing…';
 
   try {
     const savedTransform = el.style.transform;
@@ -298,7 +298,7 @@ async function nativeShareCard() {
     el.style.transformOrigin = savedOrigin;
 
     canvas.toBlob(async (blob) => {
-      if (!blob) { btn.disabled = false; btn.textContent = '⬆ Share Image'; return; }
+      if (!blob) { btn.disabled = false; btn.innerHTML = ibpIcon('share', 13) + ' Share Image'; return; }
       const p    = picksMap[_shareCardPickId] || {};
       const team = (p.pick || 'pick').replace(/\s/g, '-').toLowerCase();
       const file = new File([blob], `ibp-${team}.png`, { type: 'image/png' });
@@ -311,7 +311,7 @@ async function nativeShareCard() {
           });
           btn.textContent = '✓ Shared';
         } catch(e) {
-          if (e.name !== 'AbortError') btn.textContent = '⬆ Share Image';
+          if (e.name !== 'AbortError') btn.innerHTML = ibpIcon('share', 13) + ' Share Image';
         }
       } else {
         // Fallback: download
@@ -323,13 +323,13 @@ async function nativeShareCard() {
       }
       setTimeout(() => {
         btn.disabled = false;
-        btn.textContent = '⬆ Share Image';
+        btn.innerHTML = ibpIcon('share', 13) + ' Share Image';
       }, 2500);
     }, 'image/png');
   } catch (err) {
     console.error('[Independent Baseball Projections] nativeShareCard error:', err);
     btn.disabled = false;
-    btn.textContent = '⬆ Share Image';
+    btn.innerHTML = ibpIcon('share', 13) + ' Share Image';
   }
 }
 
@@ -680,7 +680,7 @@ function renderPreview(preview) {
       <div class="preview-section" id="preview-section">
         <div class="preview-header" onclick="togglePreview()">
           <div class="preview-header-left">
-            <span class="preview-title">🔭 Tomorrow's Preview · ${count} pick${count !== 1 ? 's' : ''}</span>
+            <span class="preview-title">${ibpIcon('search', 13)} Tomorrow's Preview · ${count} pick${count !== 1 ? 's' : ''}</span>
             <span class="preview-subtitle">Opening line · Projected lineup · Posted ${genAt}</span>
           </div>
           <span class="preview-chevron">▼</span>
@@ -913,8 +913,8 @@ function renderEmptyState(data, hist, marginal = []) {
   const isPre9AM = nowCT.getHours() < 9;
 
   const onwardCTA = `<div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:16px;font-size:12px">
-        <a href="performance.html" style="color:var(--indigo-lt);text-decoration:none;font-weight:600">📈 See the track record →</a>
-        <a href="#email-capture" onclick="event.preventDefault();document.getElementById('email-capture')?.scrollIntoView({behavior:'smooth'})" style="color:var(--indigo-lt);text-decoration:none;font-weight:600">✉️ Email me when picks post →</a>
+        <a href="performance.html" style="color:var(--indigo-lt);text-decoration:none;font-weight:600">${ibpIcon('trendup', 13)} See the track record →</a>
+        <a href="#email-capture" onclick="event.preventDefault();document.getElementById('email-capture')?.scrollIntoView({behavior:'smooth'})" style="color:var(--indigo-lt);text-decoration:none;font-weight:600">${ibpIcon('mail', 13)} Email me when picks post →</a>
       </div>`;
   // ── Season-aware empty state ──────────────────────────────────────────────
   // No-games / off-season / stale-delay all outrank the pre-9AM and no-edge cards,
@@ -943,23 +943,23 @@ function renderEmptyState(data, hist, marginal = []) {
         <div class="state-sub">${sub}</div>
         ${extra}${onwardCTA}
       </div>`;
-  const offseasonCard = card('⚾', 'MLB is between seasons.',
+  const offseasonCard = card(ibpIcon('baseball', 34), 'MLB is between seasons.',
     'Daily value picks return for the 2027 season. The full 2026 track record stays public — and founding subscribers lock in early pricing before then.');
-  const offDayCard = card('⚾', 'No MLB games scheduled today.',
+  const offDayCard = card(ibpIcon('baseball', 34), 'No MLB games scheduled today.',
     'The slate is empty today — value picks resume on the next game day.');
-  const delayedCard = card('⏳', "Today's slate is still updating.",
+  const delayedCard = card(ibpIcon('clock', 34), "Today's slate is still updating.",
     'Fresh picks are taking a little longer than usual to post — check back shortly.');
   const pendingCard = `<div class="picks-pending-card">
-        <div class="ppc-time">🕐</div>
+        <div class="ppc-time">${ibpIcon('clock', 26)}</div>
         <div class="ppc-title">Today's Picks Post at 9:00 AM CT</div>
         <div class="ppc-sub">
           The model runs each morning after overnight data and opening lines are confirmed.<br>
           Picks are locked before first pitch and tracked to closing line value.
         </div>
-        <a class="ppc-preview-link" href="preview.html">🔭 View tomorrow's opening line estimates →</a>
+        <a class="ppc-preview-link" href="preview.html">${ibpIcon('search', 13)} View tomorrow's opening line estimates →</a>
         ${onwardCTA}
       </div>`;
-  const noEdgeCard = card('📊', 'No picks clear the edge threshold today.',
+  const noEdgeCard = card(ibpIcon('chart', 34), 'No picks clear the edge threshold today.',
     'The model found no bets with sufficient edge vs. Pinnacle no-vig lines.');
 
   let emptyCard;
@@ -1043,8 +1043,8 @@ function formatWeather(p) {
     parts.push(spd > 0 ? `${spd}mph ${dir}` : 'Calm');
   }
   const highWind = (p.wind_speed_mph || 0) >= 15;
-  if (highWind) parts.push('⚡ High wind');
-  return { text: '🌤 ' + parts.join(' · '), highWind };
+  if (highWind) parts.push('High wind');
+  return { text: parts.join(' · '), highWind };
 }
 
 function tierLabel(edge, verdict) {
@@ -1101,7 +1101,7 @@ function buildHistContextFn(histRows) {
     const hi = fmtO(pick.odds + 40);
     const pnlStr = (pnl >= 0 ? '+' : '') + pnl.toFixed(1) + 'u';
     const pnlCol = pnl >= 0 ? 'var(--green)' : 'var(--red)';
-    return `<div class="hist-context">📊 <strong>${side} ${type} ${lo}–${hi}</strong> this season: ` +
+    return `<div class="hist-context">${ibpIcon('chart', 12)} <strong>${side} ${type} ${lo}–${hi}</strong> this season: ` +
       `<span style="color:var(--text-2);font-weight:600">${w}W–${l}L</span> ` +
       `<span style="color:var(--text-4)">(${winPct}%)</span> · ` +
       `<span style="color:${pnlCol};font-weight:600">${pnlStr}</span> ` +
@@ -1610,7 +1610,7 @@ function renderStatusStrip(picks, noPicksYet, generatedAt, gamesToday) {
     const pre9   = nowCT.getHours() < 9;
     strip.className = 'status-strip ss-pending';
     strip.innerHTML = `
-      <span class="ss-badge ss-badge-pending">${pre9 ? '🕐 PENDING' : '📊 NO PICKS'}</span>
+      <span class="ss-badge ss-badge-pending">${pre9 ? ibpIcon('clock', 11) + ' PENDING' : ibpIcon('chart', 11) + ' NO PICKS'}</span>
       <span class="ss-text">${pre9 ? 'Picks post at 9:00 AM CT after lineup confirmation' : 'No picks clear the 4pp edge threshold today'}</span>
       <a class="ss-link" href="preview.html">Tomorrow's opening lines →</a>`;
     return;

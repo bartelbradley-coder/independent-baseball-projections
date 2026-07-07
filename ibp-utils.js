@@ -244,3 +244,34 @@ function handleEmailSubmit(e) {
     alert('Something went wrong — please try again in a moment.');
   });
 }
+
+// ── Inline SVG icon set (P4a) — replaces emoji in UI chrome. Monochrome,
+// stroke=currentColor so icons inherit text color; size via the px argument.
+const IBP_ICONS = {
+  lock:      '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  chart:     '<path d="M5 20V10M12 20V4M19 20v-6"/>',
+  trendup:   '<path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/>',
+  trenddown: '<path d="M3 7l6 6 4-4 7 7"/><path d="M14 16h6v-6"/>',
+  clock:     '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  search:    '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  mail:      '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  pin:       '<path d="M12 21s-6-5.1-6-10a6 6 0 1 1 12 0c0 4.9-6 10-6 10z"/><circle cx="12" cy="11" r="2"/>',
+  download:  '<path d="M12 3v12M7 11l5 5 5-5M5 21h14"/>',
+  share:     '<path d="M12 21V9M7 13l5-5 5 5M5 3h14"/>',
+  info:      '<circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 11v5"/>',
+  trophy:    '<path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3"/>',
+  calendar:  '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/>',
+  target:    '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  baseball:  '<circle cx="12" cy="12" r="9"/><path d="M5.5 6a12 12 0 0 1 0 12M18.5 6a12 12 0 0 0 0 12"/>',
+  warn:      '<path d="M12 3L2 20h20L12 3z"/><path d="M12 9v5M12 17h.01"/>',
+};
+function ibpIcon(name, px, cls) {
+  const p = IBP_ICONS[name];
+  if (!p) return '';
+  // width/height attrs are overridden by the .ibp-ic{width:1em;height:1em} rule
+  // (which keeps text line-heights undisturbed) — the inline font-size makes
+  // 1em equal the requested px in every context, so the argument stays authoritative.
+  return '<svg class="ibp-ic' + (cls ? ' ' + cls : '') + '" style="font-size:' + (px || 14) + 'px" width="' + (px || 14) + '" height="' + (px || 14)
+    + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + p + '</svg>';
+}
