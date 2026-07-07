@@ -103,6 +103,9 @@
       <li>Live results are reported separately from historical backtests.</li>
       <li>Past performance does not guarantee future results.</li>
     </ul>
+    <div style="margin-top:10px;font-size:11px;color:var(--text-2);background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.16);border-radius:8px;padding:8px 12px;line-height:1.6">
+      <strong>Verify it yourself:</strong> the <strong>⬇ CSV</strong> button below the filters exports the rows currently shown — date, posted time, odds, edge, model probability, result, CLV, P&amp;L. Leave the filters on "All" (the default) to export the complete log, and diff it against any snapshot of this page: rows are added, never removed.
+    </div>
     <details class="record-notes" style="margin-top:10px;font-size:11px;color:var(--text-3);line-height:1.55">
       <summary style="cursor:pointer;font-weight:600;color:var(--text-2)">Record notes — known imperfections in this data</summary>
       <ul style="margin:8px 0 0 16px;padding:0">
@@ -145,9 +148,9 @@
       <button class="filter-btn" data-filter="W" aria-pressed="false">Wins</button>
       <button class="filter-btn" data-filter="L" aria-pressed="false">Losses</button>
       <div class="filter-sep"></div>
-      <button class="filter-btn" data-filter="strong" aria-pressed="false">8pp+ Edge</button>
-      <button class="filter-btn" data-filter="value" aria-pressed="false">5–8pp Edge</button>
-      <button class="filter-btn" data-filter="marginal-edge" aria-pressed="false">2–5pp Edge</button>
+      <button class="filter-btn" data-filter="strong" aria-pressed="false" title="Picks with 8pp+ model edge at posting">Strong (8pp+)</button>
+      <button class="filter-btn" data-filter="value" aria-pressed="false" title="Picks with 4–8pp model edge at posting">Value (4–8pp)</button>
+      <button class="filter-btn" data-filter="marginal-edge" aria-pressed="false" title="Picks below the current 4pp posting threshold (earlier-season minimums were lower)">Below (&lt;4pp)</button>
       <div class="filter-sep"></div>
       <button class="filter-btn win-btn active" data-window="all" aria-pressed="true" title="All settled picks">All time</button>
       <button class="filter-btn win-btn" data-window="7"  aria-pressed="false" title="Picks from the last 7 days">Last 7d</button>
@@ -292,6 +295,10 @@ async function loadAll() {
       !alreadyInRows.has(`${r.game}|${(r.side||'').toUpperCase()}`)
     );
     if (newSettled.length > 0) {
+      // Mark client-side-settled rows so the table can flag them as provisional —
+      // totals shift intraday as these land, and a skeptic comparing snapshots
+      // deserves to see which rows aren't in the official log yet.
+      newSettled.forEach(r => { r._provisional = true; });
       allRows = [...allRows, ...newSettled];
     }
     const pAugmented = applyTodayToPerf(p, newSettled);
@@ -369,7 +376,7 @@ function _filterLabel() {
   if (activeWindow !== 'all') lab.push('Last ' + activeWindow + ' days');
   if (activeMonth !== 'all') { const [y, m] = activeMonth.split('-'); lab.push(new Date(y, +m - 1, 1).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })); }
   if (activeFilter === 'W') lab.push('Wins'); else if (activeFilter === 'L') lab.push('Losses');
-  else if (activeFilter === 'strong') lab.push('8pp+ edge'); else if (activeFilter === 'value') lab.push('5–8pp edge'); else if (activeFilter === 'marginal-edge') lab.push('2–5pp edge');
+  else if (activeFilter === 'strong') lab.push('Strong (8pp+)'); else if (activeFilter === 'value') lab.push('Value (4–8pp)'); else if (activeFilter === 'marginal-edge') lab.push('Below (<4pp)');
   if (activeSideFilter !== 'all') lab.push(({ dog: 'Dogs', fav: 'Favs', home: 'Home', away: 'Away' })[activeSideFilter] || activeSideFilter);
   if (activeThreshold > 0) lab.push('≥' + (activeThreshold * 100).toFixed(activeThreshold % 0.01 < 0.001 ? 0 : 1) + 'pp edge');
   if (activeSearch) lab.push('“' + activeSearch + '”');
@@ -453,9 +460,11 @@ function getFilteredSorted(rows) {
   if (activeThreshold > 0) r = r.filter(x => (parseFloat(x.edge) || 0) >= activeThreshold);
   if (activeFilter === 'W') r = r.filter(x => x.result === 'W');
   else if (activeFilter === 'L') r = r.filter(x => x.result === 'L');
+  // Bands match the Tier badges exactly (Strong ≥8pp · Value 4–8pp · Below <4pp) —
+  // three different edge taxonomies used to coexist on this page.
   else if (activeFilter === 'strong')        r = r.filter(x => x.edge != null && x.edge >= 0.08);
-  else if (activeFilter === 'value')         r = r.filter(x => x.edge != null && x.edge >= 0.05 && x.edge < 0.08);
-  else if (activeFilter === 'marginal-edge') r = r.filter(x => x.edge != null && x.edge >= 0.02 && x.edge < 0.05);
+  else if (activeFilter === 'value')         r = r.filter(x => x.edge != null && x.edge >= 0.04 && x.edge < 0.08);
+  else if (activeFilter === 'marginal-edge') r = r.filter(x => x.edge != null && x.edge < 0.04);
   // Side filter (from dropdown)
   if (activeSideFilter === 'dog')  r = r.filter(x => x.odds != null && x.odds > 0);
   else if (activeSideFilter === 'fav')  r = r.filter(x => x.odds != null && x.odds <= 0);
@@ -535,11 +544,17 @@ function renderTable(rows) {
       : edgeVal >= 0.04
       ? 'background:rgba(34,197,94,.08);color:var(--green);border:1px solid rgba(34,197,94,.20)'
       : 'background:rgba(255,255,255,.04);color:var(--text-4);border:1px solid var(--border)';
-    const tierHTML = `<span style="font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:4px;${tierStyle}">${tierLabel}</span>`;
+    const tierTitle = tierLabel === 'Strong' ? '8pp+ model edge at posting'
+      : tierLabel === 'Value' ? '4–8pp model edge at posting'
+      : 'Below the current 4pp posting threshold — earlier-season picks were posted at lower minimums (see Record notes)';
+    const tierHTML = `<span title="${tierTitle}" style="cursor:help;font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:4px;${tierStyle}">${tierLabel}</span>`;
     // Row tinting: Strong (≥8pp) or Value (≥4pp, current posting threshold)
     const rowClass = edgeVal >= 0.08 ? 'row-strong' : edgeVal >= 0.04 ? 'row-value' : '';
+    const provisionalHTML = r._provisional
+      ? `<span title="Provisional — settled in your browser from the live scoreboard; enters the official log at tonight's settle run" style="cursor:help;color:var(--amber);font-size:9px;margin-left:4px">● prov.</span>`
+      : '';
     return `<tr class="${rowClass}">
-      <td data-label="Date" style="color:var(--text-4);font-family:var(--font-mono);font-size:11px">${dateStr}${r.posted_at_ct ? `<div style="font-size:9px;color:var(--text-4);opacity:.7" title="Timestamp this pick was logged, before first pitch${r.posted_at ? ' (UTC: ' + _escAttr(r.posted_at) + ')' : ''}">📌 ${_escAttr(r.posted_at_ct)}</div>` : ''}</td>
+      <td data-label="Date" style="color:var(--text-4);font-family:var(--font-mono);font-size:11px">${dateStr}${provisionalHTML}${r.posted_at_ct ? `<div style="font-size:9px;color:var(--text-4);opacity:.7" title="Timestamp this pick was logged, before first pitch${r.posted_at ? ' (UTC: ' + _escAttr(r.posted_at) + ')' : ''}">📌 ${_escAttr(r.posted_at_ct)}</div>` : ''}</td>
       <td data-label="Game" class="hide-sm" style="color:var(--text-2);font-weight:500">${r.game || '—'}</td>
       <td data-label="Pick">${r.pick || '—'}</td>
       <td data-label="Odds" style="font-family:var(--font-mono);font-size:11px">${formatOdds(r.odds)}</td>

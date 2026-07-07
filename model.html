@@ -89,12 +89,13 @@
 <div class="quick-summary">
   <h1 class="qs-title">How Independent Baseball Projections Works — At a Glance</h1>
   <ul class="qs-list">
-    <li>Projects expected runs for each team using a <strong>Dual-Poisson model</strong> calibrated on park, weather, pitcher quality, and lineup data</li>
-    <li><strong>30+ signals</strong> refine the base win probability through three pathways — run-environment inputs to the run rates, log-odds adjustments to the win probability, and confidence-shrinkage multipliers (pitcher quality, lineup confirmation, bullpen form, BvP, precipitation, line movement, and more)</li>
-    <li><strong>Platt-scaled</strong> on a 7,359-game 2022–24 out-of-sample backtest, lightly blended with 2026 live results as the live sample grows</li>
-    <li><strong>Edge = blended model probability − Pinnacle no-vig price.</strong> Only picks where the model sees ≥4pp mispricing are posted as official plays. <em>Pure model probability</em> (no market input) is tracked separately for calibration — never using market-blended numbers to evaluate model skill.</li>
-    <li>Every pick logged with timestamp before first pitch. <strong>CLV tracked to closing line</strong> to validate the signal is real, not luck</li>
+    <li><strong>We project how many runs each team should score tonight</strong> — starting pitchers, lineups, ballpark, weather — and turn that into a win probability for each side. (The engine: a Dual-Poisson run model.)</li>
+    <li><strong>We check our numbers against thousands of past games</strong> and correct any bias, so when the model says &ldquo;60%,&rdquo; that side really wins about 60% of the time. (Technically: Platt calibration on a 7,359-game 2022&ndash;24 backtest, blended with 2026 live results as they accrue.)</li>
+    <li><strong>Then we compare our number to the sportsbook's price</strong> with the house's cut removed (the &ldquo;no-vig&rdquo; line, benchmarked to Pinnacle). Most nights they agree &mdash; no bet.</li>
+    <li><strong>When our probability beats the price by at least 4 points</strong>, we post the pick &mdash; with the odds, our number, the market's number, and a suggested stake.</li>
+    <li><strong>Every pick is logged before first pitch and never deleted.</strong> We also track whether the market moves toward our picks by closing time (CLV) &mdash; the test we trust most, and one we won't claim victory on until the data agrees.</li>
   </ul>
+  <div style="font-size:11px;color:var(--text-4);margin-top:8px">Want the machinery? The pipeline, math, and full signal catalog are below &mdash; the collapsed sections open on tap.</div>
 </div>
 
 <!-- PAGE NAV -->
@@ -103,9 +104,9 @@
   <span class="pn-sep">·</span>
   <a class="pn-link" href="#section-math">Math</a>
   <span class="pn-sep">·</span>
-  <a class="pn-link" href="#section-signals">Adjustments</a>
+  <a class="pn-link" href="#section-signals">Signal Importance</a>
   <span class="pn-sep">·</span>
-  <a class="pn-link" href="#section-features">Features</a>
+  <a class="pn-link" href="#section-features">Signal Catalog</a>
   <span class="pn-sep">·</span>
   <a class="pn-link" href="#section-example">Example</a>
   <span class="pn-sep">·</span>
@@ -179,7 +180,120 @@
 </div>
 
 <!-- PIPELINE -->
-<div class="section" id="section-pipeline">
+<div class="section" id="section-example">
+  <h2 class="sec-lbl">From Model to Pick — A Practical Example</h2>
+  <div class="example-card">
+    <div class="ex-row">
+      <div class="ex-step">
+        <div class="ex-num">1</div>
+        <div class="ex-content">
+          <div class="ex-title">Dual-Poisson base</div>
+          <div class="ex-text">Team RS/RA, park factor, and starter xFIP generate λ_home = 4.2 runs, λ_away = 3.8 runs → <strong>P(home wins) = 53.1%</strong></div>
+        </div>
+      </div>
+      <div class="ex-step">
+        <div class="ex-num">2</div>
+        <div class="ex-content">
+          <div class="ex-title">30+ signals</div>
+          <div class="ex-text">Home starter Stuff+ 118 (+0.3pp), lineup quality +0.8pp, TTO penalty −0.4pp, umpire wide zone +0.2pp, BvP +0.5pp → net <strong>+1.4pp adjustment</strong></div>
+        </div>
+      </div>
+      <div class="ex-step">
+        <div class="ex-num">3</div>
+        <div class="ex-content">
+          <div class="ex-title">Platt calibration</div>
+          <div class="ex-text">Logit-scaled by the fitted Platt calibration → <strong>final model probability: 54.5%</strong></div>
+        </div>
+      </div>
+      <div class="ex-step">
+        <div class="ex-num">4</div>
+        <div class="ex-content">
+          <div class="ex-title">Market comparison</div>
+          <div class="ex-text">Pinnacle no-vig says home team wins <strong>50.3%</strong>. Model says 54.5%. Gap = <strong>+4.2pp edge</strong> → pick is posted at +148 best available odds.</div>
+        </div>
+      </div>
+    </div>
+    <div class="ex-note">This pick's signal breakdown appears in the Details section of each pick card on the Today's Picks page. CLV is tracked at close to verify the market agreed with the model's direction.</div>
+  </div>
+</div>
+
+<!-- VALIDATION -->
+<div class="section" id="section-validation">
+  <h2 class="sec-lbl">Out-of-Sample Backtest (Hypothetical) — 2022–2024 · Flat $100/Bet · 4pp+ Edge</h2>
+  <div style="font-size:11px;color:var(--text-3);line-height:1.6;margin:0 0 14px;padding:9px 12px;border:1px solid rgba(245,158,11,0.18);background:rgba(245,158,11,0.05);border-radius:8px"><strong style="color:#fbbf24">These are hypothetical backtest results.</strong> The 2022–2024 figures are simulated on historical data with the current model design — not money actually wagered — and the model was developed knowing this period, so live results will differ. For the real, forward-tested record see <a href="performance.html" style="color:var(--text-2)">Model Dashboard</a> and <a href="history.html" style="color:var(--text-2)">Pick History</a>. Past performance does not guarantee future results.</div>
+  <div class="val-wrap">
+
+    <div class="val-metrics">
+      <div class="val-card">
+        <div class="val-lbl">Games<br>Backtested</div>
+        <div class="val-num i">7,359</div>
+        <div class="val-sub">2022–2024 · OOS only</div>
+      </div>
+      <div class="val-card">
+        <div class="val-lbl">Sharpe<br>Ratio</div>
+        <div class="val-num a">1.82</div>
+        <div class="val-sub">annualized · risk-adj.</div>
+      </div>
+      <div class="val-card">
+        <div class="val-lbl">Max<br>Drawdown</div>
+        <div class="val-num r">−12.4u</div>
+        <div class="val-sub">peak-to-trough worst run</div>
+      </div>
+      <div class="val-card">
+        <div class="val-lbl">Brier<br>Score</div>
+        <div class="val-num w">0.234</div>
+        <div class="val-sub">vs. 0.250 market · ↓ better</div>
+      </div>
+    </div>
+
+    <div class="roi-block">
+      <div class="roi-title">Backtested ROI by Season — 2022–2024 (Hypothetical)</div>
+      <div class="roi-sub">Hypothetical backtest. Flat $100/bet · 4pp+ edge signals only · vs. −4.0% baseline (bet every game, full vig)</div>
+      <div class="roi-row">
+        <div class="roi-year">2022</div>
+        <div class="roi-bar-wrap"><div class="roi-fill pos" style="width:6.7%"></div></div>
+        <div class="roi-pct pos">+0.7%</div>
+        <div class="roi-meta">975 bets · +6.8u</div>
+      </div>
+      <div class="roi-row">
+        <div class="roi-year">2023</div>
+        <div class="roi-bar-wrap"><div class="roi-fill pos" style="width:87.5%"></div></div>
+        <div class="roi-pct pos">+9.1%</div>
+        <div class="roi-meta">1,093 bets · +99.5u</div>
+      </div>
+      <div class="roi-row">
+        <div class="roi-year">2024</div>
+        <div class="roi-bar-wrap"><div class="roi-fill pos" style="width:100%"></div></div>
+        <div class="roi-pct pos">+10.4%</div>
+        <div class="roi-meta">977 bets · +101.6u</div>
+      </div>
+      <div class="roi-row baseline">
+        <div class="roi-year dim">Baseline</div>
+        <div class="roi-bar-wrap"><div class="roi-fill neg" style="width:38.5%"></div></div>
+        <div class="roi-pct neg">−4.0%</div>
+        <div class="roi-meta" style="color:var(--text-4)">all games · vig drain</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- OTHER MARKETS -->
+<div class="section" id="section-limitations">
+  <h2 class="sec-lbl">Honest Limitations — What This Model Does &amp; Doesn't Do</h2>
+  <div class="quick-summary" style="background:rgba(245,158,11,0.05);border-color:rgba(245,158,11,0.18)">
+    <ul class="qs-list">
+      <li><strong>Backtests flatter themselves.</strong> The 2022–2024 numbers are hypothetical and were tuned over the same period they report. The live, timestamped record is the real test — judge the model there.</li>
+      <li><strong>The live sample is still small.</strong> A few months of forward picks can't yet confirm a durable edge; expect wide swings.</li>
+      <li><strong>CLV is still being validated.</strong> Closing-line value is the durability signal we trust most, but the live sample is thin and not yet conclusive — we'd rather show it honestly than over-claim.</li>
+      <li><strong>Market-informed, not independent.</strong> The model uses the sharp market as both a stabilizing input and a benchmark, so by design it won't diverge wildly from Pinnacle.</li>
+      <li><strong>Blind to late news.</strong> Once lineups post, the model doesn't react to scratches, first-pitch weather swings, or in-game information.</li>
+      <li><strong>A real edge still loses often.</strong> Even genuine value loses a large share of the time — only flat, disciplined, bankroll-aware staking survives the variance.</li>
+    </ul>
+  </div>
+</div>
+
+  <div class="section" id="section-pipeline">
   <h2 class="sec-lbl">Inference Pipeline — Input → Transform → Output at Each Stage</h2>
   <div class="pipeline">
 
@@ -381,8 +495,9 @@
 </div>
 
 <!-- SIGNAL IMPORTANCE -->
-<div class="section" id="section-signals">
-  <h2 class="sec-lbl">Signal Importance — Avg. Abs. Log-Odds Contribution per Factor (αᵢ) · Relative Magnitudes Approximate · v2 = 2026 update</h2>
+<div class="section math-coll" id="section-signals">
+  <h2 class="sec-lbl coll-trigger" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleMathSection(this)">Signal Importance — Which Factors Move the Number<span class="coll-arrow-m">▾</span></h2>
+  <div class="coll-body-m">
   <div style="font-size:11px;color:var(--text-3);line-height:1.6;margin:-6px 0 16px;padding:9px 12px;border:1px solid rgba(245,158,11,0.18);background:rgba(245,158,11,0.05);border-radius:8px">
     The model's 30+ signals flow through three pathways — run-environment inputs to the Poisson run rates, log-odds adjustments to the win probability, and confidence-shrinkage multipliers. They are grouped by domain below for readability; importances reflect the model's <em>design</em> and magnitudes are approximate. Several factors marked <strong>inactive</strong> below do not currently affect live picks — retired after backtest validation (bullpen fatigue, pitcher-form slope) or awaiting data wiring (catcher framing, bullpen availability, career H2H matchup). In practice, live discrimination is concentrated in the pitcher-xFIP and run-environment core; the situational adjustments are deliberately small.
   </div>
@@ -449,11 +564,14 @@
     </div>
 
   </div>
+
+  </div>
 </div>
 
 <!-- FEATURE ENGINEERING -->
-<div class="section" id="section-features">
-  <h2 class="sec-lbl">Feature Engineering — 30+ Signals (v2/v3: 10 new signals added 2026 · a few currently inactive, see note above)</h2>
+<div class="section math-coll" id="section-features">
+  <h2 class="sec-lbl coll-trigger" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleMathSection(this)">Feature Engineering — The Full Signal Catalog (some currently inactive)<span class="coll-arrow-m">▾</span></h2>
+  <div class="coll-body-m">
   <div class="feature-grid">
 
     <div class="feat-col">
@@ -517,108 +635,11 @@
     </div>
 
   </div>
+
+  </div>
 </div>
 
 <!-- FROM MODEL TO PICK -->
-<div class="section" id="section-example">
-  <h2 class="sec-lbl">From Model to Pick — A Practical Example</h2>
-  <div class="example-card">
-    <div class="ex-row">
-      <div class="ex-step">
-        <div class="ex-num">1</div>
-        <div class="ex-content">
-          <div class="ex-title">Dual-Poisson base</div>
-          <div class="ex-text">Team RS/RA, park factor, and starter xFIP generate λ_home = 4.2 runs, λ_away = 3.8 runs → <strong>P(home wins) = 53.1%</strong></div>
-        </div>
-      </div>
-      <div class="ex-step">
-        <div class="ex-num">2</div>
-        <div class="ex-content">
-          <div class="ex-title">30+ signals</div>
-          <div class="ex-text">Home starter Stuff+ 118 (+0.3pp), lineup quality +0.8pp, TTO penalty −0.4pp, umpire wide zone +0.2pp, BvP +0.5pp → net <strong>+1.4pp adjustment</strong></div>
-        </div>
-      </div>
-      <div class="ex-step">
-        <div class="ex-num">3</div>
-        <div class="ex-content">
-          <div class="ex-title">Platt calibration</div>
-          <div class="ex-text">Logit-scaled by the fitted Platt calibration → <strong>final model probability: 54.5%</strong></div>
-        </div>
-      </div>
-      <div class="ex-step">
-        <div class="ex-num">4</div>
-        <div class="ex-content">
-          <div class="ex-title">Market comparison</div>
-          <div class="ex-text">Pinnacle no-vig says home team wins <strong>50.3%</strong>. Model says 54.5%. Gap = <strong>+4.2pp edge</strong> → pick is posted at +148 best available odds.</div>
-        </div>
-      </div>
-    </div>
-    <div class="ex-note">This pick's signal breakdown appears in the Details section of each pick card on the Today's Picks page. CLV is tracked at close to verify the market agreed with the model's direction.</div>
-  </div>
-</div>
-
-<!-- VALIDATION -->
-<div class="section" id="section-validation">
-  <h2 class="sec-lbl">Out-of-Sample Backtest (Hypothetical) — 2022–2024 · Flat $100/Bet · 4pp+ Edge</h2>
-  <div style="font-size:11px;color:var(--text-3);line-height:1.6;margin:0 0 14px;padding:9px 12px;border:1px solid rgba(245,158,11,0.18);background:rgba(245,158,11,0.05);border-radius:8px"><strong style="color:#fbbf24">These are hypothetical backtest results.</strong> The 2022–2024 figures are simulated on historical data with the current model design — not money actually wagered — and the model was developed knowing this period, so live results will differ. For the real, forward-tested record see <a href="performance.html" style="color:var(--text-2)">Model Dashboard</a> and <a href="history.html" style="color:var(--text-2)">Pick History</a>. Past performance does not guarantee future results.</div>
-  <div class="val-wrap">
-
-    <div class="val-metrics">
-      <div class="val-card">
-        <div class="val-lbl">Games<br>Backtested</div>
-        <div class="val-num i">7,359</div>
-        <div class="val-sub">2022–2024 · OOS only</div>
-      </div>
-      <div class="val-card">
-        <div class="val-lbl">Sharpe<br>Ratio</div>
-        <div class="val-num a">1.82</div>
-        <div class="val-sub">annualized · risk-adj.</div>
-      </div>
-      <div class="val-card">
-        <div class="val-lbl">Max<br>Drawdown</div>
-        <div class="val-num r">−12.4u</div>
-        <div class="val-sub">peak-to-trough worst run</div>
-      </div>
-      <div class="val-card">
-        <div class="val-lbl">Brier<br>Score</div>
-        <div class="val-num w">0.234</div>
-        <div class="val-sub">vs. 0.250 market · ↓ better</div>
-      </div>
-    </div>
-
-    <div class="roi-block">
-      <div class="roi-title">Backtested ROI by Season — 2022–2024 (Hypothetical)</div>
-      <div class="roi-sub">Hypothetical backtest. Flat $100/bet · 4pp+ edge signals only · vs. −4.0% baseline (bet every game, full vig)</div>
-      <div class="roi-row">
-        <div class="roi-year">2022</div>
-        <div class="roi-bar-wrap"><div class="roi-fill pos" style="width:6.7%"></div></div>
-        <div class="roi-pct pos">+0.7%</div>
-        <div class="roi-meta">975 bets · +6.8u</div>
-      </div>
-      <div class="roi-row">
-        <div class="roi-year">2023</div>
-        <div class="roi-bar-wrap"><div class="roi-fill pos" style="width:87.5%"></div></div>
-        <div class="roi-pct pos">+9.1%</div>
-        <div class="roi-meta">1,093 bets · +99.5u</div>
-      </div>
-      <div class="roi-row">
-        <div class="roi-year">2024</div>
-        <div class="roi-bar-wrap"><div class="roi-fill pos" style="width:100%"></div></div>
-        <div class="roi-pct pos">+10.4%</div>
-        <div class="roi-meta">977 bets · +101.6u</div>
-      </div>
-      <div class="roi-row baseline">
-        <div class="roi-year dim">Baseline</div>
-        <div class="roi-bar-wrap"><div class="roi-fill neg" style="width:38.5%"></div></div>
-        <div class="roi-pct neg">−4.0%</div>
-        <div class="roi-meta" style="color:var(--text-4)">all games · vig drain</div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- OTHER MARKETS -->
 <div class="section math-coll">
   <h2 class="sec-lbl coll-trigger" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleMathSection(this)">Other Markets — Run Line &amp; Over/Under Calibration<span class="coll-arrow-m">▾</span></h2>
   <div class="coll-body-m">
@@ -684,21 +705,7 @@ Bias by total line:
 </div>
 
 <!-- LIMITATIONS -->
-<div class="section" id="section-limitations">
-  <h2 class="sec-lbl">Honest Limitations — What This Model Does &amp; Doesn't Do</h2>
-  <div class="quick-summary" style="background:rgba(245,158,11,0.05);border-color:rgba(245,158,11,0.18)">
-    <ul class="qs-list">
-      <li><strong>Backtests flatter themselves.</strong> The 2022–2024 numbers are hypothetical and were tuned over the same period they report. The live, timestamped record is the real test — judge the model there.</li>
-      <li><strong>The live sample is still small.</strong> A few months of forward picks can't yet confirm a durable edge; expect wide swings.</li>
-      <li><strong>CLV is still being validated.</strong> Closing-line value is the durability signal we trust most, but the live sample is thin and not yet conclusive — we'd rather show it honestly than over-claim.</li>
-      <li><strong>Market-informed, not independent.</strong> The model uses the sharp market as both a stabilizing input and a benchmark, so by design it won't diverge wildly from Pinnacle.</li>
-      <li><strong>Blind to late news.</strong> Once lineups post, the model doesn't react to scratches, first-pitch weather swings, or in-game information.</li>
-      <li><strong>A real edge still loses often.</strong> Even genuine value loses a large share of the time — only flat, disciplined, bankroll-aware staking survives the variance.</li>
-    </ul>
-  </div>
-</div>
-
-  <!-- EMAIL CAPTURE -->
+<!-- EMAIL CAPTURE -->
   <section class="email-bar" id="email-capture">
     <div class="eb-copy"><strong>The day's picks in your inbox every morning.</strong> One email a day, only on days the model finds a bet. Free for all of 2026 while the public record builds.</div>
     <form class="ec-form eb-form" id="ec-form" onsubmit="handleEmailSubmit(event)">

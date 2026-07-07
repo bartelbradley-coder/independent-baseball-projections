@@ -1027,10 +1027,15 @@ details[open] .faq-q::after { content: '−'; }
 .ppd-text strong { color: var(--amber); font-weight: 600; }
 
 .preview-pick-card {
-  background: var(--bg-card); border: 1px solid var(--border);
+  background: var(--bg-card);
+  /* dashed + slightly muted: "preliminary" should be felt, not just read —
+     these cards must not look like the homepage's bettable rows */
+  border: 1px dashed rgba(255,255,255,0.16);
   border-radius: 10px; padding: 16px 18px; margin-bottom: 10px;
   display: flex; align-items: flex-start; gap: 14px;
+  opacity: .92;
 }
+.preview-pick-card .ppc-edge { color: var(--amber); }
 .ppc-left { flex: 1; min-width: 0; }
 .ppc-team {
   font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700;

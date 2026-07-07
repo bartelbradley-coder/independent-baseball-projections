@@ -237,7 +237,20 @@ async function loadPreview() {
         <a href="index.html" style="color:var(--amber);margin-left:6px;">→ View today's picks</a>
       </div>` : '';
 
-    container.innerHTML = todayBanner + picks.map(p => {
+    // Coverage line — "1 signal from 14 games" tells the reader the model looked
+    // at everything and found little, which is the honest (and reassuring) story.
+    const nSig = data.signal_count != null ? data.signal_count : picks.length;
+    const coverageHTML = data.games_in_cache
+      ? `<div style="font-size:11px;color:var(--text-3);margin-bottom:12px">`
+        + `<strong>${nSig}</strong> early signal${nSig !== 1 ? 's' : ''} from `
+        + `<strong>${data.games_in_cache}</strong> games with lines — the rest show no edge at opening prices.</div>`
+      : '';
+    // The feed ships its own honesty note (shrinkage, refresh cadence) — render it.
+    const feedNoteHTML = data.note
+      ? `<div style="font-size:10.5px;color:var(--text-4);margin-bottom:14px;line-height:1.5">${String(data.note).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}</div>`
+      : '';
+
+    container.innerHTML = todayBanner + coverageHTML + feedNoteHTML + picks.map(p => {
       const edge    = p.edge ? (p.edge * 100).toFixed(1) : null;
       const odds    = formatOdds(p.odds);
       const book    = p.best_book || p.book || '';
@@ -292,6 +305,9 @@ async function loadPreview() {
 }
 
 loadPreview();
+// The copy promises 7/9/11 PM CT refreshes — actually pick them up. Without this
+// a tab opened at 6:55 PM showed the empty state forever.
+setInterval(loadPreview, 5 * 60 * 1000);
 </script>
 </body>
 </html>

@@ -237,6 +237,9 @@
             </div>
           </div>
           <div id="lb-band" style="margin-top:14px"></div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:12px;line-height:1.6;border-top:1px solid var(--border);padding-top:10px">
+            <strong>How to square this with flat CLV:</strong> this test says our results have outrun luck <em>at the prices we got</em> — but the market hasn't yet moved toward our picks by close (CLV), which means the market doesn't yet agree we had an edge at bet time. Both can be true on a small sample; we treat the edge as unproven until they converge.
+          </div>
           <div style="font-size:9px;color:var(--text-4);margin-top:10px;line-height:1.5">
             Monte Carlo over our exact bets and prices — only the outcomes are randomized, each at its line's market-implied probability. A genuine same-sample test of selection skill vs. luck; makes no assumptions about games we didn't bet.
           </div>
@@ -259,7 +262,19 @@
     </div>
   </div>
 
-  <!-- CHANGE 3: Team + Pitcher stats as two-column grid -->
+  <!-- Team + Pitcher splits — collapsed: min-3-pick ROI splits are variance,
+       not signal, and a "+129% ROI pitcher" invites exactly the wrong inference. -->
+  <div class="section">
+    <div class="card" style="padding:16px 20px">
+      <div class="collapsible-section" id="tp-collapsible">
+        <div class="collapsible-trigger" role="button" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="toggleSection('tp-body', 'tp-collapsible')">
+          Team &amp; pitcher splits — fun, not signal <span class="coll-arrow">▾</span>
+        </div>
+        <div id="tp-body" class="collapsible-content">
+          <div style="font-size:11px;color:var(--amber);line-height:1.6;margin-bottom:12px">
+            ⚠ Tiny samples (min. 3 picks). A 3–0 pitcher at +129% ROI is noise, not a pattern —
+            nothing here feeds the model or should feed your bets. Shown because we show everything.
+          </div>
   <div class="two-col-stats" id="team-pitcher-section">
 
     <!-- Per-Team Record -->
@@ -309,6 +324,10 @@
     </div>
 
   </div><!-- end two-col-stats -->
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- CHANGE 4: Calibration — collapsible -->
   <div class="section" id="calib-section" style="display:none">
@@ -580,6 +599,21 @@ function renderValidationHeader(p, h) {
     if (r.result === 'L') { runLoss++; longestLoss = Math.max(longestLoss, runLoss); } else runLoss = 0;
   });
 
+  // Fold hierarchy: the honest numbers get the big type. One verdict tile says
+  // the sentence the whole page stands behind; beat-close is promoted from the
+  // risk strip (it's the decision-relevant validation stat — avg CLV moves to
+  // the strip); the $-bankroll tile is demoted to its chart section below.
+  const _roiSig    = _roiCI.lo != null && _roiCI.lo > 0;
+  const _clvAgrees = _cv.tone === 'pos';
+  const _verdictTxt = _roiSig && _clvAgrees ? 'Profitable · market-confirmed'
+                    : _roiSig ? 'Profitable · unproven'
+                    : 'Emerging';
+  const _verdictSub = _roiSig && _clvAgrees
+    ? 'ROI positive and the market moves toward our picks'
+    : _roiSig ? 'market agreement (CLV) still flat — edge not yet proven'
+    : 'sample still building — judge the record, not a claim';
+  const _bcTone = _clvAgrees ? 'green' : 'white';
+
   document.getElementById('headline-stats').innerHTML = `
     <div class="hl-stat">
       <div class="hl-val white">${s.wins || 0}W–${s.losses || 0}L</div>
@@ -589,23 +623,23 @@ function renderValidationHeader(p, h) {
     <div class="hl-stat featured">
       <div class="hl-val ${(s.units || 0) >= 0 ? 'green' : 'red'}">${fmtU(s.units)}</div>
       <div class="hl-lbl">Units P&amp;L</div>
-      <div class="hl-sub" title="${_roiCI.lo != null ? 'Likely true long-run ROI/bet: ' + pct(_roiCI.lo) + ' to ' + pct(_roiCI.hi) + ' (95% CI over ' + _roiCI.n + ' bets) — see the risk strip below.' : ''}">${pct(s.roi)} ROI / bet</div>
-    </div>
-    <div class="hl-stat ${_clvFeat}">
-      <div class="hl-val ${_clvCol}">${pct(clv)}</div>
-      <div class="hl-lbl">Avg CLV</div>
-      <div class="hl-sub">n=${p && p.clv_count || 0} · ${_clvSub}</div>
+      <div class="hl-sub">${pct(s.roi)} ROI / bet${_roiCI.lo != null ? ' · plausibly ' + pct(_roiCI.lo) + ' to ' + pct(_roiCI.hi) : ''}</div>
     </div>
     <div class="hl-stat">
-      <div class="hl-val amber">$${Math.round(currentBank).toLocaleString()}</div>
-      <div class="hl-lbl">$5,000 Bankroll (flat)</div>
-      <div class="hl-sub">${parseFloat(bankGrowth) >= 0 ? '+' : ''}${bankGrowth}% · $100/bet = 2% of bankroll</div>
+      <div class="hl-val ${_bcTone}">${beatClose}</div>
+      <div class="hl-lbl">Picks Beating the Close</div>
+      <div class="hl-sub">the market-agreement test · n=${_cv.n || 0}</div>
+    </div>
+    <div class="hl-stat ${_roiSig && _clvAgrees ? 'featured' : ''}">
+      <div class="hl-val ${_roiSig && _clvAgrees ? 'green' : 'white'}" style="font-size:17px;line-height:1.25">${_verdictTxt}</div>
+      <div class="hl-lbl">Edge Verdict</div>
+      <div class="hl-sub">${_verdictSub}</div>
     </div>
     <div class="hl-risk-strip" role="group" aria-label="Risk and validation metrics">
-      <span class="hri"><span class="hri-lbl">Beat close</span><span class="hri-val">${beatClose}</span></span>
-      <span class="hri"><span class="hri-lbl">ROI 95% CI</span><span class="hri-val">${_roiCI.lo != null ? pct(_roiCI.lo) + ' … ' + pct(_roiCI.hi) : '—'}</span></span>
+      <span class="hri"><span class="hri-lbl">Avg CLV</span><span class="hri-val">${pct(clv)} · ${_clvSub}</span></span>
       <span class="hri"><span class="hri-lbl">Max drawdown</span><span class="hri-val">${fmtU(maxDD)}</span></span>
       <span class="hri"><span class="hri-lbl">Longest losing streak</span><span class="hri-val">${longestLoss || '—'}</span></span>
+      <span class="hri"><span class="hri-lbl">Flat $5,000 bankroll</span><span class="hri-val">$${Math.round(currentBank).toLocaleString()} (${parseFloat(bankGrowth) >= 0 ? '+' : ''}${bankGrowth}%)</span></span>
     </div>`;
 }
 
@@ -751,15 +785,38 @@ function renderBankrollChart(h) {
   const kellyRoi  = ((kellyEnd - START) / START * 100).toFixed(1);
   const kellyCol  = kellyEnd >= START ? '#818cf8' : 'var(--red)';  // indigo for Kelly line
 
+  // Axes + drawdown annotation. Labels are HTML (not SVG text) because the SVG
+  // stretches with preserveAspectRatio:none and would distort glyphs. The worst
+  // peak-to-trough stretch is marked so the ride is visible, not just the destination.
+  let _pk = START, _ddWorst = 0, _ddIdx = 0;
+  curve.forEach((v, i) => { _pk = Math.max(_pk, v); if (v - _pk < _ddWorst) { _ddWorst = v - _pk; _ddIdx = i; } });
+  const ddPt = pts[_ddIdx] || pts[0];
+  const yPct = v => (yFor(v) / H * 100).toFixed(1);
+  const _fmtD = d => { const [y, m, day] = String(d).split('-'); const mo = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m] || ''; return mo + ' ' + (+day); };
+  const gridVals = [maxV, START, minV].filter((v, i, a) => a.indexOf(v) === i);
+  const gridLines = gridVals.map(v =>
+    `<line x1="0" y1="${yFor(v).toFixed(1)}" x2="${W}" y2="${yFor(v).toFixed(1)}" stroke="rgba(255,255,255,0.10)" stroke-width="1"${v === START ? ' stroke-dasharray="4 3"' : ''}/>`).join('');
+  const gridLabels = gridVals.map(v =>
+    `<span style="position:absolute;left:2px;top:${yPct(v)}%;transform:translateY(-55%);font-size:9px;font-family:var(--font-mono);color:var(--text-4);background:rgba(11,15,26,.75);padding:0 4px;border-radius:3px;pointer-events:none">$${Math.round(v).toLocaleString()}</span>`).join('');
+
   el.innerHTML = `
-    <svg role="img" aria-label="Bankroll growth over the season: flat $100 per bet versus fractional Kelly staking" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:100px">
-      <line x1="0" y1="${zeroY}" x2="${W}" y2="${zeroY}" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="4 3"/>
+    <div style="position:relative">
+    <svg role="img" aria-label="Bankroll growth over the season: flat $100 per bet versus fractional Kelly staking" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:110px">
+      ${gridLines}
       <path d="${areaPath}" fill="${col}" fill-opacity="0.07"/>
       <path d="${linePath}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"/>
       <path d="${kellyPath}" fill="none" stroke="${kellyCol}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="5 3"/>
+      <circle cx="${ddPt[0]}" cy="${ddPt[1]}" r="3" fill="none" stroke="var(--red)" stroke-width="1.5"/>
       <circle cx="${lx}" cy="${ly}" r="3.5" fill="${col}"/>
       <circle cx="${klx}" cy="${kly}" r="3.5" fill="${kellyCol}"/>
     </svg>
+    ${gridLabels}
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:9px;font-family:var(--font-mono);color:var(--text-4);margin-top:3px">
+      <span>${_fmtD(settled[0].date)}</span>
+      <span style="color:var(--red)">○ worst stretch ${fmtU(_ddWorst / 100)} ≈ $${Math.abs(Math.round(_ddWorst)).toLocaleString()} off peak</span>
+      <span>${_fmtD(settled[settled.length - 1].date)}</span>
+    </div>
     <div class="bankroll-meta" style="margin-top:10px">
       <span style="display:flex;align-items:center;gap:6px">
         <span style="width:18px;height:2px;background:${col};display:inline-block;border-radius:2px"></span>
