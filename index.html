@@ -60,7 +60,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=37">
+<link rel="stylesheet" href="style.css?v=38">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="index.css?v=5">
 <!-- Google tag (gtag.js) -->
@@ -115,37 +115,27 @@
     </ul>
   </header>
 
-  <!-- YESTERDAY RECAP: recency proof, rendered from today.json yesterday_picks -->
-  <a id="yesterday-recap" class="yest-recap" href="history.html" hidden></a>
-
-  <!-- STATUS STRIP: always-visible daily state indicator -->
+  <!-- STATUS STRIP: daily state indicator (pending / no-picks / final) — stays
+       above the picks because pre-picks it IS the page's answer -->
   <div id="status-strip" class="status-strip ss-pending" role="status" aria-live="polite" style="display:none">
     <span class="ss-badge ss-badge-pending">Loading…</span>
     <span class="ss-text"></span>
   </div>
-
-  <!-- Brand bar and differentiator line merged into phb-card above picks -->
-
-  <!-- CONTEXT BAR removed — pick count, games modeled, and posted time now
-       live in the single LOCKED status strip above (deduped). -->
-
-  <!-- PICKS HEADER BLOCK: performance stats + sizing controls -->
-  <div id="picks-header-block"></div>
-
-  <!-- Track record anchor — links to the full dashboard -->
-  <a href="performance.html" class="track-record-link">View track record &amp; methodology →</a>
 
   <!-- Correlated picks warning -->
   <div class="corr-warning" id="corr-warning" style="display:none">
     ⚠️ <span id="corr-text"></span>
   </div>
 
-  <!-- TODAY'S PICKS — inline expansion below each card -->
+  <!-- TODAY'S PICKS — the product, one scroll from the top. Proof bands
+       (yesterday recap, season stats) moved BELOW the table: sell after serving. -->
   <div class="section" id="picks-anchor" style="scroll-margin-top:72px">
-    <h2 class="sec-lbl" id="page-date">Today's Value Bets</h2>
+    <div class="sec-lbl-row">
+      <h2 class="sec-lbl" id="page-date">Today's Value Bets</h2>
+      <button class="help-trigger" type="button" onclick="toggleHelpSheet(true)" aria-haspopup="dialog" aria-controls="help-sheet">ⓘ How to read this</button>
+    </div>
     <div id="page-refresh-meta" class="page-refresh-meta" style="display:none"></div>
     <div id="picks-summary"></div>
-    <div id="sizing-bar"></div>
     <div id="picks-container">
       <div id="loading-placeholder" style="display:flex;flex-direction:column;gap:14px">
         <div class="skeleton-card">
@@ -167,7 +157,16 @@
         </div>
       </div>
     </div>
+    <!-- Sizing controls live BELOW the table: they modify how stakes display,
+         and the picks themselves are the page's first job. -->
+    <div id="sizing-bar"></div>
   </div>
+
+  <!-- PROOF BAND: yesterday recap + season stats + dashboard link — skepticism
+       gets its answer right after the product -->
+  <a id="yesterday-recap" class="yest-recap" href="history.html" hidden></a>
+  <div id="picks-header-block"></div>
+  <a href="performance.html" class="track-record-link">View track record &amp; methodology →</a>
 
   <!-- EMAIL CAPTURE — slim inline bar (full pitch demoted; list growth is secondary) -->
   <section class="email-bar" id="email-capture">
@@ -285,6 +284,25 @@
   <div class="footer-byline">Built &amp; run by BB · an independent one-person project</div>
 </footer>
 
+<!-- ── How-to-read-a-pick help sheet (bottom sheet on mobile, modal on desktop).
+     Replaces the desktop-only hover tooltips, which don't exist below 760px. ── -->
+<div id="help-sheet" class="help-sheet-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="help-sheet-title" onclick="if(event.target===this)toggleHelpSheet(false)">
+  <div class="help-sheet">
+    <div class="hs-hdr">
+      <span class="hs-title" id="help-sheet-title">How to read a pick</span>
+      <button class="hs-close" type="button" onclick="toggleHelpSheet(false)" aria-label="Close">✕</button>
+    </div>
+    <dl class="hs-list">
+      <div class="hs-item"><dt>Tier</dt><dd><span class="pr-tierchip pt-strong">STRONG</span> 8pp+ edge · <span class="pr-tierchip pt-value">VALUE</span> 6–8pp · <span class="pr-tierchip pt-conditional">CONDITIONAL</span> 4–6pp. The model's conviction level — higher tier, bigger gap between our number and the price.</dd></div>
+      <div class="hs-item"><dt>Edge (pp)</dt><dd>How much higher our win probability is than the price implies, in percentage points. We only post picks with at least a 4pp edge.</dd></div>
+      <div class="hs-item"><dt>Mkt → Model</dt><dd>The market's implied win probability vs. ours. We bet when our number is meaningfully higher.</dd></div>
+      <div class="hs-item"><dt>Now</dt><dd>Best moneyline price we currently see across books. The ¢ chip shows movement since we posted — green means the line got worse after we posted (you'd have locked the better number).</dd></div>
+      <div class="hs-item"><dt>Play to</dt><dd>The worst price still worth betting. If the price has dropped past this number, the edge is gone — pass rather than chase.</dd></div>
+      <div class="hs-item"><dt>Stake</dt><dd>Suggested bet size. A unit is 1% of the bankroll you set (or $100 flat if you don't). Kelly mode scales stakes to edge size.</dd></div>
+    </dl>
+  </div>
+</div>
+
 <!-- ── Share card modal ── -->
 <div id="share-modal" class="share-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="share-modal-title-el" onclick="closeShareModalOnBackdrop(event)">
   <div class="share-modal-box">
@@ -311,6 +329,6 @@
 </div>
 
 <script src="ibp-utils.js?v=5"></script>
-<script src="index.js?v=30"></script>
+<script src="index.js?v=31"></script>
 </body>
 </html>

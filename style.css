@@ -191,7 +191,9 @@ nav {
     border-radius: 6px;
   }
   .nav-right { display: none; }
-  nav { position: relative; }
+  /* nav stays sticky on phones — it was demoted to position:relative here, which
+     cost mobile users the persistent nav. The .nav-links dropdown anchors to the
+     nav either way (sticky elements are positioned containing blocks). */
 }
 
 /* ── PAGE WRAPPER ── */
@@ -1126,6 +1128,43 @@ details[open] .faq-q::after { content: '−'; }
 .pr-row.open { background:rgba(99,102,241,.06); }
 .pr-row.pr-faded { opacity:.62; }
 .pr-row.pr-faded:hover { opacity:.85; }
+/* ── Conviction tier chips + row stripes ─────────────────────────────────────
+   Tier = the feed's verdict (STRONG/VALUE/CONDITIONAL, edge-derived fallback).
+   Chip sits in the matchup subline; stripe on the row's left edge. Live/final
+   state stripes (below) override tier stripes — state beats conviction. */
+.pr-tierchip { display:inline-block; font-size:10px; font-weight:700; letter-spacing:.06em; line-height:1; padding:2px 5px; border-radius:3px; margin-right:6px; vertical-align:0; }
+.pt-strong      { color:var(--amber); background:rgba(245,158,11,.10); border:1px solid rgba(245,158,11,.28); }
+.pt-value       { color:var(--green); background:rgba(34,197,94,.09);  border:1px solid rgba(34,197,94,.25); }
+.pt-conditional { color:var(--text-3); background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); }
+.pt-reduced, .pt-flagged { color:#fbbf24; background:rgba(245,158,11,.07); border:1px dashed rgba(245,158,11,.35); }
+.pt-marginal    { color:var(--text-4); background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08); }
+.pr-row.pr-t-strong:not(.pr-state-live):not(.pr-state-final):not(.pr-state-ppd) { box-shadow:inset 3px 0 0 var(--amber); }
+.pr-row.pr-t-value:not(.pr-state-live):not(.pr-state-final):not(.pr-state-ppd)  { box-shadow:inset 3px 0 0 var(--green); }
+.pr-legend { padding:9px 16px 3px; font-size:10.5px; color:var(--text-4); line-height:1.6; }
+
+/* ── "How to read this" trigger + help sheet ─────────────────────────────────
+   Modal on desktop; slides up as a bottom sheet ≤760px where the header
+   tooltips (the only other education) don't exist. */
+.sec-lbl-row { display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+.help-trigger { background:none; border:1px solid var(--border); border-radius:999px; color:var(--text-3); font-size:11px; font-weight:600; padding:3px 10px; cursor:pointer; white-space:nowrap; }
+.help-trigger:hover { color:var(--text-2); border-color:rgba(255,255,255,.18); }
+.help-sheet-overlay { position:fixed; inset:0; background:rgba(3,5,8,.72); z-index:1000; display:flex; align-items:center; justify-content:center; }
+.help-sheet-overlay[hidden] { display:none; }  /* display:flex above would otherwise defeat the hidden attribute */
+.help-sheet { background:#0f1626; border:1px solid rgba(255,255,255,.1); border-radius:14px; max-width:520px; width:calc(100% - 40px); max-height:80vh; overflow-y:auto; padding:16px 18px 18px; box-shadow:0 24px 60px rgba(0,0,0,.6); }
+.hs-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.hs-title { font-family:var(--font-display); font-size:16px; font-weight:700; color:var(--text); }
+.hs-close { background:none; border:1px solid var(--border); border-radius:6px; color:var(--text-3); font-size:12px; padding:4px 9px; cursor:pointer; }
+.hs-close:hover { color:var(--text); }
+.hs-list { margin:0; }
+.hs-item { padding:9px 0; border-bottom:1px solid rgba(255,255,255,.05); }
+.hs-item:last-child { border-bottom:none; }
+.hs-item dt { font-family:var(--font-mono); font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--indigo-lt); margin-bottom:3px; }
+.hs-item dd { margin:0; font-size:12.5px; color:var(--text-2); line-height:1.55; }
+@media (max-width:760px) {
+  .help-sheet-overlay { align-items:flex-end; }
+  .help-sheet { width:100%; max-width:none; border-radius:14px 14px 0 0; border-bottom:none; max-height:76vh; padding-bottom:max(18px, env(safe-area-inset-bottom)); }
+}
+
 /* live / final / postponed — distinct from the faded "skip" rows */
 .pr-row.pr-state-live  { opacity:1; box-shadow:inset 3px 0 0 var(--indigo-lt, #818cf8); }
 .pr-row.pr-state-final { opacity:.8; }
@@ -1284,6 +1323,27 @@ details[open] .faq-q::after { content: '−'; }
 .dw-head-detail { font-size:12px; color:var(--text-3); }
 
 /* decision band — current · posted · play-to · stake (dividers, no panel) */
+/* TL;DR — the one-sentence answer, ahead of all analysis */
+.dw-tldr { font-size:13px; color:var(--text); background:rgba(34,197,94,.06); border:1px solid rgba(34,197,94,.2); border-radius:8px; padding:9px 12px; margin-bottom:10px; line-height:1.5; }
+.dw-tldr b { font-family:var(--font-mono); color:var(--green); font-weight:700; }
+/* risk flags — downgrade reasons, stated not implied */
+.dw-flags { font-size:11.5px; color:var(--amber); background:rgba(245,158,11,.06); border:1px solid rgba(245,158,11,.2); border-radius:8px; padding:7px 11px; margin-bottom:10px; line-height:1.5; }
+/* per-book price shelf */
+.dw-books { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:8px 0 4px; }
+.dw-books-k { font-size:9.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-4); margin-right:2px; }
+.dw-book { font-size:11px; color:var(--text-3); background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:5px; padding:2px 7px; white-space:nowrap; }
+.dw-book b { font-family:var(--font-mono); color:var(--text-2); font-weight:600; margin-left:2px; }
+.dw-book.best { border-color:rgba(34,197,94,.35); }
+.dw-book.best b { color:var(--green); }
+.dw-books-more { font-size:10px; color:var(--text-4); }
+/* collapsed deep analysis */
+.dw-full { margin-top:10px; border-top:1px solid var(--border); padding-top:8px; }
+.dw-full > summary { cursor:pointer; list-style:none; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-3); display:flex; align-items:center; gap:6px; padding:4px 0; }
+.dw-full > summary::-webkit-details-marker { display:none; }
+.dw-full > summary:hover { color:var(--text-2); }
+.dw-full[open] > summary .am-chevron { transform:rotate(180deg); }
+.dw-full .am-chevron { transition:transform .15s; }
+
 .dw-band { display:flex; flex-wrap:wrap; margin-bottom:2px; }
 .dw-bi { flex:1 1 0; min-width:120px; padding:0 16px; text-align:center; border-left:1px solid var(--border); }
 .dw-bi:first-child { border-left:none; padding-left:0; }

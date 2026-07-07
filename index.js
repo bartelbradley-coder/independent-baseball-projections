@@ -1395,6 +1395,23 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
     + '<span class="dw-pill ' + pCls + '">' + pill + '</span>'
     + '<span class="dw-head-detail">— ' + detail + '</span></div>';
 
+  // ── TL;DR — the one-sentence answer a bettor came for, before any analysis ──
+  const _tldrOK = !inactive && (pill === 'Still playable' || pill === 'Playable');
+  const tldrHTML = _tldrOK
+    ? '<div class="dw-tldr">Bet <b>' + pickAbbr + '</b> at <b>' + ptStr + '</b> or better · <b>'
+      + (isKelly ? stakeUnits : '$100') + '</b> · model <b>' + mpPct + '</b> vs market <b>' + bpPct + '</b>'
+      + (pill === 'Playable' ? ' — confirm the lineup first' : '') + '.</div>'
+    : '';
+
+  // ── Risk flags — the feed's downgrade_reasons were mapped (FLAG_COPY) but
+  //    never rendered; a trimmed stake deserves a stated reason.
+  const _flags = String(p.downgrade_reasons || '').split(/[,;|]+/)
+    .map(s => s.trim()).filter(Boolean)
+    .map(c => FLAG_COPY[c] || _escHTML(c.replace(/_/g, ' ')));
+  const flagsHTML = _flags.length
+    ? '<div class="dw-flags">⚠ Heads-up: ' + _flags.join(' · ') + '</div>'
+    : '';
+
   // ── decision band: current · posted · play-to · stake ──────────────────
   const bandHTML = '<div class="dw-band">'
     + '<div class="dw-bi"><span class="dw-bi-k">Current odds</span><span class="dw-bi-v' + (curGood ? ' good' : '') + '">' + (inactive ? '—' : curStr) + '</span>' + ((!inactive && curBook) ? '<span class="dw-bi-s">' + curBook + '</span>' : '') + '</div>'
@@ -1421,7 +1438,14 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   const frow = a => '<div class="dw-frow"><b class="' + (a.positive ? 'good' : 'bad') + '">' + (a.pp >= 0 ? '+' : '') + a.pp.toFixed(1) + '</b><span>' + a.label + '</span></div>';
   const driversCol = pos.length ? '<div class="dw-fcol"><div class="dw-fh good">Key Drivers</div>' + pos.map(frow).join('') + '</div>' : '';
   const offsetsCol = neg.length ? '<div class="dw-fcol"><div class="dw-fh bad">Offsets</div>' + neg.map(frow).join('') + '</div>' : '';
-  const factorsHTML = (driversCol || offsetsCol) ? '<div class="dw-factors">' + driversCol + offsetsCol + '</div>' : '';
+  // The reconciling caveat ships in the feed (explanation.attribution_note) and was
+  // never rendered — without it, drivers that sum negative under a positive edge
+  // read as the model contradicting itself.
+  const _attrNote = _escHTML((p.explanation && p.explanation.attribution_note)
+    || 'Driver impacts are approximate probability-point contributions and do not sum to the edge.');
+  const factorsHTML = (driversCol || offsetsCol)
+    ? '<div class="dw-factors">' + driversCol + offsetsCol + '</div><div class="dw-cap">' + _attrNote + '</div>'
+    : '';
   const listJoin = arr => arr.length <= 1 ? (arr[0] || '') : arr.slice(0, -1).join(', ') + ' and ' + arr[arr.length - 1];
   const tp = pos.slice(0, 2).map(a => a.label.toLowerCase()), tn = neg.slice(0, 2).map(a => a.label.toLowerCase());
   let readTxt = '';
@@ -1488,8 +1512,9 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
     + '</div>';
   const dataInner = '<div class="dw-h2">Matchup Data</div>' + tableHTML + statusHTML;
 
-  // Two columns when there's a real matchup table; otherwise stack so the right
-  // side never sits empty.
+  // Share cards keep the classic two-column layout (html2canvas can't lay out
+  // <details>); the live drawer instead shows the "why" and collapses the deep
+  // matchup/line-movement analysis — decision first, evidence on demand.
   const twoCol = mqRows.length > 0;
   const bodyHTML = twoCol
     ? '<div class="dw-cols"><div class="dw-col">' + whyInner + '</div><div class="dw-col">' + dataInner + '</div></div>'
@@ -1546,7 +1571,23 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
   // html2canvas lays out incorrectly (its body overlaps the sections below), and the
   // intraday re-rate detail isn't share-card material anyway.
   const changedHTML = forShare ? '' : prWhatChanged(p);
-  return '<div class="dw">' + headHTML + bandHTML + changedHTML + bodyHTML + moveHTML + actionsHTML + '</div>';
+  if (forShare) {
+    return '<div class="dw">' + headHTML + bandHTML + bodyHTML + moveHTML + actionsHTML + '</div>';
+  }
+  // Per-book price comparison — the feed ships up to 12 books and the site showed
+  // only one; "shop the best price" needs the shelf, and the best price is often
+  // an exchange the visitor can't use.
+  const bookRowHTML = (!inactive && sb.entries.length >= 2)
+    ? '<div class="dw-books"><span class="dw-books-k">Prices</span>'
+      + sb.entries.slice(0, 6).map((e, i) =>
+          '<span class="dw-book' + (i === 0 ? ' best' : '') + '">' + _escHTML(e.book) + ' <b>' + fmtO(e.odds) + '</b></span>').join('')
+      + (sb.entries.length > 6 ? '<span class="dw-books-more">+' + (sb.entries.length - 6) + ' more</span>' : '')
+      + '</div>'
+    : '';
+  const fullAnalysisHTML = '<details class="dw-full"><summary>Full analysis — matchup data &amp; line movement <span class="am-chevron">▾</span></summary>'
+    + '<div class="dw-sec">' + dataInner + '</div>' + moveHTML + '</details>';
+  return '<div class="dw">' + headHTML + tldrHTML + flagsHTML + bandHTML + bookRowHTML + changedHTML
+    + '<div class="dw-sec">' + whyInner + '</div>' + fullAnalysisHTML + actionsHTML + '</div>';
 }
 
 // ── Pick card HTML ────────────────────────────────────────────────────────────
@@ -1791,6 +1832,23 @@ function prRowStateClass(p, gr) {
 // One collapsed analytics row (simple, edge-sorted table).
 // Columns: Matchup+time · Pick(team + captured line) · Mkt→Model · Edge ·
 // Status[odds / live score] · Play-to · Stake · chevron.
+// Escape feed strings before HTML interpolation — the feed is first-party, but
+// raw insertion of narrative-adjacent fields is an avoidable class of bug.
+function _escHTML(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// Plain-English hover help for the tier chips (mobile gets the legend + help sheet).
+const _TIER_HELP = {
+  strong:      'Strong — 8pp+ model edge; the model\'s highest-conviction tier',
+  value:       'Value — solid edge in the 6–8pp band',
+  conditional: 'Conditional — edge in the 4–6pp band; a standard play, sized accordingly',
+  reduced:     'Reduced confidence — a risk flag trimmed the suggested stake',
+  flagged:     'Flagged — posted with a caution; open the pick for details before betting',
+  marginal:    'Below the 4pp posting threshold — tracked for transparency, not a recommended bet',
+};
+
 function prRowCollapsed(p, isBest, gameResult) {
   const parts = String(p.game || '').split('@').map(s => s.trim());
   const away = parts[0] || '', home = parts[1] || '';
@@ -1798,6 +1856,11 @@ function prRowCollapsed(p, isBest, gameResult) {
   const live = isLiveGame(p), over = isGameOver(p), postponed = isPostponed(p);
   const inactive = live || over || postponed;
   const fmtO = o => (o == null ? '—' : (o > 0 ? '+' + o : String(o)));
+
+  // Conviction tier — the feed's verdict (STRONG/VALUE/CONDITIONAL…) was computed
+  // and never rendered; surface it as a chip + row stripe so conviction is
+  // scannable without decoding "+X.Xpp".
+  const [tierTxt, tierCls] = tierLabel(p.edge != null ? p.edge : 0, p.verdict);
 
   // Matchup — plain game label + time; the Pick column names the side.
   const timeStr = prGameTime(p.game_time);
@@ -1844,31 +1907,35 @@ function prRowCollapsed(p, isBest, gameResult) {
 
   const ptStr = fmtO(_cur.playTo);
 
-  // Stake — units primary, $ secondary.
+  // Stake — dollars first. A casual bettor's question is "how much?", and "$100"
+  // answers it where "1.0u" requires knowing the unit convention.
   const _isKellyMode = _indexPnlMode === 'kelly';
   const _rowStakeU = kellyStakeUnits(p);   // shared derivation incl. kelly_pct fallback
-  const units = _isKellyMode ? (_rowStakeU != null ? _rowStakeU.toFixed(1) + 'u' : '—') : '1.0u';
+  const units = _isKellyMode ? (_rowStakeU != null ? _rowStakeU.toFixed(1) + 'u' : '—') : '$100';
   const stakeSub = _isKellyMode
     ? `<span class="pr-st-usd kelly-usd" data-units="${_rowStakeU || 0}"></span>`
-    : '';  // flat mode: stake is 1.0u on every row — no need to repeat $100
+    : `<span class="pr-st-usd">1.0u flat</span>`;
 
   // Matchup subline — the start time is meaningless once a game starts, so live /
   // final / postponed games show their state there (inning, Final, Postponed).
   const _sub = inactive ? prStateSub(gameResult) : null;
+  const tierChip = !inactive
+    ? `<span class="pr-tierchip pt-${tierCls}" title="${_TIER_HELP[tierCls] || ''}">${tierTxt}</span>`
+    : '';
   const subHTML = _sub
     ? `<div class="${_sub.cls}" data-live-sub>${_sub.txt.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>`
-    : `<div class="pr-time">${timeStr || '—'}</div>`;
+    : `<div class="pr-time">${tierChip}${timeStr || '—'}</div>`;
 
   // Accessible name — colour/position cues are invisible to assistive tech. For
   // live/final games the play-to/stake tail is meaningless, so we read the state.
   const _stateAria = inactive ? prStateCellAria(p, gameResult) : '';
-  const ariaLabel = `${away} at ${home}, pick ${pickAbbr}${spread} ${fmtO(p.odds)}`
+  const ariaLabel = `${away} at ${home}, pick ${pickAbbr}${spread} ${fmtO(p.odds)}, ${tierTxt} tier`
     + `${timeStr && !inactive ? ', ' + timeStr : ''}, market ${bpPct} percent, model ${mpPct} percent, edge ${edgeStr}`
     + (_cur.moved ? ` (re-rated from posted ${(_cur.postedEdge * 100).toFixed(1)}pp)` : '')
     + (inactive ? (_stateAria ? ', ' + _stateAria : '') : `, playable to ${ptStr}, stake ${units}.`);
 
   const _rowState = prRowStateClass(p, gameResult);
-  return `<div class="pr-cols pr-row${_rowState ? ' ' + _rowState : ''}" role="button" tabindex="0" data-pr-card="${prCardId(p)}" `
+  return `<div class="pr-cols pr-row pr-t-${tierCls}${_rowState ? ' ' + _rowState : ''}" role="button" tabindex="0" data-pr-card="${prCardId(p)}" `
     + `aria-expanded="false" aria-label="${ariaLabel}" onclick="prToggle(this)" onkeydown="prKey(event,this)">`
     + `<div class="pr-mu"><div class="pr-mu-main"><div class="pr-match">${away} <span class="pr-at">@</span> ${home}</div>${subHTML}</div>${prStateChipHTML(p, gameResult)}</div>`
     + `<div class="pr-pick">${pickCell}</div>`
@@ -2426,7 +2493,12 @@ function render(data, hist, scores = {}, perf = null) {
         _rows += prGroupLabel('Near-miss — below 4pp threshold', marginal.length);
         _rows += prRows(prSortPicks(marginal), scores);
       }
-      picksHTML = `<div class="pr-table">${prTableHead()}${_rows}</div>`;
+      picksHTML = `<div class="pr-table">${prTableHead()}${_rows}</div>`
+        + `<div class="pr-legend">Conviction tiers: `
+        + `<span class="pr-tierchip pt-strong">STRONG</span> 8pp+ edge · `
+        + `<span class="pr-tierchip pt-value">VALUE</span> 6–8pp · `
+        + `<span class="pr-tierchip pt-conditional">CONDITIONAL</span> 4–6pp`
+        + ` — tap any pick for the full read</div>`;
     }
 
     // ── Action Today strip — counts reflect what's PLAYABLE now, not just posted ─
@@ -2796,4 +2868,39 @@ document.querySelectorAll('.nav-link').forEach(el => {
     document.querySelector('.nav-links')?.classList.remove('open');
     document.getElementById('nav-hamburger')?.classList.remove('open');
   });
+});
+
+// ── "How to read a pick" help sheet ──────────────────────────────────────────
+// The table's education lives in hover tooltips that don't exist on touch —
+// this sheet is the tap-reachable equivalent (bottom sheet ≤760px, modal above).
+let _helpPrevFocus = null;
+function toggleHelpSheet(open) {
+  const el = document.getElementById('help-sheet');
+  if (!el) return;
+  if (open) {
+    _helpPrevFocus = document.activeElement;
+    el.hidden = false;
+    document.body.style.overflow = 'hidden';
+    el.querySelector('.hs-close')?.focus();
+  } else {
+    el.hidden = true;
+    document.body.style.overflow = '';
+    if (_helpPrevFocus && _helpPrevFocus.focus) _helpPrevFocus.focus();
+  }
+}
+document.addEventListener('keydown', e => {
+  const sheet = document.getElementById('help-sheet');
+  if (!sheet || sheet.hidden) return;
+  if (e.key === 'Escape') { toggleHelpSheet(false); return; }
+  // Focus trap — aria-modal promises the background is inert to keyboard users.
+  if (e.key === 'Tab') {
+    const focusables = sheet.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (!focusables.length) return;
+    const first = focusables[0], last = focusables[focusables.length - 1];
+    if (e.shiftKey && (document.activeElement === first || !sheet.contains(document.activeElement))) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && (document.activeElement === last || !sheet.contains(document.activeElement))) {
+      e.preventDefault(); first.focus();
+    }
+  }
 });
