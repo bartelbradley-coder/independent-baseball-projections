@@ -1,9 +1,595 @@
 {
   "date": "2026-07-07",
-  "generated_at": "10:16 AM CT \u00b7 Jul 7",
-  "generated_at_utc": "2026-07-07T15:16:51Z",
+  "generated_at": "11:17 AM CT \u00b7 Jul 7",
+  "generated_at_utc": "2026-07-07T16:17:21Z",
   "no_picks_yet": false,
   "picks": [
+    {
+      "game": "MIL @ STL",
+      "pick": "STL",
+      "side": "HOME",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Hunter Dobbins",
+      "posted_at": "11:17 AM CT",
+      "game_time": "2026-07-07T23:45:00Z",
+      "temp_f": 86.0,
+      "wind_speed_mph": 7.0,
+      "wind_dir_degrees": 45.0,
+      "is_domed": false,
+      "model_prob": 0.5298,
+      "market_prob": 0.4457,
+      "edge": 0.0753,
+      "ev_per_100": 16.56,
+      "odds": 120,
+      "best_odds": 120,
+      "best_book": "Pinnacle",
+      "fair_odds": "-113",
+      "playable_to": 104,
+      "break_even": 0.4545,
+      "kelly_units": 1.72,
+      "line_open": 120,
+      "line_current": 120,
+      "odds_history": [
+        {
+          "t": "2026-07-07T05:25",
+          "odds": 170
+        },
+        {
+          "t": "2026-07-07T12:54",
+          "odds": 172
+        },
+        {
+          "t": "2026-07-07T14:16",
+          "odds": 126
+        },
+        {
+          "t": "2026-07-07T15:16",
+          "odds": 120
+        },
+        {
+          "t": "2026-07-07T16:17",
+          "odds": 120
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 110,
+        "Pinnacle": 120,
+        "ProphetX": 117,
+        "Novig": 117,
+        "BetOnline": 118,
+        "LowVig": 118,
+        "Bovada": 115,
+        "DraftKings": 113,
+        "BetUS": 118,
+        "BetRivers": 110,
+        "BetMGM": 115,
+        "ESPN Bet": 115,
+        "Betway": 115,
+        "MyBookie": 114
+      },
+      "pitcher": "Hunter Dobbins",
+      "opp_pitcher": "Robert Gasser",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 0.57
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": 0.025
+        },
+        {
+          "label": "Home Field",
+          "value": 0.02
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 3.45,
+        "opp_xfip": 4.053,
+        "pick_oaa": 20,
+        "opp_oaa": 1,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": null,
+        "opp_whiff_pct": 45.0,
+        "pick_kbb_pct": 0.1644,
+        "opp_kbb_pct": 0.1494,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.0,
+        "opp_arsenal_fit": 0.8584,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 5.5,
+        "opp_proj_ip": 5.2,
+        "pick_era": 3.63,
+        "opp_era": 4.54,
+        "pick_k_pct": 0.2603,
+        "opp_k_pct": 0.2338,
+        "ump_name": "",
+        "pick_home_w": 23,
+        "pick_home_l": 22,
+        "pinnacle_ml_open": 120.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 1.0
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.62,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 0.57,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Home field",
+            "pp": 0.5,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Starter rest",
+            "pp": 0.25,
+            "positive": true,
+            "group": "schedule"
+          }
+        ],
+        "total_adj_pp": 1.94,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Model and market disagree on STL by 7.5pp \u2014 53.0% fair against a 44.6% price. Several smaller signals stack the same way \u2014 defense (oaa) (~+0.6pp), pitcher quality (xfip) (~+0.6pp), home field (~+0.5pp) \u2014 with no single one dominating. The price has held roughly steady since posting \u2014 the current +120 still sits inside the playable range (to +104). The case is a stack of small same-direction signals, not one dominant mismatch \u2014 treat it as the thinner edge it is.",
+      "explanation": {
+        "explanation_type": "cluster_edge",
+        "risk_level": "medium",
+        "model_prob": 0.5298,
+        "market_prob": 0.4457,
+        "edge_pp": 7.5,
+        "fair_odds": "-113",
+        "current_odds": "+120",
+        "playable_to": "+104",
+        "positive_drivers": [
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": 0.62,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "STL defense grades +19 OAA better on the season \u2014 a run-prevention edge.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 0.57,
+            "tier": "secondary",
+            "group": "pitcher",
+            "detail": "Hunter Dobbins 3.45 xFIP vs Robert Gasser 4.05 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Home field",
+            "impact_pp": 0.5,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for STL.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Starter rest",
+            "impact_pp": 0.25,
+            "tier": "data",
+            "group": "schedule",
+            "detail": "Rest-day alignment favors the pick's starter.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [],
+        "line_movement": {
+          "posted_odds": "+120",
+          "current_odds": "+120",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "Model and market disagree on STL by 7.5pp \u2014 53.0% fair against a 44.6% price.",
+          "whats_driving_it": "Several smaller signals stack the same way \u2014 defense (oaa) (~+0.6pp), pitcher quality (xfip) (~+0.6pp), home field (~+0.5pp) \u2014 with no single one dominating.",
+          "what_pushes_back": null,
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current +120 still sits inside the playable range (to +104).",
+          "route_to_win": "The case is a stack of small same-direction signals, not one dominant mismatch \u2014 treat it as the thinner edge it is.",
+          "read": "This is a cluster edge \u2014 several small signals, not one mismatch."
+        },
+        "read_label": "This is a cluster edge \u2014 several small signals, not one mismatch.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Defense (OAA)",
+          "top_positive_pp": 0.62,
+          "top_negative_label": null,
+          "top_negative_pp": null,
+          "has_primary_driver": false,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 4
+        },
+        "prose": "Model and market disagree on STL by 7.5pp \u2014 53.0% fair against a 44.6% price. Several smaller signals stack the same way \u2014 defense (oaa) (~+0.6pp), pitcher quality (xfip) (~+0.6pp), home field (~+0.5pp) \u2014 with no single one dominating. The price has held roughly steady since posting \u2014 the current +120 still sits inside the playable range (to +104). The case is a stack of small same-direction signals, not one dominant mismatch \u2014 treat it as the thinner edge it is."
+      },
+      "run_line": {
+        "spread": "-1.5",
+        "model_prob": 0.3722,
+        "fair_odds": "+169",
+        "book_odds": null,
+        "edge": null
+      },
+      "total": null,
+      "current_edge": 0.0753,
+      "current_model_prob": 0.5298,
+      "current_refresh_time": "11:17 AM CT \u00b7 Jul 7",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Hunter Dobbins",
+      "current_fair_odds": "-113",
+      "current_playable_to": 104,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Defense (OAA)",
+          "pp": 0.62,
+          "positive": true
+        },
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 0.57,
+          "positive": true
+        },
+        {
+          "label": "Home field",
+          "pp": 0.5,
+          "positive": true
+        }
+      ],
+      "model_change": {
+        "edge_delta": -0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.5298,
+          "market_prob": 0.4457,
+          "edge": 0.0753
+        },
+        "current": {
+          "model_prob": 0.5298,
+          "market_prob": 0.4457,
+          "edge": 0.0753
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": -0.5,
+            "delta_pp": -0.5
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "11:17 AM CT \u00b7 Jul 7"
+      },
+      "verdict": "\u2705 VALUE",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "TOR @ SF",
+      "pick": "SF",
+      "side": "HOME",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Trevor McDonald",
+      "posted_at": "11:17 AM CT",
+      "game_time": "2026-07-08T01:45:00Z",
+      "temp_f": 59.0,
+      "wind_speed_mph": 15.0,
+      "wind_dir_degrees": 270.0,
+      "is_domed": false,
+      "model_prob": 0.5624,
+      "market_prob": 0.4825,
+      "edge": 0.0722,
+      "ev_per_100": 14.73,
+      "odds": 104,
+      "best_odds": 104,
+      "best_book": "ProphetX",
+      "fair_odds": "-129",
+      "playable_to": -109,
+      "break_even": 0.4902,
+      "kelly_units": 1.77,
+      "line_open": 103,
+      "line_current": 103,
+      "odds_history": [
+        {
+          "t": "2026-07-07T05:25",
+          "odds": 106
+        },
+        {
+          "t": "2026-07-07T06:53",
+          "odds": 108
+        },
+        {
+          "t": "2026-07-07T12:54",
+          "odds": 104
+        },
+        {
+          "t": "2026-07-07T14:16",
+          "odds": 103
+        },
+        {
+          "t": "2026-07-07T15:16",
+          "odds": 104
+        },
+        {
+          "t": "2026-07-07T16:17",
+          "odds": 104
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": -104,
+        "BetRivers": -106,
+        "ESPN Bet": 100,
+        "Hard Rock": -105,
+        "ProphetX": 104,
+        "MyBookie": -103,
+        "Novig": 104,
+        "LowVig": 100,
+        "BetOnline": 100,
+        "DraftKings": -105,
+        "BetMGM": -105,
+        "Bovada": -102,
+        "Betway": -105,
+        "Pinnacle": 103,
+        "BetUS": 100
+      },
+      "pitcher": "Trevor McDonald",
+      "opp_pitcher": "Spencer Miles",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 0.32
+        },
+        {
+          "label": "Home Field",
+          "value": 0.034
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 3.8,
+        "opp_xfip": 4.14,
+        "pick_oaa": -5,
+        "opp_oaa": 2,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 31.0,
+        "opp_whiff_pct": 12.0,
+        "pick_kbb_pct": 0.125,
+        "opp_kbb_pct": null,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.1567,
+        "opp_arsenal_fit": 0.5391,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 5.2,
+        "opp_proj_ip": 5.3,
+        "pick_era": 4.42,
+        "opp_era": null,
+        "pick_k_pct": 0.2016,
+        "opp_k_pct": null,
+        "ump_name": "",
+        "pick_home_w": 19,
+        "pick_home_l": 22,
+        "pinnacle_ml_open": 103.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 0.97
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": 0.84,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 0.32,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.23,
+            "positive": false,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 0.93,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "IBP makes SF 56.2% fair versus a 48.2% no-vig market price \u2014 a 7.2pp gap. The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself. The price has held roughly steady since posting \u2014 the current +104 still sits inside the playable range (to -109). This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed.",
+      "explanation": {
+        "explanation_type": "price_only_value",
+        "risk_level": "medium",
+        "model_prob": 0.5624,
+        "market_prob": 0.4825,
+        "edge_pp": 7.2,
+        "fair_odds": "-129",
+        "current_odds": "+104",
+        "playable_to": "-109",
+        "positive_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": 0.84,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for SF.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 0.32,
+            "tier": "data",
+            "group": "pitcher",
+            "detail": "Trevor McDonald 3.80 xFIP vs Spencer Miles 4.14 xFIP.",
+            "attribution": "display_only"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": -0.23,
+            "tier": "data",
+            "group": "team",
+            "detail": "TOR defense grades +7 OAA better on the season \u2014 a run-prevention headwind.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+103",
+          "current_odds": "+104",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "IBP makes SF 56.2% fair versus a 48.2% no-vig market price \u2014 a 7.2pp gap.",
+          "whats_driving_it": "The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself.",
+          "what_pushes_back": null,
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current +104 still sits inside the playable range (to -109).",
+          "route_to_win": "This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed.",
+          "read": "This is mostly a price play; the baseball case is mixed."
+        },
+        "read_label": "This is mostly a price play; the baseball case is mixed.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Home field",
+          "top_positive_pp": 0.84,
+          "top_negative_label": "Defense (OAA)",
+          "top_negative_pp": -0.23,
+          "has_primary_driver": false,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 2
+        },
+        "prose": "IBP makes SF 56.2% fair versus a 48.2% no-vig market price \u2014 a 7.2pp gap. The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself. The price has held roughly steady since posting \u2014 the current +104 still sits inside the playable range (to -109). This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed."
+      },
+      "run_line": {
+        "spread": "-1.5",
+        "model_prob": 0.4047,
+        "fair_odds": "+147",
+        "book_odds": null,
+        "edge": null
+      },
+      "total": null,
+      "current_edge": 0.0722,
+      "current_model_prob": 0.5624,
+      "current_refresh_time": "11:17 AM CT \u00b7 Jul 7",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Trevor McDonald",
+      "current_fair_odds": "-129",
+      "current_playable_to": -109,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Home field",
+          "pp": 0.84,
+          "positive": true
+        },
+        {
+          "label": "Arsenal fit",
+          "pp": -0.38,
+          "positive": false
+        },
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 0.32,
+          "positive": true
+        }
+      ],
+      "model_change": {
+        "edge_delta": 0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.5624,
+          "market_prob": 0.4825,
+          "edge": 0.0722
+        },
+        "current": {
+          "model_prob": 0.5624,
+          "market_prob": 0.4825,
+          "edge": 0.0722
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": -0.38,
+            "delta_pp": -0.38
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "11:17 AM CT \u00b7 Jul 7"
+      },
+      "verdict": "\u2705 VALUE",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
     {
       "game": "OAK @ DET",
       "pick": "OAK",
@@ -45,6 +631,10 @@
         {
           "t": "2026-07-07T15:16",
           "odds": 182
+        },
+        {
+          "t": "2026-07-07T16:17",
+          "odds": 194
         }
       ],
       "clv": null,
@@ -54,20 +644,20 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 166,
-        "BetOnline": 175,
-        "LowVig": 175,
-        "Novig": 182,
-        "Hard Rock": 165,
-        "BetUS": 170,
-        "DraftKings": 168,
+        "FanDuel": 172,
+        "BetOnline": 182,
+        "LowVig": 182,
+        "Novig": 194,
+        "Hard Rock": 175,
+        "BetUS": 178,
+        "DraftKings": 178,
         "BetMGM": 170,
-        "ESPN Bet": 165,
+        "ESPN Bet": 170,
         "BetRivers": 170,
-        "MyBookie": 168,
-        "Pinnacle": 175,
-        "Bovada": 167,
-        "ProphetX": 180,
+        "MyBookie": 173,
+        "Pinnacle": 187,
+        "Bovada": 178,
+        "ProphetX": 188,
         "Betway": 175
       },
       "pitcher": "J.T. Ginn",
@@ -232,15 +822,15 @@
         "edge": 0.0838
       },
       "total": null,
-      "current_edge": 0.0792,
-      "current_model_prob": 0.4338,
-      "current_refresh_time": "10:16 AM CT \u00b7 Jul 7",
+      "current_edge": 0.09,
+      "current_model_prob": 0.4301,
+      "current_refresh_time": "11:17 AM CT \u00b7 Jul 7",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "J.T. Ginn",
-      "current_fair_odds": "+131",
-      "current_playable_to": 154,
+      "current_fair_odds": "+133",
+      "current_playable_to": 156,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -262,18 +852,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0114,
-        "model_delta": -0.0044,
-        "market_delta": -0.0146,
+        "edge_delta": 0.0222,
+        "model_delta": -0.0081,
+        "market_delta": -0.0292,
         "posted": {
           "model_prob": 0.4382,
           "market_prob": 0.3703,
           "edge": 0.0678
         },
         "current": {
-          "model_prob": 0.4338,
-          "market_prob": 0.3557,
-          "edge": 0.0792
+          "model_prob": 0.4301,
+          "market_prob": 0.3411,
+          "edge": 0.09
         },
         "factor_deltas": [
           {
@@ -284,7 +874,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "10:16 AM CT \u00b7 Jul 7"
+        "refreshed_at": "11:17 AM CT \u00b7 Jul 7"
       },
       "verdict": "\u2b07\ufe0f REDUCED CONF.",
       "kelly_multiplier": 1.0,
@@ -327,7 +917,7 @@
           "odds": -113
         },
         {
-          "t": "2026-07-07T15:16",
+          "t": "2026-07-07T16:17",
           "odds": -113
         }
       ],
@@ -339,17 +929,17 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": -118,
-        "LowVig": -120,
-        "BetOnline": -120,
+        "LowVig": -118,
+        "BetOnline": -118,
         "Novig": -113,
         "Hard Rock": -120,
         "DraftKings": -122,
-        "BetMGM": -125,
+        "BetMGM": -120,
         "ESPN Bet": -125,
         "BetRivers": -127,
         "MyBookie": -120,
-        "BetUS": -120,
-        "Bovada": -123,
+        "BetUS": -116,
+        "Bovada": -122,
         "Pinnacle": -116,
         "ProphetX": -114,
         "Betway": -120
@@ -521,15 +1111,15 @@
         "edge": 0.0911
       },
       "total": null,
-      "current_edge": 0.0602,
-      "current_model_prob": 0.5907,
-      "current_refresh_time": "10:16 AM CT \u00b7 Jul 7",
+      "current_edge": 0.0599,
+      "current_model_prob": 0.5904,
+      "current_refresh_time": "11:17 AM CT \u00b7 Jul 7",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Andrew Alvarez",
       "current_fair_odds": "-144",
-      "current_playable_to": -123,
+      "current_playable_to": -122,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -551,18 +1141,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0028,
-        "model_delta": 0.0006,
-        "market_delta": 0.0068,
+        "edge_delta": 0.0025,
+        "model_delta": 0.0003,
+        "market_delta": 0.0056,
         "posted": {
           "model_prob": 0.5901,
           "market_prob": 0.5208,
           "edge": 0.0574
         },
         "current": {
-          "model_prob": 0.5907,
-          "market_prob": 0.5276,
-          "edge": 0.0602
+          "model_prob": 0.5904,
+          "market_prob": 0.5264,
+          "edge": 0.0599
         },
         "factor_deltas": [
           {
@@ -573,7 +1163,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "10:16 AM CT \u00b7 Jul 7"
+        "refreshed_at": "11:17 AM CT \u00b7 Jul 7"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -618,6 +1208,10 @@
         {
           "t": "2026-07-07T15:16",
           "odds": -104
+        },
+        {
+          "t": "2026-07-07T16:17",
+          "odds": -106
         }
       ],
       "clv": null,
@@ -630,9 +1224,9 @@
         "FanDuel": -116,
         "BetOnline": -111,
         "LowVig": -111,
-        "Novig": -104,
+        "Novig": -106,
         "Hard Rock": -120,
-        "BetUS": -109,
+        "BetUS": -108,
         "DraftKings": -117,
         "BetMGM": -118,
         "ESPN Bet": -120,
@@ -796,9 +1390,9 @@
         "edge": 0.0754
       },
       "total": null,
-      "current_edge": 0.0688,
+      "current_edge": 0.064,
       "current_model_prob": 0.5786,
-      "current_refresh_time": "10:16 AM CT \u00b7 Jul 7",
+      "current_refresh_time": "11:17 AM CT \u00b7 Jul 7",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -825,24 +1419,7 @@
           "positive": true
         }
       ],
-      "model_change": {
-        "edge_delta": 0.0143,
-        "model_delta": -0.002,
-        "market_delta": -0.0068,
-        "posted": {
-          "model_prob": 0.5806,
-          "market_prob": 0.5162,
-          "edge": 0.0545
-        },
-        "current": {
-          "model_prob": 0.5786,
-          "market_prob": 0.5094,
-          "edge": 0.0688
-        },
-        "factor_deltas": [],
-        "starter_changed": null,
-        "refreshed_at": "10:16 AM CT \u00b7 Jul 7"
-      },
+      "model_change": null,
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -886,6 +1463,10 @@
         {
           "t": "2026-07-07T15:16",
           "odds": -104
+        },
+        {
+          "t": "2026-07-07T16:17",
+          "odds": -104
         }
       ],
       "clv": null,
@@ -902,13 +1483,13 @@
         "Hard Rock": -115,
         "BetUS": -110,
         "DraftKings": -115,
-        "ESPN Bet": -120,
+        "ESPN Bet": -115,
         "BetMGM": -115,
-        "BetRivers": -122,
+        "BetRivers": -118,
         "MyBookie": -113,
         "Bovada": -113,
         "Pinnacle": -107,
-        "ProphetX": -104,
+        "ProphetX": -106,
         "Betway": -115
       },
       "pitcher": "Matthew Boyd",
@@ -1088,7 +1669,7 @@
       "total": null,
       "current_edge": 0.0503,
       "current_model_prob": 0.5601,
-      "current_refresh_time": "10:16 AM CT \u00b7 Jul 7",
+      "current_refresh_time": "11:17 AM CT \u00b7 Jul 7",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1138,7 +1719,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "10:16 AM CT \u00b7 Jul 7"
+        "refreshed_at": "11:17 AM CT \u00b7 Jul 7"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1147,8 +1728,8 @@
       "projected_starter": false
     }
   ],
-  "signal_count": 4,
-  "posted_count": 4,
+  "signal_count": 6,
+  "posted_count": 6,
   "games_today": 15,
   "yesterday_picks": [
     {
