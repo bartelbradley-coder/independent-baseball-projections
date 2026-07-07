@@ -21,61 +21,10 @@ let _histContextFn = null;      // set in render() — returns hist-context HTML
 let _countdownTimerStarted = false;
 let _lastBucketSig = null;      // section-bucket signature; re-render when a game changes state
 
-// ── Book-odds sanitizer (trust fix) ───────────────────────────────────────────
-// Shared by every place that renders per-book lines. Fixes two long-standing
-// display bugs: (1) raw book_odds were shown unfiltered, so a stale / wrong-signed
-// line (e.g. a MyBookie -833 on a +183 underdog) rendered verbatim and looked like
-// a data error; (2) "best price" was picked with a raw descending-American sort /
-// Math.max, which is only valid when every line has the same sign. Here we convert
-// to implied probability, drop books that are off-market vs the field median
-// (robust to a single bad book), and rank by payout (lowest implied prob = best).
-const _BOOK_NAMES = {novig:'Novig',prophetx:'ProphetX',pinnacle:'Pinnacle',lowvig:'LowVig',
-  betonlineag:'BetOnline',draftkings:'DraftKings',fanduel:'FanDuel',betmgm:'BetMGM',
-  betrivers:'BetRivers',espnbet:'ESPN Bet',hardrockbet:'Hard Rock',betway:'Betway',
-  bovada:'Bovada',mybookieag:'MyBookie',betus:'BetUS'};
-function _impliedFromAmerican(ml) {
-  const n = typeof ml === 'number' ? ml : parseInt(ml);
-  if (!isFinite(n) || n === 0) return null;
-  return n > 0 ? 100 / (n + 100) : (-n) / ((-n) + 100);
-}
-// Returns { entries:[{book,odds,implied}], best:{...}|null, dropped:N }, entries
-// ranked best-payout-first. Two filters: (1) ANCHOR — drop books whose implied
-// prob is far from the pick's OWN posted price (opts.anchorPp, default 0.22);
-// catches a whole field quoting the wrong side / corrupted values (e.g. -1275
-// books on a +183 underdog). (2) MEDIAN — drop a lone outlier within an
-// otherwise-consistent field (opts.outlierPp, default 0.15).
-function sanitizeBookOdds(p, opts) {
-  const outlierPp = (opts && opts.outlierPp != null) ? opts.outlierPp : 0.15;
-  const anchorPp  = (opts && opts.anchorPp  != null) ? opts.anchorPp  : 0.22;
-  const raw = (() => {
-    const src = (typeof p.book_odds === 'object' && p.book_odds) ? p.book_odds
-              : (typeof p.books === 'object' && p.books) ? p.books : null;
-    if (src) return src;
-    try { return JSON.parse(p.book_odds || p.books || '{}'); } catch (e) { return {}; }
-  })();
-  let entries = Object.entries(raw || {})
-    .map(([k, v]) => {
-      const odds = typeof v === 'number' ? v : parseInt(v);
-      return { book: _BOOK_NAMES[k.toLowerCase()] || k, odds: odds, implied: _impliedFromAmerican(odds) };
-    })
-    .filter(e => !isNaN(e.odds) && e.implied != null);
-  const total = entries.length;
-  // (1) anchor against the pick's own posted price; if the whole field is wrong-
-  //     side/corrupted, this leaves entries empty → no (bad) current price shown.
-  const anchor = _impliedFromAmerican(p.odds);
-  if (anchor != null && entries.length) {
-    entries = entries.filter(e => Math.abs(e.implied - anchor) <= anchorPp);
-  }
-  // (2) median filter for a lone outlier within an otherwise-consistent field.
-  if (entries.length >= 3) {
-    const imp = entries.map(e => e.implied).slice().sort((a, b) => a - b);
-    const mid = Math.floor(imp.length / 2);
-    const median = imp.length % 2 ? imp[mid] : (imp[mid - 1] + imp[mid]) / 2;
-    entries = entries.filter(e => Math.abs(e.implied - median) <= outlierPp);
-  }
-  entries.sort((a, b) => a.implied - b.implied);   // best payout first
-  return { entries: entries, best: entries.length ? entries[0] : null, dropped: total - entries.length };
-}
+// ── Book-odds sanitizer ───────────────────────────────────────────────────────
+// _BOOK_NAMES, _impliedFromAmerican and sanitizeBookOdds moved VERBATIM to
+// ibp-utils.js (loaded before this file) so bets.js shares the exact same
+// best-price behavior. Edit them there, never re-add copies here.
 
 // ── Share on X/Twitter ────────────────────────────────────────────────────────
 // Open an X share with the post text PLUS a UTM-tagged link back to the site, so every
@@ -1707,13 +1656,7 @@ function prSortPicks(arr) {
   });
 }
 
-// American odds → a continuous "cents" scale where +100 and -100 both map to 0 and
-// higher = a better price for the bettor. Lets us measure line movement and cushion
-// cleanly, even across the +/- boundary.
-function _oddsToCents(o) {
-  if (o == null || isNaN(o)) return null;
-  return o > 0 ? o - 100 : -(Math.abs(o) - 100);
-}
+// _oddsToCents moved VERBATIM to ibp-utils.js (shared with bets.js).
 
 // Implied win probability → American odds (used for the closing-line point on the
 // movement graph). Inverse of _impliedFromAmerican.

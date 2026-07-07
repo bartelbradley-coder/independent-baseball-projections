@@ -1,0 +1,135 @@
+/* ── "Just Tell Me What To Bet (for Z and Kream)" — bets.html ──
+   Deliberately sparse: one column, big type, one decision per card.
+   All colors come from the style.css token set. */
+
+.zk-wrap { max-width: 560px; margin: 0 auto; padding: 28px 18px 40px; }
+
+/* ── header ── */
+.zk-wrap h1 {
+  font-size: clamp(26px, 6.4vw, 34px); line-height: 1.15; font-weight: 800;
+  color: var(--text-1, #f1f5f9); letter-spacing: -0.02em; text-wrap: balance;
+  margin-bottom: 10px;
+}
+.zk-wrap h1 .zk-dedication { color: var(--indigo-lt); }
+.zk-subtitle { color: var(--text-2); font-size: 15px; max-width: 42ch; margin-bottom: 26px; }
+
+/* ── unit selector ── */
+.zk-unit-box {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-card);
+  padding: 14px 16px 16px; margin-bottom: 10px;
+}
+.zk-unit-box .zk-label {
+  font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--text-4); margin-bottom: 10px;
+}
+.zk-unit-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.zk-unit-opts button {
+  font: inherit; font-weight: 600; font-size: 15px; cursor: pointer;
+  color: var(--text-2); background: transparent;
+  border: 1px solid var(--border); border-radius: var(--r-pill);
+  padding: 8px 16px; transition: background .12s, color .12s, border-color .12s;
+}
+.zk-unit-opts button:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+.zk-unit-opts button[aria-pressed="true"] {
+  background: var(--indigo); border-color: var(--indigo); color: #fff;
+}
+.zk-custom-row { display: none; margin-top: 12px; align-items: center; gap: 8px; }
+.zk-custom-row.show { display: flex; }
+.zk-custom-row .zk-dollar { color: var(--text-2); font-weight: 600; }
+.zk-custom-row input {
+  font: inherit; font-size: 16px; font-weight: 600; width: 110px;
+  background: rgba(255,255,255,0.06); color: var(--text-1, #f1f5f9);
+  border: 1px solid var(--border); border-radius: var(--r-input); padding: 8px 12px;
+}
+.zk-unit-note { font-size: 12.5px; color: var(--text-4); margin-top: 10px; }
+.zk-unit-note strong { color: var(--text-2); font-weight: 600; }
+
+.zk-asof { display: none; font-size: 12.5px; color: var(--text-4); margin: 0 2px 22px; }
+.zk-asof .zk-dot { color: var(--green); }
+
+/* ── bet cards ── */
+.zk-cards { display: flex; flex-direction: column; gap: 16px; }
+.zk-card {
+  background: var(--bg-card); border: 1px solid rgba(34,197,94,0.35);
+  border-radius: var(--r-card); padding: 20px 20px 18px;
+}
+.zk-status {
+  display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .14em;
+  color: #04120a; background: var(--green); border-radius: var(--r-chip);
+  padding: 4px 10px; margin-bottom: 12px;
+}
+.zk-name { font-size: 26px; font-weight: 800; color: var(--text-1, #f1f5f9); letter-spacing: -0.015em; margin-bottom: 2px; }
+.zk-game { font-size: 13px; color: var(--text-4); margin-bottom: 16px; }
+
+.zk-prices { display: flex; gap: 10px; margin-bottom: 16px; }
+.zk-price {
+  flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  border-radius: var(--r-input); padding: 10px 12px;
+}
+.zk-price .zk-k { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-4); margin-bottom: 2px; }
+.zk-price .zk-v { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text-1, #f1f5f9); }
+.zk-price.limit .zk-v { color: var(--green); }
+
+.zk-stake-label { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-4); margin-bottom: 2px; }
+.zk-stake { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.zk-stake .zk-amt { font-size: 34px; font-weight: 800; color: var(--text-1, #f1f5f9); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.zk-stake .zk-units { font-size: 14px; color: var(--text-2); font-weight: 600; }
+
+.zk-instruction {
+  font-size: 14px; color: var(--text); background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.22); border-radius: var(--r-input);
+  padding: 10px 13px; margin: 14px 0 16px;
+}
+.zk-instruction strong { color: var(--green); font-variant-numeric: tabular-nums; }
+
+.zk-books { display: flex; gap: 8px; flex-wrap: wrap; }
+.zk-books .zk-bk-label { flex-basis: 100%; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-4); }
+.zk-books a {
+  font-size: 13px; font-weight: 600; text-decoration: none; color: var(--text-2);
+  border: 1px solid var(--border); border-radius: var(--r-pill); padding: 7px 14px;
+  transition: color .12s, border-color .12s;
+}
+.zk-books a:hover { color: var(--text-1, #f1f5f9); border-color: rgba(255,255,255,0.2); }
+.zk-books a::after { content: " ↗"; color: var(--text-4); font-size: 11px; }
+
+/* ── skip section ── */
+.zk-skips { margin-top: 26px; }
+.zk-skips summary {
+  cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--text-4); padding: 10px 2px;
+}
+.zk-skips summary::-webkit-details-marker { display: none; }
+.zk-skips summary .zk-chev { transition: transform .15s; font-size: 11px; }
+.zk-skips[open] summary .zk-chev { transform: rotate(90deg); }
+.zk-skip-card {
+  background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2);
+  border-radius: var(--r-card); padding: 14px 16px; margin-top: 8px;
+}
+.zk-skip-row1 { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.zk-skip-nm { font-size: 17px; font-weight: 700; color: var(--text); }
+.zk-skip-tag { font-size: 10.5px; font-weight: 800; letter-spacing: .1em; color: var(--red-lt); }
+.zk-skip-nums { font-size: 13.5px; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.zk-skip-nums b { color: var(--text-1, #f1f5f9); font-weight: 700; }
+.zk-skip-why { font-size: 12.5px; color: var(--text-4); margin-top: 6px; }
+.zk-skip-why a { color: var(--text-2); }
+
+/* ── empty / pending / guarded states ── */
+.zk-empty { text-align: center; padding: 56px 10px 30px; }
+.zk-empty h2 {
+  font-size: clamp(26px, 7vw, 36px); font-weight: 800; letter-spacing: -0.02em;
+  color: var(--text-1, #f1f5f9); margin-bottom: 14px; text-wrap: balance;
+}
+.zk-empty.zk-nobets h2 { color: var(--red-lt); }
+.zk-empty p { color: var(--text-2); max-width: 40ch; margin: 0 auto 8px; }
+.zk-empty .zk-fine { font-size: 13px; color: var(--text-4); }
+#zk-nobets-skips { text-align: left; }
+
+/* ── page footer bits ── */
+.zk-grass { text-align: center; font-size: 15px; font-weight: 600; color: var(--text-2); margin: 40px 0 8px; }
+.zk-pagefoot {
+  border-top: 1px solid var(--border); margin-top: 26px; padding-top: 18px;
+  font-size: 12.5px; color: var(--text-4); text-align: center;
+}
+.zk-pagefoot p { margin-bottom: 6px; }
+.zk-pagefoot a { color: var(--text-2); }
