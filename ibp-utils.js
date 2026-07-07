@@ -238,7 +238,11 @@ function handleEmailSubmit(e) {
     body: JSON.stringify({ email }),
   })
   .then(r => r.json())
-  .then(() => { form.style.display = 'none'; if (success) success.style.display = 'block'; })
+  .then(() => {
+    form.style.display = 'none'; if (success) success.style.display = 'block';
+    // Subscribed — permanently suppress the sticky mobile capture prompt.
+    try { localStorage.setItem('ibp_subscribed', '1'); document.getElementById('sticky-capture')?.remove(); } catch (err) {}
+  })
   .catch(() => {
     if (btn) { btn.disabled = false; btn.textContent = origLabel || 'Get Daily Picks →'; }
     alert('Something went wrong — please try again in a moment.');

@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=39">
+<link rel="stylesheet" href="style.css?v=40">
 <link rel="stylesheet" href="index.css?v=6">
 <style>
 .gen-at { font-size: 11px; color: var(--text-4); margin-bottom: 16px; }
@@ -88,10 +88,25 @@
     </div>
   </div>
 
+  <!-- Preview accountability: yesterday evening's signals vs this morning's
+       official picks. Hidden until data/preview_recon.json exists for today
+       (written by the morning export) — the page is forward-compatible. -->
+  <div id="preview-recon" class="preview-recon" hidden></div>
+
   <div id="gen-at" class="gen-at"></div>
 
   <!-- Pick cards -->
   <div id="preview-picks"></div>
+
+  <!-- EMAIL CAPTURE — this page's whole audience is "tell me at 9 AM" people -->
+  <section class="email-bar" id="email-capture">
+    <div class="eb-copy"><strong>The day's picks in your inbox every morning.</strong> One email a day, only on days the model finds a bet. Free for all of 2026 while the public record builds.</div>
+    <form class="ec-form eb-form" id="ec-form" onsubmit="handleEmailSubmit(event)">
+      <input class="ec-input" type="email" name="email_address" aria-label="Email address" placeholder="your@email.com" required autocomplete="email">
+      <button class="ec-btn" type="submit">Send me the picks →</button>
+    </form>
+    <div class="ec-success" id="ec-success" role="status">✓ You're on the list — picks coming your way.</div>
+  </section>
 
 </div><!-- /page -->
 
@@ -303,6 +318,36 @@ async function loadPreview() {
       </div>`;
   }
 }
+
+// ── Preview scorecard: how yesterday evening's signals fared at 9 AM ─────────
+async function loadPreviewRecon() {
+  try {
+    const r = await fetch('data/preview_recon.json?v=' + Date.now());
+    if (!r.ok) return;
+    const d = await r.json();
+    // CT date, not visitor-local — the export writes recon.date in CT, and a
+    // visitor in another timezone must not lose (or prematurely see) the strip.
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Chicago' }).format(new Date());
+    if (!d || d.date !== today || !d.summary || !d.summary.signals) return;
+    const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const s = d.summary;
+    const moves = (d.results || [])
+      .filter(x => x.status === 'became_official' && x.preview_edge != null && x.official_edge != null)
+      .map(x => esc(x.pick) + ' ' + (x.preview_edge * 100).toFixed(1) + 'pp → ' + (x.official_edge * 100).toFixed(1) + 'pp')
+      .join(' · ');
+    const dropped = (d.results || []).filter(x => x.status === 'dropped').map(x => esc(x.pick)).join(', ');
+    const el = document.getElementById('preview-recon');
+    el.innerHTML = '<div class="pr-recon-h">Preview scorecard — how last evening\'s signals fared</div>'
+      + '<div class="pr-recon-b"><strong>' + s.survived + ' of ' + s.signals + '</strong> preview signal'
+      + (s.signals !== 1 ? 's' : '') + ' became official picks at the 9 AM post'
+      + (moves ? ' <span class="pr-recon-mv">(' + moves + ')</span>' : '')
+      + (dropped ? ' · dropped after lineup confirmation: ' + dropped : '')
+      + (s.official_not_previewed ? ' · ' + s.official_not_previewed + ' official pick' + (s.official_not_previewed !== 1 ? 's' : '') + ' had no evening signal' : '')
+      + '. Tracked daily — previews are accountable, not disposable.</div>';
+    el.hidden = false;
+  } catch (e) { /* strip is optional — never break the page */ }
+}
+loadPreviewRecon();
 
 loadPreview();
 // The copy promises 7/9/11 PM CT refreshes — actually pick them up. Without this

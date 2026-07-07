@@ -2870,6 +2870,42 @@ document.querySelectorAll('.nav-link').forEach(el => {
   });
 });
 
+// ── Sticky mobile email capture — repeat visitors only ───────────────────────
+// Shown ≤760px (CSS-gated) after 2+ distinct visit days; one dismissal = 30-day
+// suppress; subscribing removes it permanently. No dark patterns: it never
+// re-prompts within the window and never blocks content (bottom bar, real ✕).
+(function initStickyCapture() {
+  try {
+    const today = new Date().toLocaleDateString('en-CA');
+    if (localStorage.getItem('ibp_subscribed') === '1') return;
+    const dismissedAt = parseInt(localStorage.getItem('ibp_sticky_dismissed') || '0', 10);
+    if (dismissedAt && (Date.now() - dismissedAt) < 30 * 86400000) return;
+    let visits = [];
+    try { visits = JSON.parse(localStorage.getItem('ibp_visit_days') || '[]'); } catch (e) {}
+    if (!visits.includes(today)) visits = visits.concat(today).slice(-10);
+    localStorage.setItem('ibp_visit_days', JSON.stringify(visits));
+    if (visits.length < 2) return;
+
+    const bar = document.createElement('div');
+    bar.id = 'sticky-capture';
+    bar.className = 'sticky-capture show';
+    bar.setAttribute('role', 'complementary');
+    bar.innerHTML = '<span class="sc-cap-txt"><strong>The day\'s picks in your inbox every morning</strong> — free in 2026.</span>'
+      + '<button type="button" class="sc-cap-btn">Sign up</button>'
+      + '<button type="button" class="sc-cap-x" aria-label="Dismiss">✕</button>';
+    bar.querySelector('.sc-cap-btn').onclick = () => {
+      document.getElementById('email-capture')?.scrollIntoView({ behavior: 'smooth' });
+      document.querySelector('#email-capture .ec-input')?.focus({ preventScroll: true });
+      bar.remove();
+    };
+    bar.querySelector('.sc-cap-x').onclick = () => {
+      localStorage.setItem('ibp_sticky_dismissed', String(Date.now()));
+      bar.remove();
+    };
+    document.body.appendChild(bar);
+  } catch (e) { /* capture prompt is optional */ }
+})();
+
 // ── "How to read a pick" help sheet ──────────────────────────────────────────
 // The table's education lives in hover tooltips that don't exist on touch —
 // this sheet is the tap-reachable equivalent (bottom sheet ≤760px, modal above).
