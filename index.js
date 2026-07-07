@@ -2591,7 +2591,11 @@ function render(data, hist, scores = {}, perf = null) {
     if (_strongN) _metaBits.push(`<strong class="at-strong">${_strongN}</strong> strong`);
     if (_best) _metaBits.push(`top edge <strong class="g">+${(_best.edge * 100).toFixed(1)}pp</strong> <span class="at-bt">${_best.pick}</span>`);
     if (_hasInactive) _metaBits.push(`<span class="at-dim">${inactivePosted.length} no longer playable</span>`);
-    if (data.games_today) _metaBits.push(`<span class="at-dim">${data.games_today} games analyzed</span>`);
+    // games_today can undercount when the export cache lags the pick list — never
+    // print an "analyzed" figure smaller than the number of games we're showing.
+    const _gamesShown = new Set((data.picks || []).map(p => p.game).filter(Boolean)).size;
+    const _gamesAnalyzed = Math.max(data.games_today || 0, _gamesShown);
+    if (_gamesAnalyzed) _metaBits.push(`<span class="at-dim">${_gamesAnalyzed} games analyzed</span>`);
     const _upd = data.generated_at ? `Updated ${String(data.generated_at).split(' · ')[0]}` : '';
     const _summaryEl = document.getElementById('picks-summary');
     if (_summaryEl) _summaryEl.innerHTML =

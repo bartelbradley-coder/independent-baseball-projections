@@ -240,7 +240,7 @@ async function loadPreview() {
     container.innerHTML = todayBanner + picks.map(p => {
       const edge    = p.edge ? (p.edge * 100).toFixed(1) : null;
       const odds    = formatOdds(p.odds);
-      const book    = p.book || '';
+      const book    = p.best_book || p.book || '';
       const pitchers = [p.pitcher, p.opp_pitcher].filter(Boolean).join(' vs. ');
       const gameTime = formatGameTime(p.game_time);
       const edgeHtml = edge

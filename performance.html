@@ -587,7 +587,7 @@ function renderValidationHeader(p, h) {
       <div class="hl-sub">${s.bets || 0} picks settled</div>
     </div>
     <div class="hl-stat featured">
-      <div class="hl-val green">${fmtU(s.units)}</div>
+      <div class="hl-val ${(s.units || 0) >= 0 ? 'green' : 'red'}">${fmtU(s.units)}</div>
       <div class="hl-lbl">Units P&amp;L</div>
       <div class="hl-sub" title="${_roiCI.lo != null ? 'Likely true long-run ROI/bet: ' + pct(_roiCI.lo) + ' to ' + pct(_roiCI.hi) + ' (95% CI over ' + _roiCI.n + ' bets) — see the risk strip below.' : ''}">${pct(s.roi)} ROI / bet</div>
     </div>
@@ -1268,7 +1268,8 @@ function renderTeamStats(rows) {
 
 // ── Pitcher performance ───────────────────────────────────────────────────────
 function renderPitcherStats(rows) {
-  const settled = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.pitcher);
+  // Exclude placeholder names (e.g. "TBD" when the starter was unannounced) — not real pitchers
+  const settled = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.pitcher && r.pitcher.trim().toUpperCase() !== 'TBD');
   if (settled.length === 0) return;
 
   const map = {};
