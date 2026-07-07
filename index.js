@@ -2257,9 +2257,11 @@ function render(data, hist, scores = {}, perf = null) {
     const s  = data && data.season;
     if (el && s && s.roi != null && s.bets) {
       const roi = (s.roi >= 0 ? '+' : '') + (s.roi * 100).toFixed(1) + '%';
-      el.innerHTML = `<span class="hp-stat">${roi} ROI</span> across `
-        + `<span class="hp-stat idx">${s.bets.toLocaleString()}</span> logged bets`
-        + ` — every pick posted before first pitch.`;
+      // Brag + hedge in one breath: the ROI claim never ships without the CLV
+      // caveat, so the hero can't overclaim what the dashboard won't certify.
+      el.innerHTML = `<span class="hp-stat idx">${s.bets.toLocaleString()}</span> picks logged`
+        + ` · <span class="hp-stat">${roi} ROI</span> so far`
+        + ` — we track closing-line value too, and we won't call the edge proven until it agrees.`;
       el.hidden = false;
     }
     const cnt = document.getElementById('hero-pick-count');

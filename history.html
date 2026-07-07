@@ -103,6 +103,14 @@
       <li>Live results are reported separately from historical backtests.</li>
       <li>Past performance does not guarantee future results.</li>
     </ul>
+    <details class="record-notes" style="margin-top:10px;font-size:11px;color:var(--text-3);line-height:1.55">
+      <summary style="cursor:pointer;font-weight:600;color:var(--text-2)">Record notes — known imperfections in this data</summary>
+      <ul style="margin:8px 0 0 16px;padding:0">
+        <li><strong>Posting timestamps begin June 1, 2026.</strong> Picks before that date were logged pre-pitch but predate the visible-timestamp system, so no 📌 posted-time appears on those rows.</li>
+        <li><strong>The posting threshold tightened over the season.</strong> Earlier picks were posted at lower edge minimums; the current bar is 4pp. Everything ever posted stays in the record — rows below today's threshold are marked "Below" rather than removed.</li>
+        <li><strong>Early-season CLV is partly reconstructed.</strong> Live closing-line capture matured during the season; some early values were reconstructed from historical odds, and rows show "—" where no usable closing snapshot exists. We treat CLV as a signal to accumulate, not proof.</li>
+      </ul>
+    </details>
   </section>
 
   <!-- Summary pills + P&L mode toggle -->
@@ -174,10 +182,10 @@
 
   <!-- EMAIL CAPTURE -->
   <section class="email-bar" id="email-capture">
-    <div class="eb-copy"><strong>Get the daily picks by email</strong> — free while we build the 2026 track record (it won't be free forever). One email a day, only on days with picks.</div>
+    <div class="eb-copy"><strong>The day's picks in your inbox every morning.</strong> One email a day, only on days the model finds a bet. Free for all of 2026 while the public record builds.</div>
     <form class="ec-form eb-form" id="ec-form" onsubmit="handleEmailSubmit(event)">
       <input class="ec-input" type="email" name="email_address" aria-label="Email address" placeholder="your@email.com" required autocomplete="email">
-      <button class="ec-btn" type="submit">Get Daily Picks →</button>
+      <button class="ec-btn" type="submit">Send me the picks →</button>
     </form>
     <div class="ec-success" id="ec-success" role="status">✓ You're on the list — picks coming your way.</div>
   </section>

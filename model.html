@@ -174,7 +174,7 @@
   <div>
     <div style="font-size:12px;font-weight:700;color:#818cf8;margin-bottom:6px">Independent Baseball Projections is a market-informed model</div>
     <p style="font-size:11.5px;color:var(--text-3);line-height:1.65;margin-bottom:6px">Raw team strength, pitching, lineup, park, weather, and situational signals generate the baseline projection. Market information — specifically the book O/U total and Pinnacle no-vig probability — is used as a stabilizing input (via the <code style="font-family:var(--font-mono);font-size:10px;color:#c7d2fe">book_total_constraint</code> factor, α₁₆) to reduce extreme run-total outputs and align the model with the sharp betting market's run environment. After Platt calibration, the final Independent Baseball Projections probability is compared against the no-vig Pinnacle market probability to identify remaining pricing gaps where the model and market diverge.</p>
-    <p style="font-size:10.5px;color:var(--text-3);font-style:italic;line-height:1.5;margin:0">Because the market is used as both a stabilizing input and a comparison benchmark, Independent Baseball Projections should be understood as a market-informed model rather than a fully market-independent projection. This is disclosed transparently; the model still identifies genuine pricing gaps in approximately 15–25% of games per day.</p>
+    <p style="font-size:10.5px;color:var(--text-3);font-style:italic;line-height:1.5;margin:0">Because the market is used as both a stabilizing input and a comparison benchmark, Independent Baseball Projections should be understood as a market-informed model rather than a fully market-independent projection. This is disclosed transparently; the model flags candidate pricing gaps in approximately 15–25% of games per day — whether those gaps are durable edge is what the live record is testing.</p>
   </div>
 </div>
 
@@ -275,7 +275,7 @@
       </div>
       <div class="pipe-io">
         <div class="pio-row"><div class="pio-lbl pio-in">IN</div><div class="pio-text">edge, decimal_odds, bankroll</div></div>
-        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">stake (units); cap 3u; log → picks_log.csv</div></div>
+        <div class="pio-row"><div class="pio-lbl pio-out">OUT</div><div class="pio-text">stake (units); cap 3u; pick logged pre-pitch</div></div>
       </div>
     </div>
 
@@ -371,9 +371,9 @@
       <div class="fbox"><span class="v">CLV</span> <span class="op">&gt;</span> <span class="n">0</span>  → market moved <span class="v">toward</span> pick
 <span class="v">CLV</span> <span class="op">&lt;</span> <span class="n">0</span>  → market moved <span class="v">against</span> pick
 
-<span class="cm">// +1% avg CLV ≈ long-run positive EV
-// Separates skill from short-run variance</span></div>
-      <div class="math-note">CLV is the gold standard for betting process validation — a model can run cold for 50 games but still show positive CLV, confirming the signal is real. Tracked per-bet in <strong>picks_log.csv</strong>, surfaced via <strong>--poster-stats</strong>.</div>
+<span class="cm">// Sustained positive CLV is the standard
+// evidence of a durable edge</span></div>
+      <div class="math-note">CLV is the gold standard for betting process validation — a model can run cold for 50 games while positive CLV still suggests the process is sound. Our live CLV sample is thin and not yet conclusive (see Honest Limitations below); every pick's CLV is logged and reported on the Model Dashboard.</div>
     </div>
 
   </div>
@@ -635,7 +635,7 @@
       <div class="fbox"><span class="hl">A_rl</span> <span class="op">&lt;</span> <span class="n">1</span>  <span class="cm">// &lt; 1: slight overconfidence;
                //   less shrinkage than ML model</span>
 <span class="hl">B_rl</span> <span class="op">&lt;</span> <span class="n">0</span> <span class="cm">// small away-team correction</span></div>
-      <div class="f-lbl">Backtest results — 7,237 games, OOS 2022–2024</div>
+      <div class="f-lbl">Backtest results (hypothetical — not live results) — 7,237 games, OOS 2022–2024</div>
       <div class="fbox">Home cover rate:  <span class="n">35.7%</span> actual vs <span class="n">35.6%</span> model
 Direction acc.:   <span class="n">64.7%</span>  <span class="cm">(better side predicted)</span>
 
@@ -647,8 +647,8 @@ Away <span class="op">+</span><span class="n">1.5</span> win rate vs model edge:
   <span class="op">≥</span> <span class="n">0pp</span> edge <span class="op">→</span> <span class="n">65.5%</span>
   <span class="op">≥</span> <span class="n">5pp</span> edge <span class="op">→</span> <span class="n">67.2%</span>
   <span class="op">≥</span> <span class="n">8pp</span> edge <span class="op">→</span> <span class="n">68.4%</span>
-  <span class="op">≥</span><span class="n">10pp</span> edge <span class="op">→</span> <span class="n">69.6%</span>   <span class="cm">// genuine discriminatory power</span></div>
-      <div class="math-note">RL edge = p_rl_cal − p_nv_Pinnacle_RL. Logged at edge ≥ 2pp — a deliberately low gate that keeps the calibration sample full; run-line ROI uplift concentrates at ≥ 5pp edge. CLV tracked separately via Pinnacle spreads pre-game closing line snapshot. Home −1.5 volume is low (&lt;40 bets at ≥8pp edge over 3 seasons) — treated as a specialty bet requiring high model confidence.</div>
+  <span class="op">≥</span><span class="n">10pp</span> edge <span class="op">→</span> <span class="n">69.6%</span>   <span class="cm">// monotonic in the backtest</span></div>
+      <div class="math-note">RL edge = p_rl_cal − p_nv_Pinnacle_RL. Logged at edge ≥ 2pp — a deliberately low gate that keeps the calibration sample full; run-line ROI uplift concentrates at ≥ 5pp edge. CLV tracked separately via Pinnacle spreads pre-game closing line snapshot. Home −1.5 volume is low (&lt;40 bets at ≥8pp edge over 3 seasons) — treated as a specialty bet requiring high model confidence. <strong>Live status:</strong> run-line picks are not posted or staked on this site, and the live run-line record has not matched these backtest figures — read this section as model validation on historical data, not an expected return.</div>
     </div>
 
     <div class="math-block cv">
@@ -700,10 +700,10 @@ Bias by total line:
 
   <!-- EMAIL CAPTURE -->
   <section class="email-bar" id="email-capture">
-    <div class="eb-copy"><strong>Get the daily picks by email</strong> — free while we build the 2026 track record (it won't be free forever). One email a day, only on days with picks.</div>
+    <div class="eb-copy"><strong>The day's picks in your inbox every morning.</strong> One email a day, only on days the model finds a bet. Free for all of 2026 while the public record builds.</div>
     <form class="ec-form eb-form" id="ec-form" onsubmit="handleEmailSubmit(event)">
       <input class="ec-input" type="email" name="email_address" aria-label="Email address" placeholder="your@email.com" required autocomplete="email">
-      <button class="ec-btn" type="submit">Get Daily Picks →</button>
+      <button class="ec-btn" type="submit">Send me the picks →</button>
     </form>
     <div class="ec-success" id="ec-success" role="status">✓ You're on the list — picks coming your way.</div>
   </section>

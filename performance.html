@@ -364,10 +364,10 @@
 
   <!-- EMAIL CAPTURE -->
   <section class="email-bar" id="email-capture">
-    <div class="eb-copy"><strong>Get the daily picks by email</strong> — free while we build the 2026 track record (it won't be free forever). One email a day, only on days with picks.</div>
+    <div class="eb-copy"><strong>The day's picks in your inbox every morning.</strong> One email a day, only on days the model finds a bet. Free for all of 2026 while the public record builds.</div>
     <form class="ec-form eb-form" id="ec-form" onsubmit="handleEmailSubmit(event)">
       <input class="ec-input" type="email" name="email_address" aria-label="Email address" placeholder="your@email.com" required autocomplete="email">
-      <button class="ec-btn" type="submit">Get Daily Picks →</button>
+      <button class="ec-btn" type="submit">Send me the picks →</button>
     </form>
     <div class="ec-success" id="ec-success" role="status">✓ You're on the list — picks coming your way.</div>
   </section>
@@ -1072,7 +1072,9 @@ function renderModelValidation(rows) {
   const z  = (actWins - expWins) / sd;
   const delta = actWins - expWins;
   const skillTone = Math.abs(z) < 1 ? 'at' : z >= 1 ? 'above' : 'below';
-  const skillVerdict = skillTone === 'at' ? 'Running at model expectation — results reflect skill, not a hot streak.'
+  // NB: this compares results to the model's OWN probabilities — it can confirm
+  // consistency, never edge vs the market. Don't let the copy claim more.
+  const skillVerdict = skillTone === 'at' ? 'Running at model expectation — consistent with the model\'s read. (Market agreement is the CLV test.)'
     : skillTone === 'above' ? 'Running above expectation — some positive variance in the sample.'
     : 'Running below expectation — some negative variance in the sample.';
 
@@ -1098,15 +1100,19 @@ function renderModelValidation(rows) {
   const se = Math.sqrt(sevar / n);
   const ciLo = mean - 1.96 * se, ciHi = mean + 1.96 * se;
   const roiSig = ciLo > 0;
-  // CLV significance
+  // CLV agreement — same two-condition bar as the headline tile (CI > 0 AND a
+  // majority of picks beating the close). A mean-CI-only test can read "significant"
+  // off a few tail moves while most picks lose to the close — that contradiction
+  // shipped here before; keep one verdict across the page.
   const clvs = settled.map(r => parseFloat(r.clv)).filter(v => !isNaN(v));
-  let clvLine = '';
+  let clvLine = '', clvAgrees = false;
   if (clvs.length >= 20) {
     const cm = clvs.reduce((a, b) => a + b, 0) / clvs.length;
     const cv = clvs.reduce((a, b) => a + (b - cm) ** 2, 0) / (clvs.length - 1);
     const cse = Math.sqrt(cv / clvs.length);
-    const csig = (cm - 1.96 * cse) > 0;
-    clvLine = `CLV ${pct(cm)} ± ${(1.96 * cse * 100).toFixed(1)}pp · ${csig ? 'beats close significantly' : 'not yet distinguishable from 0'}`;
+    const cpos = clvs.filter(v => v > 0).length / clvs.length;
+    clvAgrees = (cm - 1.96 * cse) > 0 && cpos >= 0.5;
+    clvLine = `CLV ${pct(cm)} ± ${(1.96 * cse * 100).toFixed(1)}pp · ${(cpos * 100).toFixed(0)}% of picks beat the close · ${clvAgrees ? 'the market is moving toward our picks' : 'flat — the market hasn\'t confirmed the edge'}`;
   }
 
   const card = (label, big, bigCol, sub) => `
@@ -1121,10 +1127,13 @@ function renderModelValidation(rows) {
          `${actWins} <span class="val-vs">vs</span> ${expWins.toFixed(0)}`,
          Math.abs(z) < 1 ? 'green' : '',
          `Actual vs expected wins (${delta >= 0 ? '+' : ''}${delta.toFixed(1)}, z=${z.toFixed(1)}). ${skillVerdict}`) +
-    card('Edge Significance',
-         roiSig ? 'Significant' : 'Emerging',
-         roiSig ? 'green' : '',
-         `ROI/bet ${pct(mean)} · 95% CI ${pct(ciLo)}…${pct(ciHi)} over ${n} bets.${clvLine ? ' ' + clvLine + '.' : ''}`) +
+    card('Edge Verdict',
+         roiSig && clvAgrees ? 'Profitable · market-confirmed'
+           : roiSig ? 'Profitable · unproven'
+           : 'Emerging',
+         roiSig && clvAgrees ? 'green' : '',
+         `${roiSig && !clvAgrees ? 'Profitable so far; market agreement (CLV) is still flat — the edge is not yet proven. ' : ''}`
+           + `ROI/bet ${pct(mean)} · 95% CI ${pct(ciLo)}…${pct(ciHi)} over ${n} bets.${clvLine ? ' ' + clvLine + '.' : ''}`) +
     card('Risk',
          `${fmtU(maxDD)}`,
          'red',
