@@ -392,9 +392,10 @@ async function loadPreviewRecon() {
     const el = document.getElementById('preview-recon');
     el.innerHTML = '<div class="pr-recon-h">Preview scorecard — how last evening\'s signals fared</div>'
       + '<div class="pr-recon-b"><strong>' + s.survived + ' of ' + s.signals + '</strong> preview signal'
-      + (s.signals !== 1 ? 's' : '') + ' became official picks at the 9 AM post'
+      + (s.signals !== 1 ? 's' : '') + ' became ' + (s.survived === 1 ? 'an official pick' : 'official picks') + ' at the 9 AM post'
       + (moves ? ' <span class="pr-recon-mv">(' + moves + ')</span>' : '')
       + (dropped ? ' · dropped after lineup confirmation: ' + dropped : '')
+      + (s.ambiguous ? ' · ' + s.ambiguous + ' doubleheader signal' + (s.ambiguous !== 1 ? 's' : '') + ' couldn\'t be attributed (same matchup played twice)' : '')
       + (s.official_not_previewed ? ' · ' + s.official_not_previewed + ' official pick' + (s.official_not_previewed !== 1 ? 's' : '') + ' had no evening signal' : '')
       + '. Tracked daily — previews are accountable, not disposable.</div>';
     el.hidden = false;
