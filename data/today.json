@@ -1,9 +1,283 @@
 {
   "date": "2026-07-08",
-  "generated_at": "8:55 AM CT \u00b7 Jul 8",
-  "generated_at_utc": "2026-07-08T13:55:09Z",
+  "generated_at": "9:16 AM CT \u00b7 Jul 8",
+  "generated_at_utc": "2026-07-08T14:16:33Z",
   "no_picks_yet": false,
   "picks": [
+    {
+      "game": "KC @ MET",
+      "pick": "KC",
+      "side": "AWAY",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Steven Cruz",
+      "posted_at": "9:16 AM CT",
+      "game_time": "2026-07-08T23:10:00Z",
+      "temp_f": 80.0,
+      "wind_speed_mph": 7.0,
+      "wind_dir_degrees": 180.0,
+      "is_domed": false,
+      "model_prob": 0.5323,
+      "market_prob": 0.4173,
+      "edge": 0.1174,
+      "ev_per_100": 28.28,
+      "odds": 141,
+      "best_odds": 141,
+      "best_book": "Novig",
+      "fair_odds": "-114",
+      "playable_to": 103,
+      "break_even": 0.4149,
+      "kelly_units": 2.51,
+      "line_open": 134,
+      "line_current": 134,
+      "odds_history": [
+        {
+          "t": "2026-07-08T13:04",
+          "odds": 133
+        },
+        {
+          "t": "2026-07-08T14:16",
+          "odds": 141
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 128,
+        "Betway": 125,
+        "Novig": 141,
+        "ESPN Bet": 130,
+        "DraftKings": 130,
+        "Hard Rock": 125,
+        "BetRivers": 123,
+        "BetMGM": 125,
+        "ProphetX": 140,
+        "BetUS": 135,
+        "BetOnline": 136,
+        "LowVig": 136,
+        "Pinnacle": 134,
+        "Bovada": 130
+      },
+      "pitcher": "Steven Cruz",
+      "opp_pitcher": "Christian Scott",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 0.97
+        },
+        {
+          "label": "Home Field",
+          "value": -0.026
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": 0.025
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 4.188,
+        "opp_xfip": 5.215,
+        "pick_oaa": 9,
+        "opp_oaa": -17,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 94.0,
+        "opp_whiff_pct": 53.0,
+        "pick_kbb_pct": null,
+        "opp_kbb_pct": 0.1636,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.1995,
+        "opp_arsenal_fit": -0.2531,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 5.3,
+        "opp_proj_ip": 4.8,
+        "pick_era": null,
+        "opp_era": 3.49,
+        "pick_k_pct": null,
+        "opp_k_pct": 0.2804,
+        "ump_name": "",
+        "pick_home_w": 17,
+        "pick_home_l": 28,
+        "pinnacle_ml_open": 134.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 0.968
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 0.97,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Home field",
+            "pp": -0.65,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.62,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 0.94,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "The model prices KC at 53.2% to win where the no-vig market implies 41.7%, a 11.7pp disagreement. Several smaller signals stack the same way \u2014 pitcher quality (xfip) (~+1.0pp), defense (oaa) (~+0.6pp) \u2014 with no single one dominating. The main pushback is home field (~-0.7pp): MET's home-field context weighs against the pick playing on the road. The market has drifted against the pick since posting, widening the available price \u2014 the current +141 still sits inside the playable range (to +103). As a cluster edge rather than one dominant mismatch, it is a thinner, more fragile signal \u2014 worth sizing accordingly.",
+      "explanation": {
+        "explanation_type": "cluster_edge",
+        "risk_level": "medium",
+        "model_prob": 0.5323,
+        "market_prob": 0.4173,
+        "edge_pp": 11.7,
+        "fair_odds": "-114",
+        "current_odds": "+141",
+        "playable_to": "+103",
+        "positive_drivers": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 0.97,
+            "tier": "secondary",
+            "group": "pitcher",
+            "detail": "Steven Cruz 4.19 xFIP vs Christian Scott 5.21 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": 0.62,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "KC defense grades +26 OAA better on the season \u2014 a run-prevention edge.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": -0.65,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "MET's home-field context weighs against the pick playing on the road.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+134",
+          "current_odds": "+141",
+          "movement_summary": "the market has drifted against the pick since posting, widening the available price"
+        },
+        "sections": {
+          "edge_thesis": "The model prices KC at 53.2% to win where the no-vig market implies 41.7%, a 11.7pp disagreement.",
+          "whats_driving_it": "Several smaller signals stack the same way \u2014 pitcher quality (xfip) (~+1.0pp), defense (oaa) (~+0.6pp) \u2014 with no single one dominating.",
+          "what_pushes_back": "The main pushback is home field (~-0.7pp): MET's home-field context weighs against the pick playing on the road.",
+          "bvp_note": null,
+          "betting_note": "The market has drifted against the pick since posting, widening the available price \u2014 the current +141 still sits inside the playable range (to +103).",
+          "route_to_win": "As a cluster edge rather than one dominant mismatch, it is a thinner, more fragile signal \u2014 worth sizing accordingly.",
+          "read": "This is a cluster edge \u2014 several small signals, not one mismatch."
+        },
+        "read_label": "This is a cluster edge \u2014 several small signals, not one mismatch.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Pitcher quality (xFIP)",
+          "top_positive_pp": 0.97,
+          "top_negative_label": "Home field",
+          "top_negative_pp": -0.65,
+          "has_primary_driver": false,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 2
+        },
+        "prose": "The model prices KC at 53.2% to win where the no-vig market implies 41.7%, a 11.7pp disagreement. Several smaller signals stack the same way \u2014 pitcher quality (xfip) (~+1.0pp), defense (oaa) (~+0.6pp) \u2014 with no single one dominating. The main pushback is home field (~-0.7pp): MET's home-field context weighs against the pick playing on the road. The market has drifted against the pick since posting, widening the available price \u2014 the current +141 still sits inside the playable range (to +103). As a cluster edge rather than one dominant mismatch, it is a thinner, more fragile signal \u2014 worth sizing accordingly."
+      },
+      "run_line": {
+        "spread": "+1.5",
+        "model_prob": 0.777,
+        "fair_odds": "-348",
+        "book_odds": -153,
+        "edge": 0.1723
+      },
+      "total": null,
+      "current_edge": 0.1174,
+      "current_model_prob": 0.5323,
+      "current_refresh_time": "9:16 AM CT \u00b7 Jul 8",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Steven Cruz",
+      "current_fair_odds": "-114",
+      "current_playable_to": 103,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 0.97,
+          "positive": true
+        },
+        {
+          "label": "Home field",
+          "pp": -0.65,
+          "positive": false
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": 0.62,
+          "positive": true
+        }
+      ],
+      "model_change": {
+        "edge_delta": -0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.5323,
+          "market_prob": 0.4173,
+          "edge": 0.1174
+        },
+        "current": {
+          "model_prob": 0.5323,
+          "market_prob": 0.4173,
+          "edge": 0.1174
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": 0.45,
+            "delta_pp": 0.45
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "9:16 AM CT \u00b7 Jul 8"
+      },
+      "verdict": "\u2705 STRONG",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
     {
       "game": "COL @ LAD",
       "pick": "COL",
@@ -35,7 +309,7 @@
           "odds": 217
         },
         {
-          "t": "2026-07-08T13:55",
+          "t": "2026-07-08T14:16",
           "odds": 217
         }
       ],
@@ -51,14 +325,14 @@
         "BetOnline": 201,
         "Novig": 217,
         "Hard Rock": 200,
-        "DraftKings": 198,
-        "BetMGM": 190,
+        "DraftKings": 202,
+        "BetMGM": 195,
         "ProphetX": 215,
         "ESPN Bet": 210,
         "Bovada": 195,
         "BetRivers": 200,
         "Pinnacle": 206,
-        "MyBookie": 197,
+        "MyBookie": 202,
         "BetUS": 202,
         "Betway": 200
       },
@@ -219,9 +493,9 @@
         "edge": 0.156
       },
       "total": null,
-      "current_edge": 0.1078,
-      "current_model_prob": 0.4233,
-      "current_refresh_time": "8:55 AM CT \u00b7 Jul 8",
+      "current_edge": 0.1077,
+      "current_model_prob": 0.4232,
+      "current_refresh_time": "9:16 AM CT \u00b7 Jul 8",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -249,18 +523,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": -0.0001,
+        "model_delta": -0.0001,
+        "market_delta": -0.0003,
         "posted": {
           "model_prob": 0.4233,
           "market_prob": 0.3198,
           "edge": 0.1078
         },
         "current": {
-          "model_prob": 0.4233,
-          "market_prob": 0.3198,
-          "edge": 0.1078
+          "model_prob": 0.4232,
+          "market_prob": 0.3195,
+          "edge": 0.1077
         },
         "factor_deltas": [
           {
@@ -271,7 +545,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:55 AM CT \u00b7 Jul 8"
+        "refreshed_at": "9:16 AM CT \u00b7 Jul 8"
       },
       "verdict": "\u2705 STRONG",
       "kelly_multiplier": 1.0,
@@ -310,8 +584,8 @@
           "odds": -108
         },
         {
-          "t": "2026-07-08T13:55",
-          "odds": -108
+          "t": "2026-07-08T14:16",
+          "odds": -109
         }
       ],
       "clv": null,
@@ -331,10 +605,10 @@
         "MyBookie": -118,
         "BetUS": -113,
         "ESPN Bet": -120,
-        "ProphetX": -108,
-        "Pinnacle": -113,
+        "ProphetX": -109,
+        "Pinnacle": -114,
         "BetRivers": -122,
-        "Bovada": -119,
+        "Bovada": -120,
         "Betway": -120
       },
       "pitcher": "Jared Jones",
@@ -504,9 +778,9 @@
         "edge": 0.1067
       },
       "total": null,
-      "current_edge": 0.0723,
-      "current_model_prob": 0.5915,
-      "current_refresh_time": "8:55 AM CT \u00b7 Jul 8",
+      "current_edge": 0.0705,
+      "current_model_prob": 0.592,
+      "current_refresh_time": "9:16 AM CT \u00b7 Jul 8",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -571,7 +845,7 @@
           "odds": -117
         },
         {
-          "t": "2026-07-08T13:55",
+          "t": "2026-07-08T14:16",
           "odds": -117
         }
       ],
@@ -588,9 +862,9 @@
         "Novig": -117,
         "Hard Rock": -130,
         "DraftKings": -131,
-        "BetMGM": -130,
+        "BetMGM": -135,
         "MyBookie": -129,
-        "BetUS": -125,
+        "BetUS": -122,
         "ESPN Bet": -130,
         "ProphetX": -117,
         "BetRivers": -132,
@@ -767,7 +1041,7 @@
       "total": null,
       "current_edge": 0.0684,
       "current_model_prob": 0.6076,
-      "current_refresh_time": "8:55 AM CT \u00b7 Jul 8",
+      "current_refresh_time": "9:16 AM CT \u00b7 Jul 8",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -832,7 +1106,7 @@
           "odds": 117
         },
         {
-          "t": "2026-07-08T13:55",
+          "t": "2026-07-08T14:16",
           "odds": 117
         }
       ],
@@ -845,19 +1119,19 @@
       "book_odds": {
         "FanDuel": 114,
         "MyBookie": 111,
-        "Novig": 115,
+        "Novig": 117,
         "Hard Rock": 110,
         "ESPN Bet": 110,
-        "ProphetX": 117,
+        "ProphetX": 114,
         "DraftKings": 109,
         "BetMGM": 105,
-        "Bovada": 109,
+        "Bovada": 110,
         "BetRivers": 115,
         "Betway": 110,
         "LowVig": 111,
         "BetOnline": 111,
         "Pinnacle": 115,
-        "BetUS": 113
+        "BetUS": 114
       },
       "pitcher": "Tyler Phillips",
       "opp_pitcher": "George Kirby",
@@ -1030,9 +1304,9 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0658,
-      "current_model_prob": 0.5266,
-      "current_refresh_time": "8:55 AM CT \u00b7 Jul 8",
+      "current_edge": 0.0656,
+      "current_model_prob": 0.5264,
+      "current_refresh_time": "9:16 AM CT \u00b7 Jul 8",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1060,18 +1334,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": -0.0002,
+        "model_delta": -0.0002,
+        "market_delta": -0.0009,
         "posted": {
           "model_prob": 0.5266,
           "market_prob": 0.4566,
           "edge": 0.0658
         },
         "current": {
-          "model_prob": 0.5266,
-          "market_prob": 0.4566,
-          "edge": 0.0658
+          "model_prob": 0.5264,
+          "market_prob": 0.4557,
+          "edge": 0.0656
         },
         "factor_deltas": [
           {
@@ -1082,7 +1356,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:55 AM CT \u00b7 Jul 8"
+        "refreshed_at": "9:16 AM CT \u00b7 Jul 8"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -1121,8 +1395,8 @@
           "odds": -127
         },
         {
-          "t": "2026-07-08T13:55",
-          "odds": -127
+          "t": "2026-07-08T14:16",
+          "odds": -126
         }
       ],
       "clv": null,
@@ -1133,18 +1407,18 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": -134,
-        "LowVig": -137,
-        "BetOnline": -137,
+        "LowVig": -135,
+        "BetOnline": -135,
         "Novig": -127,
         "Hard Rock": -135,
         "DraftKings": -136,
         "BetMGM": -140,
         "MyBookie": -135,
-        "BetUS": -137,
+        "BetUS": -135,
         "ESPN Bet": -135,
-        "ProphetX": -128,
-        "Pinnacle": -129,
-        "Bovada": -136,
+        "ProphetX": -126,
+        "Pinnacle": -130,
+        "Bovada": -138,
         "BetRivers": -141,
         "Betway": -135
       },
@@ -1297,9 +1571,9 @@
         "edge": 0.1026
       },
       "total": null,
-      "current_edge": 0.0529,
-      "current_model_prob": 0.6124,
-      "current_refresh_time": "8:55 AM CT \u00b7 Jul 8",
+      "current_edge": 0.0554,
+      "current_model_prob": 0.6129,
+      "current_refresh_time": "9:16 AM CT \u00b7 Jul 8",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1327,18 +1601,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": 0.0025,
+        "model_delta": 0.0005,
+        "market_delta": 0.002,
         "posted": {
           "model_prob": 0.6124,
           "market_prob": 0.5523,
           "edge": 0.0529
         },
         "current": {
-          "model_prob": 0.6124,
-          "market_prob": 0.5523,
-          "edge": 0.0529
+          "model_prob": 0.6129,
+          "market_prob": 0.5543,
+          "edge": 0.0554
         },
         "factor_deltas": [
           {
@@ -1349,7 +1623,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:55 AM CT \u00b7 Jul 8"
+        "refreshed_at": "9:16 AM CT \u00b7 Jul 8"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1358,8 +1632,8 @@
       "projected_starter": false
     }
   ],
-  "signal_count": 5,
-  "posted_count": 5,
+  "signal_count": 6,
+  "posted_count": 6,
   "games_today": 15,
   "yesterday_picks": [
     {
