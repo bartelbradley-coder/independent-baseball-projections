@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=41">
+<link rel="stylesheet" href="style.css?v=42">
 <link rel="stylesheet" href="index.css?v=6">
 <style>
 .gen-at { font-size: 11px; color: var(--text-4); margin-bottom: 16px; }
@@ -245,10 +245,29 @@ function renderBoardRow(b) {
   const time = formatGameTime(b.game_time);
   const sub  = [pitchers, time].filter(Boolean).join(' · ');
   const tag  = b.radar ? ` <span class="bt-radar-tag">RADAR</span>` : '';
+
+  // Attribute the row's Market/Model/Gap numbers to a team: they're all the
+  // model's lean side. Mark that team with a caret + color + weight (color is
+  // never the only signal), mute the other, and label it for screen readers.
+  // Drive it off lean_side (AWAY/HOME) — never string-matching the matchup, so
+  // doubleheaders are safe — and fall back to the plain matchup if the
+  // attribution fields are absent or unexpected.
+  const side = String(b.lean_side || '').toUpperCase();
+  let matchHtml, modelCell = `<td>${model}</td>`;
+  if ((side === 'AWAY' || side === 'HOME') && b.away && b.home) {
+    const leanAway = side === 'AWAY';
+    const lean = t => `<span class="bt-lean"><span class="bt-caret" aria-hidden="true">▸</span>${escHtml(t)}<span class="sr-only"> (model's side)</span></span>`;
+    const opp  = t => `<span class="bt-opp">${escHtml(t)}</span>`;
+    matchHtml = `${leanAway ? lean(b.away) : opp(b.away)} <span class="bt-opp">@</span> ${leanAway ? opp(b.home) : lean(b.home)}`;
+    if (model !== '—') modelCell = `<td><span class="bt-lean-num">${model}</span></td>`;
+  } else {
+    matchHtml = `<span class="bt-match">${escHtml(b.game)}</span>`;
+  }
+
   return `<tr class="${b.radar ? 'radar' : ''}">`
-    + `<td class="l"><span class="bt-match">${escHtml(b.game)}</span>${tag}`
+    + `<td class="l">${matchHtml}${tag}`
     + `${sub ? `<div class="bt-sub">${sub}</div>` : ''}</td>`
-    + `<td>${mkt}</td><td>${model}</td>`
+    + `<td>${mkt}</td>${modelCell}`
     + `<td class="${gapCls}">${gapCell}</td></tr>`;
 }
 
@@ -356,7 +375,8 @@ async function loadPreview() {
       tableHTML = `<div class="board-section-label">Full slate — model vs market</div>`
         + `<div class="board-table-wrap"><table class="board-table">`
         + `<thead><tr><th class="l">Matchup</th><th>Market</th><th>Model</th><th>Gap</th></tr></thead>`
-        + `<tbody>${board.map(renderBoardRow).join('')}</tbody></table></div>`;
+        + `<tbody>${board.map(renderBoardRow).join('')}</tbody></table></div>`
+        + `<div class="board-legend"><span class="bt-caret" aria-hidden="true">▸</span> marks the side shown in the Market, Model, and Gap columns. Gap = model win probability minus market win probability for that team.</div>`;
     }
 
     // Feed honesty note (shrinkage, refresh cadence)
