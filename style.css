@@ -694,6 +694,15 @@ details[open] .faq-q::after { content: '−'; }
   white-space:nowrap; }
 .bt-gap-pos { color:var(--green); font-weight:700; }
 .bt-gap-flat { color:var(--text-4); }
+/* Lean-side attribution — which team the Market/Model/Gap numbers describe.
+   Caret marker means it never relies on color alone (accessibility). */
+.bt-lean { color:var(--green); font-weight:700; white-space:nowrap; }
+.bt-caret { color:var(--green); font-weight:700; margin-right:3px; }
+.bt-opp { color:var(--text-2); font-weight:500; }
+.bt-lean-num { color:var(--green); font-weight:700; }
+.board-legend { font-size:10.5px; color:var(--text-4); margin:-8px 0 16px; line-height:1.5; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
 /* Sticky mobile email capture — repeat visitors only, one dismissal = 30-day suppress */
 .sticky-capture { display:none; }
