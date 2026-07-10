@@ -112,7 +112,7 @@
       <ul style="margin:8px 0 0 16px;padding:0">
         <li><strong>Posting timestamps begin June 1, 2026.</strong> Picks before that date were logged pre-pitch but predate the visible-timestamp system, so no 📌 posted-time appears on those rows.</li>
         <li><strong>The posting threshold tightened over the season.</strong> Earlier picks were posted at lower edge minimums; the current bar is 4pp. Everything ever posted stays in the record — rows below today's threshold are marked "Below" rather than removed.</li>
-        <li><strong>Early-season CLV is partly reconstructed.</strong> Live closing-line capture matured during the season; some early values were reconstructed from historical odds, and rows show "—" where no usable closing snapshot exists. We treat CLV as a signal to accumulate, not proof.</li>
+        <li><strong>CLV reporting is paused while close-provenance validation is rebuilt.</strong> Live closing-line capture matured during the season and early values were partly reconstructed from historical odds; until each close can be verified as a genuine live capture, per-row CLV shows "—" and no CLV aggregate is published. We treat CLV as a signal to accumulate, not proof.</li>
       </ul>
     </details>
   </section>
@@ -363,7 +363,7 @@ function renderSummary(rows) {
 
   document.getElementById('summary-row').innerHTML = `
     <div class="stat-pill"><div class="stat-lbl">2026 Record</div><div class="stat-val white">${wins}W–${losses}L</div><div class="stat-sub">${settled.length} bets</div></div>
-    <div class="stat-pill"><div class="stat-lbl">Season P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${_fmtPnl(totalPnl)}</div><div class="stat-sub">${pnlMode==='kelly'?'fractional Kelly sized':pnlMode==='dollars'&&_bankroll>0?`$${_bankroll} bankroll`:'flat $100/bet'}</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Season P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${_fmtPnl(totalPnl)}</div><div class="stat-sub">${pnlMode==='kelly'?'fractional Kelly sized':pnlMode==='dollars'&&_bankroll>0?`$${_bankroll} bankroll`:'flat $100/bet at posted prices (no bets placed)'}</div></div>
     <div class="stat-pill"><div class="stat-lbl">ROI / Bet</div><div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${pct(roi)}</div><div class="stat-sub">per settled bet</div></div>
     <div class="stat-pill"><div class="stat-lbl">Win Rate</div><div class="stat-val white">${winRate != null ? (winRate*100).toFixed(1)+'%' : '—'}</div><div class="stat-sub">~52% break-even</div></div>
     ${avgClv != null ? `<div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${(t=>t==='pos'?'green':t==='neg'?'red':'white')(_clvTone(clvRows.map(r=>r.clv)))}">${pct(avgClv)}</div><div class="stat-sub">n=${clvRows.length}</div></div>` : ''}

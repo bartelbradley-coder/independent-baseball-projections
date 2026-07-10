@@ -187,7 +187,8 @@ def generate(output_path=None):
     boxes = [
         {'label': '2026 RECORD', 'value': stats['record'],  'color': TEXT_PRI},
         {'label': 'P&L UNITS',   'value': stats['pnl'],      'color': GREEN},
-        {'label': 'AVG CLV',     'value': stats['avg_clv'],  'color': GREEN},
+        # AVG CLV tile removed (operator decision 2026-07-10): public CLV is
+        # suppressed pending close-provenance validation.
         {'label': 'ROI / BET',   'value': stats['roi'],      'color': AMBER},
     ]
 
@@ -209,7 +210,7 @@ def generate(output_path=None):
 
     # ── Description ──────────────────────────────────────────────────────
     draw.text((80, 405),
-              'Daily MLB value bets · Edge vs. no-vig Pinnacle · Fractional-Kelly sizing · CLV tracked',
+              'Daily MLB model picks · Model vs. no-vig market · Fractional-Kelly sizing · Every result graded',
               font=f_desc, fill=TEXT_SEC)
 
     # ── URL ──────────────────────────────────────────────────────────────

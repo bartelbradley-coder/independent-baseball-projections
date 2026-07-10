@@ -559,14 +559,15 @@ function renderEvidenceSection(data, perf, hist) {
   // CLV claim is gated by sample size: only make the causal "identifies edge
   // before it's priced in" claim once the sample is meaningful (>=100 picks).
   // Below that, lead with the honest hit-rate + a "still building sample" caveat.
-  const _clvDesc = clvCount >= 100
-    ? `On average, posted picks have closed better than the release price across the tracked sample — an early sign the model may be finding edge before the market fully prices it.${posPct ? ' ' + posPct + ' of ' + clvCount + ' picks beat the close.' : ''} ${trendStr}`
-    : `${posPct ? posPct + ' of ' + clvCount + ' picks have beaten the close so far' : 'Tracking whether our posted price beats the close'} — still building a sample before drawing conclusions about edge.${trendStr ? ' ' + trendStr : ''}`;
+  // Operator decision 2026-07-10: public CLV is suppressed until
+  // close-provenance validation is rebuilt (data.clv_suppressed). No CLV
+  // number or beat-close claim is shown; an explicit paused state renders.
+  const _clvDesc = 'CLV reporting paused while close-provenance validation is rebuilt.';
 
   grid.innerHTML = `
     <div class="evidence-claim">
-      <div class="ec-stat">${clv || '—'}</div>
-      <div class="ec-label">Average Closing Line Value</div>
+      <div class="ec-stat" style="font-size:15px;font-weight:600">Paused</div>
+      <div class="ec-label">Closing Line Value</div>
       <div class="ec-desc">${_clvDesc}</div>
     </div>
     <div class="evidence-claim">
