@@ -81,7 +81,7 @@
     <div class="hdr-pill p-ind">3 Signal Pathways</div>
     <div class="hdr-pill p-vio">Dual-Poisson</div>
     <div class="hdr-pill p-tea">Platt Calibrated</div>
-    <div class="hdr-pill p-sla">CLV Tracked</div>
+    <div class="hdr-pill p-sla">Closes Captured</div>
     <div class="hdr-pill p-sla">7,359 Games Backtested</div>
   </div>
 </div>
@@ -94,7 +94,7 @@
     <li><strong>We check our numbers against thousands of past games</strong> and correct any bias, so when the model says &ldquo;60%,&rdquo; that side really wins about 60% of the time. (Technically: Platt calibration on a 7,359-game 2022&ndash;24 backtest, blended with 2026 live results as they accrue.)</li>
     <li><strong>Then we compare our number to the sportsbook's price</strong> with the house's cut removed (the &ldquo;no-vig&rdquo; line, benchmarked to Pinnacle). Most nights they agree &mdash; no bet.</li>
     <li><strong>When our probability beats the price by at least 4 points</strong>, we post the pick &mdash; with the odds, our number, the market's number, and a suggested stake.</li>
-    <li><strong>Every pick is logged before first pitch and never deleted.</strong> We also track whether the market moves toward our picks by closing time (CLV) &mdash; the test we trust most, and one we won't claim victory on until the data agrees.</li>
+    <li><strong>Every pick is logged before first pitch and never deleted.</strong> We also capture closing prices to test whether the market moves toward our picks (CLV) &mdash; the test we trust most; CLV reporting is paused while close-provenance validation is rebuilt, and we won't claim victory on it until the validated data agrees.</li>
   </ul>
   <div style="font-size:11px;color:var(--text-4);margin-top:8px">Want the machinery? The pipeline, math, and full signal catalog are below &mdash; the collapsed sections open on tap.</div>
 </div>
@@ -488,7 +488,7 @@
 
 <span class="cm">// Sustained positive CLV is the standard
 // evidence of a durable edge</span></div>
-      <div class="math-note">CLV is the gold standard for betting process validation — a model can run cold for 50 games while positive CLV still suggests the process is sound. Our live CLV sample is thin and not yet conclusive (see Honest Limitations below); every pick's CLV is logged and reported on the Model Dashboard.</div>
+      <div class="math-note">CLV is the gold standard for betting process validation — a model can run cold for 50 games while positive CLV still suggests the process is sound. Our CLV reporting is paused while close-provenance validation is rebuilt (see Honest Limitations below); validated CLV will return to the Model Dashboard once genuine live closes accumulate.</div>
     </div>
 
   </div>

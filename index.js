@@ -2284,8 +2284,8 @@ function render(data, hist, scores = {}, perf = null) {
           <div class="phb-vdivider"></div>
           <div class="phb-stat-group">
             <span class="phb-stat-label">Avg CLV</span>
-            <span class="phb-stat-val ${clvStr ? clvCol : 'muted'}" title="Average closing-line value — tracked as live closing data accumulates; not treated as a proven edge unless the significance test on the Model Dashboard clears.">${clvStr || '—'}</span>
-            <span class="phb-stat-sub">${clvStr ? (data.clv_count || '') + ' picks tracked' : 'pending'}</span>
+            <span class="phb-stat-val muted" title="CLV reporting paused while close-provenance validation is rebuilt.">Paused</span>
+            <span class="phb-stat-sub">provenance rebuild</span>
           </div>
           <div class="phb-right-group">
             ${todayChip}
