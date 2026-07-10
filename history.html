@@ -273,8 +273,9 @@ async function loadAll() {
     const h     = hRes.ok     ? await hRes.json()     : null;
     const p     = pRes.ok     ? await pRes.json()     : null;
     const today = todayRes.ok ? await todayRes.json() : null;
-    // Close-based displays are omitted entirely while the feed suppresses them.
-    window._clvSuppressed = !!((h && h.clv_suppressed) || (p && p.clv_suppressed));
+    // Close-based displays are omitted unless EVERY payload explicitly
+    // supports rendering them — FAIL-CLOSED (computeClvSuppressed, ibp-utils.js).
+    window._clvSuppressed = computeClvSuppressed([h, p, today]);
     // rl_performance.json no longer fetched — RL removed from display
 
     if (h && h.updated_at) {

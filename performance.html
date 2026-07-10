@@ -499,9 +499,9 @@ async function loadAll() {
       if (_lu && pAugmented.updated_at) _lu.textContent = pAugmented.updated_at;
     }
 
-    // Suppression flag for every close-based computation on this page.
-    window._clvSuppressed = !!((pAugmented && pAugmented.clv_suppressed) ||
-                               (hAugmented && hAugmented.clv_suppressed));
+    // Suppression flag — FAIL-CLOSED: renders close-based sections only when
+    // every required payload explicitly reports clv_suppressed === false.
+    window._clvSuppressed = computeClvSuppressed([pAugmented, hAugmented]);
     // Today's pick status shown on Today's Picks tab — not duplicated here
     renderValidationHeader(pAugmented, hAugmented);
     renderInsight(pAugmented);

@@ -812,10 +812,11 @@ async function loadPicks() {
     const data    = todayRes.ok    ? await todayRes.json()    : null;
     const hist    = histRes.ok     ? await histRes.json()     : null;
     const perf    = perfRes.ok     ? await perfRes.json()     : null;
-    // Unified close-suppression flag for every close-derived path on this page.
-    window._clvSuppressed = !!((data && window._clvSuppressed) ||
-                               (perf && perf.clv_suppressed) ||
-                               (hist && hist.clv_suppressed));
+    // Unified close-suppression flag — FAIL-CLOSED: public CLV renders only
+    // when every required payload explicitly reports clv_suppressed === false
+    // (failed feed, missing field, or any true -> suppressed; see
+    // computeClvSuppressed in ibp-utils.js, tested in dev/test_clv_suppression.js).
+    window._clvSuppressed = computeClvSuppressed([data, perf, hist]);
     const preview = (previewRes && previewRes.ok) ? await previewRes.json() : null;
     _histRef = hist;
     if (data) render(data, hist, scores, perf);
