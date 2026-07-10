@@ -499,6 +499,9 @@ async function loadAll() {
       if (_lu && pAugmented.updated_at) _lu.textContent = pAugmented.updated_at;
     }
 
+    // Suppression flag for every close-based computation on this page.
+    window._clvSuppressed = !!((pAugmented && pAugmented.clv_suppressed) ||
+                               (hAugmented && hAugmented.clv_suppressed));
     // Today's pick status shown on Today's Picks tab — not duplicated here
     renderValidationHeader(pAugmented, hAugmented);
     renderInsight(pAugmented);
@@ -606,7 +609,9 @@ function renderValidationHeader(p, h) {
   // risk strip (it's the decision-relevant validation stat — avg CLV moves to
   // the strip); the $-bankroll tile is demoted to its chart section below.
   const _roiSig    = _roiCI.lo != null && _roiCI.lo > 0;
-  const _clvAgrees = _cv.tone === 'pos';
+  // Explicitly suppression-gated: 'market-confirmed' can NEVER derive from
+  // suppressed close data, even if a stray value leaked into rows.
+  const _clvAgrees = !_clvOmitted && _cv.tone === 'pos';
   const _verdictTxt = _roiSig && _clvAgrees ? 'Paper ROI positive · market-confirmed'
                     : _roiSig ? 'Paper ROI positive · unproven'
                     : 'Emerging';
@@ -1173,7 +1178,9 @@ function renderModelValidation(rows) {
   // majority of picks beating the close). A mean-CI-only test can read "significant"
   // off a few tail moves while most picks lose to the close — that contradiction
   // shipped here before; keep one verdict across the page.
-  const clvs = settled.map(r => parseFloat(r.clv)).filter(v => !isNaN(v));
+  // Suppression-gated: no close-based agreement may be computed while the
+  // feed suppresses CLV (window._clvSuppressed set from the fetched payloads).
+  const clvs = window._clvSuppressed ? [] : settled.map(r => parseFloat(r.clv)).filter(v => !isNaN(v));
   let clvLine = '', clvAgrees = false;
   if (clvs.length >= 20) {
     const cm = clvs.reduce((a, b) => a + b, 0) / clvs.length;
