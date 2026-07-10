@@ -559,14 +559,14 @@ function renderEvidenceSection(data, perf, hist) {
   // CLV claim is gated by sample size: only make the causal "identifies edge
   // before it's priced in" claim once the sample is meaningful (>=100 picks).
   // Below that, lead with the honest hit-rate + a "still building sample" caveat.
-  // Operator decision 2026-07-10 (revised): while data.clv_suppressed is set
+  // Operator decision 2026-07-10 (revised): while window._clvSuppressed is set
   // the CLV evidence card is OMITTED entirely (no placeholder). NOTE: this
   // whole section is currently dead code — renderEvidenceSection is not
   // invoked and index.html has no evidence-section element.
   const _clvDesc = 'Tracked against validated market closes.';
 
   grid.innerHTML = `
-    ${data.clv_suppressed ? '' : `<div class="evidence-claim">
+    ${window._clvSuppressed ? '' : `<div class="evidence-claim">
       <div class="ec-stat">${clv || '—'}</div>
       <div class="ec-label">Average Closing Line Value</div>
       <div class="ec-desc">${_clvDesc}</div>
@@ -813,7 +813,7 @@ async function loadPicks() {
     const hist    = histRes.ok     ? await histRes.json()     : null;
     const perf    = perfRes.ok     ? await perfRes.json()     : null;
     // Unified close-suppression flag for every close-derived path on this page.
-    window._clvSuppressed = !!((data && data.clv_suppressed) ||
+    window._clvSuppressed = !!((data && window._clvSuppressed) ||
                                (perf && perf.clv_suppressed) ||
                                (hist && hist.clv_suppressed));
     const preview = (previewRes && previewRes.ok) ? await previewRes.json() : null;
@@ -2286,7 +2286,7 @@ function render(data, hist, scores = {}, perf = null) {
             <span class="phb-stat-val ${uCol}">${pnlDisplay}</span>
             <span class="phb-stat-sub">${pnlSublabel}</span>
           </div>
-          ${data.clv_suppressed ? '' : `<div class="phb-vdivider"></div>
+          ${window._clvSuppressed ? '' : `<div class="phb-vdivider"></div>
           <div class="phb-stat-group">
             <span class="phb-stat-label">Avg CLV</span>
             <span class="phb-stat-val muted">${data.avg_clv != null ? ((data.avg_clv>=0?'+':'')+(data.avg_clv*100).toFixed(2)+'%') : '—'}</span>
