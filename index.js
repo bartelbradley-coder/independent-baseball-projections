@@ -904,7 +904,7 @@ function renderEmptyState(data, hist, marginal = []) {
         <div class="ppc-title">Today's Picks Post at 9:00 AM CT</div>
         <div class="ppc-sub">
           The model runs each morning after overnight data and opening lines are confirmed.<br>
-          Picks are locked before first pitch and tracked to closing line value.
+          Picks are locked before first pitch and every result is graded publicly.
         </div>
         <a class="ppc-preview-link" href="preview.html">${ibpIcon('search', 13)} View tomorrow's opening line estimates →</a>
         ${onwardCTA}
@@ -2163,7 +2163,7 @@ function render(data, hist, scores = {}, perf = null) {
       // caveat, so the hero can't overclaim what the dashboard won't certify.
       el.innerHTML = `<span class="hp-stat idx">${s.bets.toLocaleString()}</span> picks logged`
         + ` · <span class="hp-stat">${roi} ROI</span> so far`
-        + ` — we track closing-line value too, and we won't call the edge proven until it agrees.`;
+        + ` — closing prices are captured for CLV validation (currently paused for the provenance rebuild), and we won't call the edge proven until it agrees.`;
       el.hidden = false;
     }
 
