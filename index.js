@@ -559,17 +559,18 @@ function renderEvidenceSection(data, perf, hist) {
   // CLV claim is gated by sample size: only make the causal "identifies edge
   // before it's priced in" claim once the sample is meaningful (>=100 picks).
   // Below that, lead with the honest hit-rate + a "still building sample" caveat.
-  // Operator decision 2026-07-10: public CLV is suppressed until
-  // close-provenance validation is rebuilt (data.clv_suppressed). No CLV
-  // number or beat-close claim is shown; an explicit paused state renders.
-  const _clvDesc = 'CLV reporting paused while close-provenance validation is rebuilt.';
+  // Operator decision 2026-07-10 (revised): while data.clv_suppressed is set
+  // the CLV evidence card is OMITTED entirely (no placeholder). NOTE: this
+  // whole section is currently dead code — renderEvidenceSection is not
+  // invoked and index.html has no evidence-section element.
+  const _clvDesc = 'Tracked against validated market closes.';
 
   grid.innerHTML = `
-    <div class="evidence-claim">
-      <div class="ec-stat" style="font-size:15px;font-weight:600">Paused</div>
-      <div class="ec-label">Closing Line Value</div>
+    ${data.clv_suppressed ? '' : `<div class="evidence-claim">
+      <div class="ec-stat">${clv || '—'}</div>
+      <div class="ec-label">Average Closing Line Value</div>
       <div class="ec-desc">${_clvDesc}</div>
-    </div>
+    </div>`}
     <div class="evidence-claim">
       <div class="ec-stat">${roi || '—'}</div>
       <div class="ec-label">${s.bets || ''} tracked picks, 2026 season</div>
@@ -2163,7 +2164,7 @@ function render(data, hist, scores = {}, perf = null) {
       // caveat, so the hero can't overclaim what the dashboard won't certify.
       el.innerHTML = `<span class="hp-stat idx">${s.bets.toLocaleString()}</span> picks logged`
         + ` · <span class="hp-stat">${roi} ROI</span> so far`
-        + ` — closing prices are captured for CLV validation (currently paused for the provenance rebuild), and we won't call the edge proven until it agrees.`;
+        + ` — and we won't call the edge proven until a larger validated sample agrees.`;
       el.hidden = false;
     }
 
@@ -2281,12 +2282,12 @@ function render(data, hist, scores = {}, perf = null) {
             <span class="phb-stat-val ${uCol}">${pnlDisplay}</span>
             <span class="phb-stat-sub">${pnlSublabel}</span>
           </div>
-          <div class="phb-vdivider"></div>
+          ${data.clv_suppressed ? '' : `<div class="phb-vdivider"></div>
           <div class="phb-stat-group">
             <span class="phb-stat-label">Avg CLV</span>
-            <span class="phb-stat-val muted" title="CLV reporting paused while close-provenance validation is rebuilt.">Paused</span>
-            <span class="phb-stat-sub">provenance rebuild</span>
-          </div>
+            <span class="phb-stat-val muted">${data.avg_clv != null ? ((data.avg_clv>=0?'+':'')+(data.avg_clv*100).toFixed(2)+'%') : '—'}</span>
+            <span class="phb-stat-sub">${data.clv_count || ''} picks</span>
+          </div>`}
           <div class="phb-right-group">
             ${todayChip}
           </div>

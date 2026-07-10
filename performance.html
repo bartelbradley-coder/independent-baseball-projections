@@ -18,7 +18,7 @@
 </script>
 <meta name="description" content="Model Dashboard for Independent Baseball Projections. Bankroll growth, P&L curve, win rate trends, calibration, CLV validation, edge-tier ROI, and threshold analysis.">
 <meta property="og:title" content="Independent Baseball Projections — Model Dashboard">
-<meta property="og:description" content="Model Dashboard — bankroll growth, CLV validation, edge-tier breakdown, strategy comparison, and development-period backtest results (hypothetical).">
+<meta property="og:description" content="Model Dashboard — bankroll growth, edge-tier breakdown, strategy comparison, and development-period backtest results (hypothetical).">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://independentbaseballprojections.net/og-image.png?v=2">
 <meta property="og:image:width" content="1200">
@@ -26,7 +26,7 @@
 <meta property="og:url" content="https://independentbaseballprojections.net/performance.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Independent Baseball Projections — Model Dashboard">
-<meta name="twitter:description" content="Bankroll growth, CLV validation, edge-tier ROI, strategy comparison, and development-period backtest results (hypothetical).">
+<meta name="twitter:description" content="Bankroll growth, edge-tier ROI, strategy comparison, and development-period backtest results (hypothetical).">
 <meta name="twitter:image" content="https://independentbaseballprojections.net/og-image.png?v=2">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='5' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='white'>IB</text><text x='16' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='%2360a5fa'>P</text><line x1='21' y1='23' x2='25' y2='18' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='25' cy='18' r='1.4' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,7 +74,7 @@
   <header class="hero hero-slim">
     <div class="hero-eyebrow">Model Validation · Updated Daily</div>
     <h1 class="hero-title">Model Dashboard</h1>
-    <p class="hero-sub">Bankroll growth, closing-line value, edge-tier ROI, and backtested results — the full case for whether the edge is real. <a href="model.html">How it works →</a></p>
+    <p class="hero-sub">Bankroll growth, edge-tier ROI, and backtested results — the full case for whether the edge is real. <a href="model.html">How it works →</a></p>
   </header>
 
   <!-- Live section header + compact orientation strip -->
@@ -115,22 +115,20 @@
     </div>
   </div>
 
-  <!-- CLV + Monthly ROI (moved up) -->
+  <!-- Market movement + Monthly ROI (moved up) -->
   <div class="section">
-    <div class="two-col">
-      <div class="card">
-        <div class="card-title"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg> Closing Line Value — Season Average</div>
-        <div class="card-sub">Last 30 picks shown · positive = market confirmed the pick</div>
+    <div class="two-col" id="clv-roi-row" style="grid-template-columns:1fr">
+      <!-- Close-based season card: rendered by renderCLV() ONLY when the
+           feed is not suppressed; removed entirely (with single-column reflow)
+           while clv_suppressed is set. -->
+      <div class="card" id="clv-season-card" hidden>
+        <div class="card-title">Market Movement — Season Average</div>
+        <div class="card-sub" id="clv-season-sub"></div>
         <div class="clv-big">
-          <div class="clv-big-num" id="clv-big-num" style="font-size:18px;font-weight:600">Paused</div>
-          <div class="clv-big-lbl">Closing Line Value</div>
+          <div class="clv-big-num" id="clv-big-num"></div>
+          <div class="clv-big-lbl" id="clv-big-lbl"></div>
         </div>
-        <div style="font-size:10px;color:var(--text-4);margin-top:10px;line-height:1.5">
-          CLV reporting paused while close-provenance validation is rebuilt. CLV compares our posted price to a validated pre-game
-          close; our historical closes cannot yet be verified as genuinely live
-          captures, so no CLV number is shown until provenance-validated closes
-          accumulate.
-        </div>
+        <div class="clv-chart" id="clv-chart"></div>
       </div>
       <div class="card">
         <div class="card-title"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg> Monthly ROI — 2026 Season</div>
@@ -241,7 +239,7 @@
           </div>
           <div id="lb-band" style="margin-top:14px"></div>
           <div style="font-size:11px;color:var(--text-3);margin-top:12px;line-height:1.6;border-top:1px solid var(--border);padding-top:10px">
-            <strong>Why this alone doesn't prove an edge:</strong> this test says our results have outrun luck <em>at the posted prices</em> — but market confirmation (CLV) cannot currently be assessed: CLV reporting is paused while close-provenance validation is rebuilt. We treat the edge as unproven until validated CLV returns and agrees.
+            <strong>Why this alone doesn't prove an edge:</strong> this test says our results have outrun luck <em>at the posted prices</em> — it does not show that the market agreed we had an edge. We treat the edge as unproven.
           </div>
           <div style="font-size:9px;color:var(--text-4);margin-top:10px;line-height:1.5">
             Monte Carlo over our exact bets and prices — only the outcomes are randomized, each at its line's market-implied probability. A genuine same-sample test of selection skill vs. luck; makes no assumptions about games we didn't bet.
@@ -590,9 +588,8 @@ function renderValidationHeader(p, h) {
   const _clvSub  = _cv.tone === 'pos' ? 'beats close (95% CI &gt; 0)'
                  : _cv.tone === 'neg' ? 'trails close'
                  : 'flat / still proving';
-  const _clvPaused = !!(p && p.clv_suppressed);
-  const beatClose = _clvPaused ? 'Paused'
-                  : _cv.posShare != null ? Math.round(_cv.posShare * 100) + '%' : '—';
+  const _clvOmitted = !!(p && p.clv_suppressed);
+  const beatClose = _cv.posShare != null ? Math.round(_cv.posShare * 100) + '%' : '—';
 
   // Risk — max drawdown + longest losing streak (chronological, oldest→newest).
   const settled = rows.slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
@@ -615,7 +612,7 @@ function renderValidationHeader(p, h) {
                     : 'Emerging';
   const _verdictSub = _roiSig && _clvAgrees
     ? 'ROI positive and the market moves toward our picks'
-    : _roiSig ? 'CLV validation paused (provenance rebuild) — edge not market-confirmed'
+    : _roiSig ? 'paper record at posted prices — no bets placed; edge not yet proven'
     : 'sample still building — judge the record, not a claim';
   const _bcTone = _clvAgrees ? 'green' : 'white';
 
@@ -630,18 +627,18 @@ function renderValidationHeader(p, h) {
       <div class="hl-lbl">Units P&amp;L</div>
       <div class="hl-sub">${pct(s.roi)} ROI / bet${_roiCI.lo != null ? ' · plausibly ' + pct(_roiCI.lo) + ' to ' + pct(_roiCI.hi) : ''}</div>
     </div>
-    <div class="hl-stat">
+    ${_clvOmitted ? '' : `<div class="hl-stat">
       <div class="hl-val ${_bcTone}">${beatClose}</div>
       <div class="hl-lbl">Picks Beating the Close</div>
-      <div class="hl-sub">${_clvPaused ? 'paused — close-provenance validation is being rebuilt' : 'the market-agreement test · n=' + (_cv.n || 0)}</div>
-    </div>
+      <div class="hl-sub">the market-agreement test · n=${_cv.n || 0}</div>
+    </div>`}
     <div class="hl-stat ${_roiSig && _clvAgrees ? 'featured' : ''}">
       <div class="hl-val ${_roiSig && _clvAgrees ? 'green' : 'white'}" style="font-size:17px;line-height:1.25">${_verdictTxt}</div>
       <div class="hl-lbl">Edge Verdict</div>
       <div class="hl-sub">${_verdictSub}</div>
     </div>
     <div class="hl-risk-strip" role="group" aria-label="Risk and validation metrics">
-      <span class="hri"><span class="hri-lbl">Avg CLV</span><span class="hri-val">${_clvPaused ? 'Paused — provenance rebuild' : pct(clv) + ' · ' + _clvSub}</span></span>
+      ${_clvOmitted ? '' : `<span class="hri"><span class="hri-lbl">Avg CLV</span><span class="hri-val">${pct(clv) + ' · ' + _clvSub}</span></span>`}
       <span class="hri"><span class="hri-lbl">Max drawdown</span><span class="hri-val">${fmtU(maxDD)}</span></span>
       <span class="hri"><span class="hri-lbl">Longest losing streak</span><span class="hri-val">${longestLoss || '—'}</span></span>
       <span class="hri"><span class="hri-lbl">Flat $5,000 bankroll</span><span class="hri-val">$${Math.round(currentBank).toLocaleString()} (${parseFloat(bankGrowth) >= 0 ? '+' : ''}${bankGrowth}%)</span></span>
@@ -649,6 +646,7 @@ function renderValidationHeader(p, h) {
 }
 
 function renderInsight(p) {
+  if (p && p.clv_suppressed) return;  // section removed under suppression
   const clv = p && p.avg_clv;
   const s   = p && p.season;
   if (clv == null || !s || !s.bets) return;
@@ -841,10 +839,15 @@ function renderBankrollChart(h) {
 
 function renderCLV(p, h) {
   if (!p) return;
-  // Operator decision 2026-07-10: explicit suppression state — when the feed
-  // says clv_suppressed, leave the static "Paused" rendering untouched and
-  // draw no number, sparkline, or beat-close verdict.
-  if (p.clv_suppressed) return;
+  // Operator decision 2026-07-10 (revised): while the feed sets
+  // clv_suppressed, the entire close-based section is REMOVED — no card,
+  // number, sparkline, verdict, or placeholder — and the row reflows to a
+  // single column. Nothing here may infer close-based values client-side.
+  const cardEl = document.getElementById('clv-season-card');
+  const rowEl  = document.getElementById('clv-roi-row');
+  if (p.clv_suppressed) { if (cardEl) cardEl.remove(); return; }
+  if (cardEl) cardEl.hidden = false;
+  if (rowEl) rowEl.style.gridTemplateColumns = '1fr 1fr';
   const clv = p.avg_clv;
   if (clv != null) {
     const el = document.getElementById('clv-big-num');
@@ -1198,7 +1201,7 @@ function renderModelValidation(rows) {
            : roiSig ? 'Paper ROI positive · unproven'
            : 'Emerging',
          roiSig && clvAgrees ? 'green' : '',
-         `${roiSig && !clvAgrees ? 'Paper ROI positive so far (flat $100 at posted prices — no bets placed); CLV validation is paused during the close-provenance rebuild, so the edge is not market-confirmed. ' : ''}`
+         `${roiSig && !clvAgrees ? 'Paper ROI positive so far (flat $100 at posted prices — no bets placed); the edge is not yet proven. ' : ''}`
            + `ROI/bet ${pct(mean)} · 95% CI ${pct(ciLo)}…${pct(ciHi)} over ${n} bets.${clvLine ? ' ' + clvLine + '.' : ''}`) +
     card('Risk',
          `${fmtU(maxDD)}`,

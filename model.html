@@ -94,7 +94,7 @@
     <li><strong>We check our numbers against thousands of past games</strong> and correct any bias, so when the model says &ldquo;60%,&rdquo; that side really wins about 60% of the time. (Technically: Platt calibration on a 7,359-game 2022&ndash;24 backtest, blended with 2026 live results as they accrue.)</li>
     <li><strong>Then we compare our number to the sportsbook's price</strong> with the house's cut removed (the &ldquo;no-vig&rdquo; line, benchmarked to Pinnacle). Most nights they agree &mdash; no bet.</li>
     <li><strong>When our probability beats the price by at least 4 points</strong>, we post the pick &mdash; with the odds, our number, the market's number, and a suggested stake.</li>
-    <li><strong>Every pick is logged before first pitch and never deleted.</strong> We also capture closing prices to test whether the market moves toward our picks (CLV) &mdash; the test we trust most; CLV reporting is paused while close-provenance validation is rebuilt, and we won't claim victory on it until the validated data agrees.</li>
+    <li><strong>Every pick is logged before first pitch and never deleted.</strong> We also capture closing prices to test whether the market moves toward our picks (CLV) &mdash; the test we trust most, and one we won't claim victory on until validated data agrees.</li>
   </ul>
   <div style="font-size:11px;color:var(--text-4);margin-top:8px">Want the machinery? The pipeline, math, and full signal catalog are below &mdash; the collapsed sections open on tap.</div>
 </div>
@@ -214,7 +214,7 @@
         </div>
       </div>
     </div>
-    <div class="ex-note">This pick's signal breakdown appears in the Details section of each pick card on the Today's Picks page. Closing prices are captured to test whether the market agreed with the model's direction (CLV reporting is paused during the close-provenance rebuild).</div>
+    <div class="ex-note">This pick's signal breakdown appears in the Details section of each pick card on the Today's Picks page. Closing prices are captured to test whether the market agreed with the model's direction.</div>
   </div>
 </div>
 
@@ -478,7 +478,7 @@
     </div>
 
     <div class="math-block ce">
-      <div class="math-hdr"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg>  Closing Line Value — Process Validation</div>
+      <div class="math-hdr"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg>  Close-Based Process Validation (CLV)</div>
       <div class="f-lbl">Definition — Pinnacle no-vig both sides</div>
       <div class="fbox"><span class="v">CLV</span> <span class="op">=</span> <span class="v">p_close_nv</span> <span class="op">−</span> <span class="v">p_open_nv</span>
 <span class="cm">// Snapshot: pre-game closing line (CT)</span></div>
@@ -488,7 +488,7 @@
 
 <span class="cm">// Sustained positive CLV is the standard
 // evidence of a durable edge</span></div>
-      <div class="math-note">CLV is the gold standard for betting process validation — a model can run cold for 50 games while positive CLV still suggests the process is sound. Our CLV reporting is paused while close-provenance validation is rebuilt (see Honest Limitations below); validated CLV will return to the Model Dashboard once genuine live closes accumulate.</div>
+      <div class="math-note">CLV is the gold standard for betting process validation — a model can run cold for 50 games while positive CLV still suggests the process is sound. Our validated live-close sample is not yet sufficient to publish (see Honest Limitations below); a validated CLV read will appear on the Model Dashboard once genuine live-close coverage accumulates.</div>
     </div>
 
   </div>

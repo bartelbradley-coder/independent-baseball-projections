@@ -5,10 +5,17 @@
 
 /* Headline stats */
 .headline-stats {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;
   margin-bottom: 28px;
 }
-@media (max-width: 700px) { .headline-stats { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 700px) {
+  .headline-stats { grid-template-columns: repeat(2, 1fr); }
+  /* odd tile count (e.g. close-based tile omitted): last tile spans the row
+     so no empty grid slot remains */
+  /* the risk strip is the container last child, so the final TILE is
+     nth-last-child(2); span it when the tile count is odd */
+  .headline-stats .hl-stat:nth-child(odd):nth-last-child(2) { grid-column: 1 / -1; }
+}
 .hl-stat {
   background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
   padding: 18px 16px; text-align: center;
