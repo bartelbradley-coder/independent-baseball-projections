@@ -17,9 +17,9 @@
   "creator": { "@type": "Organization", "name": "Independent Baseball Projections", "url": "https://independentbaseballprojections.net/" }
 }
 </script>
-<meta name="description" content="Complete pick log for Independent Baseball Projections. Every posted pick with result, CLV, units, and ROI. Filterable by month, result, edge, and side.">
+<meta name="description" content="Complete pick log for Independent Baseball Projections. Every posted pick with result, units, and ROI. Filterable by month, result, edge, and side.">
 <meta property="og:title" content="Independent Baseball Projections — Pick History">
-<meta property="og:description" content="Every posted pick logged with result, CLV, units, and ROI. Filterable pick table, P&L curve, calibration chart, and daily breakdown.">
+<meta property="og:description" content="Every posted pick logged with result, units, and ROI. Filterable pick table, P&L curve, calibration chart, and daily breakdown.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://independentbaseballprojections.net/og-image.png?v=2">
 <meta property="og:image:width" content="1200">
@@ -27,7 +27,7 @@
 <meta property="og:url" content="https://independentbaseballprojections.net/history.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Independent Baseball Projections — Pick History">
-<meta name="twitter:description" content="Live 2026 MLB betting results with CLV tracking and full pick history.">
+<meta name="twitter:description" content="Live 2026 MLB betting results with a full auditable pick history.">
 <meta name="twitter:image" content="https://independentbaseballprojections.net/og-image.png?v=2">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='5' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='white'>IB</text><text x='16' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='%2360a5fa'>P</text><line x1='21' y1='23' x2='25' y2='18' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='25' cy='18' r='1.4' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,7 +75,7 @@
   <header class="hero hero-slim">
     <div class="hero-eyebrow">Full Record · Updated Daily</div>
     <h1 class="hero-title">Pick History</h1>
-    <p class="hero-sub">Every posted pick — team, odds, stake, result, CLV, and units. Logged before first pitch, never deleted after a loss. <a href="model.html">How it works →</a></p>
+    <p class="hero-sub">Every posted pick — team, odds, stake, result, and units. Logged before first pitch, never deleted after a loss. <a href="model.html">How it works →</a></p>
   </header>
 
   <!-- Live section header + compact metrics -->
@@ -100,19 +100,19 @@
       <li>Every posted pick is logged before first pitch.</li>
       <li>Model probability, market probability, odds, edge, stake, and timestamp are stored at posting.</li>
       <li>Results are not deleted after losses.</li>
-      <li>Closing-line value is tracked where available.</li>
+      <li>Closing prices are captured for validation.</li>
       <li>Live results are reported separately from historical backtests.</li>
       <li>Past performance does not guarantee future results.</li>
     </ul>
     <div style="margin-top:10px;font-size:11px;color:var(--text-2);background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.16);border-radius:8px;padding:8px 12px;line-height:1.6">
-      <strong>Verify it yourself:</strong> the <strong><svg class="ibp-ic" style="font-size:12px" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 11l5 5 5-5M5 21h14"/></svg> CSV</strong> button below the filters exports the rows currently shown — date, posted time, odds, edge, model probability, result, CLV, P&amp;L. Leave the filters on "All" (the default) to export the complete log, and diff it against any snapshot of this page: rows are added, never removed. Independent daily snapshots of this data live at the <a href="https://web.archive.org/web/*/independentbaseballprojections.net/data/history.json" target="_blank" rel="noopener">Internet Archive</a> — third-party copies we cannot edit.
+      <strong>Verify it yourself:</strong> the <strong><svg class="ibp-ic" style="font-size:12px" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 11l5 5 5-5M5 21h14"/></svg> CSV</strong> button below the filters exports the rows currently shown — date, posted time, odds, edge, model probability, result, P&amp;L. Leave the filters on "All" (the default) to export the complete log, and diff it against any snapshot of this page: rows are added, never removed. Independent daily snapshots of this data live at the <a href="https://web.archive.org/web/*/independentbaseballprojections.net/data/history.json" target="_blank" rel="noopener">Internet Archive</a> — third-party copies we cannot edit.
     </div>
     <details class="record-notes" style="margin-top:10px;font-size:11px;color:var(--text-3);line-height:1.55">
       <summary style="cursor:pointer;font-weight:600;color:var(--text-2)">Record notes — known imperfections in this data</summary>
       <ul style="margin:8px 0 0 16px;padding:0">
         <li><strong>Posting timestamps begin June 1, 2026.</strong> Picks before that date were logged pre-pitch but predate the visible-timestamp system, so no 📌 posted-time appears on those rows.</li>
         <li><strong>The posting threshold tightened over the season.</strong> Earlier picks were posted at lower edge minimums; the current bar is 4pp. Everything ever posted stays in the record — rows below today's threshold are marked "Below" rather than removed.</li>
-        <li><strong>Early-season CLV is partly reconstructed.</strong> Live closing-line capture matured during the season; some early values were reconstructed from historical odds, and rows show "—" where no usable closing snapshot exists. We treat CLV as a signal to accumulate, not proof.</li>
+        <li><strong>Close-based validation is not currently published.</strong> Live closing-price capture matured during the season and early closes were partly reconstructed from historical odds; validated close-based metrics will return once genuine live-close coverage accumulates.</li>
       </ul>
     </details>
   </section>
@@ -221,7 +221,7 @@
   <div class="footer-byline">Built &amp; run by BB · an independent one-person project</div>
 </footer>
 
-<script src="ibp-utils.js?v=9"></script>
+<script src="ibp-utils.js?v=10"></script>
 <script>
 let allRows = [];
 let sortCol = 'date';
@@ -273,6 +273,9 @@ async function loadAll() {
     const h     = hRes.ok     ? await hRes.json()     : null;
     const p     = pRes.ok     ? await pRes.json()     : null;
     const today = todayRes.ok ? await todayRes.json() : null;
+    // Close-based displays are omitted unless EVERY payload explicitly
+    // supports rendering them — FAIL-CLOSED (computeClvSuppressed, ibp-utils.js).
+    window._clvSuppressed = computeClvSuppressed([h, p, today]);
     // rl_performance.json no longer fetched — RL removed from display
 
     if (h && h.updated_at) {
@@ -358,12 +361,12 @@ function renderSummary(rows) {
     ? (kellyStaked > 0 ? kellyPnl / kellyStaked : 0)
     : (settled.length > 0 ? flatPnl / settled.length : 0);
   const clvRows  = rows.filter(r => r.clv != null);
-  const avgClv   = clvRows.length > 0 ? clvRows.reduce((s, r) => s + r.clv, 0) / clvRows.length : null;
+  const avgClv   = (!window._clvSuppressed && clvRows.length > 0) ? clvRows.reduce((s, r) => s + r.clv, 0) / clvRows.length : null;
   const winRate  = settled.length > 0 ? wins / settled.length : null;
 
   document.getElementById('summary-row').innerHTML = `
     <div class="stat-pill"><div class="stat-lbl">2026 Record</div><div class="stat-val white">${wins}W–${losses}L</div><div class="stat-sub">${settled.length} bets</div></div>
-    <div class="stat-pill"><div class="stat-lbl">Season P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${_fmtPnl(totalPnl)}</div><div class="stat-sub">${pnlMode==='kelly'?'fractional Kelly sized':pnlMode==='dollars'&&_bankroll>0?`$${_bankroll} bankroll`:'flat $100/bet'}</div></div>
+    <div class="stat-pill"><div class="stat-lbl">Season P&L</div><div class="stat-val ${totalPnl >= 0 ? 'green' : 'red'}">${_fmtPnl(totalPnl)}</div><div class="stat-sub">${pnlMode==='kelly'?'fractional Kelly sized':pnlMode==='dollars'&&_bankroll>0?`$${_bankroll} bankroll`:'flat $100/bet at posted prices (no bets placed)'}</div></div>
     <div class="stat-pill"><div class="stat-lbl">ROI / Bet</div><div class="stat-val ${roi >= 0 ? 'green' : 'red'}">${pct(roi)}</div><div class="stat-sub">per settled bet</div></div>
     <div class="stat-pill"><div class="stat-lbl">Win Rate</div><div class="stat-val white">${winRate != null ? (winRate*100).toFixed(1)+'%' : '—'}</div><div class="stat-sub">~52% break-even</div></div>
     ${avgClv != null ? `<div class="stat-pill"><div class="stat-lbl">Avg CLV</div><div class="stat-val ${(t=>t==='pos'?'green':t==='neg'?'red':'white')(_clvTone(clvRows.map(r=>r.clv)))}">${pct(avgClv)}</div><div class="stat-sub">n=${clvRows.length}</div></div>` : ''}
@@ -406,8 +409,8 @@ function renderLiveTotals(rows) {
   const pnl  = sub.reduce((s, x) => s + (parseFloat(x.pnl_u || x.pnl) || 0), 0);
   const roi  = sub.length > 0 ? pnl / sub.length : 0;
   const wr   = sub.length > 0 ? wins / sub.length : 0;
-  const clvs = sub.filter(x => x.clv != null).map(x => parseFloat(x.clv));
-  const avgClv = clvs.length > 0 ? clvs.reduce((a,b)=>a+b,0)/clvs.length : null;
+  const clvs = window._clvSuppressed ? [] : sub.filter(x => x.clv != null).map(x => parseFloat(x.clv));
+  const avgClv = (!window._clvSuppressed && clvs.length > 0) ? clvs.reduce((a,b)=>a+b,0)/clvs.length : null;
 
   const pct = t => (t >= 0 ? '+' : '') + (t * 100).toFixed(1) + '%';
   const roiCol  = roi  >= 0 ? 'var(--green)' : 'var(--red)';
@@ -446,12 +449,12 @@ function renderRollingStrip(rows) {
   function card(label, s) {
     if (s.n === 0) return `<div class="stat-pill"><div class="stat-lbl">${label}</div><div class="stat-val white">—</div><div class="stat-sub">no settled picks</div></div>`;
     const cls = s.pnl >= 0 ? 'green' : 'red';
-    const clvStr = s.clv != null ? ` · CLV ${s.clv >= 0 ? '+' : ''}${(s.clv * 100).toFixed(1)}%` : '';
+    const clvStr = (!window._clvSuppressed && s.clv != null) ? ` · CLV ${s.clv >= 0 ? '+' : ''}${(s.clv * 100).toFixed(1)}%` : '';
     return `<div class="stat-pill"><div class="stat-lbl">${label}</div><div class="stat-val white">${s.w}–${s.l}</div>
       <div class="stat-sub" style="color:var(--${cls})">${s.pnl >= 0 ? '+' : ''}${s.pnl.toFixed(1)}u · ${(s.roi * 100).toFixed(1)}% ROI${clvStr}</div></div>`;
   }
   if (rows.filter(r => r.result === 'W' || r.result === 'L').length === 0) { el.innerHTML = ''; return; }
-  el.innerHTML = `<div class="rolling-lbl">Recent form <span class="rolling-note">small windows are noisy — weigh CLV alongside ROI</span></div>
+  el.innerHTML = `<div class="rolling-lbl">Recent form <span class="rolling-note">small windows are noisy — judge the record, not single weeks</span></div>
     <div class="summary-row">${card('Last 7 days', stats(7))}${card('Last 14 days', stats(14))}${card('Last 30 days', stats(30))}</div>`;
 }
 
@@ -517,7 +520,9 @@ function renderTable(rows) {
     { key: 'edge',       label: 'Edge',    cls: '' },
     { key: 'model_prob', label: 'Model%',  cls: 'hide-sm' },
     { key: 'result',     label: 'Result',  cls: '' },
-    { key: 'clv',        label: 'CLV',     cls: '' },
+    // Close-based column omitted entirely while the feed sets clv_suppressed
+    // (operator decision 2026-07-10) — no placeholder column is shown.
+    ...(window._clvSuppressed ? [] : [{ key: 'clv', label: 'CLV', cls: '' }]),
     { key: 'pnl_u',      label: pnlMode === 'dollars' ? 'P&L ($)' : 'P&L (u)',     cls: '' },
   ];
 
@@ -563,7 +568,7 @@ function renderTable(rows) {
       <td data-label="Edge" style="color:var(--amber)">${edgeStr}</td>
       <td data-label="Model%" class="hide-sm">${probStr}</td>
       <td data-label="Result"><span class="${resultCls}">${r.result || '—'}</span></td>
-      <td data-label="CLV" class="${clvCls}">${clvStr}</td>
+      ${window._clvSuppressed ? '' : `<td data-label="CLV" class="${clvCls}">${clvStr}</td>`}
       <td data-label="P&amp;L" class="${pnlCls}">${pnlStr}</td>
     </tr>`;
   }).join('');
@@ -574,7 +579,7 @@ function renderTable(rows) {
   const _fpnl = _fS.reduce((s, r) => s + (pnlMode === 'kelly' ? (r.kelly_units || 1) : 1) * (parseFloat(r.pnl_u) || 0), 0);
   const _fe   = filtered.filter(r => r.edge != null).map(r => parseFloat(r.edge));
   const _fae  = _fe.length ? _fe.reduce((a, b) => a + b, 0) / _fe.length : null;
-  const _fc   = filtered.filter(r => r.clv != null).map(r => parseFloat(r.clv));
+  const _fc   = window._clvSuppressed ? [] : filtered.filter(r => r.clv != null).map(r => parseFloat(r.clv));
   const _fac  = _fc.length ? _fc.reduce((a, b) => a + b, 0) / _fc.length : null;
   const tfootHTML = `<tfoot><tr class="totals-row">
       <td data-label="">Totals</td>
@@ -585,7 +590,7 @@ function renderTable(rows) {
       <td data-label="Avg edge" style="color:var(--amber)">${_fae != null ? '+' + (_fae * 100).toFixed(1) + 'pp' : '—'}</td>
       <td class="hide-sm"></td>
       <td data-label="Record">${_fw}–${_fS.length - _fw}</td>
-      <td data-label="Avg CLV" class="${_fac == null ? 'clv-neu' : 'clv-' + _clvTone(_fc)}">${_fac != null ? pct(_fac) : '—'}</td>
+      ${window._clvSuppressed ? '' : `<td data-label="Avg CLV" class="${_fac == null ? 'clv-neu' : 'clv-' + _clvTone(_fc)}">${_fac != null ? pct(_fac) : '—'}</td>`}
       <td data-label="Total P&amp;L" class="${_fpnl >= 0 ? 'pnl-pos' : 'pnl-neg'}">${_fmtPnl(_fpnl)}</td>
     </tr></tfoot>`;
 

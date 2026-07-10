@@ -559,16 +559,18 @@ function renderEvidenceSection(data, perf, hist) {
   // CLV claim is gated by sample size: only make the causal "identifies edge
   // before it's priced in" claim once the sample is meaningful (>=100 picks).
   // Below that, lead with the honest hit-rate + a "still building sample" caveat.
-  const _clvDesc = clvCount >= 100
-    ? `On average, posted picks have closed better than the release price across the tracked sample — an early sign the model may be finding edge before the market fully prices it.${posPct ? ' ' + posPct + ' of ' + clvCount + ' picks beat the close.' : ''} ${trendStr}`
-    : `${posPct ? posPct + ' of ' + clvCount + ' picks have beaten the close so far' : 'Tracking whether our posted price beats the close'} — still building a sample before drawing conclusions about edge.${trendStr ? ' ' + trendStr : ''}`;
+  // Operator decision 2026-07-10 (revised): while window._clvSuppressed is set
+  // the CLV evidence card is OMITTED entirely (no placeholder). NOTE: this
+  // whole section is currently dead code — renderEvidenceSection is not
+  // invoked and index.html has no evidence-section element.
+  const _clvDesc = 'Tracked against validated market closes.';
 
   grid.innerHTML = `
-    <div class="evidence-claim">
+    ${window._clvSuppressed ? '' : `<div class="evidence-claim">
       <div class="ec-stat">${clv || '—'}</div>
       <div class="ec-label">Average Closing Line Value</div>
       <div class="ec-desc">${_clvDesc}</div>
-    </div>
+    </div>`}
     <div class="evidence-claim">
       <div class="ec-stat">${roi || '—'}</div>
       <div class="ec-label">${s.bets || ''} tracked picks, 2026 season</div>
@@ -810,6 +812,11 @@ async function loadPicks() {
     const data    = todayRes.ok    ? await todayRes.json()    : null;
     const hist    = histRes.ok     ? await histRes.json()     : null;
     const perf    = perfRes.ok     ? await perfRes.json()     : null;
+    // Unified close-suppression flag — FAIL-CLOSED: public CLV renders only
+    // when every required payload explicitly reports clv_suppressed === false
+    // (failed feed, missing field, or any true -> suppressed; see
+    // computeClvSuppressed in ibp-utils.js, tested in dev/test_clv_suppression.js).
+    window._clvSuppressed = computeClvSuppressed([data, perf, hist]);
     const preview = (previewRes && previewRes.ok) ? await previewRes.json() : null;
     _histRef = hist;
     if (data) render(data, hist, scores, perf);
@@ -903,7 +910,7 @@ function renderEmptyState(data, hist, marginal = []) {
         <div class="ppc-title">Today's Picks Post at 9:00 AM CT</div>
         <div class="ppc-sub">
           The model runs each morning after overnight data and opening lines are confirmed.<br>
-          Picks are locked before first pitch and tracked to closing line value.
+          Picks are locked before first pitch and every result is graded publicly.
         </div>
         <a class="ppc-preview-link" href="preview.html">${ibpIcon('search', 13)} View tomorrow's opening line estimates →</a>
         ${onwardCTA}
@@ -1490,7 +1497,7 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
     const _nowClock = String(p.current_refresh_time || '').replace(/\s*CT$/i, '').trim();
     lgPts = [{ label: 'Posted', odds: p.odds, clock: String(p.posted_at || '').replace(/\s*CT$/i, '').trim() }];
     if (!inactive && sb.best) lgPts.push({ label: _endLabel, odds: sb.best.odds, clock: _nowClock });
-    else if ((live || over) && p.closing_prob != null) lgPts.push({ label: _endLabel, odds: _americanFromImplied(p.closing_prob), clock: _nowClock });
+    else if (!window._clvSuppressed && (live || over) && p.closing_prob != null) lgPts.push({ label: _endLabel, odds: _americanFromImplied(p.closing_prob), clock: _nowClock });
   }
   const graphHTML = prLineGraph(lgPts) || '<div class="dw-cap">Not enough line data to chart.</div>';
   let lgCap = '';
@@ -1499,7 +1506,7 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
           + ' CT \u00b7 ' + _hist.length + ' snapshots \u00b7 <span style="color:var(--green)">green</span> = current line is worse than what we locked (you\'re ahead)</div>';
   }
   let clvHTML = '';
-  if (p.clv != null && (live || over)) {   // CLV only exists once the line has closed (first pitch)
+  if (!window._clvSuppressed && p.clv != null && (live || over)) {   // close-based drawer line — unified suppression gate
     const clvpp = p.clv * 100;
     const cls = clvpp >= 0.5 ? 'g' : clvpp <= -0.5 ? 'r' : '';
     const note = clvpp >= 0.5 ? 'beat the close' : clvpp <= -0.5 ? 'closed past us' : 'matched close';
@@ -2162,7 +2169,7 @@ function render(data, hist, scores = {}, perf = null) {
       // caveat, so the hero can't overclaim what the dashboard won't certify.
       el.innerHTML = `<span class="hp-stat idx">${s.bets.toLocaleString()}</span> picks logged`
         + ` · <span class="hp-stat">${roi} ROI</span> so far`
-        + ` — we track closing-line value too, and we won't call the edge proven until it agrees.`;
+        + ` — and we won't call the edge proven until a larger validated sample agrees.`;
       el.hidden = false;
     }
 
@@ -2280,12 +2287,12 @@ function render(data, hist, scores = {}, perf = null) {
             <span class="phb-stat-val ${uCol}">${pnlDisplay}</span>
             <span class="phb-stat-sub">${pnlSublabel}</span>
           </div>
-          <div class="phb-vdivider"></div>
+          ${window._clvSuppressed ? '' : `<div class="phb-vdivider"></div>
           <div class="phb-stat-group">
             <span class="phb-stat-label">Avg CLV</span>
-            <span class="phb-stat-val ${clvStr ? clvCol : 'muted'}" title="Average closing-line value — tracked as live closing data accumulates; not treated as a proven edge unless the significance test on the Model Dashboard clears.">${clvStr || '—'}</span>
-            <span class="phb-stat-sub">${clvStr ? (data.clv_count || '') + ' picks tracked' : 'pending'}</span>
-          </div>
+            <span class="phb-stat-val muted">${data.avg_clv != null ? ((data.avg_clv>=0?'+':'')+(data.avg_clv*100).toFixed(2)+'%') : '—'}</span>
+            <span class="phb-stat-sub">${data.clv_count || ''} picks</span>
+          </div>`}
           <div class="phb-right-group">
             ${todayChip}
           </div>

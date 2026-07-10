@@ -10,15 +10,15 @@
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": "How the Independent Baseball Projections Model Works",
-  "description": "A Dual-Poisson run-expectancy engine with 30+ signals, Platt calibration, and out-of-sample validation vs. Pinnacle no-vig lines.",
+  "description": "A Dual-Poisson run-expectancy engine with 30+ signals, Platt calibration, and a development-period historical backtest vs. Pinnacle no-vig lines.",
   "url": "https://independentbaseballprojections.net/model.html",
   "author": { "@type": "Organization", "name": "Independent Baseball Projections", "url": "https://independentbaseballprojections.net/" },
   "publisher": { "@type": "Organization", "name": "Independent Baseball Projections", "url": "https://independentbaseballprojections.net/" }
 }
 </script>
-<meta name="description" content="How the Independent Baseball Projections model works: a Dual-Poisson run-expectancy engine with 30+ signals, Platt calibration, and out-of-sample validation vs. Pinnacle no-vig lines.">
+<meta name="description" content="How the Independent Baseball Projections model works: a Dual-Poisson run-expectancy engine with 30+ signals, Platt calibration, and a development-period historical backtest vs. Pinnacle no-vig lines.">
 <meta property="og:title" content="Independent Baseball Projections — Methodology">
-<meta property="og:description" content="Dual-Poisson + 30+ signals + Platt calibration. The full model pipeline, the math, the signals, and 2022–2024 out-of-sample backtest results.">
+<meta property="og:description" content="Dual-Poisson + 30+ signals + Platt calibration. The full model pipeline, the math, the signals, and 2022–2024 development-period backtest results (hypothetical).">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://independentbaseballprojections.net/og-image.png?v=2">
 <meta property="og:image:width" content="1200">
@@ -26,7 +26,7 @@
 <meta property="og:url" content="https://independentbaseballprojections.net/model.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Independent Baseball Projections — Methodology">
-<meta name="twitter:description" content="The full model pipeline: Dual-Poisson, 30+ signals, Platt calibration, and out-of-sample validation.">
+<meta name="twitter:description" content="The full model pipeline: Dual-Poisson, 30+ signals, Platt calibration, and a development-period historical backtest.">
 <meta name="twitter:image" content="https://independentbaseballprojections.net/og-image.png?v=2">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230f1829'/><circle cx='16' cy='16' r='14' stroke='rgba(255,255,255,0.82)' stroke-width='1' fill='none'/><path d='M7,9 Q10,12 8,16 Q6,20 8,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><path d='M25,9 Q22,12 24,16 Q26,20 24,23' stroke='rgba(255,255,255,0.3)' stroke-width='0.7' fill='none' stroke-linecap='round'/><text x='5' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='white'>IB</text><text x='16' y='21' font-family='system-ui,sans-serif' font-size='9' font-weight='900' fill='%2360a5fa'>P</text><line x1='21' y1='23' x2='25' y2='18' stroke='%2322c55e' stroke-width='1.2' stroke-linecap='round'/><circle cx='25' cy='18' r='1.4' fill='%2322c55e'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -81,8 +81,8 @@
     <div class="hdr-pill p-ind">3 Signal Pathways</div>
     <div class="hdr-pill p-vio">Dual-Poisson</div>
     <div class="hdr-pill p-tea">Platt Calibrated</div>
-    <div class="hdr-pill p-sla">CLV Tracked</div>
-    <div class="hdr-pill p-sla">7,359 Games OOS</div>
+    <div class="hdr-pill p-sla">Closes Captured</div>
+    <div class="hdr-pill p-sla">7,359 Games Backtested</div>
   </div>
 </div>
 
@@ -94,7 +94,7 @@
     <li><strong>We check our numbers against thousands of past games</strong> and correct any bias, so when the model says &ldquo;60%,&rdquo; that side really wins about 60% of the time. (Technically: Platt calibration on a 7,359-game 2022&ndash;24 backtest, blended with 2026 live results as they accrue.)</li>
     <li><strong>Then we compare our number to the sportsbook's price</strong> with the house's cut removed (the &ldquo;no-vig&rdquo; line, benchmarked to Pinnacle). Most nights they agree &mdash; no bet.</li>
     <li><strong>When our probability beats the price by at least 4 points</strong>, we post the pick &mdash; with the odds, our number, the market's number, and a suggested stake.</li>
-    <li><strong>Every pick is logged before first pitch and never deleted.</strong> We also track whether the market moves toward our picks by closing time (CLV) &mdash; the test we trust most, and one we won't claim victory on until the data agrees.</li>
+    <li><strong>Every pick is logged before first pitch and never deleted.</strong> We also capture closing prices to test whether the market moves toward our picks (CLV) &mdash; the test we trust most, and one we won't claim victory on until validated data agrees.</li>
   </ul>
   <div style="font-size:11px;color:var(--text-4);margin-top:8px">Want the machinery? The pipeline, math, and full signal catalog are below &mdash; the collapsed sections open on tap.</div>
 </div>
@@ -146,7 +146,7 @@
   <div class="msig-cell">
     <div class="msig-lbl">Calibration</div>
     <div class="msig-val">Platt sigmoid</div>
-    <div class="msig-sub">OOS fit + live blend</div>
+    <div class="msig-sub">dev-period fit + live blend</div>
   </div>
   <div class="msig-cell">
     <div class="msig-lbl">Bet Filter</div>
@@ -159,7 +159,7 @@
     <div class="msig-sub">bankroll fraction</div>
   </div>
   <div class="msig-cell">
-    <div class="msig-lbl">OOS Period</div>
+    <div class="msig-lbl">Backtest Period</div>
     <div class="msig-val">2022 – 2024</div>
     <div class="msig-sub">3 seasons, sequential</div>
   </div>
@@ -214,13 +214,13 @@
         </div>
       </div>
     </div>
-    <div class="ex-note">This pick's signal breakdown appears in the Details section of each pick card on the Today's Picks page. CLV is tracked at close to verify the market agreed with the model's direction.</div>
+    <div class="ex-note">This pick's signal breakdown appears in the Details section of each pick card on the Today's Picks page. Closing prices are captured to test whether the market agreed with the model's direction.</div>
   </div>
 </div>
 
 <!-- VALIDATION -->
 <div class="section" id="section-validation">
-  <h2 class="sec-lbl">Out-of-Sample Backtest (Hypothetical) — 2022–2024 · Flat $100/Bet · 4pp+ Edge</h2>
+  <h2 class="sec-lbl">Development-Period Backtest (Hypothetical) — 2022–2024 · Flat $100/Bet · 4pp+ Edge</h2>
   <div style="font-size:11px;color:var(--text-3);line-height:1.6;margin:0 0 14px;padding:9px 12px;border:1px solid rgba(245,158,11,0.18);background:rgba(245,158,11,0.05);border-radius:8px"><strong style="color:#fbbf24">These are hypothetical backtest results.</strong> The 2022–2024 figures are simulated on historical data with the current model design — not money actually wagered — and the model was developed knowing this period, so live results will differ. For the real, forward-tested record see <a href="performance.html" style="color:var(--text-2)">Model Dashboard</a> and <a href="history.html" style="color:var(--text-2)">Pick History</a>. Past performance does not guarantee future results.</div>
   <div class="val-wrap">
 
@@ -228,7 +228,7 @@
       <div class="val-card">
         <div class="val-lbl">Games<br>Backtested</div>
         <div class="val-num i">7,359</div>
-        <div class="val-sub">2022–2024 · OOS only</div>
+        <div class="val-sub">2022–2024 · development period</div>
       </div>
       <div class="val-card">
         <div class="val-lbl">Sharpe<br>Ratio</div>
@@ -435,7 +435,7 @@
 
     <div class="math-block ct">
       <div class="math-hdr">σ  Platt Scaling Calibration</div>
-      <div class="f-lbl">Sigmoid recalibration — fitted OOS 2022–2024</div>
+      <div class="f-lbl">Sigmoid recalibration — fitted on the 2022–2024 development period</div>
       <div class="fbox"><span class="v">p_cal</span> <span class="op">=</span> <span class="fn">σ</span>(<span class="v">A</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_raw</span>) <span class="op">+</span> <span class="v">B</span>)
 
       <span class="op">=</span> <span class="n">1</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">+</span> <span class="fn">exp</span>(<span class="op">−</span>(<span class="hl">A</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_raw</span>)
@@ -444,7 +444,7 @@
       <div class="fbox"><span class="hl">A &lt; 1</span>  <span class="cm">// &lt; 1: model over-expresses
           //   confidence; compress toward 50%</span>
 <span class="hl">B &gt; 0</span> <span class="cm">// home-team bias correction</span></div>
-      <div class="math-note">Fitted via MLE on the 2022–24 out-of-sample backtest, lightly blended with 2026 live outcomes as the sample grows (exact A,&nbsp;B not published). Brier Score: <strong>0.234</strong> model vs. <strong>0.250</strong> market — 6.4% improvement. A &lt; 1 confirms the raw Poisson systematically over-prices favorites; calibration compresses the logit toward the empirical base rate.</div>
+      <div class="math-note">Fitted via MLE on the 2022–24 development-period backtest (the same seasons the model was tuned on — in-sample for the calibration layer), lightly blended with 2026 live outcomes as the sample grows (exact A,&nbsp;B not published). Brier Score: <strong>0.234</strong> model vs. <strong>0.250</strong> market — 6.4% improvement. A &lt; 1 confirms the raw Poisson systematically over-prices favorites; calibration compresses the logit toward the empirical base rate.</div>
     </div>
 
     <div class="math-block cs">
@@ -478,7 +478,7 @@
     </div>
 
     <div class="math-block ce">
-      <div class="math-hdr"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg>  Closing Line Value — Process Validation</div>
+      <div class="math-hdr"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg>  Close-Based Process Validation (CLV)</div>
       <div class="f-lbl">Definition — Pinnacle no-vig both sides</div>
       <div class="fbox"><span class="v">CLV</span> <span class="op">=</span> <span class="v">p_close_nv</span> <span class="op">−</span> <span class="v">p_open_nv</span>
 <span class="cm">// Snapshot: pre-game closing line (CT)</span></div>
@@ -488,7 +488,7 @@
 
 <span class="cm">// Sustained positive CLV is the standard
 // evidence of a durable edge</span></div>
-      <div class="math-note">CLV is the gold standard for betting process validation — a model can run cold for 50 games while positive CLV still suggests the process is sound. Our live CLV sample is thin and not yet conclusive (see Honest Limitations below); every pick's CLV is logged and reported on the Model Dashboard.</div>
+      <div class="math-note">CLV is the gold standard for betting process validation — a model can run cold for 50 games while positive CLV still suggests the process is sound. Our validated live-close sample is not yet sufficient to publish (see Honest Limitations below); a validated CLV read will appear on the Model Dashboard once genuine live-close coverage accumulates.</div>
     </div>
 
   </div>
@@ -648,7 +648,7 @@
 
     <div class="math-block ci">
       <div class="math-hdr"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="14" cy="5" r="2"/><path d="M6 21l3-6 3 2 2-5-3-2 2-4 4 3h3"/></svg>  Run Line Calibration</div>
-      <div class="f-lbl">Platt scaling — RL-specific constants, fitted OOS 2022–2024</div>
+      <div class="f-lbl">Platt scaling — RL-specific constants, fitted on the 2022–2024 development period</div>
       <div class="fbox"><span class="v">p_rl_cal</span> <span class="op">=</span> <span class="fn">σ</span>(<span class="v">A_rl</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_rl_raw</span>) <span class="op">+</span> <span class="v">B_rl</span>)
 
          <span class="op">=</span> <span class="n">1</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">+</span> <span class="fn">exp</span>(<span class="op">−</span>(<span class="hl">A_rl</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_rl_raw</span>)
@@ -657,7 +657,7 @@
       <div class="fbox"><span class="hl">A_rl</span> <span class="op">&lt;</span> <span class="n">1</span>  <span class="cm">// &lt; 1: slight overconfidence;
                //   less shrinkage than ML model</span>
 <span class="hl">B_rl</span> <span class="op">&lt;</span> <span class="n">0</span> <span class="cm">// small away-team correction</span></div>
-      <div class="f-lbl">Backtest results (hypothetical — not live results) — 7,237 games, OOS 2022–2024</div>
+      <div class="f-lbl">Backtest results (hypothetical — not live results) — 7,237 games, development period 2022–2024</div>
       <div class="fbox">Home cover rate:  <span class="n">35.7%</span> actual vs <span class="n">35.6%</span> model
 Direction acc.:   <span class="n">64.7%</span>  <span class="cm">(better side predicted)</span>
 
@@ -675,7 +675,7 @@ Away <span class="op">+</span><span class="n">1.5</span> win rate vs model edge:
 
     <div class="math-block cv">
       <div class="math-hdr"><svg class="ibp-ic" style="font-size:13px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-6"/></svg>  Over/Under Calibration</div>
-      <div class="f-lbl">Platt scaling — O/U constants, fitted OOS 2022–2024</div>
+      <div class="f-lbl">Platt scaling — O/U constants, fitted on the 2022–2024 development period</div>
       <div class="fbox"><span class="v">p_over_cal</span> <span class="op">=</span> <span class="fn">σ</span>(<span class="v">A_ou</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_over_raw</span>) <span class="op">+</span> <span class="v">B_ou</span>)
 
            <span class="op">=</span> <span class="n">1</span> <span class="op">/</span> (<span class="n">1</span> <span class="op">+</span> <span class="fn">exp</span>(<span class="op">−</span>(<span class="hl">A_ou</span> <span class="op">·</span> <span class="fn">logit</span>(<span class="v">p_over_raw</span>)
@@ -743,7 +743,7 @@ Bias by total line:
   <div class="footer-byline">Built &amp; run by BB · an independent one-person project</div>
 </footer>
 
-<script src="ibp-utils.js?v=9"></script>
+<script src="ibp-utils.js?v=10"></script>
 <script>
 // ── Nav hamburger ──
 function toggleNav() {

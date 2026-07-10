@@ -363,3 +363,27 @@ function ibpIcon(name, px, cls) {
     + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
     + p + '</svg>';
 }
+
+
+/* ── Public CLV suppression (fail-closed) ─────────────────────────────────────
+ * Operator policy 2026-07-10: public CLV renders ONLY when EVERY required
+ * payload is present AND explicitly reports clv_suppressed === false.
+ *  - a failed/missing feed        -> suppressed (fail closed)
+ *  - a missing suppression field  -> suppressed (fail closed)
+ *  - any payload reporting true   -> suppressed
+ *  - stale non-null CLV values never override the state (renderers gate on
+ *    the flag before reading any close-derived value)
+ * Restoration requires every payload to support it under a separately
+ * approved policy. Pure function — unit-tested in dev/test_clv_suppression.js.
+ */
+function computeClvSuppressed(payloads) {
+  if (!Array.isArray(payloads) || payloads.length === 0) return true;
+  for (const p of payloads) {
+    if (!p || typeof p !== 'object') return true;          // feed failed
+    if (p.clv_suppressed !== false) return true;           // missing or true
+  }
+  return false;
+}
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports.computeClvSuppressed = computeClvSuppressed;
+}
