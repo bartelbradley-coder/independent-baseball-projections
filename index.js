@@ -812,6 +812,10 @@ async function loadPicks() {
     const data    = todayRes.ok    ? await todayRes.json()    : null;
     const hist    = histRes.ok     ? await histRes.json()     : null;
     const perf    = perfRes.ok     ? await perfRes.json()     : null;
+    // Unified close-suppression flag for every close-derived path on this page.
+    window._clvSuppressed = !!((data && data.clv_suppressed) ||
+                               (perf && perf.clv_suppressed) ||
+                               (hist && hist.clv_suppressed));
     const preview = (previewRes && previewRes.ok) ? await previewRes.json() : null;
     _histRef = hist;
     if (data) render(data, hist, scores, perf);
@@ -1492,7 +1496,7 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
     const _nowClock = String(p.current_refresh_time || '').replace(/\s*CT$/i, '').trim();
     lgPts = [{ label: 'Posted', odds: p.odds, clock: String(p.posted_at || '').replace(/\s*CT$/i, '').trim() }];
     if (!inactive && sb.best) lgPts.push({ label: _endLabel, odds: sb.best.odds, clock: _nowClock });
-    else if ((live || over) && p.closing_prob != null) lgPts.push({ label: _endLabel, odds: _americanFromImplied(p.closing_prob), clock: _nowClock });
+    else if (!window._clvSuppressed && (live || over) && p.closing_prob != null) lgPts.push({ label: _endLabel, odds: _americanFromImplied(p.closing_prob), clock: _nowClock });
   }
   const graphHTML = prLineGraph(lgPts) || '<div class="dw-cap">Not enough line data to chart.</div>';
   let lgCap = '';
@@ -1501,7 +1505,7 @@ function prDrawerHTML(p, isBest, gameResult, forShare) {
           + ' CT \u00b7 ' + _hist.length + ' snapshots \u00b7 <span style="color:var(--green)">green</span> = current line is worse than what we locked (you\'re ahead)</div>';
   }
   let clvHTML = '';
-  if (p.clv != null && (live || over)) {   // CLV only exists once the line has closed (first pitch)
+  if (!window._clvSuppressed && p.clv != null && (live || over)) {   // close-based drawer line — unified suppression gate
     const clvpp = p.clv * 100;
     const cls = clvpp >= 0.5 ? 'g' : clvpp <= -0.5 ? 'r' : '';
     const note = clvpp >= 0.5 ? 'beat the close' : clvpp <= -0.5 ? 'closed past us' : 'matched close';

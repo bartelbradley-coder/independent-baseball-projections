@@ -408,7 +408,7 @@ function renderLiveTotals(rows) {
   const pnl  = sub.reduce((s, x) => s + (parseFloat(x.pnl_u || x.pnl) || 0), 0);
   const roi  = sub.length > 0 ? pnl / sub.length : 0;
   const wr   = sub.length > 0 ? wins / sub.length : 0;
-  const clvs = sub.filter(x => x.clv != null).map(x => parseFloat(x.clv));
+  const clvs = window._clvSuppressed ? [] : sub.filter(x => x.clv != null).map(x => parseFloat(x.clv));
   const avgClv = (!window._clvSuppressed && clvs.length > 0) ? clvs.reduce((a,b)=>a+b,0)/clvs.length : null;
 
   const pct = t => (t >= 0 ? '+' : '') + (t * 100).toFixed(1) + '%';
@@ -578,7 +578,7 @@ function renderTable(rows) {
   const _fpnl = _fS.reduce((s, r) => s + (pnlMode === 'kelly' ? (r.kelly_units || 1) : 1) * (parseFloat(r.pnl_u) || 0), 0);
   const _fe   = filtered.filter(r => r.edge != null).map(r => parseFloat(r.edge));
   const _fae  = _fe.length ? _fe.reduce((a, b) => a + b, 0) / _fe.length : null;
-  const _fc   = filtered.filter(r => r.clv != null).map(r => parseFloat(r.clv));
+  const _fc   = window._clvSuppressed ? [] : filtered.filter(r => r.clv != null).map(r => parseFloat(r.clv));
   const _fac  = _fc.length ? _fc.reduce((a, b) => a + b, 0) / _fc.length : null;
   const tfootHTML = `<tfoot><tr class="totals-row">
       <td data-label="">Totals</td>

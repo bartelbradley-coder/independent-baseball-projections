@@ -594,7 +594,7 @@ function renderValidationHeader(p, h) {
   const _clvSub  = _cv.tone === 'pos' ? 'beats close (95% CI &gt; 0)'
                  : _cv.tone === 'neg' ? 'trails close'
                  : 'flat / still proving';
-  const _clvOmitted = !!(p && p.clv_suppressed);
+  const _clvOmitted = !!window._clvSuppressed;
   const beatClose = _cv.posShare != null ? Math.round(_cv.posShare * 100) + '%' : '—';
 
   // Risk — max drawdown + longest losing streak (chronological, oldest→newest).
@@ -654,7 +654,7 @@ function renderValidationHeader(p, h) {
 }
 
 function renderInsight(p) {
-  if (p && p.clv_suppressed) return;  // section removed under suppression
+  if (window._clvSuppressed) return;  // section removed under suppression
   const clv = p && p.avg_clv;
   const s   = p && p.season;
   if (clv == null || !s || !s.bets) return;
@@ -853,7 +853,7 @@ function renderCLV(p, h) {
   // single column. Nothing here may infer close-based values client-side.
   const cardEl = document.getElementById('clv-season-card');
   const rowEl  = document.getElementById('clv-roi-row');
-  if (p.clv_suppressed) { if (cardEl) cardEl.remove(); return; }
+  if (window._clvSuppressed) { if (cardEl) cardEl.remove(); return; }
   if (cardEl) cardEl.hidden = false;
   if (rowEl) rowEl.style.gridTemplateColumns = '1fr 1fr';
   const clv = p.avg_clv;
