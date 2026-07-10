@@ -360,7 +360,7 @@ function renderSummary(rows) {
     ? (kellyStaked > 0 ? kellyPnl / kellyStaked : 0)
     : (settled.length > 0 ? flatPnl / settled.length : 0);
   const clvRows  = rows.filter(r => r.clv != null);
-  const avgClv   = clvRows.length > 0 ? clvRows.reduce((s, r) => s + r.clv, 0) / clvRows.length : null;
+  const avgClv   = (!window._clvSuppressed && clvRows.length > 0) ? clvRows.reduce((s, r) => s + r.clv, 0) / clvRows.length : null;
   const winRate  = settled.length > 0 ? wins / settled.length : null;
 
   document.getElementById('summary-row').innerHTML = `
@@ -409,7 +409,7 @@ function renderLiveTotals(rows) {
   const roi  = sub.length > 0 ? pnl / sub.length : 0;
   const wr   = sub.length > 0 ? wins / sub.length : 0;
   const clvs = sub.filter(x => x.clv != null).map(x => parseFloat(x.clv));
-  const avgClv = clvs.length > 0 ? clvs.reduce((a,b)=>a+b,0)/clvs.length : null;
+  const avgClv = (!window._clvSuppressed && clvs.length > 0) ? clvs.reduce((a,b)=>a+b,0)/clvs.length : null;
 
   const pct = t => (t >= 0 ? '+' : '') + (t * 100).toFixed(1) + '%';
   const roiCol  = roi  >= 0 ? 'var(--green)' : 'var(--red)';
@@ -448,7 +448,7 @@ function renderRollingStrip(rows) {
   function card(label, s) {
     if (s.n === 0) return `<div class="stat-pill"><div class="stat-lbl">${label}</div><div class="stat-val white">—</div><div class="stat-sub">no settled picks</div></div>`;
     const cls = s.pnl >= 0 ? 'green' : 'red';
-    const clvStr = s.clv != null ? ` · CLV ${s.clv >= 0 ? '+' : ''}${(s.clv * 100).toFixed(1)}%` : '';
+    const clvStr = (!window._clvSuppressed && s.clv != null) ? ` · CLV ${s.clv >= 0 ? '+' : ''}${(s.clv * 100).toFixed(1)}%` : '';
     return `<div class="stat-pill"><div class="stat-lbl">${label}</div><div class="stat-val white">${s.w}–${s.l}</div>
       <div class="stat-sub" style="color:var(--${cls})">${s.pnl >= 0 ? '+' : ''}${s.pnl.toFixed(1)}u · ${(s.roi * 100).toFixed(1)}% ROI${clvStr}</div></div>`;
   }

@@ -549,6 +549,9 @@ function _meanCI(vals) {
 // close); red only when entirely below; otherwise neutral — a near-zero/flat CLV must not
 // read as a proven edge.
 function clvVerdict(h) {
+  // Unified suppression short-circuit: no close-derived computation may run
+  // while the feed suppresses CLV.
+  if (window._clvSuppressed) return { tone: 'neu', posShare: null, n: 0, lo: null, hi: null, mean: null };
   const rows = (h && h.rows) || [];
   const clvs = rows.filter(r => (r.result === 'W' || r.result === 'L') && r.clv != null)
                    .map(r => parseFloat(r.clv));
