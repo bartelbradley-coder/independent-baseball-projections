@@ -1,7 +1,7 @@
 {
   "date": "2026-07-19",
-  "generated_at": "11:17 AM CT \u00b7 Jul 19",
-  "generated_at_utc": "2026-07-19T16:17:45Z",
+  "generated_at": "12:16 PM CT \u00b7 Jul 19",
+  "generated_at_utc": "2026-07-19T17:16:59Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -45,6 +45,10 @@
         {
           "t": "2026-07-19T16:17",
           "odds": -138
+        },
+        {
+          "t": "2026-07-19T17:16",
+          "odds": -140
         }
       ],
       "clv": null,
@@ -54,21 +58,21 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -138,
-        "BetOnline": -139,
-        "LowVig": -139,
-        "MyBookie": -147,
-        "Novig": -138,
+        "FanDuel": -146,
+        "BetOnline": -141,
+        "LowVig": -141,
+        "MyBookie": -149,
+        "Novig": -141,
         "DraftKings": -149,
         "Hard Rock": -145,
         "Betway": -150,
-        "Pinnacle": -142,
-        "BetMGM": -145,
+        "Pinnacle": -146,
+        "BetMGM": -155,
         "BetRivers": -143,
-        "ProphetX": -138,
-        "Bovada": -150,
-        "BetUS": -140,
-        "ESPN Bet": -140
+        "ProphetX": -140,
+        "Bovada": -154,
+        "BetUS": -141,
+        "ESPN Bet": -145
       },
       "pitcher": "Foster Griffin",
       "opp_pitcher": "Jacob Lopez",
@@ -241,36 +245,53 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0872,
-      "current_model_prob": 0.667,
-      "current_refresh_time": "11:17 AM CT \u00b7 Jul 19",
+      "current_edge": 0.0711,
+      "current_model_prob": 0.6544,
+      "current_refresh_time": "12:16 PM CT \u00b7 Jul 19",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Foster Griffin",
-      "current_fair_odds": "-200",
-      "current_playable_to": -168,
+      "current_fair_odds": "-189",
+      "current_playable_to": -159,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": 1.83,
+          "pp": 1.86,
           "positive": true
         },
         {
           "label": "Home field",
-          "pp": -0.64,
+          "pp": -0.66,
           "positive": false
         },
         {
           "label": "Defense (OAA)",
-          "pp": 0.56,
+          "pp": 0.57,
           "positive": true
         }
       ],
-      "model_change": null,
+      "model_change": {
+        "edge_delta": -0.0224,
+        "model_delta": -0.0099,
+        "market_delta": 0.0178,
+        "posted": {
+          "model_prob": 0.6643,
+          "market_prob": 0.5646,
+          "edge": 0.0935
+        },
+        "current": {
+          "model_prob": 0.6544,
+          "market_prob": 0.5824,
+          "edge": 0.0711
+        },
+        "factor_deltas": [],
+        "starter_changed": null,
+        "refreshed_at": "12:16 PM CT \u00b7 Jul 19"
+      },
       "verdict": "\u2705 STRONG",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -318,6 +339,10 @@
         {
           "t": "2026-07-19T16:17",
           "odds": -119
+        },
+        {
+          "t": "2026-07-19T17:16",
+          "odds": -119
         }
       ],
       "clv": null,
@@ -331,15 +356,16 @@
         "BetOnline": -126,
         "LowVig": -126,
         "MyBookie": -129,
-        "Novig": -122,
+        "Novig": -120,
         "DraftKings": -131,
         "Betway": -130,
         "ProphetX": -119,
         "BetMGM": -135,
         "ESPN Bet": -130,
-        "Pinnacle": -124,
-        "Bovada": -131,
-        "BetUS": -125
+        "Pinnacle": -123,
+        "Bovada": -130,
+        "BetUS": -125,
+        "BetRivers": -130
       },
       "pitcher": "TBD",
       "opp_pitcher": "TBD",
@@ -536,9 +562,9 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0244,
-      "current_model_prob": 0.5678,
-      "current_refresh_time": "11:17 AM CT \u00b7 Jul 19",
+      "current_edge": 0.0242,
+      "current_model_prob": 0.5676,
+      "current_refresh_time": "12:16 PM CT \u00b7 Jul 19",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -561,18 +587,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0551,
-        "model_delta": -0.0355,
-        "market_delta": 0.0139,
+        "edge_delta": -0.0553,
+        "model_delta": -0.0357,
+        "market_delta": 0.0118,
         "posted": {
           "model_prob": 0.6033,
           "market_prob": 0.5284,
           "edge": 0.0795
         },
         "current": {
-          "model_prob": 0.5678,
-          "market_prob": 0.5423,
-          "edge": 0.0244
+          "model_prob": 0.5676,
+          "market_prob": 0.5402,
+          "edge": 0.0242
         },
         "factor_deltas": [
           {
@@ -598,7 +624,7 @@
           "from": "Yoshinobu Yamamoto",
           "to": "TBD"
         },
-        "refreshed_at": "11:17 AM CT \u00b7 Jul 19"
+        "refreshed_at": "12:16 PM CT \u00b7 Jul 19"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -645,8 +671,8 @@
           "odds": 180
         },
         {
-          "t": "2026-07-19T16:17",
-          "odds": 180
+          "t": "2026-07-19T17:16",
+          "odds": 182
         }
       ],
       "clv": null,
@@ -657,20 +683,20 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 164,
-        "LowVig": 174,
-        "BetOnline": 174,
-        "MyBookie": 166,
-        "Novig": 178,
+        "LowVig": 176,
+        "BetOnline": 176,
+        "MyBookie": 170,
+        "Novig": 182,
         "DraftKings": 168,
         "Hard Rock": 165,
         "Betway": 175,
         "Pinnacle": 176,
-        "BetMGM": 165,
-        "BetRivers": 163,
-        "ProphetX": 180,
+        "BetMGM": 170,
+        "BetRivers": 165,
+        "ProphetX": 182,
         "BetUS": 168,
         "Bovada": 166,
-        "ESPN Bet": 165
+        "ESPN Bet": 170
       },
       "pitcher": "Robbie Ray",
       "opp_pitcher": "Logan Gilbert",
@@ -857,27 +883,27 @@
         "edge": 0.0875
       },
       "total": null,
-      "current_edge": 0.0796,
-      "current_model_prob": 0.4367,
-      "current_refresh_time": "11:17 AM CT \u00b7 Jul 19",
+      "current_edge": 0.0676,
+      "current_model_prob": 0.4222,
+      "current_refresh_time": "12:16 PM CT \u00b7 Jul 19",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Robbie Ray",
-      "current_fair_odds": "+129",
-      "current_playable_to": 152,
+      "current_fair_odds": "+137",
+      "current_playable_to": 162,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": -1.47,
+          "pp": -1.45,
           "positive": false
         },
         {
           "label": "Home field",
-          "pp": -1.11,
+          "pp": -1.1,
           "positive": false
         },
         {
@@ -887,8 +913,8 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0108,
-        "model_delta": -0.0066,
+        "edge_delta": -0.0012,
+        "model_delta": -0.0211,
         "market_delta": -0.0264,
         "posted": {
           "model_prob": 0.4433,
@@ -896,20 +922,20 @@
           "edge": 0.0688
         },
         "current": {
-          "model_prob": 0.4367,
+          "model_prob": 0.4222,
           "market_prob": 0.3545,
-          "edge": 0.0796
+          "edge": 0.0676
         },
         "factor_deltas": [
           {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
-            "current_pp": -0.35,
-            "delta_pp": -0.35
+            "current_pp": -0.34,
+            "delta_pp": -0.34
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "11:17 AM CT \u00b7 Jul 19"
+        "refreshed_at": "12:16 PM CT \u00b7 Jul 19"
       },
       "verdict": "\u2b07\ufe0f REDUCED CONF.",
       "kelly_multiplier": 1.0,
@@ -963,21 +989,17 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -120,
+        "FanDuel": -162,
         "Novig": -108,
-        "BetOnline": -112,
-        "LowVig": -112,
-        "Betway": -115,
-        "MyBookie": -115,
-        "DraftKings": -112,
-        "Hard Rock": -120,
-        "BetUS": -112,
-        "Pinnacle": -113,
-        "BetMGM": -118,
-        "BetRivers": -118,
-        "ProphetX": -108,
-        "Bovada": -120,
-        "ESPN Bet": -116
+        "Betway": -145,
+        "MyBookie": -118,
+        "DraftKings": -154,
+        "Hard Rock": -155,
+        "Pinnacle": -117,
+        "BetMGM": -155,
+        "ProphetX": -116,
+        "Bovada": -115,
+        "ESPN Bet": -115
       },
       "pitcher": "Sean Burke",
       "opp_pitcher": "Trey Yesavage",
@@ -1148,7 +1170,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "11:17 AM CT \u00b7 Jul 19",
+      "current_refresh_time": "12:16 PM CT \u00b7 Jul 19",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1205,8 +1227,8 @@
           "odds": 115
         },
         {
-          "t": "2026-07-19T16:17",
-          "odds": 115
+          "t": "2026-07-19T17:16",
+          "odds": 114
         }
       ],
       "clv": null,
@@ -1219,17 +1241,17 @@
         "FanDuel": 108,
         "BetOnline": 110,
         "LowVig": 110,
-        "MyBookie": 106,
-        "Novig": 115,
-        "DraftKings": 104,
+        "MyBookie": 108,
+        "Novig": 113,
+        "DraftKings": 108,
         "Hard Rock": 105,
         "Betway": 105,
         "BetUS": 109,
         "Pinnacle": 114,
         "BetMGM": 105,
         "BetRivers": 104,
-        "ProphetX": 112,
-        "Bovada": 109,
+        "ProphetX": 113,
+        "Bovada": 107,
         "ESPN Bet": 105
       },
       "pitcher": "Andre Pallante",
@@ -1399,9 +1421,9 @@
         "edge": 0.1085
       },
       "total": null,
-      "current_edge": 0.0675,
-      "current_model_prob": 0.5326,
-      "current_refresh_time": "11:17 AM CT \u00b7 Jul 19",
+      "current_edge": 0.0649,
+      "current_model_prob": 0.5322,
+      "current_refresh_time": "12:16 PM CT \u00b7 Jul 19",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1429,8 +1451,8 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0071,
-        "model_delta": -0.004,
+        "edge_delta": 0.0045,
+        "model_delta": -0.0044,
         "market_delta": -0.0159,
         "posted": {
           "model_prob": 0.5366,
@@ -1438,9 +1460,9 @@
           "edge": 0.0604
         },
         "current": {
-          "model_prob": 0.5326,
+          "model_prob": 0.5322,
           "market_prob": 0.4577,
-          "edge": 0.0675
+          "edge": 0.0649
         },
         "factor_deltas": [
           {
@@ -1451,7 +1473,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "11:17 AM CT \u00b7 Jul 19"
+        "refreshed_at": "12:16 PM CT \u00b7 Jul 19"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -1500,6 +1522,10 @@
         {
           "t": "2026-07-19T16:17",
           "odds": 104
+        },
+        {
+          "t": "2026-07-19T17:16",
+          "odds": 104
         }
       ],
       "clv": null,
@@ -1518,11 +1544,11 @@
         "DraftKings": -107,
         "Hard Rock": -105,
         "Pinnacle": 100,
-        "BetMGM": -110,
+        "BetMGM": -105,
         "BetRivers": 100,
         "ProphetX": 104,
         "Bovada": -106,
-        "BetUS": 100,
+        "BetUS": -101,
         "ESPN Bet": 100
       },
       "pitcher": "Paul Skenes",
@@ -1698,7 +1724,7 @@
       "total": null,
       "current_edge": 0.0937,
       "current_model_prob": 0.5839,
-      "current_refresh_time": "11:17 AM CT \u00b7 Jul 19",
+      "current_refresh_time": "12:16 PM CT \u00b7 Jul 19",
       "current_recommendation": "reduced",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1754,7 +1780,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "11:17 AM CT \u00b7 Jul 19"
+        "refreshed_at": "12:16 PM CT \u00b7 Jul 19"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1803,6 +1829,10 @@
         {
           "t": "2026-07-19T16:17",
           "odds": 153
+        },
+        {
+          "t": "2026-07-19T17:16",
+          "odds": 150
         }
       ],
       "clv": null,
@@ -1816,16 +1846,16 @@
         "LowVig": 147,
         "BetOnline": 147,
         "MyBookie": 141,
-        "Novig": 153,
+        "Novig": 150,
         "DraftKings": 141,
         "Betway": 140,
         "Hard Rock": 140,
         "BetUS": 145,
-        "Pinnacle": 149,
+        "Pinnacle": 147,
         "BetMGM": 140,
-        "BetRivers": 138,
+        "BetRivers": 143,
         "ProphetX": 150,
-        "Bovada": 142,
+        "Bovada": 141,
         "ESPN Bet": 140
       },
       "pitcher": "Ryan Feltner",
@@ -1999,16 +2029,16 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0439,
-      "current_model_prob": 0.4392,
-      "current_refresh_time": "11:17 AM CT \u00b7 Jul 19",
-      "current_recommendation": "reduced",
+      "current_edge": 0.04,
+      "current_model_prob": 0.44,
+      "current_refresh_time": "12:16 PM CT \u00b7 Jul 19",
+      "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Ryan Feltner",
-      "current_fair_odds": "+128",
-      "current_playable_to": null,
-      "current_stale_market_guard": true,
+      "current_fair_odds": "+127",
+      "current_playable_to": 150,
+      "current_stale_market_guard": false,
       "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
       "current_top_factors": [
@@ -2029,18 +2059,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0009,
-        "model_delta": 0.0007,
-        "market_delta": -0.0015,
+        "edge_delta": -0.0048,
+        "model_delta": 0.0015,
+        "market_delta": 0.0015,
         "posted": {
           "model_prob": 0.4385,
           "market_prob": 0.3953,
           "edge": 0.0448
         },
         "current": {
-          "model_prob": 0.4392,
-          "market_prob": 0.3938,
-          "edge": 0.0439
+          "model_prob": 0.44,
+          "market_prob": 0.3968,
+          "edge": 0.04
         },
         "factor_deltas": [
           {
@@ -2051,7 +2081,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "11:17 AM CT \u00b7 Jul 19"
+        "refreshed_at": "12:16 PM CT \u00b7 Jul 19"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
