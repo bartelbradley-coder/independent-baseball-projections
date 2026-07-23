@@ -1,7 +1,7 @@
 {
   "date": "2026-07-23",
-  "generated_at": "1:16 PM CT \u00b7 Jul 23",
-  "generated_at_utc": "2026-07-23T18:16:08Z",
+  "generated_at": "2:16 PM CT \u00b7 Jul 23",
+  "generated_at_utc": "2026-07-23T19:16:32Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -250,7 +250,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "1:16 PM CT \u00b7 Jul 23",
+      "current_refresh_time": "2:16 PM CT \u00b7 Jul 23",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -488,7 +488,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "1:16 PM CT \u00b7 Jul 23",
+      "current_refresh_time": "2:16 PM CT \u00b7 Jul 23",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -511,7 +511,7 @@
       "pick": "TB",
       "side": "AWAY",
       "pick_type": "MONEYLINE",
-      "meta": "SP: Casey Legumina",
+      "meta": "SP: Ian Seymour",
       "posted_at": "10:16 AM CT",
       "game_time": "2026-07-23T19:07:00Z",
       "temp_f": 72.0,
@@ -547,10 +547,6 @@
         {
           "t": "2026-07-23T17:16",
           "odds": -104
-        },
-        {
-          "t": "2026-07-23T18:16",
-          "odds": -106
         }
       ],
       "clv": null,
@@ -576,9 +572,9 @@
         "BetUS": -113,
         "ProphetX": -106
       },
-      "pitcher": "Casey Legumina",
+      "pitcher": "Ian Seymour",
       "opp_pitcher": "Shane Bieber",
-      "starter_swapped": true,
+      "starter_swapped": false,
       "factors": [
         {
           "label": "Pitcher Quality (xFIP)",
@@ -594,28 +590,28 @@
         }
       ],
       "raw_stats": {
-        "pick_xfip": 4.338,
-        "opp_xfip": 5.617,
+        "pick_xfip": 4.393,
+        "opp_xfip": 5.62,
         "pick_oaa": -14,
         "opp_oaa": 4,
         "pick_bp_pitches": 150,
         "opp_bp_pitches": 150,
         "pick_bp_xfip": 4.35,
         "opp_bp_xfip": 4.35,
-        "pick_xera": 4.97,
-        "opp_xera": 8.54,
-        "pick_xera_pct": 21.0,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
         "opp_xera_pct": null,
-        "pick_whiff_pct": 14.0,
+        "pick_whiff_pct": 79.0,
         "opp_whiff_pct": null,
         "pick_kbb_pct": null,
         "opp_kbb_pct": 0.0648,
         "pick_bvp_shift": 0.0,
-        "pick_arsenal_fit": -0.543,
+        "pick_arsenal_fit": 0.2197,
         "opp_arsenal_fit": -1.0,
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
-        "pick_proj_ip": 5.3,
+        "pick_proj_ip": 7.1,
         "opp_proj_ip": 5.1,
         "pick_era": null,
         "opp_era": 5.7,
@@ -747,69 +743,20 @@
         "edge": 0.1304
       },
       "total": null,
-      "current_edge": 0.0631,
-      "current_model_prob": 0.5777,
-      "current_refresh_time": "1:16 PM CT \u00b7 Jul 23",
-      "current_recommendation": "same",
+      "current_edge": null,
+      "current_model_prob": null,
+      "current_refresh_time": "2:16 PM CT \u00b7 Jul 23",
+      "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Casey Legumina",
-      "current_fair_odds": "-137",
-      "current_playable_to": -116,
+      "current_pitcher": null,
+      "current_fair_odds": null,
+      "current_playable_to": null,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": true,
-      "current_top_factors": [
-        {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 1.19,
-          "positive": true
-        },
-        {
-          "label": "Defense (OAA)",
-          "pp": -0.61,
-          "positive": false
-        },
-        {
-          "label": "Arsenal fit",
-          "pp": 0.45,
-          "positive": true
-        }
-      ],
-      "model_change": {
-        "edge_delta": -0.0066,
-        "model_delta": -0.0018,
-        "market_delta": 0.0047,
-        "posted": {
-          "model_prob": 0.5795,
-          "market_prob": 0.5094,
-          "edge": 0.0697
-        },
-        "current": {
-          "model_prob": 0.5777,
-          "market_prob": 0.5141,
-          "edge": 0.0631
-        },
-        "factor_deltas": [
-          {
-            "label": "Arsenal fit",
-            "posted_pp": 0.0,
-            "current_pp": 0.45,
-            "delta_pp": 0.45
-          },
-          {
-            "label": "Lineup quality",
-            "posted_pp": 0.0,
-            "current_pp": -0.25,
-            "delta_pp": -0.25
-          }
-        ],
-        "starter_changed": {
-          "from": "Ian Seymour",
-          "to": "Casey Legumina"
-        },
-        "refreshed_at": "1:16 PM CT \u00b7 Jul 23"
-      },
+      "current_lineup_confirmed": null,
+      "current_opp_lineup_confirmed": null,
+      "current_top_factors": [],
+      "model_change": null,
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -825,7 +772,7 @@
       "posted_at": "12:16 PM CT",
       "game_time": "2026-07-23T22:40:00Z",
       "temp_f": 78.0,
-      "wind_speed_mph": 6.0,
+      "wind_speed_mph": 7.0,
       "wind_dir_degrees": 135.0,
       "is_domed": false,
       "model_prob": 0.3846,
@@ -859,7 +806,7 @@
           "odds": 210
         },
         {
-          "t": "2026-07-23T18:16",
+          "t": "2026-07-23T19:16",
           "odds": 208
         }
       ],
@@ -1039,38 +986,38 @@
         "edge": 0.0807
       },
       "total": null,
-      "current_edge": 0.0595,
-      "current_model_prob": 0.3842,
-      "current_refresh_time": "1:16 PM CT \u00b7 Jul 23",
+      "current_edge": 0.0467,
+      "current_model_prob": 0.3714,
+      "current_refresh_time": "2:16 PM CT \u00b7 Jul 23",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Randy Dobnak",
-      "current_fair_odds": "+160",
-      "current_playable_to": 191,
+      "current_fair_odds": "+169",
+      "current_playable_to": 202,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": false,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": -1.19,
+          "pp": -1.16,
+          "positive": false
+        },
+        {
+          "label": "Lineup quality",
+          "pp": -0.74,
           "positive": false
         },
         {
           "label": "Defense (OAA)",
-          "pp": 0.59,
+          "pp": 0.58,
           "positive": true
-        },
-        {
-          "label": "Arsenal fit",
-          "pp": -0.47,
-          "positive": false
         }
       ],
       "model_change": {
-        "edge_delta": -0.0025,
-        "model_delta": -0.0004,
+        "edge_delta": -0.0153,
+        "model_delta": -0.0132,
         "market_delta": -0.0014,
         "posted": {
           "model_prob": 0.3846,
@@ -1078,11 +1025,17 @@
           "edge": 0.062
         },
         "current": {
-          "model_prob": 0.3842,
+          "model_prob": 0.3714,
           "market_prob": 0.3283,
-          "edge": 0.0595
+          "edge": 0.0467
         },
         "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.74,
+            "delta_pp": -0.74
+          },
           {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
@@ -1091,7 +1044,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "1:16 PM CT \u00b7 Jul 23"
+        "refreshed_at": "2:16 PM CT \u00b7 Jul 23"
       },
       "verdict": "\u2b07\ufe0f REDUCED CONF.",
       "kelly_multiplier": 1.0,
@@ -1102,7 +1055,7 @@
   ],
   "signal_count": 4,
   "posted_count": 4,
-  "games_today": 3,
+  "games_today": 2,
   "yesterday_picks": [
     {
       "game": "PIT @ NYY",
@@ -1196,17 +1149,17 @@
   "correlated_warning": null,
   "season": {
     "wins": 372,
-    "losses": 346,
-    "units": 77.48,
-    "bets": 718,
-    "roi": 0.1079
+    "losses": 347,
+    "units": 76.48,
+    "bets": 719,
+    "roi": 0.1064
   },
   "last7": {
     "wins": 17,
-    "losses": 24,
-    "units": -5.91,
-    "roi": -0.1441,
-    "bets": 41
+    "losses": 25,
+    "units": -6.91,
+    "roi": -0.1645,
+    "bets": 42
   },
   "week_picks": [
     {
