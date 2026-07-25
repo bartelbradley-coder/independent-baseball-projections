@@ -1,58 +1,271 @@
 {
-  "date": "2026-07-24",
-  "generated_at": "10:17 PM CT \u00b7 Jul 24",
-  "generated_at_utc": "2026-07-25T03:17:17Z",
-  "no_picks_yet": true,
-  "picks": [],
-  "signal_count": 0,
-  "posted_count": 0,
-  "games_today": 0,
-  "yesterday_picks": [
+  "date": "2026-07-25",
+  "generated_at": "8:04 AM CT \u00b7 Jul 25",
+  "generated_at_utc": "2026-07-25T13:04:14Z",
+  "no_picks_yet": false,
+  "picks": [
     {
-      "game": "SD @ ATL",
-      "pick": "SD",
-      "pitcher": "Kyle Hart",
-      "odds": 230,
-      "edge": 0.0703,
-      "result": "L",
+      "game": "ARI @ WSH",
+      "pick": "WSH",
+      "side": "HOME",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Foster Griffin",
+      "posted_at": "8:02 AM CT",
+      "game_time": "2026-07-25T20:05:00Z",
+      "temp_f": 83.0,
+      "wind_speed_mph": 6.0,
+      "wind_dir_degrees": 90.0,
+      "is_domed": false,
+      "model_prob": 0.6547,
+      "market_prob": 0.5831,
+      "edge": 0.0696,
+      "ev_per_100": 11.9,
+      "odds": -141,
+      "best_odds": -141,
+      "best_book": "Novig",
+      "fair_odds": "-190",
+      "playable_to": -160,
+      "break_even": 0.5851,
+      "kelly_units": 2.1,
+      "line_open": -147,
+      "line_current": -147,
+      "odds_history": [
+        {
+          "t": "2026-07-25T13:02",
+          "odds": -141
+        }
+      ],
       "clv": null,
-      "pnl_u": -1.0,
-      "kelly_units": 0.63
-    },
-    {
-      "game": "MIN @ CLE",
-      "pick": "MIN",
-      "pitcher": "Taj Bradley",
-      "odds": 134,
-      "edge": 0.0745,
-      "result": "W",
-      "clv": null,
-      "pnl_u": 1.34,
-      "kelly_units": 1.63
-    },
-    {
-      "game": "TB @ TOR",
-      "pick": "TB",
-      "pitcher": "Ian Seymour",
-      "odds": -104,
-      "edge": 0.0697,
-      "result": "L",
-      "clv": null,
-      "pnl_u": -1.0,
-      "kelly_units": 1.78
-    },
-    {
-      "game": "KC @ DET",
-      "pick": "KC",
-      "pitcher": "Randy Dobnak",
-      "odds": 210,
-      "edge": 0.062,
-      "result": "L",
-      "clv": null,
-      "pnl_u": -1.0,
-      "kelly_units": 0.57
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": -152,
+        "MyBookie": -151,
+        "LowVig": -147,
+        "BetOnline": -147,
+        "DraftKings": -156,
+        "Novig": -141,
+        "Hard Rock": -150,
+        "Betway": -150,
+        "ESPN Bet": -150,
+        "Pinnacle": -147,
+        "Bovada": -155,
+        "BetMGM": -150,
+        "BetUS": -147,
+        "ProphetX": -142,
+        "BetRivers": -148
+      },
+      "pitcher": "Foster Griffin",
+      "opp_pitcher": "Mitch Bratt",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 2.84
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": -0.025
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 3.565,
+        "opp_xfip": 6.872,
+        "pick_oaa": -15,
+        "opp_oaa": 34,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 49.0,
+        "opp_whiff_pct": null,
+        "pick_kbb_pct": 0.1776,
+        "opp_kbb_pct": 0.0196,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.1167,
+        "opp_arsenal_fit": 0.0,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 5.7,
+        "opp_proj_ip": 4.9,
+        "pick_era": 2.68,
+        "opp_era": 5.06,
+        "pick_k_pct": 0.2347,
+        "opp_k_pct": 0.1373,
+        "ump_name": "",
+        "pick_home_w": 20,
+        "pick_home_l": 32,
+        "pinnacle_ml_open": -147.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 0.974
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 2.84,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.57,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Day/night",
+            "pp": -0.34,
+            "positive": false,
+            "group": "schedule"
+          },
+          {
+            "label": "Home field",
+            "pp": 0.25,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 2.18,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "A 7.0pp gap: IBP has WSH at 65.5%, the market at 58.3%. The largest lift is pitcher quality (xfip) (~+2.8pp): Foster Griffin 3.56 xFIP vs Mitch Bratt 6.87 xFIP. The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent. The market has drifted against the pick since posting, widening the available price \u2014 the current -141 still sits inside the playable range (to -160). The win condition is five-plus quality innings from Foster Griffin and avoiding early bullpen exposure.",
+      "explanation": {
+        "explanation_type": "starter_mismatch",
+        "risk_level": "medium",
+        "model_prob": 0.6547,
+        "market_prob": 0.5831,
+        "edge_pp": 7.0,
+        "fair_odds": "-190",
+        "current_odds": "-141",
+        "playable_to": "-160",
+        "positive_drivers": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 2.84,
+            "tier": "primary",
+            "group": "pitcher",
+            "detail": "Foster Griffin 3.56 xFIP vs Mitch Bratt 6.87 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Home field",
+            "impact_pp": 0.25,
+            "tier": "data",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for WSH.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": -0.57,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "The model's defensive-efficiency adjustment leans to the opponent.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Day/night",
+            "impact_pp": -0.34,
+            "tier": "data",
+            "group": "schedule",
+            "detail": "Day/night schedule context leans to the opponent.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "-147",
+          "current_odds": "-141",
+          "movement_summary": "the market has drifted against the pick since posting, widening the available price"
+        },
+        "sections": {
+          "edge_thesis": "A 7.0pp gap: IBP has WSH at 65.5%, the market at 58.3%.",
+          "whats_driving_it": "The largest lift is pitcher quality (xfip) (~+2.8pp): Foster Griffin 3.56 xFIP vs Mitch Bratt 6.87 xFIP.",
+          "what_pushes_back": "The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent.",
+          "bvp_note": null,
+          "betting_note": "The market has drifted against the pick since posting, widening the available price \u2014 the current -141 still sits inside the playable range (to -160).",
+          "route_to_win": "The win condition is five-plus quality innings from Foster Griffin and avoiding early bullpen exposure.",
+          "read": "This is a starting-pitcher edge."
+        },
+        "read_label": "This is a starting-pitcher edge.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Pitcher quality (xFIP)",
+          "top_positive_pp": 2.84,
+          "top_negative_label": "Defense (OAA)",
+          "top_negative_pp": -0.57,
+          "has_primary_driver": true,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 2
+        },
+        "prose": "A 7.0pp gap: IBP has WSH at 65.5%, the market at 58.3%. The largest lift is pitcher quality (xfip) (~+2.8pp): Foster Griffin 3.56 xFIP vs Mitch Bratt 6.87 xFIP. The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent. The market has drifted against the pick since posting, widening the available price \u2014 the current -141 still sits inside the playable range (to -160). The win condition is five-plus quality innings from Foster Griffin and avoiding early bullpen exposure."
+      },
+      "run_line": {
+        "spread": "-1.5",
+        "model_prob": 0.5655,
+        "fair_odds": "-130",
+        "book_odds": 141,
+        "edge": 0.1506
+      },
+      "total": null,
+      "current_edge": 0.0696,
+      "current_model_prob": 0.6547,
+      "current_refresh_time": "8:02 AM CT \u00b7 Jul 25",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Foster Griffin",
+      "current_fair_odds": "-190",
+      "current_playable_to": -160,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 2.84,
+          "positive": true
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": -0.57,
+          "positive": false
+        },
+        {
+          "label": "Day/night",
+          "pp": -0.34,
+          "positive": false
+        }
+      ],
+      "model_change": null,
+      "verdict": "\u2705 VALUE",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
     }
   ],
+  "signal_count": 1,
+  "posted_count": 1,
+  "games_today": 15,
+  "yesterday_picks": [],
   "correlated_warning": null,
   "season": {
     "wins": 373,
@@ -62,22 +275,13 @@
     "roi": 0.105
   },
   "last7": {
-    "wins": 18,
-    "losses": 27,
-    "units": -7.57,
-    "roi": -0.1682,
-    "bets": 45
+    "wins": 14,
+    "losses": 25,
+    "units": -10.31,
+    "roi": -0.2644,
+    "bets": 39
   },
   "week_picks": [
-    {
-      "date": "2026-07-17",
-      "pick": "STL",
-      "game": "STL @ ARI",
-      "odds": -102,
-      "edge": 0.066,
-      "result": "W",
-      "pnl_u": 0.98
-    },
     {
       "date": "2026-07-18",
       "pick": "PIT",
