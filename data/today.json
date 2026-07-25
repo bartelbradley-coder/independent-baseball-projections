@@ -1,7 +1,7 @@
 {
   "date": "2026-07-25",
-  "generated_at": "10:16 AM CT \u00b7 Jul 25",
-  "generated_at_utc": "2026-07-25T15:16:37Z",
+  "generated_at": "11:16 AM CT \u00b7 Jul 25",
+  "generated_at_utc": "2026-07-25T16:16:44Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -10,29 +10,29 @@
       "side": "HOME",
       "pick_type": "MONEYLINE",
       "meta": "SP: Foster Griffin",
-      "posted_at": "10:16 AM CT",
+      "posted_at": "11:16 AM CT",
       "game_time": "2026-07-25T20:05:00Z",
       "temp_f": 83.0,
       "wind_speed_mph": 6.0,
       "wind_dir_degrees": 90.0,
       "is_domed": false,
-      "model_prob": 0.6565,
-      "market_prob": 0.5701,
-      "edge": 0.082,
-      "ev_per_100": 14.28,
-      "odds": -135,
-      "best_odds": -135,
+      "model_prob": 0.6486,
+      "market_prob": 0.5581,
+      "edge": 0.0834,
+      "ev_per_100": 14.75,
+      "odds": -130,
+      "best_odds": -130,
       "best_book": "Novig",
-      "fair_odds": "-191",
-      "playable_to": -161,
-      "break_even": 0.5745,
-      "kelly_units": 2.41,
-      "line_open": -139,
-      "line_current": -139,
+      "fair_odds": "-185",
+      "playable_to": -155,
+      "break_even": 0.5652,
+      "kelly_units": 2.4,
+      "line_open": -132,
+      "line_current": -132,
       "odds_history": [
         {
-          "t": "2026-07-25T15:16",
-          "odds": -135
+          "t": "2026-07-25T16:16",
+          "odds": -130
         }
       ],
       "clv": null,
@@ -41,14 +41,30 @@
       "steam_move": false,
       "model_total": null,
       "market_total": null,
-      "book_odds": {},
+      "book_odds": {
+        "FanDuel": -134,
+        "MyBookie": -140,
+        "LowVig": -138,
+        "BetOnline": -138,
+        "DraftKings": -144,
+        "Novig": -130,
+        "Hard Rock": -145,
+        "Betway": -140,
+        "ESPN Bet": -140,
+        "Pinnacle": -132,
+        "Bovada": -136,
+        "BetMGM": -150,
+        "BetUS": -138,
+        "ProphetX": -132,
+        "BetRivers": -139
+      },
       "pitcher": "Foster Griffin",
       "opp_pitcher": "Mitch Bratt",
       "starter_swapped": false,
       "factors": [
         {
           "label": "Pitcher Quality (xFIP)",
-          "value": 2.84
+          "value": 2.87
         },
         {
           "label": "Defense (OAA)",
@@ -86,7 +102,7 @@
         "ump_name": "",
         "pick_home_w": 20,
         "pick_home_l": 32,
-        "pinnacle_ml_open": -139.0,
+        "pinnacle_ml_open": -132.0,
         "pick_bullpen_recent_xfip": null,
         "opp_bullpen_recent_xfip": null,
         "opp_starter_hand": "R",
@@ -97,13 +113,13 @@
         "adjustments": [
           {
             "label": "Pitcher quality (xFIP)",
-            "pp": 2.84,
+            "pp": 2.87,
             "positive": true,
             "group": "pitcher"
           },
           {
             "label": "Defense (OAA)",
-            "pp": -0.56,
+            "pp": -0.57,
             "positive": false,
             "group": "team"
           },
@@ -120,24 +136,24 @@
             "group": "team"
           }
         ],
-        "total_adj_pp": 2.19,
+        "total_adj_pp": 2.21,
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "A 8.2pp gap: IBP has WSH at 65.6%, the market at 57.0%. The largest lift is pitcher quality (xfip) (~+2.8pp): Foster Griffin 3.57 xFIP vs Mitch Bratt 6.88 xFIP. The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent. The price has held roughly steady since posting \u2014 the current -135 still sits inside the playable range (to -161). The win condition is five-plus quality innings from Foster Griffin and avoiding early bullpen exposure.",
+      "narrative": "A 8.3pp gap: IBP has WSH at 64.9%, the market at 55.8%. The largest lift is pitcher quality (xfip) (~+2.9pp): Foster Griffin 3.57 xFIP vs Mitch Bratt 6.88 xFIP. The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent. The price has held roughly steady since posting \u2014 the current -130 still sits inside the playable range (to -155). The win condition is five-plus quality innings from Foster Griffin and avoiding early bullpen exposure.",
       "explanation": {
         "explanation_type": "starter_mismatch",
         "risk_level": "medium",
-        "model_prob": 0.6565,
-        "market_prob": 0.5701,
-        "edge_pp": 8.2,
-        "fair_odds": "-191",
-        "current_odds": "-135",
-        "playable_to": "-161",
+        "model_prob": 0.6486,
+        "market_prob": 0.5581,
+        "edge_pp": 8.3,
+        "fair_odds": "-185",
+        "current_odds": "-130",
+        "playable_to": "-155",
         "positive_drivers": [
           {
             "label": "Pitcher quality (xFIP)",
-            "impact_pp": 2.84,
+            "impact_pp": 2.87,
             "tier": "primary",
             "group": "pitcher",
             "detail": "Foster Griffin 3.57 xFIP vs Mitch Bratt 6.88 xFIP.",
@@ -155,7 +171,7 @@
         "negative_drivers": [
           {
             "label": "Defense (OAA)",
-            "impact_pp": -0.56,
+            "impact_pp": -0.57,
             "tier": "secondary",
             "group": "team",
             "detail": "The model's defensive-efficiency adjustment leans to the opponent.",
@@ -171,16 +187,16 @@
           }
         ],
         "line_movement": {
-          "posted_odds": "-139",
-          "current_odds": "-135",
+          "posted_odds": "-132",
+          "current_odds": "-130",
           "movement_summary": "the price has held roughly steady since posting"
         },
         "sections": {
-          "edge_thesis": "A 8.2pp gap: IBP has WSH at 65.6%, the market at 57.0%.",
-          "whats_driving_it": "The largest lift is pitcher quality (xfip) (~+2.8pp): Foster Griffin 3.57 xFIP vs Mitch Bratt 6.88 xFIP.",
+          "edge_thesis": "A 8.3pp gap: IBP has WSH at 64.9%, the market at 55.8%.",
+          "whats_driving_it": "The largest lift is pitcher quality (xfip) (~+2.9pp): Foster Griffin 3.57 xFIP vs Mitch Bratt 6.88 xFIP.",
           "what_pushes_back": "The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent.",
           "bvp_note": null,
-          "betting_note": "The price has held roughly steady since posting \u2014 the current -135 still sits inside the playable range (to -161).",
+          "betting_note": "The price has held roughly steady since posting \u2014 the current -130 still sits inside the playable range (to -155).",
           "route_to_win": "The win condition is five-plus quality innings from Foster Griffin and avoiding early bullpen exposure.",
           "read": "This is a starting-pitcher edge."
         },
@@ -190,46 +206,46 @@
         "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
         "debug": {
           "top_positive_label": "Pitcher quality (xFIP)",
-          "top_positive_pp": 2.84,
+          "top_positive_pp": 2.87,
           "top_negative_label": "Defense (OAA)",
-          "top_negative_pp": -0.56,
+          "top_negative_pp": -0.57,
           "has_primary_driver": true,
           "has_material_headwind": false,
           "bvp_present": false,
           "contains_display_only_drivers": true,
           "n_positive_core": 2
         },
-        "prose": "A 8.2pp gap: IBP has WSH at 65.6%, the market at 57.0%. The largest lift is pitcher quality (xfip) (~+2.8pp): Foster Griffin 3.57 xFIP vs Mitch Bratt 6.88 xFIP. The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent. The price has held roughly steady since posting \u2014 the current -135 still sits inside the playable range (to -161). The win condition is five-plus quality innings from Foster Griffin and avoiding early bullpen exposure."
+        "prose": "A 8.3pp gap: IBP has WSH at 64.9%, the market at 55.8%. The largest lift is pitcher quality (xfip) (~+2.9pp): Foster Griffin 3.57 xFIP vs Mitch Bratt 6.88 xFIP. The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent. The price has held roughly steady since posting \u2014 the current -130 still sits inside the playable range (to -155). The win condition is five-plus quality innings from Foster Griffin and avoiding early bullpen exposure."
       },
       "run_line": {
         "spread": "-1.5",
-        "model_prob": 0.5811,
-        "fair_odds": "-139",
-        "book_odds": 146,
-        "edge": 0.1746
+        "model_prob": 0.5658,
+        "fair_odds": "-130",
+        "book_odds": 150,
+        "edge": 0.1658
       },
       "total": null,
-      "current_edge": 0.082,
-      "current_model_prob": 0.6565,
-      "current_refresh_time": "10:16 AM CT \u00b7 Jul 25",
+      "current_edge": 0.0834,
+      "current_model_prob": 0.6486,
+      "current_refresh_time": "11:16 AM CT \u00b7 Jul 25",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Foster Griffin",
-      "current_fair_odds": "-191",
-      "current_playable_to": -161,
+      "current_fair_odds": "-185",
+      "current_playable_to": -155,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": 2.84,
+          "pp": 2.87,
           "positive": true
         },
         {
           "label": "Defense (OAA)",
-          "pp": -0.56,
+          "pp": -0.57,
           "positive": false
         },
         {
@@ -244,223 +260,10 @@
       "downgrade_reasons": "",
       "is_flagged": false,
       "projected_starter": false
-    },
-    {
-      "game": "CLE @ TB",
-      "pick": "TB",
-      "side": "HOME",
-      "pick_type": "MONEYLINE",
-      "meta": "SP: Nick Martinez",
-      "posted_at": "10:16 AM CT",
-      "game_time": "2026-07-25T22:10:00Z",
-      "temp_f": 72.0,
-      "wind_speed_mph": 0.0,
-      "wind_dir_degrees": 0.0,
-      "is_domed": true,
-      "model_prob": 0.5582,
-      "market_prob": 0.5118,
-      "edge": 0.0413,
-      "ev_per_100": 7.99,
-      "odds": -107,
-      "best_odds": -107,
-      "best_book": "ProphetX",
-      "fair_odds": "-126",
-      "playable_to": -108,
-      "break_even": 0.5169,
-      "kelly_units": 1.07,
-      "line_open": -109,
-      "line_current": -109,
-      "odds_history": [
-        {
-          "t": "2026-07-25T15:16",
-          "odds": -107
-        }
-      ],
-      "clv": null,
-      "closing_prob": null,
-      "sharp_movement": false,
-      "steam_move": false,
-      "model_total": null,
-      "market_total": null,
-      "book_odds": {},
-      "pitcher": "Nick Martinez",
-      "opp_pitcher": "Tanner Bibee",
-      "starter_swapped": false,
-      "factors": [
-        {
-          "label": "Home Field",
-          "value": 0.045
-        },
-        {
-          "label": "Defense (OAA)",
-          "value": -0.025
-        }
-      ],
-      "raw_stats": {
-        "pick_xfip": 4.82,
-        "opp_xfip": 4.785,
-        "pick_oaa": -16,
-        "opp_oaa": 10,
-        "pick_bp_pitches": 150,
-        "opp_bp_pitches": 150,
-        "pick_bp_xfip": 4.35,
-        "opp_bp_xfip": 4.35,
-        "pick_xera": null,
-        "opp_xera": null,
-        "pick_xera_pct": null,
-        "opp_xera_pct": null,
-        "pick_whiff_pct": 3.0,
-        "opp_whiff_pct": 45.0,
-        "pick_kbb_pct": 0.0929,
-        "opp_kbb_pct": 0.1183,
-        "pick_bvp_shift": 0.0,
-        "pick_arsenal_fit": -0.1205,
-        "opp_arsenal_fit": -0.3048,
-        "pick_lineup_confirmed": false,
-        "opp_lineup_confirmed": false,
-        "pick_proj_ip": 5.7,
-        "opp_proj_ip": 5.5,
-        "pick_era": 2.59,
-        "opp_era": 3.86,
-        "pick_k_pct": 0.1372,
-        "opp_k_pct": 0.1909,
-        "ump_name": "",
-        "pick_home_w": 36,
-        "pick_home_l": 15,
-        "pinnacle_ml_open": -109.0,
-        "pick_bullpen_recent_xfip": null,
-        "opp_bullpen_recent_xfip": null,
-        "opp_starter_hand": "R",
-        "pick_ops_vs_hand": null,
-        "park_factor": 0.958
-      },
-      "adj_breakdown": {
-        "adjustments": [
-          {
-            "label": "Home field",
-            "pp": 1.11,
-            "positive": true,
-            "group": "team"
-          },
-          {
-            "label": "Defense (OAA)",
-            "pp": -0.62,
-            "positive": false,
-            "group": "team"
-          }
-        ],
-        "total_adj_pp": 0.49,
-        "shrink_note": null,
-        "note": "~"
-      },
-      "narrative": "IBP values TB 4.1pp higher than the market \u2014 55.8% model vs 51.2% implied. The largest lift is home field (~+1.1pp): Home-park and 2026 home-game context add a modest edge for TB. The main pushback is defense (oaa) (~-0.6pp): CLE defense grades +26 OAA better on the season \u2014 a run-prevention headwind. The price has held roughly steady since posting \u2014 the current -107 still sits inside the playable range (to -108). The edge is the model pricing TB differently than the market rather than one of the marquee starter/lineup/bullpen buckets \u2014 worth taking at the number, not chasing past it.",
-      "explanation": {
-        "explanation_type": "market_dislocation",
-        "risk_level": "medium",
-        "model_prob": 0.5582,
-        "market_prob": 0.5118,
-        "edge_pp": 4.1,
-        "fair_odds": "-126",
-        "current_odds": "-107",
-        "playable_to": "-108",
-        "positive_drivers": [
-          {
-            "label": "Home field",
-            "impact_pp": 1.11,
-            "tier": "primary",
-            "group": "team",
-            "detail": "Home-park and 2026 home-game context add a modest edge for TB.",
-            "attribution": "log_odds"
-          }
-        ],
-        "negative_drivers": [
-          {
-            "label": "Defense (OAA)",
-            "impact_pp": -0.62,
-            "tier": "secondary",
-            "group": "team",
-            "detail": "CLE defense grades +26 OAA better on the season \u2014 a run-prevention headwind.",
-            "attribution": "log_odds"
-          }
-        ],
-        "line_movement": {
-          "posted_odds": "-109",
-          "current_odds": "-107",
-          "movement_summary": "the price has held roughly steady since posting"
-        },
-        "sections": {
-          "edge_thesis": "IBP values TB 4.1pp higher than the market \u2014 55.8% model vs 51.2% implied.",
-          "whats_driving_it": "The largest lift is home field (~+1.1pp): Home-park and 2026 home-game context add a modest edge for TB.",
-          "what_pushes_back": "The main pushback is defense (oaa) (~-0.6pp): CLE defense grades +26 OAA better on the season \u2014 a run-prevention headwind.",
-          "bvp_note": null,
-          "betting_note": "The price has held roughly steady since posting \u2014 the current -107 still sits inside the playable range (to -108).",
-          "route_to_win": "The edge is the model pricing TB differently than the market rather than one of the marquee starter/lineup/bullpen buckets \u2014 worth taking at the number, not chasing past it.",
-          "read": "This is a price-driven read more than a matchup edge."
-        },
-        "read_label": "This is a price-driven read more than a matchup edge.",
-        "drivers_are_approximate": true,
-        "drivers_sum_to_edge": false,
-        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
-        "debug": {
-          "top_positive_label": "Home field",
-          "top_positive_pp": 1.11,
-          "top_negative_label": "Defense (OAA)",
-          "top_negative_pp": -0.62,
-          "has_primary_driver": true,
-          "has_material_headwind": false,
-          "bvp_present": false,
-          "contains_display_only_drivers": false,
-          "n_positive_core": 1
-        },
-        "prose": "IBP values TB 4.1pp higher than the market \u2014 55.8% model vs 51.2% implied. The largest lift is home field (~+1.1pp): Home-park and 2026 home-game context add a modest edge for TB. The main pushback is defense (oaa) (~-0.6pp): CLE defense grades +26 OAA better on the season \u2014 a run-prevention headwind. The price has held roughly steady since posting \u2014 the current -107 still sits inside the playable range (to -108). The edge is the model pricing TB differently than the market rather than one of the marquee starter/lineup/bullpen buckets \u2014 worth taking at the number, not chasing past it."
-      },
-      "run_line": {
-        "spread": "-1.5",
-        "model_prob": 0.4027,
-        "fair_odds": "+148",
-        "book_odds": 179,
-        "edge": 0.0443
-      },
-      "total": null,
-      "current_edge": 0.0413,
-      "current_model_prob": 0.5582,
-      "current_refresh_time": "10:16 AM CT \u00b7 Jul 25",
-      "current_recommendation": "same",
-      "current_flipped_team": null,
-      "current_flipped_edge": null,
-      "current_pitcher": "Nick Martinez",
-      "current_fair_odds": "-126",
-      "current_playable_to": -108,
-      "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
-      "current_top_factors": [
-        {
-          "label": "Home field",
-          "pp": 1.11,
-          "positive": true
-        },
-        {
-          "label": "Defense (OAA)",
-          "pp": -0.62,
-          "positive": false
-        },
-        {
-          "label": "Arsenal fit",
-          "pp": 0.18,
-          "positive": true
-        }
-      ],
-      "model_change": null,
-      "verdict": "\ud83d\udfe1 CONDITIONAL",
-      "kelly_multiplier": 1.0,
-      "downgrade_reasons": "",
-      "is_flagged": false,
-      "projected_starter": false
     }
   ],
-  "signal_count": 2,
-  "posted_count": 2,
+  "signal_count": 1,
+  "posted_count": 1,
   "games_today": 15,
   "yesterday_picks": [],
   "correlated_warning": null,
