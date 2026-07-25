@@ -1,7 +1,7 @@
 {
   "date": "2026-07-25",
-  "generated_at": "1:17 PM CT \u00b7 Jul 25",
-  "generated_at_utc": "2026-07-25T18:17:29Z",
+  "generated_at": "2:17 PM CT \u00b7 Jul 25",
+  "generated_at_utc": "2026-07-25T19:17:17Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -13,8 +13,8 @@
       "posted_at": "11:16 AM CT",
       "game_time": "2026-07-25T20:05:00Z",
       "temp_f": 83.0,
-      "wind_speed_mph": 6.0,
-      "wind_dir_degrees": 90.0,
+      "wind_speed_mph": 7.0,
+      "wind_dir_degrees": 135.0,
       "is_domed": false,
       "model_prob": 0.6486,
       "market_prob": 0.5581,
@@ -37,6 +37,10 @@
         {
           "t": "2026-07-25T18:17",
           "odds": -123
+        },
+        {
+          "t": "2026-07-25T19:17",
+          "odds": -125
         }
       ],
       "clv": null,
@@ -46,20 +50,20 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -134,
+        "FanDuel": -136,
         "MyBookie": -133,
         "LowVig": -129,
         "BetOnline": -129,
-        "DraftKings": -135,
+        "DraftKings": -136,
         "Novig": -125,
         "Hard Rock": -135,
         "Betway": -130,
         "ESPN Bet": -135,
         "Pinnacle": -126,
-        "Bovada": -132,
+        "Bovada": -136,
         "BetMGM": -135,
-        "BetUS": -127,
-        "ProphetX": -123,
+        "BetUS": -128,
+        "ProphetX": -125,
         "BetRivers": -132
       },
       "pitcher": "Foster Griffin",
@@ -229,15 +233,15 @@
         "edge": 0.1658
       },
       "total": null,
-      "current_edge": 0.0908,
-      "current_model_prob": 0.6424,
-      "current_refresh_time": "1:17 PM CT \u00b7 Jul 25",
+      "current_edge": 0.0861,
+      "current_model_prob": 0.6417,
+      "current_refresh_time": "2:17 PM CT \u00b7 Jul 25",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Foster Griffin",
-      "current_fair_odds": "-180",
-      "current_playable_to": -152,
+      "current_fair_odds": "-179",
+      "current_playable_to": -151,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
@@ -259,8 +263,8 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0074,
-        "model_delta": -0.0062,
+        "edge_delta": 0.0027,
+        "model_delta": -0.0069,
         "market_delta": -0.0118,
         "posted": {
           "model_prob": 0.6486,
@@ -268,9 +272,9 @@
           "edge": 0.0834
         },
         "current": {
-          "model_prob": 0.6424,
+          "model_prob": 0.6417,
           "market_prob": 0.5463,
-          "edge": 0.0908
+          "edge": 0.0861
         },
         "factor_deltas": [
           {
@@ -281,9 +285,298 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "1:17 PM CT \u00b7 Jul 25"
+        "refreshed_at": "2:17 PM CT \u00b7 Jul 25"
       },
       "verdict": "\u2705 STRONG",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "NYY @ PHI",
+      "pick": "PHI",
+      "side": "HOME",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Tim Mayza",
+      "posted_at": "2:17 PM CT",
+      "game_time": "2026-07-25T22:05:00Z",
+      "temp_f": 82.0,
+      "wind_speed_mph": 5.0,
+      "wind_dir_degrees": 90.0,
+      "is_domed": false,
+      "model_prob": 0.5387,
+      "market_prob": 0.4628,
+      "edge": 0.0757,
+      "ev_per_100": 16.36,
+      "odds": 116,
+      "best_odds": 116,
+      "best_book": "ProphetX",
+      "fair_odds": "-117",
+      "playable_to": 101,
+      "break_even": 0.463,
+      "kelly_units": 1.76,
+      "line_open": 112,
+      "line_current": 112,
+      "odds_history": [
+        {
+          "t": "2026-07-25T16:16",
+          "odds": 115
+        },
+        {
+          "t": "2026-07-25T19:17",
+          "odds": 116
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 108,
+        "Hard Rock": -105,
+        "Pinnacle": 112,
+        "DraftKings": 105,
+        "Bovada": 107,
+        "Betway": 105,
+        "BetMGM": 105,
+        "Novig": 115,
+        "ProphetX": 116,
+        "MyBookie": 107,
+        "ESPN Bet": 110,
+        "BetRivers": 112,
+        "LowVig": 111,
+        "BetOnline": 111,
+        "BetUS": 111
+      },
+      "pitcher": "Tim Mayza",
+      "opp_pitcher": "Ryan Weathers",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": -0.43
+        },
+        {
+          "label": "Home Field",
+          "value": 0.045
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": -0.0195
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 4.039,
+        "opp_xfip": 3.581,
+        "pick_oaa": -13,
+        "opp_oaa": 0,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 34.0,
+        "opp_whiff_pct": 69.0,
+        "pick_kbb_pct": null,
+        "opp_kbb_pct": 0.1991,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.1937,
+        "opp_arsenal_fit": -0.1947,
+        "pick_lineup_confirmed": true,
+        "opp_lineup_confirmed": true,
+        "pick_proj_ip": 7.2,
+        "opp_proj_ip": 5.4,
+        "pick_era": null,
+        "opp_era": 4.4,
+        "pick_k_pct": null,
+        "opp_k_pct": 0.2662,
+        "ump_name": "Chris Conroy",
+        "pick_home_w": 27,
+        "pick_home_l": 26,
+        "pinnacle_ml_open": 112.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 1.018
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": 1.12,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Lineup quality",
+            "pp": 0.99,
+            "positive": true,
+            "group": "lineup"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.48,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": -0.43,
+            "positive": false,
+            "group": "pitcher"
+          }
+        ],
+        "total_adj_pp": 1.2,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "The model prices PHI at 53.9% to win where the no-vig market implies 46.3%, a 7.6pp disagreement. Several smaller signals stack the same way \u2014 home field (~+1.1pp), lineup quality (~+1.0pp) \u2014 with no single one dominating. The price has held roughly steady since posting \u2014 the current +116 still sits inside the playable range (to +101). As a cluster edge rather than one dominant mismatch, it is a thinner, more fragile signal \u2014 worth sizing accordingly.",
+      "explanation": {
+        "explanation_type": "cluster_edge",
+        "risk_level": "medium",
+        "model_prob": 0.5387,
+        "market_prob": 0.4628,
+        "edge_pp": 7.6,
+        "fair_odds": "-117",
+        "current_odds": "+116",
+        "playable_to": "+101",
+        "positive_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": 1.12,
+            "tier": "primary",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for PHI.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Lineup quality",
+            "impact_pp": 0.99,
+            "tier": "secondary",
+            "group": "lineup",
+            "detail": "PHI projects above its season baseline against this pitcher handedness.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": -0.48,
+            "tier": "data",
+            "group": "team",
+            "detail": "NYY defense grades +13 OAA better on the season \u2014 a run-prevention headwind.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": -0.43,
+            "tier": "data",
+            "group": "pitcher",
+            "detail": "Tim Mayza 4.04 xFIP vs Ryan Weathers 3.58 xFIP.",
+            "attribution": "display_only"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+112",
+          "current_odds": "+116",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "The model prices PHI at 53.9% to win where the no-vig market implies 46.3%, a 7.6pp disagreement.",
+          "whats_driving_it": "Several smaller signals stack the same way \u2014 home field (~+1.1pp), lineup quality (~+1.0pp) \u2014 with no single one dominating.",
+          "what_pushes_back": null,
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current +116 still sits inside the playable range (to +101).",
+          "route_to_win": "As a cluster edge rather than one dominant mismatch, it is a thinner, more fragile signal \u2014 worth sizing accordingly.",
+          "read": "This is a cluster edge \u2014 several small signals, not one mismatch."
+        },
+        "read_label": "This is a cluster edge \u2014 several small signals, not one mismatch.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Home field",
+          "top_positive_pp": 1.12,
+          "top_negative_label": "Defense (OAA)",
+          "top_negative_pp": -0.48,
+          "has_primary_driver": true,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 2
+        },
+        "prose": "The model prices PHI at 53.9% to win where the no-vig market implies 46.3%, a 7.6pp disagreement. Several smaller signals stack the same way \u2014 home field (~+1.1pp), lineup quality (~+1.0pp) \u2014 with no single one dominating. The price has held roughly steady since posting \u2014 the current +116 still sits inside the playable range (to +101). As a cluster edge rather than one dominant mismatch, it is a thinner, more fragile signal \u2014 worth sizing accordingly."
+      },
+      "run_line": {
+        "spread": "-1.5",
+        "model_prob": 0.385,
+        "fair_odds": "+160",
+        "book_odds": null,
+        "edge": null
+      },
+      "total": null,
+      "current_edge": 0.0757,
+      "current_model_prob": 0.5387,
+      "current_refresh_time": "2:17 PM CT \u00b7 Jul 25",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Tim Mayza",
+      "current_fair_odds": "-117",
+      "current_playable_to": 101,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
+      "current_top_factors": [
+        {
+          "label": "Home field",
+          "pp": 1.12,
+          "positive": true
+        },
+        {
+          "label": "Lineup quality",
+          "pp": 0.99,
+          "positive": true
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": -0.48,
+          "positive": false
+        }
+      ],
+      "model_change": {
+        "edge_delta": 0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.5387,
+          "market_prob": 0.4628,
+          "edge": 0.0757
+        },
+        "current": {
+          "model_prob": 0.5387,
+          "market_prob": 0.4628,
+          "edge": 0.0757
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": 0.39,
+            "delta_pp": 0.39
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "2:17 PM CT \u00b7 Jul 25"
+      },
+      "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
       "is_flagged": false,
@@ -326,6 +619,10 @@
         {
           "t": "2026-07-25T18:17",
           "odds": -127
+        },
+        {
+          "t": "2026-07-25T19:17",
+          "odds": -134
         }
       ],
       "clv": null,
@@ -336,20 +633,20 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": -142,
-        "MyBookie": -142,
+        "MyBookie": -141,
         "BetOnline": -139,
         "LowVig": -139,
         "DraftKings": -148,
-        "Novig": -133,
-        "Hard Rock": -140,
-        "Betway": -140,
+        "Novig": -135,
+        "Hard Rock": -145,
+        "Betway": -150,
         "ESPN Bet": -140,
-        "Pinnacle": -136,
-        "Bovada": -143,
+        "Pinnacle": -139,
+        "Bovada": -147,
         "BetMGM": -145,
         "BetUS": -137,
         "ProphetX": -134,
-        "BetRivers": -127
+        "BetRivers": -143
       },
       "pitcher": "Eury P\u00e9rez",
       "opp_pitcher": "Randy V\u00e1squez",
@@ -528,22 +825,22 @@
         "edge": 0.1025
       },
       "total": null,
-      "current_edge": 0.0551,
-      "current_model_prob": 0.6146,
-      "current_refresh_time": "1:17 PM CT \u00b7 Jul 25",
+      "current_edge": 0.0433,
+      "current_model_prob": 0.616,
+      "current_refresh_time": "2:17 PM CT \u00b7 Jul 25",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Eury P\u00e9rez",
-      "current_fair_odds": "-159",
-      "current_playable_to": -135,
+      "current_fair_odds": "-160",
+      "current_playable_to": -136,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": 1.89,
+          "pp": 1.88,
           "positive": true
         },
         {
@@ -558,18 +855,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": -0.0118,
+        "model_delta": 0.0014,
+        "market_delta": 0.0055,
         "posted": {
           "model_prob": 0.6146,
           "market_prob": 0.5646,
           "edge": 0.0551
         },
         "current": {
-          "model_prob": 0.6146,
-          "market_prob": 0.5646,
-          "edge": 0.0551
+          "model_prob": 0.616,
+          "market_prob": 0.5701,
+          "edge": 0.0433
         },
         "factor_deltas": [
           {
@@ -580,8 +877,273 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "1:17 PM CT \u00b7 Jul 25"
+        "refreshed_at": "2:17 PM CT \u00b7 Jul 25"
       },
+      "verdict": "\ud83d\udfe1 CONDITIONAL",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "HOU @ CHW",
+      "pick": "CHW",
+      "side": "HOME",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Sean Burke",
+      "posted_at": "2:17 PM CT",
+      "game_time": "2026-07-25T23:10:00Z",
+      "temp_f": 76.0,
+      "wind_speed_mph": 5.0,
+      "wind_dir_degrees": 225.0,
+      "is_domed": false,
+      "model_prob": 0.5823,
+      "market_prob": 0.5372,
+      "edge": 0.0431,
+      "ev_per_100": 8.0,
+      "odds": -117,
+      "best_odds": -117,
+      "best_book": "Novig",
+      "fair_odds": "-139",
+      "playable_to": -118,
+      "break_even": 0.5392,
+      "kelly_units": 1.17,
+      "line_open": -121,
+      "line_current": -121,
+      "odds_history": [
+        {
+          "t": "2026-07-25T16:16",
+          "odds": -117
+        },
+        {
+          "t": "2026-07-25T17:16",
+          "odds": -118
+        },
+        {
+          "t": "2026-07-25T19:17",
+          "odds": -117
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": -120,
+        "MyBookie": -122,
+        "LowVig": -120,
+        "BetOnline": -120,
+        "DraftKings": -126,
+        "Novig": -117,
+        "Hard Rock": -125,
+        "ESPN Bet": -125,
+        "Pinnacle": -121,
+        "Bovada": -126,
+        "BetMGM": -130,
+        "Betway": -125,
+        "ProphetX": -118,
+        "BetUS": -120,
+        "BetRivers": -134
+      },
+      "pitcher": "Sean Burke",
+      "opp_pitcher": "Hunter Brown",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 1.66
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": 0.018
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 3.538,
+        "opp_xfip": 5.329,
+        "pick_oaa": 10,
+        "opp_oaa": -2,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 46.0,
+        "opp_whiff_pct": 66.0,
+        "pick_kbb_pct": 0.1878,
+        "opp_kbb_pct": 0.0847,
+        "pick_bvp_shift": 0.01,
+        "pick_arsenal_fit": 0.3556,
+        "opp_arsenal_fit": 0.452,
+        "pick_lineup_confirmed": true,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 6.4,
+        "opp_proj_ip": 5.2,
+        "pick_era": 3.2,
+        "opp_era": 4.05,
+        "pick_k_pct": 0.262,
+        "opp_k_pct": 0.2429,
+        "ump_name": "Shane Livensparger",
+        "pick_home_w": 31,
+        "pick_home_l": 18,
+        "pinnacle_ml_open": -121.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 0.96
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 1.66,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.44,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Lineup quality",
+            "pp": -0.39,
+            "positive": false,
+            "group": "lineup"
+          },
+          {
+            "label": "Home field",
+            "pp": 0.19,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 1.9,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "The model sees CHW as a 58.2% side; the market is pricing 53.7%, leaving a 4.3pp edge. The largest lift is pitcher quality (xfip) (~+1.7pp): Sean Burke 3.54 xFIP vs Hunter Brown 5.33 xFIP. The price has held roughly steady since posting \u2014 the current -117 still sits inside the playable range (to -118). The path runs through Sean Burke pitching deep enough to keep the game out of the early bullpen.",
+      "explanation": {
+        "explanation_type": "starter_mismatch",
+        "risk_level": "medium",
+        "model_prob": 0.5823,
+        "market_prob": 0.5372,
+        "edge_pp": 4.3,
+        "fair_odds": "-139",
+        "current_odds": "-117",
+        "playable_to": "-118",
+        "positive_drivers": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 1.66,
+            "tier": "primary",
+            "group": "pitcher",
+            "detail": "Sean Burke 3.54 xFIP vs Hunter Brown 5.33 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": 0.44,
+            "tier": "data",
+            "group": "team",
+            "detail": "CHW defense grades +12 OAA better on the season \u2014 a run-prevention edge.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Home field",
+            "impact_pp": 0.19,
+            "tier": "data",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for CHW.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Lineup quality",
+            "impact_pp": -0.39,
+            "tier": "data",
+            "group": "lineup",
+            "detail": "CHW lineup projects below its season baseline against this pitcher handedness.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "-121",
+          "current_odds": "-117",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "The model sees CHW as a 58.2% side; the market is pricing 53.7%, leaving a 4.3pp edge.",
+          "whats_driving_it": "The largest lift is pitcher quality (xfip) (~+1.7pp): Sean Burke 3.54 xFIP vs Hunter Brown 5.33 xFIP.",
+          "what_pushes_back": null,
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current -117 still sits inside the playable range (to -118).",
+          "route_to_win": "The path runs through Sean Burke pitching deep enough to keep the game out of the early bullpen.",
+          "read": "This is a starting-pitcher edge."
+        },
+        "read_label": "This is a starting-pitcher edge.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Pitcher quality (xFIP)",
+          "top_positive_pp": 1.66,
+          "top_negative_label": "Lineup quality",
+          "top_negative_pp": -0.39,
+          "has_primary_driver": true,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 3
+        },
+        "prose": "The model sees CHW as a 58.2% side; the market is pricing 53.7%, leaving a 4.3pp edge. The largest lift is pitcher quality (xfip) (~+1.7pp): Sean Burke 3.54 xFIP vs Hunter Brown 5.33 xFIP. The price has held roughly steady since posting \u2014 the current -117 still sits inside the playable range (to -118). The path runs through Sean Burke pitching deep enough to keep the game out of the early bullpen."
+      },
+      "run_line": {
+        "spread": "-1.5",
+        "model_prob": 0.4361,
+        "fair_odds": "+129",
+        "book_odds": 174,
+        "edge": 0.0711
+      },
+      "total": null,
+      "current_edge": 0.0431,
+      "current_model_prob": 0.5823,
+      "current_refresh_time": "2:17 PM CT \u00b7 Jul 25",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Sean Burke",
+      "current_fair_odds": "-139",
+      "current_playable_to": -118,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 1.66,
+          "positive": true
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": 0.44,
+          "positive": true
+        },
+        {
+          "label": "Lineup quality",
+          "pp": -0.39,
+          "positive": false
+        }
+      ],
+      "model_change": null,
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -589,8 +1151,8 @@
       "projected_starter": false
     }
   ],
-  "signal_count": 2,
-  "posted_count": 2,
+  "signal_count": 4,
+  "posted_count": 4,
   "games_today": 14,
   "yesterday_picks": [],
   "correlated_warning": null,
