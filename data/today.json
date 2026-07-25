@@ -1,7 +1,7 @@
 {
   "date": "2026-07-25",
-  "generated_at": "11:16 AM CT \u00b7 Jul 25",
-  "generated_at_utc": "2026-07-25T16:16:44Z",
+  "generated_at": "12:17 PM CT \u00b7 Jul 25",
+  "generated_at_utc": "2026-07-25T17:17:06Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -33,6 +33,10 @@
         {
           "t": "2026-07-25T16:16",
           "odds": -130
+        },
+        {
+          "t": "2026-07-25T17:16",
+          "odds": -130
         }
       ],
       "clv": null,
@@ -42,21 +46,21 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -134,
+        "FanDuel": -138,
         "MyBookie": -140,
-        "LowVig": -138,
-        "BetOnline": -138,
+        "LowVig": -135,
+        "BetOnline": -135,
         "DraftKings": -144,
         "Novig": -130,
         "Hard Rock": -145,
         "Betway": -140,
         "ESPN Bet": -140,
-        "Pinnacle": -132,
-        "Bovada": -136,
-        "BetMGM": -150,
-        "BetUS": -138,
-        "ProphetX": -132,
-        "BetRivers": -139
+        "Pinnacle": -135,
+        "Bovada": -142,
+        "BetMGM": -145,
+        "BetUS": -135,
+        "ProphetX": -130,
+        "BetRivers": -137
       },
       "pitcher": "Foster Griffin",
       "opp_pitcher": "Mitch Bratt",
@@ -225,18 +229,18 @@
         "edge": 0.1658
       },
       "total": null,
-      "current_edge": 0.0834,
-      "current_model_prob": 0.6486,
-      "current_refresh_time": "11:16 AM CT \u00b7 Jul 25",
+      "current_edge": 0.0813,
+      "current_model_prob": 0.6465,
+      "current_refresh_time": "12:16 PM CT \u00b7 Jul 25",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Foster Griffin",
-      "current_fair_odds": "-185",
-      "current_playable_to": -155,
+      "current_fair_odds": "-183",
+      "current_playable_to": -154,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
@@ -254,7 +258,31 @@
           "positive": false
         }
       ],
-      "model_change": null,
+      "model_change": {
+        "edge_delta": -0.0021,
+        "model_delta": -0.0021,
+        "market_delta": 0.0046,
+        "posted": {
+          "model_prob": 0.6486,
+          "market_prob": 0.5581,
+          "edge": 0.0834
+        },
+        "current": {
+          "model_prob": 0.6465,
+          "market_prob": 0.5627,
+          "edge": 0.0813
+        },
+        "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.33,
+            "delta_pp": -0.33
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "12:16 PM CT \u00b7 Jul 25"
+      },
       "verdict": "\u2705 STRONG",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -264,7 +292,7 @@
   ],
   "signal_count": 1,
   "posted_count": 1,
-  "games_today": 15,
+  "games_today": 14,
   "yesterday_picks": [],
   "correlated_warning": null,
   "season": {
