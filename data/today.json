@@ -1,7 +1,7 @@
 {
   "date": "2026-07-26",
-  "generated_at": "9:17 AM CT \u00b7 Jul 26",
-  "generated_at_utc": "2026-07-26T14:17:38Z",
+  "generated_at": "10:17 AM CT \u00b7 Jul 26",
+  "generated_at_utc": "2026-07-26T15:17:39Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -35,8 +35,8 @@
           "odds": 170
         },
         {
-          "t": "2026-07-26T14:17",
-          "odds": 170
+          "t": "2026-07-26T15:17",
+          "odds": 174
         }
       ],
       "clv": null,
@@ -48,16 +48,16 @@
       "book_odds": {
         "FanDuel": 160,
         "Betway": 160,
-        "MyBookie": 152,
+        "MyBookie": 157,
         "Hard Rock": 155,
         "ESPN Bet": 160,
-        "Novig": 167,
-        "ProphetX": 162,
-        "BetRivers": 170,
+        "Novig": 174,
+        "ProphetX": 164,
+        "BetRivers": 163,
         "Bovada": 157,
         "LowVig": 161,
         "BetOnline": 161,
-        "BetUS": 158,
+        "BetUS": 161,
         "BetMGM": 155,
         "Pinnacle": 165,
         "DraftKings": 157
@@ -211,36 +211,60 @@
         "edge": 0.1308
       },
       "total": null,
-      "current_edge": 0.079,
-      "current_model_prob": 0.4494,
-      "current_refresh_time": "9:17 AM CT \u00b7 Jul 26",
+      "current_edge": 0.0591,
+      "current_model_prob": 0.4241,
+      "current_refresh_time": "10:17 AM CT \u00b7 Jul 26",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Luinder Avila",
-      "current_fair_odds": "+123",
-      "current_playable_to": 144,
+      "current_fair_odds": "+136",
+      "current_playable_to": 160,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
+          "label": "Lineup quality",
+          "pp": -0.72,
+          "positive": false
+        },
+        {
           "label": "Defense (OAA)",
-          "pp": 0.62,
+          "pp": 0.61,
           "positive": true
         },
         {
           "label": "Day/night",
           "pp": 0.37,
           "positive": true
-        },
-        {
-          "label": "Home field",
-          "pp": -0.2,
-          "positive": false
         }
       ],
-      "model_change": null,
+      "model_change": {
+        "edge_delta": -0.0243,
+        "model_delta": -0.0297,
+        "market_delta": 0.0031,
+        "posted": {
+          "model_prob": 0.4538,
+          "market_prob": 0.3668,
+          "edge": 0.0834
+        },
+        "current": {
+          "model_prob": 0.4241,
+          "market_prob": 0.3699,
+          "edge": 0.0591
+        },
+        "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.72,
+            "delta_pp": -0.72
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "10:17 AM CT \u00b7 Jul 26"
+      },
       "verdict": "\u2705 STRONG",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -278,7 +302,7 @@
           "odds": 308
         },
         {
-          "t": "2026-07-26T14:17",
+          "t": "2026-07-26T15:17",
           "odds": 308
         }
       ],
@@ -290,19 +314,19 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 270,
-        "BetOnline": 298,
-        "LowVig": 298,
+        "BetOnline": 294,
+        "LowVig": 294,
         "Novig": 308,
         "Betway": 275,
-        "MyBookie": 273,
-        "DraftKings": 274,
-        "Hard Rock": 300,
+        "MyBookie": 270,
+        "DraftKings": 282,
+        "Hard Rock": 275,
         "ESPN Bet": 280,
-        "BetMGM": 280,
-        "Pinnacle": 282,
-        "BetUS": 286,
+        "BetMGM": 275,
+        "Pinnacle": 286,
+        "BetUS": 282,
         "ProphetX": 295,
-        "Bovada": 265,
+        "Bovada": 280,
         "BetRivers": 280
       },
       "pitcher": "Kyle Freeland",
@@ -472,59 +496,65 @@
         "edge": 0.0783
       },
       "total": null,
-      "current_edge": 0.0813,
-      "current_model_prob": 0.3264,
-      "current_refresh_time": "9:17 AM CT \u00b7 Jul 26",
+      "current_edge": 0.0973,
+      "current_model_prob": 0.3424,
+      "current_refresh_time": "10:17 AM CT \u00b7 Jul 26",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Kyle Freeland",
-      "current_fair_odds": "+206",
-      "current_playable_to": 249,
+      "current_fair_odds": "+192",
+      "current_playable_to": 231,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": false,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": -2.0,
+          "pp": -2.08,
           "positive": false
         },
         {
           "label": "Home field",
-          "pp": -0.9,
+          "pp": -0.92,
           "positive": false
         },
         {
-          "label": "Arsenal fit",
-          "pp": -0.44,
-          "positive": false
+          "label": "Lineup quality",
+          "pp": 0.46,
+          "positive": true
         }
       ],
       "model_change": {
-        "edge_delta": 0.0022,
-        "model_delta": 0.0022,
-        "market_delta": 0.0085,
+        "edge_delta": 0.0182,
+        "model_delta": 0.0182,
+        "market_delta": 0.0059,
         "posted": {
           "model_prob": 0.3242,
           "market_prob": 0.2472,
           "edge": 0.0791
         },
         "current": {
-          "model_prob": 0.3264,
-          "market_prob": 0.2557,
-          "edge": 0.0813
+          "model_prob": 0.3424,
+          "market_prob": 0.2531,
+          "edge": 0.0973
         },
         "factor_deltas": [
           {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": 0.46,
+            "delta_pp": 0.46
+          },
+          {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
-            "current_pp": -0.44,
-            "delta_pp": -0.44
+            "current_pp": -0.45,
+            "delta_pp": -0.45
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "9:17 AM CT \u00b7 Jul 26"
+        "refreshed_at": "10:17 AM CT \u00b7 Jul 26"
       },
       "verdict": "\u2b07\ufe0f REDUCED CONF.",
       "kelly_multiplier": 1.0,
@@ -563,8 +593,8 @@
           "odds": 110
         },
         {
-          "t": "2026-07-26T14:17",
-          "odds": 110
+          "t": "2026-07-26T15:17",
+          "odds": 104
         }
       ],
       "clv": null,
@@ -575,20 +605,20 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 100,
-        "BetOnline": 101,
-        "Novig": 106,
-        "LowVig": 101,
-        "Betway": 100,
-        "MyBookie": 100,
-        "DraftKings": -103,
-        "BetUS": 101,
+        "BetOnline": 100,
+        "Novig": 104,
+        "LowVig": 100,
+        "Betway": -105,
+        "MyBookie": -102,
+        "DraftKings": -105,
+        "BetUS": 100,
         "Hard Rock": 100,
         "ESPN Bet": 100,
-        "BetMGM": -102,
+        "BetMGM": -105,
         "ProphetX": 104,
-        "BetRivers": 110,
-        "Bovada": -103,
-        "Pinnacle": 104
+        "BetRivers": 102,
+        "Bovada": -106,
+        "Pinnacle": 102
       },
       "pitcher": "Miles Mikolas",
       "opp_pitcher": "Kohl Drake",
@@ -757,24 +787,19 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0234,
-      "current_model_prob": 0.4996,
-      "current_refresh_time": "9:17 AM CT \u00b7 Jul 26",
+      "current_edge": 0.0242,
+      "current_model_prob": 0.5144,
+      "current_refresh_time": "10:17 AM CT \u00b7 Jul 26",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Miles Mikolas",
-      "current_fair_odds": "+100",
-      "current_playable_to": 118,
+      "current_fair_odds": "-106",
+      "current_playable_to": 111,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
       "current_top_factors": [
-        {
-          "label": "Lineup quality",
-          "pp": -0.7,
-          "positive": false
-        },
         {
           "label": "Defense (OAA)",
           "pp": -0.62,
@@ -784,38 +809,43 @@
           "label": "Pitcher quality (xFIP)",
           "pp": -0.62,
           "positive": false
+        },
+        {
+          "label": "Arsenal fit",
+          "pp": -0.5,
+          "positive": false
         }
       ],
       "model_change": {
-        "edge_delta": -0.0305,
-        "model_delta": -0.0305,
-        "market_delta": -0.0012,
+        "edge_delta": -0.0297,
+        "model_delta": -0.0157,
+        "market_delta": 0.0034,
         "posted": {
           "model_prob": 0.5301,
           "market_prob": 0.4825,
           "edge": 0.0539
         },
         "current": {
-          "model_prob": 0.4996,
-          "market_prob": 0.4813,
-          "edge": 0.0234
+          "model_prob": 0.5144,
+          "market_prob": 0.4859,
+          "edge": 0.0242
         },
         "factor_deltas": [
-          {
-            "label": "Lineup quality",
-            "posted_pp": 0.0,
-            "current_pp": -0.7,
-            "delta_pp": -0.7
-          },
           {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
             "current_pp": -0.5,
             "delta_pp": -0.5
+          },
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": 0.37,
+            "delta_pp": 0.37
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "9:17 AM CT \u00b7 Jul 26"
+        "refreshed_at": "10:17 AM CT \u00b7 Jul 26"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -856,6 +886,10 @@
         {
           "t": "2026-07-26T14:17",
           "odds": -103
+        },
+        {
+          "t": "2026-07-26T15:17",
+          "odds": -103
         }
       ],
       "clv": null,
@@ -869,17 +903,17 @@
         "BetOnline": -107,
         "LowVig": -107,
         "Betway": -110,
-        "MyBookie": -115,
-        "Novig": -106,
+        "MyBookie": -111,
+        "Novig": -104,
         "DraftKings": -110,
         "Hard Rock": -110,
         "BetMGM": -110,
         "ESPN Bet": -110,
-        "Pinnacle": -105,
+        "Pinnacle": -106,
         "BetUS": -105,
         "ProphetX": -103,
         "Bovada": -111,
-        "BetRivers": -108
+        "BetRivers": -110
       },
       "pitcher": "Jacob deGrom",
       "opp_pitcher": "Logan Gilbert",
@@ -1052,14 +1086,14 @@
         "edge": 0.0568
       },
       "total": null,
-      "current_edge": 0.0509,
-      "current_model_prob": 0.5583,
-      "current_refresh_time": "9:17 AM CT \u00b7 Jul 26",
+      "current_edge": 0.0514,
+      "current_model_prob": 0.5588,
+      "current_refresh_time": "10:17 AM CT \u00b7 Jul 26",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Jacob deGrom",
-      "current_fair_odds": "-126",
+      "current_fair_odds": "-127",
       "current_playable_to": -108,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
@@ -1067,7 +1101,7 @@
       "current_top_factors": [
         {
           "label": "Home field",
-          "pp": 1.09,
+          "pp": 1.08,
           "positive": true
         },
         {
@@ -1087,10 +1121,303 @@
       "downgrade_reasons": "",
       "is_flagged": false,
       "projected_starter": false
+    },
+    {
+      "game": "LAD @ MET",
+      "pick": "LAD",
+      "side": "AWAY",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Emmet Sheehan",
+      "posted_at": "10:17 AM CT",
+      "game_time": "2026-07-26T17:40:00Z",
+      "temp_f": 83.0,
+      "wind_speed_mph": 3.0,
+      "wind_dir_degrees": 45.0,
+      "is_domed": false,
+      "model_prob": 0.6373,
+      "market_prob": 0.5898,
+      "edge": 0.0471,
+      "ev_per_100": 7.99,
+      "odds": -144,
+      "best_odds": -144,
+      "best_book": "Novig",
+      "fair_odds": "-176",
+      "playable_to": -148,
+      "break_even": 0.5902,
+      "kelly_units": 1.44,
+      "line_open": -151,
+      "line_current": -151,
+      "odds_history": [
+        {
+          "t": "2026-07-26T13:03",
+          "odds": -150
+        },
+        {
+          "t": "2026-07-26T15:17",
+          "odds": -144
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": -154,
+        "LowVig": -150,
+        "BetOnline": -150,
+        "Novig": -144,
+        "Betway": -150,
+        "MyBookie": -150,
+        "DraftKings": -146,
+        "Hard Rock": -155,
+        "ESPN Bet": -165,
+        "BetMGM": -155,
+        "Pinnacle": -151,
+        "BetUS": -151,
+        "ProphetX": -144,
+        "BetRivers": -175,
+        "Bovada": -149
+      },
+      "pitcher": "Emmet Sheehan",
+      "opp_pitcher": "Freddy Peralta",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 0.47
+        },
+        {
+          "label": "Home Field",
+          "value": -0.026
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": 0.025
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 4.022,
+        "opp_xfip": 4.555,
+        "pick_oaa": 20,
+        "opp_oaa": -17,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 84.0,
+        "opp_whiff_pct": 61.0,
+        "pick_kbb_pct": 0.192,
+        "opp_kbb_pct": 0.1301,
+        "pick_bvp_shift": 0.01,
+        "pick_arsenal_fit": -0.1014,
+        "opp_arsenal_fit": 0.1487,
+        "pick_lineup_confirmed": true,
+        "opp_lineup_confirmed": true,
+        "pick_proj_ip": 5.0,
+        "opp_proj_ip": 5.2,
+        "pick_era": 5.13,
+        "opp_era": 5.01,
+        "pick_k_pct": 0.264,
+        "opp_k_pct": 0.2236,
+        "ump_name": "Malachi Moore",
+        "pick_home_w": 36,
+        "pick_home_l": 19,
+        "pinnacle_ml_open": -151.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 0.968
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": -0.6,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.58,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 0.47,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Lineup quality",
+            "pp": 0.44,
+            "positive": true,
+            "group": "lineup"
+          },
+          {
+            "label": "Day/night",
+            "pp": 0.35,
+            "positive": true,
+            "group": "schedule"
+          },
+          {
+            "label": "Starter rest",
+            "pp": 0.16,
+            "positive": true,
+            "group": "schedule"
+          }
+        ],
+        "total_adj_pp": 1.4,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Model and market disagree on LAD by 4.7pp \u2014 63.7% fair against a 59.0% price. The largest lift is defense (oaa) (~+0.6pp): The model's defensive-efficiency adjustment favors the pick. The main pushback is home field (~-0.6pp): MET's home-field context weighs against the pick playing on the road. The market has drifted against the pick since posting, widening the available price \u2014 the current -144 still sits inside the playable range (to -148). The edge is the model pricing LAD differently than the market rather than one of the marquee starter/lineup/bullpen buckets \u2014 worth taking at the number, not chasing past it.",
+      "explanation": {
+        "explanation_type": "market_dislocation",
+        "risk_level": "medium",
+        "model_prob": 0.6373,
+        "market_prob": 0.5898,
+        "edge_pp": 4.7,
+        "fair_odds": "-176",
+        "current_odds": "-144",
+        "playable_to": "-148",
+        "positive_drivers": [
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": 0.58,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "The model's defensive-efficiency adjustment favors the pick.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 0.47,
+            "tier": "data",
+            "group": "pitcher",
+            "detail": "Emmet Sheehan 4.02 xFIP vs Freddy Peralta 4.55 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Lineup quality",
+            "impact_pp": 0.44,
+            "tier": "data",
+            "group": "lineup",
+            "detail": "LAD projects above its season baseline against this pitcher handedness.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Day/night",
+            "impact_pp": 0.35,
+            "tier": "data",
+            "group": "schedule",
+            "detail": "Day/night schedule context favors the pick.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Starter rest",
+            "impact_pp": 0.16,
+            "tier": "data",
+            "group": "schedule",
+            "detail": "Rest-day alignment favors the pick's starter.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": -0.6,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "MET's home-field context weighs against the pick playing on the road.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "-151",
+          "current_odds": "-144",
+          "movement_summary": "the market has drifted against the pick since posting, widening the available price"
+        },
+        "sections": {
+          "edge_thesis": "Model and market disagree on LAD by 4.7pp \u2014 63.7% fair against a 59.0% price.",
+          "whats_driving_it": "The largest lift is defense (oaa) (~+0.6pp): The model's defensive-efficiency adjustment favors the pick.",
+          "what_pushes_back": "The main pushback is home field (~-0.6pp): MET's home-field context weighs against the pick playing on the road.",
+          "bvp_note": null,
+          "betting_note": "The market has drifted against the pick since posting, widening the available price \u2014 the current -144 still sits inside the playable range (to -148).",
+          "route_to_win": "The edge is the model pricing LAD differently than the market rather than one of the marquee starter/lineup/bullpen buckets \u2014 worth taking at the number, not chasing past it.",
+          "read": "This is a price-driven read more than a matchup edge."
+        },
+        "read_label": "This is a price-driven read more than a matchup edge.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Defense (OAA)",
+          "top_positive_pp": 0.58,
+          "top_negative_label": "Home field",
+          "top_negative_pp": -0.6,
+          "has_primary_driver": false,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 5
+        },
+        "prose": "Model and market disagree on LAD by 4.7pp \u2014 63.7% fair against a 59.0% price. The largest lift is defense (oaa) (~+0.6pp): The model's defensive-efficiency adjustment favors the pick. The main pushback is home field (~-0.6pp): MET's home-field context weighs against the pick playing on the road. The market has drifted against the pick since posting, widening the available price \u2014 the current -144 still sits inside the playable range (to -148). The edge is the model pricing LAD differently than the market rather than one of the marquee starter/lineup/bullpen buckets \u2014 worth taking at the number, not chasing past it."
+      },
+      "run_line": {
+        "spread": "+1.5",
+        "model_prob": 0.8527,
+        "fair_odds": "-579",
+        "book_odds": null,
+        "edge": null
+      },
+      "total": null,
+      "current_edge": 0.0471,
+      "current_model_prob": 0.6373,
+      "current_refresh_time": "10:17 AM CT \u00b7 Jul 26",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Emmet Sheehan",
+      "current_fair_odds": "-176",
+      "current_playable_to": -148,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
+      "current_top_factors": [
+        {
+          "label": "Home field",
+          "pp": -0.6,
+          "positive": false
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": 0.58,
+          "positive": true
+        },
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 0.47,
+          "positive": true
+        }
+      ],
+      "model_change": null,
+      "verdict": "\ud83d\udfe1 CONDITIONAL",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
     }
   ],
-  "signal_count": 4,
-  "posted_count": 4,
+  "signal_count": 5,
+  "posted_count": 5,
   "games_today": 15,
   "yesterday_picks": [
     {
