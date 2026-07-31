@@ -1,7 +1,7 @@
 {
   "date": "2026-07-31",
-  "generated_at": "3:17 PM CT \u00b7 Jul 31",
-  "generated_at_utc": "2026-07-31T20:17:38Z",
+  "generated_at": "4:18 PM CT \u00b7 Jul 31",
+  "generated_at_utc": "2026-07-31T21:18:03Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -49,6 +49,10 @@
         {
           "t": "2026-07-31T20:17",
           "odds": 112
+        },
+        {
+          "t": "2026-07-31T21:17",
+          "odds": 108
         }
       ],
       "clv": null,
@@ -58,15 +62,15 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 112,
+        "FanDuel": 106,
         "BetOnline": 102,
         "LowVig": 102,
         "Novig": 108,
-        "MyBookie": 103,
+        "MyBookie": 101,
         "BetMGM": 100,
         "DraftKings": 103,
         "ESPN Bet": 100,
-        "Bovada": 102,
+        "Bovada": 103,
         "Pinnacle": 108,
         "BetUS": 102,
         "Betway": 100,
@@ -241,9 +245,9 @@
         "edge": 0.1324
       },
       "total": null,
-      "current_edge": 0.0986,
-      "current_model_prob": 0.5703,
-      "current_refresh_time": "3:17 PM CT \u00b7 Jul 31",
+      "current_edge": 0.0892,
+      "current_model_prob": 0.57,
+      "current_refresh_time": "4:17 PM CT \u00b7 Jul 31",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -271,22 +275,317 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.02,
-        "model_delta": 0.0063,
-        "market_delta": -0.0101,
+        "edge_delta": 0.0106,
+        "model_delta": 0.006,
+        "market_delta": -0.0111,
         "posted": {
           "model_prob": 0.564,
           "market_prob": 0.4825,
           "edge": 0.0786
         },
         "current": {
-          "model_prob": 0.5703,
-          "market_prob": 0.4724,
-          "edge": 0.0986
+          "model_prob": 0.57,
+          "market_prob": 0.4714,
+          "edge": 0.0892
         },
         "factor_deltas": [],
         "starter_changed": null,
-        "refreshed_at": "3:17 PM CT \u00b7 Jul 31"
+        "refreshed_at": "4:17 PM CT \u00b7 Jul 31"
+      },
+      "verdict": "\u2705 VALUE",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "PHI @ BAL",
+      "pick": "BAL",
+      "side": "HOME",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Brandon Young",
+      "posted_at": "4:17 PM CT",
+      "game_time": "2026-07-31T23:05:00Z",
+      "temp_f": 84.0,
+      "wind_speed_mph": 3.0,
+      "wind_dir_degrees": 0.0,
+      "is_domed": false,
+      "model_prob": 0.5833,
+      "market_prob": 0.521,
+      "edge": 0.0641,
+      "ev_per_100": 12.34,
+      "odds": -108,
+      "best_odds": -108,
+      "best_book": "Novig",
+      "fair_odds": "-140",
+      "playable_to": -119,
+      "break_even": 0.5192,
+      "kelly_units": 1.67,
+      "line_open": -113,
+      "line_current": -113,
+      "odds_history": [
+        {
+          "t": "2026-07-31T13:06",
+          "odds": -108
+        },
+        {
+          "t": "2026-07-31T14:17",
+          "odds": -109
+        },
+        {
+          "t": "2026-07-31T15:16",
+          "odds": -108
+        },
+        {
+          "t": "2026-07-31T16:16",
+          "odds": -109
+        },
+        {
+          "t": "2026-07-31T17:17",
+          "odds": -108
+        },
+        {
+          "t": "2026-07-31T19:16",
+          "odds": -110
+        },
+        {
+          "t": "2026-07-31T20:17",
+          "odds": -106
+        },
+        {
+          "t": "2026-07-31T21:17",
+          "odds": -108
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": -112,
+        "Betway": -115,
+        "MyBookie": -112,
+        "Bovada": -118,
+        "Novig": -108,
+        "ProphetX": -110,
+        "Hard Rock": -110,
+        "ESPN Bet": -120,
+        "BetRivers": -121,
+        "DraftKings": -114,
+        "BetMGM": -115,
+        "Pinnacle": -113,
+        "BetUS": -108,
+        "BetOnline": -108,
+        "LowVig": -108
+      },
+      "pitcher": "Brandon Young",
+      "opp_pitcher": "Andrew Painter",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 1.52
+        },
+        {
+          "label": "Home Field",
+          "value": 0.015
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 4.045,
+        "opp_xfip": 5.694,
+        "pick_oaa": -16,
+        "opp_oaa": -13,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 33.0,
+        "opp_whiff_pct": 26.0,
+        "pick_kbb_pct": 0.1108,
+        "opp_kbb_pct": 0.097,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": -0.0865,
+        "opp_arsenal_fit": -0.5019,
+        "pick_lineup_confirmed": true,
+        "opp_lineup_confirmed": true,
+        "pick_proj_ip": 5.6,
+        "opp_proj_ip": 5.4,
+        "pick_era": 3.13,
+        "opp_era": 7.06,
+        "pick_k_pct": 0.1928,
+        "opp_k_pct": 0.1773,
+        "ump_name": "Derek Thomas",
+        "pick_home_w": 29,
+        "pick_home_l": 27,
+        "pinnacle_ml_open": -113.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 0.978
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 1.52,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Lineup quality",
+            "pp": -0.48,
+            "positive": false,
+            "group": "lineup"
+          },
+          {
+            "label": "Home field",
+            "pp": 0.36,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 1.4,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "A 6.4pp gap: IBP has BAL at 58.3%, the market at 52.1%. The largest lift is pitcher quality (xfip) (~+1.5pp): Brandon Young 4.04 xFIP vs Andrew Painter 5.69 xFIP. The market has drifted against the pick since posting, widening the available price \u2014 the current -108 still sits inside the playable range (to -119). The path is exploiting the PHI weakness the model flags before they can stabilize.",
+      "explanation": {
+        "explanation_type": "opponent_fade",
+        "risk_level": "medium",
+        "model_prob": 0.5833,
+        "market_prob": 0.521,
+        "edge_pp": 6.4,
+        "fair_odds": "-140",
+        "current_odds": "-108",
+        "playable_to": "-119",
+        "positive_drivers": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 1.52,
+            "tier": "primary",
+            "group": "pitcher",
+            "detail": "Brandon Young 4.04 xFIP vs Andrew Painter 5.69 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Home field",
+            "impact_pp": 0.36,
+            "tier": "data",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for BAL.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Lineup quality",
+            "impact_pp": -0.48,
+            "tier": "data",
+            "group": "lineup",
+            "detail": "BAL lineup projects below its season baseline against this pitcher handedness.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "-113",
+          "current_odds": "-108",
+          "movement_summary": "the market has drifted against the pick since posting, widening the available price"
+        },
+        "sections": {
+          "edge_thesis": "A 6.4pp gap: IBP has BAL at 58.3%, the market at 52.1%.",
+          "whats_driving_it": "The largest lift is pitcher quality (xfip) (~+1.5pp): Brandon Young 4.04 xFIP vs Andrew Painter 5.69 xFIP.",
+          "what_pushes_back": null,
+          "bvp_note": null,
+          "betting_note": "The market has drifted against the pick since posting, widening the available price \u2014 the current -108 still sits inside the playable range (to -119).",
+          "route_to_win": "The path is exploiting the PHI weakness the model flags before they can stabilize.",
+          "read": "This leans on an opponent weakness."
+        },
+        "read_label": "This leans on an opponent weakness.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Pitcher quality (xFIP)",
+          "top_positive_pp": 1.52,
+          "top_negative_label": "Lineup quality",
+          "top_negative_pp": -0.48,
+          "has_primary_driver": true,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 2
+        },
+        "prose": "A 6.4pp gap: IBP has BAL at 58.3%, the market at 52.1%. The largest lift is pitcher quality (xfip) (~+1.5pp): Brandon Young 4.04 xFIP vs Andrew Painter 5.69 xFIP. The market has drifted against the pick since posting, widening the available price \u2014 the current -108 still sits inside the playable range (to -119). The path is exploiting the PHI weakness the model flags before they can stabilize."
+      },
+      "run_line": {
+        "spread": "-1.5",
+        "model_prob": 0.4429,
+        "fair_odds": "+126",
+        "book_odds": 184,
+        "edge": 0.0908
+      },
+      "total": null,
+      "current_edge": 0.0641,
+      "current_model_prob": 0.5833,
+      "current_refresh_time": "4:17 PM CT \u00b7 Jul 31",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Brandon Young",
+      "current_fair_odds": "-140",
+      "current_playable_to": -119,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 1.52,
+          "positive": true
+        },
+        {
+          "label": "Lineup quality",
+          "pp": -0.48,
+          "positive": false
+        },
+        {
+          "label": "Arsenal fit",
+          "pp": 0.4,
+          "positive": true
+        }
+      ],
+      "model_change": {
+        "edge_delta": -0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.5833,
+          "market_prob": 0.521,
+          "edge": 0.0641
+        },
+        "current": {
+          "model_prob": 0.5833,
+          "market_prob": 0.521,
+          "edge": 0.0641
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": 0.4,
+            "delta_pp": 0.4
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "4:17 PM CT \u00b7 Jul 31"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -343,6 +642,10 @@
         {
           "t": "2026-07-31T20:17",
           "odds": 153
+        },
+        {
+          "t": "2026-07-31T21:17",
+          "odds": 150
         }
       ],
       "clv": null,
@@ -355,7 +658,7 @@
         "FanDuel": 148,
         "LowVig": 142,
         "BetOnline": 142,
-        "Novig": 153,
+        "Novig": 150,
         "MyBookie": 141,
         "BetMGM": 135,
         "DraftKings": 138,
@@ -364,7 +667,7 @@
         "Pinnacle": 144,
         "BetRivers": 148,
         "Betway": 140,
-        "ProphetX": 148,
+        "ProphetX": 150,
         "BetUS": 140,
         "Hard Rock": 150
       },
@@ -543,9 +846,9 @@
         "edge": 0.093
       },
       "total": null,
-      "current_edge": 0.0523,
+      "current_edge": 0.0476,
       "current_model_prob": 0.4476,
-      "current_refresh_time": "3:17 PM CT \u00b7 Jul 31",
+      "current_refresh_time": "4:17 PM CT \u00b7 Jul 31",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -573,7 +876,7 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0101,
+        "edge_delta": -0.0148,
         "model_delta": 0.0064,
         "market_delta": 0.0262,
         "posted": {
@@ -584,7 +887,7 @@
         "current": {
           "model_prob": 0.4476,
           "market_prob": 0.4015,
-          "edge": 0.0523
+          "edge": 0.0476
         },
         "factor_deltas": [
           {
@@ -595,7 +898,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "3:17 PM CT \u00b7 Jul 31"
+        "refreshed_at": "4:17 PM CT \u00b7 Jul 31"
       },
       "verdict": "\u2b07\ufe0f REDUCED CONF.",
       "kelly_multiplier": 1.0,
@@ -660,6 +963,10 @@
         {
           "t": "2026-07-31T20:17",
           "odds": 174
+        },
+        {
+          "t": "2026-07-31T21:17",
+          "odds": 174
         }
       ],
       "clv": null,
@@ -674,15 +981,15 @@
         "BetOnline": 167,
         "Novig": 174,
         "BetMGM": 155,
-        "BetUS": 161,
+        "BetUS": 160,
         "DraftKings": 158,
         "ESPN Bet": 160,
         "Bovada": 160,
         "Pinnacle": 166,
         "Betway": 160,
-        "BetRivers": 165,
+        "BetRivers": 170,
         "Hard Rock": 170,
-        "ProphetX": 174,
+        "ProphetX": 168,
         "MyBookie": 160
       },
       "pitcher": "Kyle Leahy",
@@ -842,22 +1149,22 @@
         "edge": 0.0932
       },
       "total": null,
-      "current_edge": 0.0711,
-      "current_model_prob": 0.4361,
-      "current_refresh_time": "3:17 PM CT \u00b7 Jul 31",
+      "current_edge": 0.0675,
+      "current_model_prob": 0.4325,
+      "current_refresh_time": "4:17 PM CT \u00b7 Jul 31",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Kyle Leahy",
-      "current_fair_odds": "+129",
-      "current_playable_to": 152,
+      "current_fair_odds": "+131",
+      "current_playable_to": 155,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": -1.58,
+          "pp": -1.59,
           "positive": false
         },
         {
@@ -872,8 +1179,8 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0099,
-        "model_delta": 0.0073,
+        "edge_delta": 0.0063,
+        "model_delta": 0.0037,
         "market_delta": 0.0026,
         "posted": {
           "model_prob": 0.4288,
@@ -881,9 +1188,9 @@
           "edge": 0.0612
         },
         "current": {
-          "model_prob": 0.4361,
+          "model_prob": 0.4325,
           "market_prob": 0.3681,
-          "edge": 0.0711
+          "edge": 0.0675
         },
         "factor_deltas": [
           {
@@ -895,12 +1202,12 @@
           {
             "label": "Lineup quality",
             "posted_pp": 0.0,
-            "current_pp": 0.25,
-            "delta_pp": 0.25
+            "current_pp": 0.31,
+            "delta_pp": 0.31
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "3:17 PM CT \u00b7 Jul 31"
+        "refreshed_at": "4:17 PM CT \u00b7 Jul 31"
       },
       "verdict": "\u2b07\ufe0f REDUCED CONF.",
       "kelly_multiplier": 1.0,
@@ -958,18 +1265,16 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 390,
-        "Novig": 506,
-        "Betway": 400,
-        "MyBookie": 425,
-        "DraftKings": 362,
-        "BetMGM": 425,
-        "ESPN Bet": 380,
-        "Bovada": 400,
-        "Pinnacle": 278,
-        "BetRivers": 410,
-        "Hard Rock": 375,
-        "ProphetX": 475
+        "FanDuel": 1600,
+        "Novig": 1438,
+        "Betway": 750,
+        "DraftKings": 1120,
+        "ESPN Bet": 750,
+        "Bovada": 1400,
+        "Pinnacle": 946,
+        "BetRivers": 1050,
+        "Hard Rock": 1100,
+        "ProphetX": 1350
       },
       "pitcher": "Shota Imanaga",
       "opp_pitcher": "Will Warren",
@@ -1144,7 +1449,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "3:17 PM CT \u00b7 Jul 31",
+      "current_refresh_time": "4:17 PM CT \u00b7 Jul 31",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1211,6 +1516,10 @@
         {
           "t": "2026-07-31T20:17",
           "odds": -116
+        },
+        {
+          "t": "2026-07-31T21:17",
+          "odds": -115
         }
       ],
       "clv": null,
@@ -1222,19 +1531,19 @@
       "book_odds": {
         "FanDuel": -118,
         "BetOnline": -120,
-        "Novig": -117,
+        "Novig": -115,
         "LowVig": -120,
-        "MyBookie": -125,
+        "MyBookie": -126,
         "BetMGM": -125,
         "DraftKings": -132,
         "ESPN Bet": -130,
-        "Bovada": -124,
-        "Pinnacle": -117,
+        "Bovada": -128,
+        "Pinnacle": -121,
         "Betway": -130,
         "BetUS": -120,
-        "BetRivers": -124,
+        "BetRivers": -127,
         "Hard Rock": -125,
-        "ProphetX": -116
+        "ProphetX": -117
       },
       "pitcher": "Paul Skenes",
       "opp_pitcher": "Hunter Greene",
@@ -1407,15 +1716,15 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0262,
-      "current_model_prob": 0.5632,
-      "current_refresh_time": "3:17 PM CT \u00b7 Jul 31",
+      "current_edge": 0.0312,
+      "current_model_prob": 0.5661,
+      "current_refresh_time": "4:17 PM CT \u00b7 Jul 31",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Paul Skenes",
-      "current_fair_odds": "-129",
-      "current_playable_to": -110,
+      "current_fair_odds": "-130",
+      "current_playable_to": -111,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
@@ -1437,18 +1746,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0145,
-        "model_delta": -0.008,
-        "market_delta": 0.0022,
+        "edge_delta": -0.0095,
+        "model_delta": -0.0051,
+        "market_delta": 0.0108,
         "posted": {
           "model_prob": 0.5712,
           "market_prob": 0.5264,
           "edge": 0.0407
         },
         "current": {
-          "model_prob": 0.5632,
-          "market_prob": 0.5286,
-          "edge": 0.0262
+          "model_prob": 0.5661,
+          "market_prob": 0.5372,
+          "edge": 0.0312
         },
         "factor_deltas": [
           {
@@ -1465,7 +1774,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "3:17 PM CT \u00b7 Jul 31"
+        "refreshed_at": "4:17 PM CT \u00b7 Jul 31"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1518,6 +1827,10 @@
         {
           "t": "2026-07-31T20:17",
           "odds": 111
+        },
+        {
+          "t": "2026-07-31T21:17",
+          "odds": 110
         }
       ],
       "clv": null,
@@ -1527,21 +1840,21 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 104,
+        "FanDuel": 102,
         "Novig": 108,
         "BetOnline": 104,
         "LowVig": 104,
         "BetMGM": 100,
-        "MyBookie": 103,
-        "DraftKings": 101,
+        "MyBookie": 101,
+        "DraftKings": 100,
         "ESPN Bet": -105,
         "Bovada": 102,
         "Pinnacle": 107,
         "Betway": 100,
-        "BetRivers": 104,
+        "BetRivers": -103,
         "Hard Rock": 105,
         "BetUS": 105,
-        "ProphetX": 111
+        "ProphetX": 110
       },
       "pitcher": "Janson Junk",
       "opp_pitcher": "Kodai Senga",
@@ -1562,7 +1875,7 @@
       ],
       "raw_stats": {
         "pick_xfip": 4.607,
-        "opp_xfip": 5.79,
+        "opp_xfip": 5.792,
         "pick_oaa": 7,
         "opp_oaa": -18,
         "pick_bp_pitches": 150,
@@ -1579,7 +1892,7 @@
         "opp_kbb_pct": 0.0979,
         "pick_bvp_shift": 0.0,
         "pick_arsenal_fit": 0.0484,
-        "opp_arsenal_fit": -0.451,
+        "opp_arsenal_fit": -0.5179,
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": 5.3,
@@ -1686,17 +1999,17 @@
         "edge": 0.065
       },
       "total": null,
-      "current_edge": 0.0845,
-      "current_model_prob": 0.5584,
-      "current_refresh_time": "3:17 PM CT \u00b7 Jul 31",
+      "current_edge": 0.0883,
+      "current_model_prob": 0.5645,
+      "current_refresh_time": "4:17 PM CT \u00b7 Jul 31",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Janson Junk",
-      "current_fair_odds": "-126",
-      "current_playable_to": -108,
+      "current_fair_odds": "-130",
+      "current_playable_to": -110,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
@@ -1711,13 +2024,13 @@
         },
         {
           "label": "Defense (OAA)",
-          "pp": 0.62,
+          "pp": 0.61,
           "positive": true
         }
       ],
       "model_change": {
-        "edge_delta": 0.0443,
-        "model_delta": 0.0574,
+        "edge_delta": 0.0481,
+        "model_delta": 0.0635,
         "market_delta": 0.0127,
         "posted": {
           "model_prob": 0.501,
@@ -1725,9 +2038,9 @@
           "edge": 0.0402
         },
         "current": {
-          "model_prob": 0.5584,
+          "model_prob": 0.5645,
           "market_prob": 0.4746,
-          "edge": 0.0845
+          "edge": 0.0883
         },
         "factor_deltas": [
           {
@@ -1737,20 +2050,20 @@
             "delta_pp": 1.11
           },
           {
-            "label": "Lineup quality",
-            "posted_pp": 0.0,
-            "current_pp": 0.56,
-            "delta_pp": 0.56
-          },
-          {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
             "current_pp": 0.49,
             "delta_pp": 0.49
+          },
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": 0.43,
+            "delta_pp": 0.43
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "3:17 PM CT \u00b7 Jul 31"
+        "refreshed_at": "4:17 PM CT \u00b7 Jul 31"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1759,8 +2072,8 @@
       "projected_starter": false
     }
   ],
-  "signal_count": 6,
-  "posted_count": 6,
+  "signal_count": 7,
+  "posted_count": 7,
   "games_today": 14,
   "yesterday_picks": [
     {
@@ -1833,17 +2146,17 @@
   "correlated_warning": null,
   "season": {
     "wins": 390,
-    "losses": 375,
-    "units": 69.35,
-    "bets": 765,
-    "roi": 0.0907
+    "losses": 376,
+    "units": 68.35,
+    "bets": 766,
+    "roi": 0.0892
   },
   "last7": {
     "wins": 17,
-    "losses": 26,
-    "units": -6.47,
-    "roi": -0.1505,
-    "bets": 43
+    "losses": 27,
+    "units": -7.47,
+    "roi": -0.1698,
+    "bets": 44
   },
   "week_picks": [
     {
@@ -1893,9 +2206,9 @@
     }
   ],
   "last30": {
-    "wins": 13,
-    "losses": 17,
-    "units": -2.04
+    "wins": 12,
+    "losses": 18,
+    "units": -4.29
   },
   "avg_clv": null,
   "clv_count": null,
