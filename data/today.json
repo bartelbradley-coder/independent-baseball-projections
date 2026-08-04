@@ -1,7 +1,7 @@
 {
   "date": "2026-08-03",
-  "generated_at": "6:16 PM CT \u00b7 Aug 3",
-  "generated_at_utc": "2026-08-03T23:16:34Z",
+  "generated_at": "7:16 PM CT \u00b7 Aug 3",
+  "generated_at_utc": "2026-08-04T00:16:43Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -12,9 +12,9 @@
       "meta": "SP: Andrew Alvarez",
       "posted_at": "10:16 AM CT",
       "game_time": "2026-08-03T22:40:00Z",
-      "temp_f": 70.0,
-      "wind_speed_mph": 5.0,
-      "wind_dir_degrees": 180.0,
+      "temp_f": 80.6,
+      "wind_speed_mph": 10.4,
+      "wind_dir_degrees": 252.0,
       "is_domed": false,
       "model_prob": 0.5141,
       "market_prob": 0.3982,
@@ -78,18 +78,18 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -115,
-        "MyBookie": -111,
-        "Bovada": -135,
-        "ESPN Bet": -130,
-        "DraftKings": -139,
-        "Hard Rock": -130,
-        "BetRivers": -137,
-        "Betway": -120,
-        "Novig": -100000,
-        "ProphetX": -290,
-        "BetMGM": -135,
-        "Pinnacle": -103
+        "FanDuel": -350,
+        "MyBookie": -500,
+        "Bovada": -300,
+        "ESPN Bet": -420,
+        "DraftKings": -342,
+        "Hard Rock": -400,
+        "BetRivers": -530,
+        "Betway": -400,
+        "Novig": -355,
+        "ProphetX": -350,
+        "BetMGM": -300,
+        "Pinnacle": -299
       },
       "pitcher": "Andrew Alvarez",
       "opp_pitcher": "Aaron Nola",
@@ -260,7 +260,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "6:16 PM CT \u00b7 Aug 3",
+      "current_refresh_time": "7:16 PM CT \u00b7 Aug 3",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -319,6 +319,10 @@
         {
           "t": "2026-08-03T23:16",
           "odds": 167
+        },
+        {
+          "t": "2026-08-04T00:16",
+          "odds": 167
         }
       ],
       "clv": null,
@@ -329,19 +333,19 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 158,
-        "LowVig": 160,
+        "LowVig": 161,
         "Novig": 167,
-        "BetOnline": 160,
-        "MyBookie": 156,
-        "BetMGM": 150,
-        "DraftKings": 152,
-        "BetUS": 156,
-        "Bovada": 153,
+        "BetOnline": 161,
+        "MyBookie": 152,
+        "BetMGM": 154,
+        "DraftKings": 153,
+        "BetUS": 157,
+        "Bovada": 154,
         "ESPN Bet": 160,
         "Hard Rock": 160,
-        "Pinnacle": 159,
-        "BetRivers": 160,
-        "ProphetX": 166,
+        "Pinnacle": 161,
+        "BetRivers": 165,
+        "ProphetX": 162,
         "Betway": 150
       },
       "pitcher": "Michael Lorenzen",
@@ -501,18 +505,18 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.1241,
-      "current_model_prob": 0.4986,
-      "current_refresh_time": "6:16 PM CT \u00b7 Aug 3",
+      "current_edge": 0.1286,
+      "current_model_prob": 0.5031,
+      "current_refresh_time": "7:16 PM CT \u00b7 Aug 3",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Michael Lorenzen",
-      "current_fair_odds": "+101",
-      "current_playable_to": 118,
+      "current_fair_odds": "-101",
+      "current_playable_to": 116,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Home field",
@@ -521,30 +525,36 @@
         },
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": -0.76,
+          "pp": -0.79,
           "positive": false
         },
         {
-          "label": "Arsenal fit",
-          "pp": -0.5,
-          "positive": false
+          "label": "Lineup quality",
+          "pp": 0.51,
+          "positive": true
         }
       ],
       "model_change": {
-        "edge_delta": 0.0339,
-        "model_delta": 0.0131,
-        "market_delta": -0.0091,
+        "edge_delta": 0.0384,
+        "model_delta": 0.0176,
+        "market_delta": -0.0119,
         "posted": {
           "model_prob": 0.4855,
           "market_prob": 0.3872,
           "edge": 0.0902
         },
         "current": {
-          "model_prob": 0.4986,
-          "market_prob": 0.3781,
-          "edge": 0.1241
+          "model_prob": 0.5031,
+          "market_prob": 0.3753,
+          "edge": 0.1286
         },
         "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": 0.51,
+            "delta_pp": 0.51
+          },
           {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
@@ -553,7 +563,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "6:16 PM CT \u00b7 Aug 3"
+        "refreshed_at": "7:16 PM CT \u00b7 Aug 3"
       },
       "verdict": "\u2705 STRONG",
       "kelly_multiplier": 1.0,
@@ -613,18 +623,18 @@
       "book_odds": {
         "FanDuel": 112,
         "Novig": 115,
-        "MyBookie": 108,
-        "Bovada": 108,
-        "DraftKings": 108,
+        "MyBookie": 107,
+        "Bovada": 109,
+        "DraftKings": 104,
         "ESPN Bet": 105,
         "Hard Rock": 110,
-        "ProphetX": 115,
-        "Betway": 110,
-        "BetOnline": 111,
-        "LowVig": 111,
+        "ProphetX": 114,
+        "Betway": 105,
+        "BetOnline": 107,
+        "LowVig": 107,
         "BetMGM": 105,
-        "BetRivers": 105,
-        "BetUS": 111,
+        "BetRivers": 110,
+        "BetUS": 110,
         "Pinnacle": 112
       },
       "pitcher": "Matthew Boyd",
@@ -802,35 +812,19 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0716,
-      "current_model_prob": 0.5367,
-      "current_refresh_time": "6:16 PM CT \u00b7 Aug 3",
-      "current_recommendation": "same",
+      "current_edge": null,
+      "current_model_prob": null,
+      "current_refresh_time": "7:16 PM CT \u00b7 Aug 3",
+      "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Matthew Boyd",
-      "current_fair_odds": "-116",
-      "current_playable_to": 101,
+      "current_pitcher": null,
+      "current_fair_odds": null,
+      "current_playable_to": null,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": true,
-      "current_top_factors": [
-        {
-          "label": "Home field",
-          "pp": 0.75,
-          "positive": true
-        },
-        {
-          "label": "Defense (OAA)",
-          "pp": 0.62,
-          "positive": true
-        },
-        {
-          "label": "Travel/B2B",
-          "pp": 0.4,
-          "positive": true
-        }
-      ],
+      "current_lineup_confirmed": null,
+      "current_opp_lineup_confirmed": null,
+      "current_top_factors": [],
       "model_change": null,
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -904,21 +898,18 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 134,
-        "Novig": 135,
-        "LowVig": 132,
-        "BetOnline": 132,
-        "BetMGM": 125,
-        "DraftKings": 130,
-        "BetUS": 131,
-        "Bovada": 129,
-        "Pinnacle": 132,
-        "ESPN Bet": 125,
-        "Hard Rock": 135,
-        "BetRivers": 135,
-        "MyBookie": 130,
-        "ProphetX": 136,
-        "Betway": 130
+        "FanDuel": 170,
+        "Novig": 167,
+        "BetMGM": 155,
+        "DraftKings": 159,
+        "Bovada": 160,
+        "Pinnacle": 173,
+        "ESPN Bet": 160,
+        "Hard Rock": 155,
+        "BetRivers": 123,
+        "MyBookie": 120,
+        "ProphetX": 168,
+        "Betway": 165
       },
       "pitcher": "Bubba Chandler",
       "opp_pitcher": "Brandon Sproat",
@@ -1095,66 +1086,20 @@
         "edge": 0.1048
       },
       "total": null,
-      "current_edge": 0.0618,
-      "current_model_prob": 0.4855,
-      "current_refresh_time": "6:16 PM CT \u00b7 Aug 3",
-      "current_recommendation": "same",
+      "current_edge": null,
+      "current_model_prob": null,
+      "current_refresh_time": "7:16 PM CT \u00b7 Aug 3",
+      "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Bubba Chandler",
-      "current_fair_odds": "+106",
-      "current_playable_to": 124,
+      "current_pitcher": null,
+      "current_fair_odds": null,
+      "current_playable_to": null,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": true,
-      "current_top_factors": [
-        {
-          "label": "Home field",
-          "pp": -1.02,
-          "positive": false
-        },
-        {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 0.85,
-          "positive": true
-        },
-        {
-          "label": "Defense (OAA)",
-          "pp": -0.56,
-          "positive": false
-        }
-      ],
-      "model_change": {
-        "edge_delta": -0.0058,
-        "model_delta": -0.0113,
-        "market_delta": -0.006,
-        "posted": {
-          "model_prob": 0.4968,
-          "market_prob": 0.4281,
-          "edge": 0.0676
-        },
-        "current": {
-          "model_prob": 0.4855,
-          "market_prob": 0.4221,
-          "edge": 0.0618
-        },
-        "factor_deltas": [
-          {
-            "label": "Arsenal fit",
-            "posted_pp": 0.0,
-            "current_pp": 0.5,
-            "delta_pp": 0.5
-          },
-          {
-            "label": "Lineup quality",
-            "posted_pp": 0.0,
-            "current_pp": -0.34,
-            "delta_pp": -0.34
-          }
-        ],
-        "starter_changed": null,
-        "refreshed_at": "6:16 PM CT \u00b7 Aug 3"
-      },
+      "current_lineup_confirmed": null,
+      "current_opp_lineup_confirmed": null,
+      "current_top_factors": [],
+      "model_change": null,
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -1169,9 +1114,9 @@
       "meta": "SP: Michael McGreevy",
       "posted_at": "5:16 PM CT",
       "game_time": "2026-08-03T23:05:00Z",
-      "temp_f": 81.0,
-      "wind_speed_mph": 9.0,
-      "wind_dir_degrees": 315.0,
+      "temp_f": 79.3,
+      "wind_speed_mph": 7.0,
+      "wind_dir_degrees": 314.0,
       "is_domed": false,
       "model_prob": 0.388,
       "market_prob": 0.3308,
@@ -1219,21 +1164,18 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 215,
-        "Novig": 217,
-        "BetOnline": 209,
-        "LowVig": 209,
-        "MyBookie": 206,
-        "BetMGM": 200,
-        "DraftKings": 202,
-        "BetUS": 202,
-        "Bovada": 200,
-        "ESPN Bet": 200,
-        "Pinnacle": 205,
-        "Hard Rock": 220,
-        "BetRivers": 215,
-        "Betway": 200,
-        "ProphetX": 215
+        "FanDuel": -260,
+        "Novig": -251,
+        "MyBookie": -222,
+        "BetMGM": -275,
+        "DraftKings": -277,
+        "Bovada": -260,
+        "ESPN Bet": -280,
+        "Pinnacle": -199,
+        "Hard Rock": -300,
+        "BetRivers": -240,
+        "Betway": -300,
+        "ProphetX": -240
       },
       "pitcher": "Michael McGreevy",
       "opp_pitcher": "Cam Schlittler",
@@ -1418,7 +1360,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "6:16 PM CT \u00b7 Aug 3",
+      "current_refresh_time": "7:16 PM CT \u00b7 Aug 3",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1506,21 +1448,21 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 120,
+        "FanDuel": 116,
         "Novig": 120,
-        "MyBookie": 113,
+        "MyBookie": 111,
         "Bovada": 112,
-        "DraftKings": 113,
+        "DraftKings": 109,
         "ESPN Bet": 110,
-        "Hard Rock": 120,
+        "Hard Rock": 115,
         "BetRivers": 112,
-        "ProphetX": 119,
-        "Betway": 115,
-        "LowVig": 118,
-        "BetOnline": 118,
+        "ProphetX": 121,
+        "Betway": 110,
+        "LowVig": 113,
+        "BetOnline": 113,
         "BetMGM": 110,
         "BetUS": 115,
-        "Pinnacle": 120
+        "Pinnacle": 115
       },
       "pitcher": "Logan Webb",
       "opp_pitcher": "Cal Quantrill",
@@ -1725,66 +1667,20 @@
         "edge": 0.072
       },
       "total": null,
-      "current_edge": 0.0463,
-      "current_model_prob": 0.5008,
-      "current_refresh_time": "6:16 PM CT \u00b7 Aug 3",
-      "current_recommendation": "same",
+      "current_edge": null,
+      "current_model_prob": null,
+      "current_refresh_time": "7:16 PM CT \u00b7 Aug 3",
+      "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Logan Webb",
-      "current_fair_odds": "-100",
-      "current_playable_to": 117,
+      "current_pitcher": null,
+      "current_fair_odds": null,
+      "current_playable_to": null,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": true,
-      "current_top_factors": [
-        {
-          "label": "Home field",
-          "pp": -1.1,
-          "positive": false
-        },
-        {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 0.66,
-          "positive": true
-        },
-        {
-          "label": "Arsenal fit",
-          "pp": 0.5,
-          "positive": true
-        }
-      ],
-      "model_change": {
-        "edge_delta": 0.0057,
-        "model_delta": -0.0049,
-        "market_delta": -0.0214,
-        "posted": {
-          "model_prob": 0.5057,
-          "market_prob": 0.4671,
-          "edge": 0.0406
-        },
-        "current": {
-          "model_prob": 0.5008,
-          "market_prob": 0.4457,
-          "edge": 0.0463
-        },
-        "factor_deltas": [
-          {
-            "label": "Lineup quality",
-            "posted_pp": 0.84,
-            "current_pp": 0.19,
-            "delta_pp": -0.65
-          },
-          {
-            "label": "Arsenal fit",
-            "posted_pp": 0.0,
-            "current_pp": 0.5,
-            "delta_pp": 0.5
-          }
-        ],
-        "starter_changed": null,
-        "refreshed_at": "6:16 PM CT \u00b7 Aug 3"
-      },
+      "current_lineup_confirmed": null,
+      "current_opp_lineup_confirmed": null,
+      "current_top_factors": [],
+      "model_change": null,
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -1794,7 +1690,7 @@
   ],
   "signal_count": 6,
   "posted_count": 6,
-  "games_today": 6,
+  "games_today": 2,
   "yesterday_picks": [
     {
       "game": "WSH @ ATL",
