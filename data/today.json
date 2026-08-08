@@ -1,7 +1,7 @@
 {
   "date": "2026-08-08",
-  "generated_at": "12:17 PM CT \u00b7 Aug 8",
-  "generated_at_utc": "2026-08-08T17:17:23Z",
+  "generated_at": "1:16 PM CT \u00b7 Aug 8",
+  "generated_at_utc": "2026-08-08T18:16:38Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -12,7 +12,7 @@
       "meta": "SP: Andrew Alvarez",
       "posted_at": "8:04 AM CT",
       "game_time": "2026-08-08T22:45:00Z",
-      "temp_f": 90.0,
+      "temp_f": 91.0,
       "wind_speed_mph": 8.0,
       "wind_dir_degrees": 225.0,
       "is_domed": false,
@@ -39,7 +39,7 @@
           "odds": 134
         },
         {
-          "t": "2026-08-08T17:17",
+          "t": "2026-08-08T18:16",
           "odds": 134
         }
       ],
@@ -62,7 +62,7 @@
         "Betway": 125,
         "Hard Rock": 130,
         "BetRivers": 130,
-        "BetUS": 128,
+        "BetUS": 129,
         "ProphetX": 134,
         "MyBookie": 124
       },
@@ -219,9 +219,9 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0707,
-      "current_model_prob": 0.498,
-      "current_refresh_time": "12:17 PM CT \u00b7 Aug 8",
+      "current_edge": 0.0712,
+      "current_model_prob": 0.4986,
+      "current_refresh_time": "1:16 PM CT \u00b7 Aug 8",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -249,8 +249,8 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0005,
-        "model_delta": -0.0024,
+        "edge_delta": 0.0,
+        "model_delta": -0.0018,
         "market_delta": -0.0098,
         "posted": {
           "model_prob": 0.5004,
@@ -258,9 +258,9 @@
           "edge": 0.0712
         },
         "current": {
-          "model_prob": 0.498,
+          "model_prob": 0.4986,
           "market_prob": 0.4245,
-          "edge": 0.0707
+          "edge": 0.0712
         },
         "factor_deltas": [
           {
@@ -271,7 +271,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "12:17 PM CT \u00b7 Aug 8"
+        "refreshed_at": "1:16 PM CT \u00b7 Aug 8"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -320,6 +320,10 @@
         {
           "t": "2026-08-08T17:17",
           "odds": 143
+        },
+        {
+          "t": "2026-08-08T18:16",
+          "odds": 145
         }
       ],
       "clv": null,
@@ -332,15 +336,15 @@
         "FanDuel": 142,
         "BetOnline": 139,
         "LowVig": 139,
-        "MyBookie": 131,
+        "MyBookie": 140,
         "Novig": 141,
-        "DraftKings": 135,
+        "DraftKings": 142,
         "Bovada": 138,
         "BetMGM": 135,
-        "Betway": 130,
-        "Pinnacle": 143,
-        "Hard Rock": 140,
-        "BetRivers": 138,
+        "Betway": 135,
+        "Pinnacle": 142,
+        "Hard Rock": 145,
+        "BetRivers": 143,
         "ESPN Bet": 135,
         "BetUS": 138,
         "ProphetX": 142
@@ -526,17 +530,17 @@
         "edge": 0.0893
       },
       "total": null,
-      "current_edge": 0.0528,
-      "current_model_prob": 0.4643,
-      "current_refresh_time": "12:17 PM CT \u00b7 Aug 8",
+      "current_edge": 0.0481,
+      "current_model_prob": 0.4563,
+      "current_refresh_time": "1:16 PM CT \u00b7 Aug 8",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Walbert Ure\u00f1a",
-      "current_fair_odds": "+115",
-      "current_playable_to": 136,
+      "current_fair_odds": "+119",
+      "current_playable_to": 140,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
@@ -545,40 +549,46 @@
           "positive": false
         },
         {
-          "label": "Day/night",
-          "pp": 0.37,
-          "positive": true
+          "label": "Lineup quality",
+          "pp": -0.55,
+          "positive": false
         },
         {
-          "label": "Pitcher quality (xFIP)",
+          "label": "Day/night",
           "pp": 0.37,
           "positive": true
         }
       ],
       "model_change": {
-        "edge_delta": -0.0081,
-        "model_delta": -0.0031,
-        "market_delta": -0.0081,
+        "edge_delta": -0.0128,
+        "model_delta": -0.0111,
+        "market_delta": -0.0065,
         "posted": {
           "model_prob": 0.4674,
           "market_prob": 0.4112,
           "edge": 0.0609
         },
         "current": {
-          "model_prob": 0.4643,
-          "market_prob": 0.4031,
-          "edge": 0.0528
+          "model_prob": 0.4563,
+          "market_prob": 0.4047,
+          "edge": 0.0481
         },
         "factor_deltas": [
           {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.55,
+            "delta_pp": -0.55
+          },
+          {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
-            "current_pp": 0.3,
-            "delta_pp": 0.3
+            "current_pp": 0.32,
+            "delta_pp": 0.32
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "12:17 PM CT \u00b7 Aug 8"
+        "refreshed_at": "1:16 PM CT \u00b7 Aug 8"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -627,6 +637,10 @@
         {
           "t": "2026-08-08T17:17",
           "odds": 180
+        },
+        {
+          "t": "2026-08-08T18:16",
+          "odds": 182
         }
       ],
       "clv": null,
@@ -637,20 +651,20 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 170,
-        "LowVig": 180,
-        "BetOnline": 180,
+        "LowVig": 181,
+        "BetOnline": 181,
         "MyBookie": 167,
         "ESPN Bet": 165,
-        "Novig": 178,
-        "Bovada": 164,
+        "Novig": 182,
+        "Bovada": 165,
         "DraftKings": 179,
         "BetMGM": 165,
-        "Pinnacle": 169,
-        "Hard Rock": 175,
+        "Pinnacle": 170,
+        "Hard Rock": 180,
         "Betway": 175,
         "BetRivers": 163,
-        "BetUS": 175,
-        "ProphetX": 176
+        "BetUS": 171,
+        "ProphetX": 178
       },
       "pitcher": "Brandon Pfaadt",
       "opp_pitcher": "Yoshinobu Yamamoto",
@@ -801,9 +815,9 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0702,
-      "current_model_prob": 0.4273,
-      "current_refresh_time": "12:17 PM CT \u00b7 Aug 8",
+      "current_edge": 0.0724,
+      "current_model_prob": 0.427,
+      "current_refresh_time": "1:16 PM CT \u00b7 Aug 8",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -831,18 +845,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0183,
-        "model_delta": -0.0048,
-        "market_delta": -0.0192,
+        "edge_delta": 0.0205,
+        "model_delta": -0.0051,
+        "market_delta": -0.0205,
         "posted": {
           "model_prob": 0.4321,
           "market_prob": 0.3829,
           "edge": 0.0519
         },
         "current": {
-          "model_prob": 0.4273,
-          "market_prob": 0.3637,
-          "edge": 0.0702
+          "model_prob": 0.427,
+          "market_prob": 0.3624,
+          "edge": 0.0724
         },
         "factor_deltas": [
           {
@@ -853,7 +867,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "12:17 PM CT \u00b7 Aug 8"
+        "refreshed_at": "1:16 PM CT \u00b7 Aug 8"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -902,6 +916,10 @@
         {
           "t": "2026-08-08T17:17",
           "odds": 110
+        },
+        {
+          "t": "2026-08-08T18:16",
+          "odds": 108
         }
       ],
       "clv": null,
@@ -918,14 +936,14 @@
         "ESPN Bet": 105,
         "Novig": 108,
         "DraftKings": 107,
-        "Bovada": 102,
+        "Bovada": 101,
         "BetMGM": 100,
-        "Pinnacle": 107,
+        "Pinnacle": 106,
         "Betway": 100,
         "Hard Rock": 105,
         "BetRivers": 104,
-        "BetUS": 107,
-        "ProphetX": 110
+        "BetUS": 106,
+        "ProphetX": 107
       },
       "pitcher": "Peter Lambert",
       "opp_pitcher": "Michael King",
@@ -1108,9 +1126,9 @@
         "edge": 0.0936
       },
       "total": null,
-      "current_edge": 0.0493,
-      "current_model_prob": 0.5255,
-      "current_refresh_time": "12:17 PM CT \u00b7 Aug 8",
+      "current_edge": 0.0453,
+      "current_model_prob": 0.5261,
+      "current_refresh_time": "1:16 PM CT \u00b7 Aug 8",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1138,18 +1156,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0023,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": -0.0063,
+        "model_delta": 0.0006,
+        "market_delta": 0.0022,
         "posted": {
           "model_prob": 0.5255,
           "market_prob": 0.4736,
           "edge": 0.0516
         },
         "current": {
-          "model_prob": 0.5255,
-          "market_prob": 0.4736,
-          "edge": 0.0493
+          "model_prob": 0.5261,
+          "market_prob": 0.4758,
+          "edge": 0.0453
         },
         "factor_deltas": [
           {
@@ -1160,7 +1178,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "12:17 PM CT \u00b7 Aug 8"
+        "refreshed_at": "1:16 PM CT \u00b7 Aug 8"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1207,7 +1225,7 @@
           "odds": 106
         },
         {
-          "t": "2026-08-08T17:17",
+          "t": "2026-08-08T18:16",
           "odds": 106
         }
       ],
@@ -1223,15 +1241,15 @@
         "BetOnline": 102,
         "MyBookie": 101,
         "ESPN Bet": 100,
-        "Bovada": -101,
+        "Bovada": -102,
         "DraftKings": 105,
         "Novig": 106,
         "BetMGM": -102,
-        "Pinnacle": 104,
+        "Pinnacle": 103,
         "Hard Rock": 105,
-        "BetRivers": 104,
+        "BetRivers": 102,
         "Betway": 100,
-        "BetUS": 104,
+        "BetUS": 102,
         "ProphetX": 105
       },
       "pitcher": "Griffin Jax",
@@ -1391,14 +1409,14 @@
         "edge": 0.107
       },
       "total": null,
-      "current_edge": 0.05,
-      "current_model_prob": 0.5354,
-      "current_refresh_time": "12:17 PM CT \u00b7 Aug 8",
+      "current_edge": 0.0506,
+      "current_model_prob": 0.536,
+      "current_refresh_time": "1:16 PM CT \u00b7 Aug 8",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Griffin Jax",
-      "current_fair_odds": "-115",
+      "current_fair_odds": "-116",
       "current_playable_to": 102,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
@@ -1462,7 +1480,7 @@
           "odds": -152
         },
         {
-          "t": "2026-08-08T17:17",
+          "t": "2026-08-08T18:16",
           "odds": -152
         }
       ],
@@ -1474,18 +1492,18 @@
       "market_total": null,
       "book_odds": {
         "DraftKings": -158,
-        "BetOnline": -158,
+        "BetOnline": -156,
         "Novig": -153,
-        "LowVig": -158,
-        "MyBookie": -167,
-        "BetMGM": -170,
+        "LowVig": -156,
+        "MyBookie": -163,
+        "BetMGM": -165,
         "FanDuel": -158,
-        "Bovada": -163,
+        "Bovada": -164,
         "Betway": -170,
         "Hard Rock": -160,
         "ESPN Bet": -165,
         "BetRivers": -175,
-        "BetUS": -158,
+        "BetUS": -156,
         "ProphetX": -152,
         "Pinnacle": -156
       },
@@ -1644,7 +1662,7 @@
       "total": null,
       "current_edge": 0.0384,
       "current_model_prob": 0.6416,
-      "current_refresh_time": "12:17 PM CT \u00b7 Aug 8",
+      "current_refresh_time": "1:16 PM CT \u00b7 Aug 8",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1694,7 +1712,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "12:17 PM CT \u00b7 Aug 8"
+        "refreshed_at": "1:16 PM CT \u00b7 Aug 8"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
