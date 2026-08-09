@@ -1,7 +1,7 @@
 {
   "date": "2026-08-09",
-  "generated_at": "1:17 PM CT \u00b7 Aug 9",
-  "generated_at_utc": "2026-08-09T18:17:03Z",
+  "generated_at": "2:17 PM CT \u00b7 Aug 9",
+  "generated_at_utc": "2026-08-09T19:17:47Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -50,18 +50,8 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -650,
-        "Bovada": -700,
-        "MyBookie": -667,
-        "Betway": -699,
-        "Novig": -545,
-        "ProphetX": -550,
-        "ESPN Bet": -900,
-        "BetRivers": -835,
-        "Hard Rock": -700,
-        "BetMGM": -800,
-        "DraftKings": -620,
-        "Pinnacle": -568
+        "Betway": -10000,
+        "Novig": -100000
       },
       "pitcher": "Brad Lord",
       "opp_pitcher": "Brady Singer",
@@ -228,7 +218,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "1:16 PM CT \u00b7 Aug 9",
+      "current_refresh_time": "2:17 PM CT \u00b7 Aug 9",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -285,8 +275,8 @@
           "odds": 133
         },
         {
-          "t": "2026-08-09T18:16",
-          "odds": 133
+          "t": "2026-08-09T19:17",
+          "odds": 128
         }
       ],
       "clv": null,
@@ -296,21 +286,21 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "DraftKings": 131,
-        "BetOnline": 126,
-        "LowVig": 126,
-        "MyBookie": 125,
-        "Novig": 133,
-        "FanDuel": 126,
-        "Bovada": 119,
-        "Hard Rock": 130,
-        "Betway": 125,
+        "DraftKings": 125,
+        "BetOnline": 122,
+        "LowVig": 122,
+        "MyBookie": 118,
+        "Novig": 127,
+        "FanDuel": 120,
+        "Bovada": 118,
+        "Hard Rock": 125,
+        "Betway": 120,
         "ESPN Bet": 120,
         "Pinnacle": 124,
-        "BetRivers": 120,
-        "BetMGM": 120,
-        "BetUS": 126,
-        "ProphetX": 130
+        "BetRivers": 128,
+        "BetMGM": 118,
+        "BetUS": 119,
+        "ProphetX": 125
       },
       "pitcher": "Eduardo Rodriguez",
       "opp_pitcher": "Justin Wrobleski",
@@ -475,65 +465,65 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.068,
-      "current_model_prob": 0.4972,
-      "current_refresh_time": "1:16 PM CT \u00b7 Aug 9",
+      "current_edge": 0.0604,
+      "current_model_prob": 0.499,
+      "current_refresh_time": "2:17 PM CT \u00b7 Aug 9",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Eduardo Rodriguez",
-      "current_fair_odds": "+101",
-      "current_playable_to": 119,
+      "current_fair_odds": "+100",
+      "current_playable_to": 118,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
       "current_top_factors": [
+        {
+          "label": "Lineup quality",
+          "pp": 0.96,
+          "positive": true
+        },
         {
           "label": "Pitcher quality (xFIP)",
           "pp": 0.65,
           "positive": true
         },
         {
-          "label": "Lineup quality",
-          "pp": 0.42,
-          "positive": true
-        },
-        {
           "label": "Arsenal fit",
-          "pp": -0.38,
+          "pp": -0.39,
           "positive": false
         }
       ],
       "model_change": {
-        "edge_delta": 0.0023,
-        "model_delta": 0.0041,
-        "market_delta": 0.0163,
+        "edge_delta": -0.0053,
+        "model_delta": 0.0059,
+        "market_delta": 0.0171,
         "posted": {
           "model_prob": 0.4931,
           "market_prob": 0.421,
           "edge": 0.0657
         },
         "current": {
-          "model_prob": 0.4972,
-          "market_prob": 0.4373,
-          "edge": 0.068
+          "model_prob": 0.499,
+          "market_prob": 0.4381,
+          "edge": 0.0604
         },
         "factor_deltas": [
           {
             "label": "Lineup quality",
             "posted_pp": 0.0,
-            "current_pp": 0.42,
-            "delta_pp": 0.42
+            "current_pp": 0.96,
+            "delta_pp": 0.96
           },
           {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
-            "current_pp": -0.38,
-            "delta_pp": -0.38
+            "current_pp": -0.39,
+            "delta_pp": -0.39
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "1:16 PM CT \u00b7 Aug 9"
+        "refreshed_at": "2:17 PM CT \u00b7 Aug 9"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -549,9 +539,9 @@
       "meta": "SP: J.T. Ginn",
       "posted_at": "9:17 AM CT",
       "game_time": "2026-08-09T17:35:00Z",
-      "temp_f": 88.0,
-      "wind_speed_mph": 12.0,
-      "wind_dir_degrees": 270.0,
+      "temp_f": 70.0,
+      "wind_speed_mph": 5.0,
+      "wind_dir_degrees": 180.0,
       "is_domed": false,
       "model_prob": 0.3674,
       "market_prob": 0.3012,
@@ -591,18 +581,18 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "DraftKings": 185,
-        "Betway": 165,
-        "ProphetX": 172,
-        "Novig": 178,
-        "MyBookie": 140,
-        "Hard Rock": 160,
-        "ESPN Bet": 160,
-        "FanDuel": 150,
-        "Bovada": 175,
-        "BetMGM": 165,
-        "BetRivers": 175,
-        "Pinnacle": 121
+        "DraftKings": 431,
+        "Betway": 350,
+        "ProphetX": 430,
+        "Novig": 441,
+        "MyBookie": 355,
+        "Hard Rock": 325,
+        "ESPN Bet": 400,
+        "FanDuel": 400,
+        "Bovada": 400,
+        "BetMGM": 425,
+        "BetRivers": 370,
+        "Pinnacle": 112
       },
       "pitcher": "J.T. Ginn",
       "opp_pitcher": "Erik Miller",
@@ -769,7 +759,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "1:16 PM CT \u00b7 Aug 9",
+      "current_refresh_time": "2:17 PM CT \u00b7 Aug 9",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -795,8 +785,8 @@
       "meta": "SP: Michael Lorenzen",
       "posted_at": "8:04 AM CT",
       "game_time": "2026-08-09T18:15:00Z",
-      "temp_f": 89.0,
-      "wind_speed_mph": 9.0,
+      "temp_f": 70.0,
+      "wind_speed_mph": 5.0,
       "wind_dir_degrees": 180.0,
       "is_domed": false,
       "model_prob": 0.4612,
@@ -837,21 +827,18 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "DraftKings": 147,
-        "BetOnline": 145,
-        "LowVig": 145,
-        "MyBookie": 140,
-        "Betway": 140,
-        "Novig": 153,
-        "FanDuel": 146,
-        "Bovada": 142,
-        "Hard Rock": 150,
-        "Pinnacle": 149,
-        "ESPN Bet": 140,
-        "BetUS": 144,
-        "ProphetX": 154,
-        "BetRivers": 148,
-        "BetMGM": 140
+        "DraftKings": 113,
+        "MyBookie": 125,
+        "Betway": 125,
+        "Novig": 135,
+        "FanDuel": 130,
+        "Bovada": 130,
+        "Hard Rock": 120,
+        "Pinnacle": 186,
+        "ESPN Bet": 120,
+        "ProphetX": 134,
+        "BetRivers": 125,
+        "BetMGM": 125
       },
       "pitcher": "Michael Lorenzen",
       "opp_pitcher": "Michael McGreevy",
@@ -1026,7 +1013,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "1:16 PM CT \u00b7 Aug 9",
+      "current_refresh_time": "2:17 PM CT \u00b7 Aug 9",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1094,21 +1081,17 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "DraftKings": -124,
-        "BetOnline": -128,
-        "LowVig": -128,
-        "MyBookie": -131,
-        "Betway": -130,
-        "Novig": -122,
-        "FanDuel": -126,
-        "Bovada": -135,
-        "Hard Rock": -125,
-        "ESPN Bet": -130,
-        "Pinnacle": -129,
-        "BetUS": -127,
-        "ProphetX": -124,
-        "BetRivers": -129,
-        "BetMGM": -135
+        "DraftKings": 328,
+        "MyBookie": 290,
+        "Betway": 275,
+        "Novig": 317,
+        "FanDuel": 320,
+        "Bovada": 280,
+        "Hard Rock": 325,
+        "ESPN Bet": 320,
+        "ProphetX": 280,
+        "BetRivers": 275,
+        "BetMGM": 310
       },
       "pitcher": "Kumar Rocker",
       "opp_pitcher": "Cade Povich",
@@ -1295,60 +1278,20 @@
         "edge": 0.0955
       },
       "total": null,
-      "current_edge": 0.0563,
-      "current_model_prob": 0.6058,
-      "current_refresh_time": "1:16 PM CT \u00b7 Aug 9",
-      "current_recommendation": "same",
+      "current_edge": null,
+      "current_model_prob": null,
+      "current_refresh_time": "2:17 PM CT \u00b7 Aug 9",
+      "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Kumar Rocker",
-      "current_fair_odds": "-154",
-      "current_playable_to": -130,
+      "current_pitcher": null,
+      "current_fair_odds": null,
+      "current_playable_to": null,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": true,
-      "current_top_factors": [
-        {
-          "label": "Home field",
-          "pp": 1.05,
-          "positive": true
-        },
-        {
-          "label": "Lineup quality",
-          "pp": 0.96,
-          "positive": true
-        },
-        {
-          "label": "Defense (OAA)",
-          "pp": 0.6,
-          "positive": true
-        }
-      ],
-      "model_change": {
-        "edge_delta": -0.0001,
-        "model_delta": 0.0039,
-        "market_delta": 0.0163,
-        "posted": {
-          "model_prob": 0.6019,
-          "market_prob": 0.536,
-          "edge": 0.0564
-        },
-        "current": {
-          "model_prob": 0.6058,
-          "market_prob": 0.5523,
-          "edge": 0.0563
-        },
-        "factor_deltas": [
-          {
-            "label": "Arsenal fit",
-            "posted_pp": 0.0,
-            "current_pp": 0.35,
-            "delta_pp": 0.35
-          }
-        ],
-        "starter_changed": null,
-        "refreshed_at": "1:16 PM CT \u00b7 Aug 9"
-      },
+      "current_lineup_confirmed": null,
+      "current_opp_lineup_confirmed": null,
+      "current_top_factors": [],
+      "model_change": null,
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -1358,7 +1301,7 @@
   ],
   "signal_count": 5,
   "posted_count": 5,
-  "games_today": 5,
+  "games_today": 4,
   "yesterday_picks": [
     {
       "game": "LAA @ MIA",
@@ -1429,18 +1372,18 @@
   ],
   "correlated_warning": null,
   "season": {
-    "wins": 418,
+    "wins": 419,
     "losses": 414,
-    "units": 65.0,
-    "bets": 832,
-    "roi": 0.0781
+    "units": 66.0,
+    "bets": 833,
+    "roi": 0.0792
   },
   "last7": {
-    "wins": 22,
+    "wins": 23,
     "losses": 27,
-    "units": 0.49,
-    "roi": 0.01,
-    "bets": 49
+    "units": 1.49,
+    "roi": 0.0298,
+    "bets": 50
   },
   "week_picks": [
     {
@@ -1559,12 +1502,21 @@
       "edge": 0.071,
       "result": "W",
       "pnl_u": 1.33
+    },
+    {
+      "date": "2026-08-09",
+      "pick": "WSH",
+      "game": "CIN @ WSH",
+      "odds": 100,
+      "edge": 0.073,
+      "result": "W",
+      "pnl_u": 1.0
     }
   ],
   "last30": {
-    "wins": 13,
-    "losses": 17,
-    "units": -1.77
+    "wins": 14,
+    "losses": 16,
+    "units": 0.23
   },
   "avg_clv": null,
   "clv_count": null,
