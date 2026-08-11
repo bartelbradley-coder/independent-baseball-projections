@@ -1,7 +1,7 @@
 {
   "date": "2026-08-11",
-  "generated_at": "1:17 PM CT \u00b7 Aug 11",
-  "generated_at_utc": "2026-08-11T18:17:01Z",
+  "generated_at": "2:17 PM CT \u00b7 Aug 11",
+  "generated_at_utc": "2026-08-11T19:17:50Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -43,7 +43,7 @@
           "odds": 154
         },
         {
-          "t": "2026-08-11T18:16",
+          "t": "2026-08-11T19:17",
           "odds": 154
         }
       ],
@@ -67,8 +67,8 @@
         "BetUS": 149,
         "Betway": 140,
         "ProphetX": 154,
-        "BetRivers": 140,
-        "MyBookie": 142
+        "BetRivers": 148,
+        "MyBookie": 141
       },
       "pitcher": "Andre Pallante",
       "opp_pitcher": "Cristopher S\u00e1nchez",
@@ -229,7 +229,7 @@
       "total": null,
       "current_edge": 0.0759,
       "current_model_prob": 0.4696,
-      "current_refresh_time": "1:16 PM CT \u00b7 Aug 11",
+      "current_refresh_time": "2:17 PM CT \u00b7 Aug 11",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -279,7 +279,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "1:16 PM CT \u00b7 Aug 11"
+        "refreshed_at": "2:17 PM CT \u00b7 Aug 11"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -295,9 +295,9 @@
       "meta": "SP: Drew Anderson",
       "posted_at": "8:04 AM CT",
       "game_time": "2026-08-11T22:40:00Z",
-      "temp_f": 80.0,
-      "wind_speed_mph": 5.0,
-      "wind_dir_degrees": 225.0,
+      "temp_f": 81.0,
+      "wind_speed_mph": 6.0,
+      "wind_dir_degrees": 202.5,
       "is_domed": false,
       "model_prob": 0.608,
       "market_prob": 0.5329,
@@ -324,6 +324,10 @@
         {
           "t": "2026-08-11T18:16",
           "odds": -122
+        },
+        {
+          "t": "2026-08-11T19:17",
+          "odds": -122
         }
       ],
       "clv": null,
@@ -333,7 +337,7 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -122,
+        "FanDuel": -124,
         "BetOnline": -128,
         "Novig": -122,
         "LowVig": -128,
@@ -341,12 +345,12 @@
         "DraftKings": -124,
         "ESPN Bet": -130,
         "BetMGM": -135,
-        "Pinnacle": -128,
-        "Bovada": -135,
+        "Pinnacle": -127,
+        "Bovada": -136,
         "Betway": -130,
         "ProphetX": -124,
         "MyBookie": -129,
-        "BetRivers": -127,
+        "BetRivers": -134,
         "Hard Rock": -125
       },
       "pitcher": "Drew Anderson",
@@ -502,59 +506,376 @@
         "edge": 0.1178
       },
       "total": null,
-      "current_edge": 0.0621,
-      "current_model_prob": 0.6117,
-      "current_refresh_time": "1:16 PM CT \u00b7 Aug 11",
+      "current_edge": 0.0794,
+      "current_model_prob": 0.6289,
+      "current_refresh_time": "2:17 PM CT \u00b7 Aug 11",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Drew Anderson",
-      "current_fair_odds": "-158",
-      "current_playable_to": -133,
+      "current_fair_odds": "-169",
+      "current_playable_to": -143,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
-          "label": "Defense (OAA)",
-          "pp": -0.59,
-          "positive": false
-        },
-        {
           "label": "Pitcher quality (xFIP)",
-          "pp": 0.57,
+          "pp": 0.59,
           "positive": true
         },
         {
-          "label": "Arsenal fit",
-          "pp": 0.48,
+          "label": "Defense (OAA)",
+          "pp": -0.58,
+          "positive": false
+        },
+        {
+          "label": "BvP matchup",
+          "pp": 0.58,
           "positive": true
         }
       ],
       "model_change": {
-        "edge_delta": -0.0025,
-        "model_delta": 0.0037,
-        "market_delta": 0.0174,
+        "edge_delta": 0.0147,
+        "model_delta": 0.0209,
+        "market_delta": 0.0154,
         "posted": {
           "model_prob": 0.608,
           "market_prob": 0.5329,
           "edge": 0.0646
         },
         "current": {
-          "model_prob": 0.6117,
-          "market_prob": 0.5503,
-          "edge": 0.0621
+          "model_prob": 0.6289,
+          "market_prob": 0.5483,
+          "edge": 0.0794
+        },
+        "factor_deltas": [
+          {
+            "label": "BvP matchup",
+            "posted_pp": 0.0,
+            "current_pp": 0.58,
+            "delta_pp": 0.58
+          },
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": 0.47,
+            "delta_pp": 0.47
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "2:17 PM CT \u00b7 Aug 11"
+      },
+      "verdict": "\u2705 VALUE",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "CHC @ WSH",
+      "pick": "WSH",
+      "side": "HOME",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Jake Irvin",
+      "posted_at": "2:17 PM CT",
+      "game_time": "2026-08-11T22:45:00Z",
+      "temp_f": 87.0,
+      "wind_speed_mph": 7.0,
+      "wind_dir_degrees": 270.0,
+      "is_domed": false,
+      "model_prob": 0.4406,
+      "market_prob": 0.3829,
+      "edge": 0.0604,
+      "ev_per_100": 15.88,
+      "odds": 163,
+      "best_odds": 163,
+      "best_book": "DraftKings",
+      "fair_odds": "+127",
+      "playable_to": 150,
+      "break_even": 0.3802,
+      "kelly_units": 1.22,
+      "line_open": 156,
+      "line_current": 156,
+      "odds_history": [
+        {
+          "t": "2026-08-11T13:04",
+          "odds": 155
+        },
+        {
+          "t": "2026-08-11T14:17",
+          "odds": 153
+        },
+        {
+          "t": "2026-08-11T15:16",
+          "odds": 155
+        },
+        {
+          "t": "2026-08-11T16:16",
+          "odds": 156
+        },
+        {
+          "t": "2026-08-11T17:16",
+          "odds": 153
+        },
+        {
+          "t": "2026-08-11T18:16",
+          "odds": 163
+        },
+        {
+          "t": "2026-08-11T19:17",
+          "odds": 163
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 162,
+        "MyBookie": 152,
+        "ESPN Bet": 155,
+        "Betway": 150,
+        "Novig": 160,
+        "Bovada": 149,
+        "ProphetX": 160,
+        "LowVig": 160,
+        "BetOnline": 160,
+        "BetMGM": 154,
+        "BetUS": 158,
+        "DraftKings": 163,
+        "BetRivers": 148,
+        "Hard Rock": 160,
+        "Pinnacle": 156
+      },
+      "pitcher": "Jake Irvin",
+      "opp_pitcher": "Shota Imanaga",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": -1.23
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": -0.025
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 5.237,
+        "opp_xfip": 3.928,
+        "pick_oaa": -14,
+        "opp_oaa": 58,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 45.0,
+        "opp_whiff_pct": 74.0,
+        "pick_kbb_pct": 0.1343,
+        "opp_kbb_pct": 0.1801,
+        "pick_bvp_shift": 0.021,
+        "pick_arsenal_fit": -0.8917,
+        "opp_arsenal_fit": 0.2723,
+        "pick_lineup_confirmed": true,
+        "opp_lineup_confirmed": true,
+        "pick_proj_ip": 5.0,
+        "opp_proj_ip": 5.6,
+        "pick_era": 5.37,
+        "opp_era": 3.6,
+        "pick_k_pct": 0.2313,
+        "opp_k_pct": 0.2345,
+        "ump_name": "Ryan Additon",
+        "pick_home_w": 26,
+        "pick_home_l": 34,
+        "pinnacle_ml_open": 156.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 0.974
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": -1.23,
+            "positive": false,
+            "group": "pitcher"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.62,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Home field",
+            "pp": 0.27,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Lineup quality",
+            "pp": 0.16,
+            "positive": true,
+            "group": "lineup"
+          }
+        ],
+        "total_adj_pp": -1.42,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "The model sees WSH as a 44.1% side; the market is pricing 38.3%, leaving a 6.0pp edge. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The main pushback is pitcher quality (xfip) (~-1.2pp): Jake Irvin 5.24 xFIP vs Shota Imanaga 3.93 xFIP. With a headwind that size, this is not a clean all-signal read. The market has drifted against the pick since posting, widening the available price \u2014 the current +163 still sits inside the playable range (to +150). This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability.",
+      "explanation": {
+        "explanation_type": "price_only_value",
+        "risk_level": "medium",
+        "model_prob": 0.4406,
+        "market_prob": 0.3829,
+        "edge_pp": 6.0,
+        "fair_odds": "+127",
+        "current_odds": "+163",
+        "playable_to": "+150",
+        "positive_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": 0.27,
+            "tier": "data",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for WSH.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Lineup quality",
+            "impact_pp": 0.16,
+            "tier": "data",
+            "group": "lineup",
+            "detail": "WSH projects above its season baseline against this pitcher handedness.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": -1.23,
+            "tier": "primary",
+            "group": "pitcher",
+            "detail": "Jake Irvin 5.24 xFIP vs Shota Imanaga 3.93 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": -0.62,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "The model's defensive-efficiency adjustment leans to the opponent.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+156",
+          "current_odds": "+163",
+          "movement_summary": "the market has drifted against the pick since posting, widening the available price"
+        },
+        "sections": {
+          "edge_thesis": "The model sees WSH as a 44.1% side; the market is pricing 38.3%, leaving a 6.0pp edge.",
+          "whats_driving_it": "No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market.",
+          "what_pushes_back": "The main pushback is pitcher quality (xfip) (~-1.2pp): Jake Irvin 5.24 xFIP vs Shota Imanaga 3.93 xFIP. With a headwind that size, this is not a clean all-signal read.",
+          "bvp_note": null,
+          "betting_note": "The market has drifted against the pick since posting, widening the available price \u2014 the current +163 still sits inside the playable range (to +150).",
+          "route_to_win": "This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability.",
+          "read": "This is mostly a price play; the baseball case is mixed."
+        },
+        "read_label": "This is mostly a price play; the baseball case is mixed.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Home field",
+          "top_positive_pp": 0.27,
+          "top_negative_label": "Pitcher quality (xFIP)",
+          "top_negative_pp": -1.23,
+          "has_primary_driver": false,
+          "has_material_headwind": true,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 2
+        },
+        "prose": "The model sees WSH as a 44.1% side; the market is pricing 38.3%, leaving a 6.0pp edge. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The main pushback is pitcher quality (xfip) (~-1.2pp): Jake Irvin 5.24 xFIP vs Shota Imanaga 3.93 xFIP. With a headwind that size, this is not a clean all-signal read. The market has drifted against the pick since posting, widening the available price \u2014 the current +163 still sits inside the playable range (to +150). This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability."
+      },
+      "run_line": {
+        "spread": "-1.5",
+        "model_prob": 0.2689,
+        "fair_odds": "+272",
+        "book_odds": null,
+        "edge": null
+      },
+      "total": null,
+      "current_edge": 0.0604,
+      "current_model_prob": 0.4406,
+      "current_refresh_time": "2:17 PM CT \u00b7 Aug 11",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Jake Irvin",
+      "current_fair_odds": "+127",
+      "current_playable_to": 150,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": -1.23,
+          "positive": false
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": -0.62,
+          "positive": false
+        },
+        {
+          "label": "Arsenal fit",
+          "pp": -0.49,
+          "positive": false
+        }
+      ],
+      "model_change": {
+        "edge_delta": -0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.4406,
+          "market_prob": 0.3829,
+          "edge": 0.0604
+        },
+        "current": {
+          "model_prob": 0.4406,
+          "market_prob": 0.3829,
+          "edge": 0.0604
         },
         "factor_deltas": [
           {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
-            "current_pp": 0.48,
-            "delta_pp": 0.48
+            "current_pp": -0.49,
+            "delta_pp": -0.49
+          },
+          {
+            "label": "BvP matchup",
+            "posted_pp": 0.0,
+            "current_pp": 0.27,
+            "delta_pp": 0.27
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "1:16 PM CT \u00b7 Aug 11"
+        "refreshed_at": "2:17 PM CT \u00b7 Aug 11"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -605,8 +926,8 @@
           "odds": 163
         },
         {
-          "t": "2026-08-11T18:16",
-          "odds": 163
+          "t": "2026-08-11T19:17",
+          "odds": 165
         }
       ],
       "clv": null,
@@ -618,15 +939,15 @@
       "book_odds": {
         "FanDuel": 158,
         "Novig": 163,
-        "LowVig": 156,
-        "BetOnline": 156,
+        "LowVig": 153,
+        "BetOnline": 153,
         "DraftKings": 158,
         "ESPN Bet": 150,
         "BetMGM": 150,
         "Pinnacle": 158,
         "Bovada": 151,
         "ProphetX": 162,
-        "BetRivers": 163,
+        "BetRivers": 165,
         "BetUS": 154,
         "Betway": 150,
         "MyBookie": 153,
@@ -784,15 +1105,15 @@
         "edge": 0.0574
       },
       "total": null,
-      "current_edge": 0.0497,
-      "current_model_prob": 0.4299,
-      "current_refresh_time": "1:16 PM CT \u00b7 Aug 11",
+      "current_edge": 0.0524,
+      "current_model_prob": 0.4298,
+      "current_refresh_time": "2:17 PM CT \u00b7 Aug 11",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Tomoyuki Sugano",
       "current_fair_odds": "+133",
-      "current_playable_to": 156,
+      "current_playable_to": 157,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -814,18 +1135,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0022,
-        "model_delta": -0.0022,
-        "market_delta": -0.0087,
+        "edge_delta": 0.0005,
+        "model_delta": -0.0023,
+        "market_delta": -0.0092,
         "posted": {
           "model_prob": 0.4321,
           "market_prob": 0.3887,
           "edge": 0.0519
         },
         "current": {
-          "model_prob": 0.4299,
-          "market_prob": 0.38,
-          "edge": 0.0497
+          "model_prob": 0.4298,
+          "market_prob": 0.3795,
+          "edge": 0.0524
         },
         "factor_deltas": [
           {
@@ -836,7 +1157,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "1:16 PM CT \u00b7 Aug 11"
+        "refreshed_at": "2:17 PM CT \u00b7 Aug 11"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -852,7 +1173,7 @@
       "meta": "SP: Michael Wacha",
       "posted_at": "8:04 AM CT",
       "game_time": "2026-08-12T02:10:00Z",
-      "temp_f": 78.0,
+      "temp_f": 74.0,
       "wind_speed_mph": 10.0,
       "wind_dir_degrees": 225.0,
       "is_domed": false,
@@ -879,7 +1200,7 @@
           "odds": 250
         },
         {
-          "t": "2026-08-11T18:16",
+          "t": "2026-08-11T19:17",
           "odds": 250
         }
       ],
@@ -890,19 +1211,19 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 230,
-        "LowVig": 238,
-        "BetOnline": 238,
-        "MyBookie": 218,
+        "FanDuel": 235,
+        "LowVig": 240,
+        "BetOnline": 240,
+        "MyBookie": 226,
         "Novig": 245,
         "DraftKings": 243,
-        "BetMGM": 225,
-        "Pinnacle": 234,
+        "BetMGM": 230,
+        "Pinnacle": 233,
         "Bovada": 225,
-        "ESPN Bet": 220,
+        "ESPN Bet": 230,
         "BetRivers": 225,
         "Betway": 225,
-        "BetUS": 230,
+        "BetUS": 234,
         "ProphetX": 240,
         "Hard Rock": 250
       },
@@ -1048,15 +1369,15 @@
         "edge": 0.0399
       },
       "total": null,
-      "current_edge": 0.0594,
-      "current_model_prob": 0.3451,
-      "current_refresh_time": "1:16 PM CT \u00b7 Aug 11",
+      "current_edge": 0.0597,
+      "current_model_prob": 0.3454,
+      "current_refresh_time": "2:17 PM CT \u00b7 Aug 11",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Michael Wacha",
       "current_fair_odds": "+190",
-      "current_playable_to": 228,
+      "current_playable_to": 227,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -1092,7 +1413,7 @@
       "meta": "SP: Mason Barnett",
       "posted_at": "12:16 PM CT",
       "game_time": "2026-08-12T01:40:00Z",
-      "temp_f": 73.0,
+      "temp_f": 72.0,
       "wind_speed_mph": 8.0,
       "wind_dir_degrees": 270.0,
       "is_domed": false,
@@ -1127,7 +1448,7 @@
           "odds": 164
         },
         {
-          "t": "2026-08-11T18:16",
+          "t": "2026-08-11T19:17",
           "odds": 164
         }
       ],
@@ -1140,7 +1461,7 @@
       "book_odds": {
         "FanDuel": 158,
         "MyBookie": 152,
-        "Bovada": 152,
+        "Bovada": 153,
         "ESPN Bet": 150,
         "LowVig": 158,
         "BetOnline": 158,
@@ -1148,11 +1469,11 @@
         "Betway": 150,
         "BetUS": 156,
         "Novig": 163,
-        "BetRivers": 143,
+        "BetRivers": 148,
         "BetMGM": 154,
         "ProphetX": 164,
         "Hard Rock": 160,
-        "Pinnacle": 157
+        "Pinnacle": 158
       },
       "pitcher": "Mason Barnett",
       "opp_pitcher": "Nick Martinez",
@@ -1311,9 +1632,9 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0421,
-      "current_model_prob": 0.4209,
-      "current_refresh_time": "1:16 PM CT \u00b7 Aug 11",
+      "current_edge": 0.0418,
+      "current_model_prob": 0.4206,
+      "current_refresh_time": "2:17 PM CT \u00b7 Aug 11",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1341,18 +1662,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0003,
-        "model_delta": 0.0003,
-        "market_delta": 0.0009,
+        "edge_delta": 0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
         "posted": {
           "model_prob": 0.4206,
           "market_prob": 0.38,
           "edge": 0.0418
         },
         "current": {
-          "model_prob": 0.4209,
-          "market_prob": 0.3809,
-          "edge": 0.0421
+          "model_prob": 0.4206,
+          "market_prob": 0.38,
+          "edge": 0.0418
         },
         "factor_deltas": [
           {
@@ -1363,7 +1684,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "1:16 PM CT \u00b7 Aug 11"
+        "refreshed_at": "2:17 PM CT \u00b7 Aug 11"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1372,8 +1693,8 @@
       "projected_starter": false
     }
   ],
-  "signal_count": 5,
-  "posted_count": 5,
+  "signal_count": 6,
+  "posted_count": 6,
   "games_today": 15,
   "yesterday_picks": [
     {
