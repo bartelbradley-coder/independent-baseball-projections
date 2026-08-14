@@ -1,7 +1,7 @@
 {
   "date": "2026-08-14",
-  "generated_at": "10:17 AM CT \u00b7 Aug 14",
-  "generated_at_utc": "2026-08-14T15:17:08Z",
+  "generated_at": "11:16 AM CT \u00b7 Aug 14",
+  "generated_at_utc": "2026-08-14T16:16:49Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -41,6 +41,10 @@
         {
           "t": "2026-08-14T15:16",
           "odds": -116
+        },
+        {
+          "t": "2026-08-14T16:16",
+          "odds": -117
         }
       ],
       "clv": null,
@@ -54,17 +58,17 @@
         "BetOnline": -120,
         "LowVig": -120,
         "Novig": -117,
-        "MyBookie": -126,
-        "DraftKings": -119,
+        "MyBookie": -127,
+        "DraftKings": -123,
         "ESPN Bet": -130,
         "BetMGM": -125,
         "Hard Rock": -125,
         "BetUS": -120,
         "BetRivers": -127,
-        "Bovada": -131,
-        "ProphetX": -116,
+        "Bovada": -128,
+        "ProphetX": -118,
         "Betway": -125,
-        "Pinnacle": -121
+        "Pinnacle": -122
       },
       "pitcher": "Peter Lambert",
       "opp_pitcher": "George Kirby",
@@ -222,14 +226,14 @@
         "edge": 0.1288
       },
       "total": null,
-      "current_edge": 0.0803,
-      "current_model_prob": 0.6173,
-      "current_refresh_time": "10:16 AM CT \u00b7 Aug 14",
+      "current_edge": 0.0786,
+      "current_model_prob": 0.6178,
+      "current_refresh_time": "11:16 AM CT \u00b7 Aug 14",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Peter Lambert",
-      "current_fair_odds": "-161",
+      "current_fair_odds": "-162",
       "current_playable_to": -137,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
@@ -256,6 +260,291 @@
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
       "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "ARI @ ATL",
+      "pick": "ARI",
+      "side": "AWAY",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Brandon Pfaadt",
+      "posted_at": "11:16 AM CT",
+      "game_time": "2026-08-14T23:15:00Z",
+      "temp_f": 89.0,
+      "wind_speed_mph": 5.0,
+      "wind_dir_degrees": 270.0,
+      "is_domed": false,
+      "model_prob": 0.4342,
+      "market_prob": 0.365,
+      "edge": 0.0719,
+      "ev_per_100": 19.84,
+      "odds": 176,
+      "best_odds": 176,
+      "best_book": "FanDuel",
+      "fair_odds": "+130",
+      "playable_to": 154,
+      "break_even": 0.3623,
+      "kelly_units": 0.7,
+      "line_open": 167,
+      "line_current": 167,
+      "odds_history": [
+        {
+          "t": "2026-08-14T13:04",
+          "odds": 185
+        },
+        {
+          "t": "2026-08-14T16:16",
+          "odds": 176
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 176,
+        "ProphetX": 176,
+        "ESPN Bet": 165,
+        "Betway": 160,
+        "MyBookie": 164,
+        "Hard Rock": 175,
+        "Bovada": 161,
+        "Novig": 174,
+        "BetRivers": 170,
+        "DraftKings": 173,
+        "BetMGM": 155,
+        "BetUS": 167,
+        "LowVig": 169,
+        "BetOnline": 169,
+        "Pinnacle": 167
+      },
+      "pitcher": "Brandon Pfaadt",
+      "opp_pitcher": "Chris Sale",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": -1.22
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": 0.025
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 3.939,
+        "opp_xfip": 2.627,
+        "pick_oaa": 29,
+        "opp_oaa": 11,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 12.0,
+        "opp_whiff_pct": 86.0,
+        "pick_kbb_pct": 0.0843,
+        "opp_kbb_pct": 0.249,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.3419,
+        "opp_arsenal_fit": 0.6306,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 6.6,
+        "opp_proj_ip": 5.7,
+        "pick_era": 3.36,
+        "opp_era": 2.2,
+        "pick_k_pct": 0.1517,
+        "opp_k_pct": 0.3057,
+        "ump_name": "",
+        "pick_home_w": 28,
+        "pick_home_l": 31,
+        "pinnacle_ml_open": 167.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 1.005
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": -1.22,
+            "positive": false,
+            "group": "pitcher"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.61,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Home field",
+            "pp": -0.27,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Starter rest",
+            "pp": 0.17,
+            "positive": true,
+            "group": "schedule"
+          }
+        ],
+        "total_adj_pp": -0.71,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "The model sees ARI as a 43.4% side; the market is pricing 36.5%, leaving a 7.2pp edge. The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself. The main pushback is pitcher quality (xfip) (~-1.2pp): Brandon Pfaadt 3.94 xFIP vs Chris Sale 2.63 xFIP. With a headwind that size, this is not a clean all-signal read. The market has drifted against the pick since posting, widening the available price \u2014 the current +176 still sits inside the playable range (to +154). This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability.",
+      "explanation": {
+        "explanation_type": "price_only_value",
+        "risk_level": "medium",
+        "model_prob": 0.4342,
+        "market_prob": 0.365,
+        "edge_pp": 7.2,
+        "fair_odds": "+130",
+        "current_odds": "+176",
+        "playable_to": "+154",
+        "positive_drivers": [
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": 0.61,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "ARI defense grades +18 OAA better on the season \u2014 a run-prevention edge.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Starter rest",
+            "impact_pp": 0.17,
+            "tier": "data",
+            "group": "schedule",
+            "detail": "Rest-day alignment favors the pick's starter.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": -1.22,
+            "tier": "primary",
+            "group": "pitcher",
+            "detail": "Brandon Pfaadt 3.94 xFIP vs Chris Sale 2.63 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Home field",
+            "impact_pp": -0.27,
+            "tier": "data",
+            "group": "team",
+            "detail": "ATL's home-field context weighs against the pick playing on the road.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+167",
+          "current_odds": "+176",
+          "movement_summary": "the market has drifted against the pick since posting, widening the available price"
+        },
+        "sections": {
+          "edge_thesis": "The model sees ARI as a 43.4% side; the market is pricing 36.5%, leaving a 7.2pp edge.",
+          "whats_driving_it": "The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself.",
+          "what_pushes_back": "The main pushback is pitcher quality (xfip) (~-1.2pp): Brandon Pfaadt 3.94 xFIP vs Chris Sale 2.63 xFIP. With a headwind that size, this is not a clean all-signal read.",
+          "bvp_note": null,
+          "betting_note": "The market has drifted against the pick since posting, widening the available price \u2014 the current +176 still sits inside the playable range (to +154).",
+          "route_to_win": "This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability.",
+          "read": "This is mostly a price play; the baseball case is mixed."
+        },
+        "read_label": "This is mostly a price play; the baseball case is mixed.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Defense (OAA)",
+          "top_positive_pp": 0.61,
+          "top_negative_label": "Pitcher quality (xFIP)",
+          "top_negative_pp": -1.22,
+          "has_primary_driver": false,
+          "has_material_headwind": true,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 2
+        },
+        "prose": "The model sees ARI as a 43.4% side; the market is pricing 36.5%, leaving a 7.2pp edge. The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself. The main pushback is pitcher quality (xfip) (~-1.2pp): Brandon Pfaadt 3.94 xFIP vs Chris Sale 2.63 xFIP. With a headwind that size, this is not a clean all-signal read. The market has drifted against the pick since posting, widening the available price \u2014 the current +176 still sits inside the playable range (to +154). This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability."
+      },
+      "run_line": {
+        "spread": "+1.5",
+        "model_prob": 0.6438,
+        "fair_odds": "-181",
+        "book_odds": -122,
+        "edge": 0.0943
+      },
+      "total": null,
+      "current_edge": 0.0719,
+      "current_model_prob": 0.4342,
+      "current_refresh_time": "11:16 AM CT \u00b7 Aug 14",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Brandon Pfaadt",
+      "current_fair_odds": "+130",
+      "current_playable_to": 154,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": -1.22,
+          "positive": false
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": 0.61,
+          "positive": true
+        },
+        {
+          "label": "Arsenal fit",
+          "pp": -0.28,
+          "positive": false
+        }
+      ],
+      "model_change": {
+        "edge_delta": -0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.4342,
+          "market_prob": 0.365,
+          "edge": 0.0719
+        },
+        "current": {
+          "model_prob": 0.4342,
+          "market_prob": 0.365,
+          "edge": 0.0719
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": -0.28,
+            "delta_pp": -0.28
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "11:16 AM CT \u00b7 Aug 14"
+      },
+      "verdict": "\u2b07\ufe0f REDUCED CONF.",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "away_worse_sp_fip",
+      "is_flagged": true,
       "projected_starter": false
     },
     {
@@ -291,6 +580,10 @@
         {
           "t": "2026-08-14T15:16",
           "odds": 107
+        },
+        {
+          "t": "2026-08-14T16:16",
+          "odds": 107
         }
       ],
       "clv": null,
@@ -304,17 +597,17 @@
         "MyBookie": 105,
         "Novig": 106,
         "BetRivers": 105,
-        "Bovada": 101,
+        "Bovada": 102,
         "DraftKings": 105,
         "ESPN Bet": 105,
         "BetOnline": 104,
         "LowVig": 104,
-        "BetUS": 103,
+        "BetUS": 105,
         "Betway": 100,
         "BetMGM": 100,
         "Hard Rock": 105,
-        "ProphetX": 107,
-        "Pinnacle": 106
+        "ProphetX": 106,
+        "Pinnacle": 107
       },
       "pitcher": "Andrew Alvarez",
       "opp_pitcher": "Robert Stock",
@@ -455,9 +748,9 @@
         "edge": 0.1217
       },
       "total": null,
-      "current_edge": 0.0645,
-      "current_model_prob": 0.5476,
-      "current_refresh_time": "10:16 AM CT \u00b7 Aug 14",
+      "current_edge": 0.0637,
+      "current_model_prob": 0.5468,
+      "current_refresh_time": "11:16 AM CT \u00b7 Aug 14",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -485,18 +778,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0018,
-        "model_delta": 0.0005,
-        "market_delta": 0.0022,
+        "edge_delta": -0.0026,
+        "model_delta": -0.0003,
+        "market_delta": -0.001,
         "posted": {
           "model_prob": 0.5471,
           "market_prob": 0.4746,
           "edge": 0.0663
         },
         "current": {
-          "model_prob": 0.5476,
-          "market_prob": 0.4768,
-          "edge": 0.0645
+          "model_prob": 0.5468,
+          "market_prob": 0.4736,
+          "edge": 0.0637
         },
         "factor_deltas": [
           {
@@ -507,7 +800,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "10:16 AM CT \u00b7 Aug 14"
+        "refreshed_at": "11:16 AM CT \u00b7 Aug 14"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -552,6 +845,10 @@
         {
           "t": "2026-08-14T15:16",
           "odds": 125
+        },
+        {
+          "t": "2026-08-14T16:16",
+          "odds": 122
         }
       ],
       "clv": null,
@@ -564,13 +861,13 @@
         "FanDuel": 118,
         "Betway": 115,
         "Bovada": 112,
-        "MyBookie": 116,
-        "LowVig": 118,
-        "BetOnline": 118,
-        "Novig": 125,
-        "Pinnacle": 120,
+        "MyBookie": 113,
+        "LowVig": 120,
+        "BetOnline": 120,
+        "Novig": 122,
+        "Pinnacle": 118,
         "DraftKings": 120,
-        "ProphetX": 123,
+        "ProphetX": 121,
         "Hard Rock": 120,
         "BetMGM": 110,
         "BetRivers": 115,
@@ -730,15 +1027,15 @@
         "edge": 0.0696
       },
       "total": null,
-      "current_edge": 0.027,
-      "current_model_prob": 0.4714,
-      "current_refresh_time": "10:16 AM CT \u00b7 Aug 14",
+      "current_edge": 0.022,
+      "current_model_prob": 0.4724,
+      "current_refresh_time": "11:16 AM CT \u00b7 Aug 14",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Sean Newcomb",
       "current_fair_odds": "+112",
-      "current_playable_to": 132,
+      "current_playable_to": 131,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -760,18 +1057,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0172,
-        "model_delta": 0.0053,
-        "market_delta": 0.0212,
+        "edge_delta": -0.0223,
+        "model_delta": 0.0063,
+        "market_delta": 0.0252,
         "posted": {
           "model_prob": 0.4661,
           "market_prob": 0.4245,
           "edge": 0.0442
         },
         "current": {
-          "model_prob": 0.4714,
-          "market_prob": 0.4457,
-          "edge": 0.027
+          "model_prob": 0.4724,
+          "market_prob": 0.4497,
+          "edge": 0.022
         },
         "factor_deltas": [
           {
@@ -782,7 +1079,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "10:16 AM CT \u00b7 Aug 14"
+        "refreshed_at": "11:16 AM CT \u00b7 Aug 14"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -791,8 +1088,8 @@
       "projected_starter": false
     }
   ],
-  "signal_count": 3,
-  "posted_count": 3,
+  "signal_count": 4,
+  "posted_count": 4,
   "games_today": 14,
   "yesterday_picks": [
     {
