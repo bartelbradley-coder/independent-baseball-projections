@@ -1,7 +1,7 @@
 {
   "date": "2026-08-26",
-  "generated_at": "2:17 PM CT \u00b7 Aug 26",
-  "generated_at_utc": "2026-08-26T19:17:59Z",
+  "generated_at": "3:18 PM CT \u00b7 Aug 26",
+  "generated_at_utc": "2026-08-26T20:18:07Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -53,6 +53,10 @@
         {
           "t": "2026-08-26T19:17",
           "odds": 111
+        },
+        {
+          "t": "2026-08-26T20:17",
+          "odds": 111
         }
       ],
       "clv": null,
@@ -68,10 +72,10 @@
         "BetMGM": 105,
         "Betway": 105,
         "MyBookie": 104,
-        "ProphetX": 110,
+        "ProphetX": 111,
         "FanDuel": 110,
         "Bovada": 105,
-        "BetRivers": 106,
+        "BetRivers": 108,
         "Hard Rock": 110,
         "Pinnacle": 110,
         "BetUS": 109,
@@ -213,22 +217,22 @@
         "edge": 0.1349
       },
       "total": null,
-      "current_edge": 0.0695,
-      "current_model_prob": 0.5434,
-      "current_refresh_time": "2:17 PM CT \u00b7 Aug 26",
+      "current_edge": 0.0607,
+      "current_model_prob": 0.5346,
+      "current_refresh_time": "3:17 PM CT \u00b7 Aug 26",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Peter Lambert",
-      "current_fair_odds": "-119",
-      "current_playable_to": -101,
+      "current_fair_odds": "-115",
+      "current_playable_to": 102,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": 1.71,
+          "pp": 1.72,
           "positive": true
         },
         {
@@ -237,14 +241,14 @@
           "positive": true
         },
         {
-          "label": "Home field",
-          "pp": -0.2,
+          "label": "Lineup quality",
+          "pp": -0.42,
           "positive": false
         }
       ],
       "model_change": {
-        "edge_delta": -0.0028,
-        "model_delta": -0.0006,
+        "edge_delta": -0.0116,
+        "model_delta": -0.0094,
         "market_delta": -0.0021,
         "posted": {
           "model_prob": 0.544,
@@ -252,9 +256,9 @@
           "edge": 0.0723
         },
         "current": {
-          "model_prob": 0.5434,
+          "model_prob": 0.5346,
           "market_prob": 0.4671,
-          "edge": 0.0695
+          "edge": 0.0607
         },
         "factor_deltas": [
           {
@@ -262,10 +266,16 @@
             "posted_pp": 0.0,
             "current_pp": 0.5,
             "delta_pp": 0.5
+          },
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.42,
+            "delta_pp": -0.42
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:17 PM CT \u00b7 Aug 26"
+        "refreshed_at": "3:17 PM CT \u00b7 Aug 26"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -318,6 +328,10 @@
         {
           "t": "2026-08-26T19:17",
           "odds": 128
+        },
+        {
+          "t": "2026-08-26T20:17",
+          "odds": 126
         }
       ],
       "clv": null,
@@ -327,9 +341,9 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 124,
-        "LowVig": 122,
-        "BetOnline": 122,
+        "FanDuel": 122,
+        "LowVig": 120,
+        "BetOnline": 120,
         "Novig": 125,
         "MyBookie": 117,
         "Bovada": 117,
@@ -338,10 +352,10 @@
         "ESPN Bet": 121,
         "BetMGM": 118,
         "Pinnacle": 122,
-        "BetRivers": 123,
+        "BetRivers": 116,
         "Betway": 120,
         "BetUS": 120,
-        "ProphetX": 128
+        "ProphetX": 126
       },
       "pitcher": "J.T. Ginn",
       "opp_pitcher": "Connor Prielipp",
@@ -500,18 +514,18 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0585,
-      "current_model_prob": 0.4971,
-      "current_refresh_time": "2:17 PM CT \u00b7 Aug 26",
+      "current_edge": 0.0424,
+      "current_model_prob": 0.4849,
+      "current_refresh_time": "3:17 PM CT \u00b7 Aug 26",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "J.T. Ginn",
-      "current_fair_odds": "+101",
-      "current_playable_to": 119,
+      "current_fair_odds": "+106",
+      "current_playable_to": 125,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Home field",
@@ -524,12 +538,36 @@
           "positive": false
         },
         {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 0.28,
-          "positive": true
+          "label": "Lineup quality",
+          "pp": -0.45,
+          "positive": false
         }
       ],
-      "model_change": null,
+      "model_change": {
+        "edge_delta": -0.0172,
+        "model_delta": -0.0133,
+        "market_delta": -0.0046,
+        "posted": {
+          "model_prob": 0.4982,
+          "market_prob": 0.4457,
+          "edge": 0.0596
+        },
+        "current": {
+          "model_prob": 0.4849,
+          "market_prob": 0.4411,
+          "edge": 0.0424
+        },
+        "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.45,
+            "delta_pp": -0.45
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "3:17 PM CT \u00b7 Aug 26"
+      },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -588,19 +626,19 @@
       "book_odds": {
         "FanDuel": 122,
         "Novig": 125,
-        "MyBookie": 117,
-        "Bovada": 116,
+        "MyBookie": 119,
+        "Bovada": 120,
         "Hard Rock": 120,
         "Betway": 120,
         "ESPN Bet": 121,
         "BetRivers": 123,
-        "ProphetX": 125,
-        "BetMGM": 120,
-        "DraftKings": 125,
+        "ProphetX": 127,
+        "BetMGM": 118,
+        "DraftKings": 126,
         "BetOnline": 123,
         "LowVig": 123,
-        "Pinnacle": 121,
-        "BetUS": 120
+        "Pinnacle": 124,
+        "BetUS": 122
       },
       "pitcher": "Bubba Chandler",
       "opp_pitcher": "Randy V\u00e1squez",
@@ -773,66 +811,20 @@
         "edge": 0.0895
       },
       "total": null,
-      "current_edge": 0.0791,
-      "current_model_prob": 0.5235,
-      "current_refresh_time": "2:17 PM CT \u00b7 Aug 26",
-      "current_recommendation": "same",
+      "current_edge": null,
+      "current_model_prob": null,
+      "current_refresh_time": "3:17 PM CT \u00b7 Aug 26",
+      "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Bubba Chandler",
-      "current_fair_odds": "-110",
-      "current_playable_to": 107,
+      "current_pitcher": null,
+      "current_fair_odds": null,
+      "current_playable_to": null,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": true,
-      "current_top_factors": [
-        {
-          "label": "Lineup quality",
-          "pp": 0.93,
-          "positive": true
-        },
-        {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 0.65,
-          "positive": true
-        },
-        {
-          "label": "Defense (OAA)",
-          "pp": -0.62,
-          "positive": false
-        }
-      ],
-      "model_change": {
-        "edge_delta": 0.0275,
-        "model_delta": 0.0235,
-        "market_delta": -0.0067,
-        "posted": {
-          "model_prob": 0.5,
-          "market_prob": 0.4505,
-          "edge": 0.0516
-        },
-        "current": {
-          "model_prob": 0.5235,
-          "market_prob": 0.4438,
-          "edge": 0.0791
-        },
-        "factor_deltas": [
-          {
-            "label": "Lineup quality",
-            "posted_pp": 0.0,
-            "current_pp": 0.93,
-            "delta_pp": 0.93
-          },
-          {
-            "label": "Arsenal fit",
-            "posted_pp": 0.0,
-            "current_pp": 0.5,
-            "delta_pp": 0.5
-          }
-        ],
-        "starter_changed": null,
-        "refreshed_at": "2:17 PM CT \u00b7 Aug 26"
-      },
+      "current_lineup_confirmed": null,
+      "current_opp_lineup_confirmed": null,
+      "current_top_factors": [],
+      "model_change": null,
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -844,7 +836,7 @@
       "pick": "SF",
       "side": "HOME",
       "pick_type": "MONEYLINE",
-      "meta": "SP: Logan Webb",
+      "meta": "SP: Landen Roupp",
       "posted_at": "8:03 AM CT",
       "game_time": "2026-08-26T19:45:00Z",
       "temp_f": 65.0,
@@ -893,25 +885,20 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -116,
-        "LowVig": -113,
-        "BetOnline": -113,
-        "MyBookie": -119,
-        "Novig": -111,
-        "Bovada": -118,
-        "DraftKings": -118,
-        "Hard Rock": -115,
-        "Betway": -120,
-        "ESPN Bet": -120,
-        "BetMGM": -120,
-        "Pinnacle": -112,
-        "BetRivers": -118,
-        "ProphetX": -112,
-        "BetUS": -115
+        "FanDuel": -135,
+        "MyBookie": -133,
+        "Novig": -135,
+        "DraftKings": -124,
+        "Hard Rock": -155,
+        "Betway": -125,
+        "BetMGM": -155,
+        "Pinnacle": -118,
+        "BetRivers": -155,
+        "ProphetX": -172
       },
-      "pitcher": "Logan Webb",
+      "pitcher": "Landen Roupp",
       "opp_pitcher": "Nick Lodolo",
-      "starter_swapped": true,
+      "starter_swapped": false,
       "factors": [
         {
           "label": "Pitcher Quality (xFIP)",
@@ -927,32 +914,32 @@
         }
       ],
       "raw_stats": {
-        "pick_xfip": 3.748,
-        "opp_xfip": 5.82,
+        "pick_xfip": 4.15,
+        "opp_xfip": 5.819,
         "pick_oaa": -14,
         "opp_oaa": 3,
         "pick_bp_pitches": 150,
         "opp_bp_pitches": 150,
         "pick_bp_xfip": 4.35,
         "opp_bp_xfip": 4.35,
-        "pick_xera": 3.83,
-        "opp_xera": 6.49,
-        "pick_xera_pct": 60.0,
-        "opp_xera_pct": 1.0,
-        "pick_whiff_pct": 14.0,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 49.0,
         "opp_whiff_pct": 24.0,
-        "pick_kbb_pct": 0.1332,
+        "pick_kbb_pct": 0.115,
         "opp_kbb_pct": 0.0828,
         "pick_bvp_shift": 0.0,
-        "pick_arsenal_fit": 0.216,
-        "opp_arsenal_fit": -0.9164,
+        "pick_arsenal_fit": 0.1974,
+        "opp_arsenal_fit": -0.918,
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
-        "pick_proj_ip": 5.9,
+        "pick_proj_ip": 5.4,
         "opp_proj_ip": 5.1,
-        "pick_era": 3.75,
+        "pick_era": 4.34,
         "opp_era": 5.04,
-        "pick_k_pct": 0.1938,
+        "pick_k_pct": 0.2265,
         "opp_k_pct": 0.1746,
         "ump_name": "",
         "pick_home_w": 31,
@@ -1080,81 +1067,20 @@
         "edge": 0.0427
       },
       "total": null,
-      "current_edge": 0.0202,
-      "current_model_prob": 0.5463,
-      "current_refresh_time": "2:17 PM CT \u00b7 Aug 26",
-      "current_recommendation": "same",
+      "current_edge": null,
+      "current_model_prob": null,
+      "current_refresh_time": "3:17 PM CT \u00b7 Aug 26",
+      "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Logan Webb",
-      "current_fair_odds": "-120",
-      "current_playable_to": -103,
+      "current_pitcher": null,
+      "current_fair_odds": null,
+      "current_playable_to": null,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": true,
-      "current_top_factors": [
-        {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 1.95,
-          "positive": true
-        },
-        {
-          "label": "Lineup quality",
-          "pp": -0.99,
-          "positive": false
-        },
-        {
-          "label": "Home field",
-          "pp": 0.84,
-          "positive": true
-        }
-      ],
-      "model_change": {
-        "edge_delta": -0.0284,
-        "model_delta": -0.0169,
-        "market_delta": -0.0011,
-        "posted": {
-          "model_prob": 0.5632,
-          "market_prob": 0.5198,
-          "edge": 0.0486
-        },
-        "current": {
-          "model_prob": 0.5463,
-          "market_prob": 0.5187,
-          "edge": 0.0202
-        },
-        "factor_deltas": [
-          {
-            "label": "Lineup quality",
-            "posted_pp": 0.0,
-            "current_pp": -0.99,
-            "delta_pp": -0.99
-          },
-          {
-            "label": "Arsenal fit",
-            "posted_pp": 0.0,
-            "current_pp": 0.5,
-            "delta_pp": 0.5
-          },
-          {
-            "label": "Pitcher quality (xFIP)",
-            "posted_pp": 1.56,
-            "current_pp": 1.95,
-            "delta_pp": 0.39
-          },
-          {
-            "label": "BvP matchup",
-            "posted_pp": 0.0,
-            "current_pp": -0.25,
-            "delta_pp": -0.25
-          }
-        ],
-        "starter_changed": {
-          "from": "Landen Roupp",
-          "to": "Logan Webb"
-        },
-        "refreshed_at": "2:17 PM CT \u00b7 Aug 26"
-      },
+      "current_lineup_confirmed": null,
+      "current_opp_lineup_confirmed": null,
+      "current_top_factors": [],
+      "model_change": null,
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -1206,6 +1132,10 @@
         {
           "t": "2026-08-26T19:17",
           "odds": -120
+        },
+        {
+          "t": "2026-08-26T20:17",
+          "odds": -125
         }
       ],
       "clv": null,
@@ -1215,21 +1145,21 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -122,
-        "ESPN Bet": -125,
-        "Novig": -122,
-        "MyBookie": -128,
-        "Betway": -130,
-        "ProphetX": -120,
-        "DraftKings": -124,
-        "BetMGM": -135,
-        "Bovada": -130,
-        "BetRivers": -136,
-        "BetOnline": -127,
-        "LowVig": -127,
-        "Hard Rock": -125,
-        "Pinnacle": -123,
-        "BetUS": -127
+        "FanDuel": -126,
+        "ESPN Bet": -136,
+        "Novig": -125,
+        "MyBookie": -136,
+        "Betway": -135,
+        "ProphetX": -125,
+        "DraftKings": -129,
+        "BetMGM": -140,
+        "Bovada": -136,
+        "BetRivers": -137,
+        "BetOnline": -135,
+        "LowVig": -135,
+        "Hard Rock": -130,
+        "Pinnacle": -129,
+        "BetUS": -135
       },
       "pitcher": "Matt Waldron",
       "opp_pitcher": "Tanner Gordon",
@@ -1365,65 +1295,71 @@
         "edge": 0.0798
       },
       "total": null,
-      "current_edge": 0.0471,
-      "current_model_prob": 0.5926,
-      "current_refresh_time": "2:17 PM CT \u00b7 Aug 26",
+      "current_edge": 0.0282,
+      "current_model_prob": 0.5838,
+      "current_refresh_time": "3:17 PM CT \u00b7 Aug 26",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Matt Waldron",
-      "current_fair_odds": "-145",
-      "current_playable_to": -124,
+      "current_fair_odds": "-140",
+      "current_playable_to": -119,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": 0.87,
+          "pp": 0.89,
           "positive": true
+        },
+        {
+          "label": "Lineup quality",
+          "pp": -0.77,
+          "positive": false
         },
         {
           "label": "BvP matchup",
-          "pp": 0.48,
-          "positive": true
-        },
-        {
-          "label": "Arsenal fit",
-          "pp": 0.48,
+          "pp": 0.49,
           "positive": true
         }
       ],
       "model_change": {
-        "edge_delta": 0.0007,
-        "model_delta": 0.0007,
-        "market_delta": -0.0009,
+        "edge_delta": -0.0182,
+        "model_delta": -0.0081,
+        "market_delta": 0.01,
         "posted": {
           "model_prob": 0.5919,
           "market_prob": 0.5423,
           "edge": 0.0464
         },
         "current": {
-          "model_prob": 0.5926,
-          "market_prob": 0.5414,
-          "edge": 0.0471
+          "model_prob": 0.5838,
+          "market_prob": 0.5523,
+          "edge": 0.0282
         },
         "factor_deltas": [
           {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.77,
+            "delta_pp": -0.77
+          },
+          {
             "label": "BvP matchup",
             "posted_pp": 0.0,
-            "current_pp": 0.48,
-            "delta_pp": 0.48
+            "current_pp": 0.49,
+            "delta_pp": 0.49
           },
           {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
-            "current_pp": 0.48,
-            "delta_pp": 0.48
+            "current_pp": 0.49,
+            "delta_pp": 0.49
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:17 PM CT \u00b7 Aug 26"
+        "refreshed_at": "3:17 PM CT \u00b7 Aug 26"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1488,16 +1424,16 @@
         "FanDuel": -130,
         "LowVig": -133,
         "BetOnline": -133,
-        "MyBookie": -134,
-        "Novig": -127,
-        "Bovada": -140,
+        "MyBookie": -140,
+        "Novig": -130,
+        "Bovada": -141,
         "DraftKings": -136,
         "Hard Rock": -130,
         "Betway": -140,
         "ESPN Bet": -136,
-        "BetMGM": -145,
-        "Pinnacle": -130,
-        "BetRivers": -129,
+        "BetMGM": -140,
+        "Pinnacle": -133,
+        "BetRivers": -132,
         "BetUS": -133,
         "ProphetX": -128
       },
@@ -1700,60 +1636,20 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0338,
-      "current_model_prob": 0.5933,
-      "current_refresh_time": "2:17 PM CT \u00b7 Aug 26",
-      "current_recommendation": "same",
+      "current_edge": null,
+      "current_model_prob": null,
+      "current_refresh_time": "3:17 PM CT \u00b7 Aug 26",
+      "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Jes\u00fas Luzardo",
-      "current_fair_odds": "-146",
-      "current_playable_to": -124,
+      "current_pitcher": null,
+      "current_fair_odds": null,
+      "current_playable_to": null,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": true,
-      "current_top_factors": [
-        {
-          "label": "Home field",
-          "pp": -1.09,
-          "positive": false
-        },
-        {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 0.96,
-          "positive": true
-        },
-        {
-          "label": "Lineup quality",
-          "pp": 0.68,
-          "positive": true
-        }
-      ],
-      "model_change": {
-        "edge_delta": -0.0118,
-        "model_delta": 0.0022,
-        "market_delta": 0.0088,
-        "posted": {
-          "model_prob": 0.5911,
-          "market_prob": 0.5455,
-          "edge": 0.0456
-        },
-        "current": {
-          "model_prob": 0.5933,
-          "market_prob": 0.5543,
-          "edge": 0.0338
-        },
-        "factor_deltas": [
-          {
-            "label": "Arsenal fit",
-            "posted_pp": 0.0,
-            "current_pp": 0.48,
-            "delta_pp": 0.48
-          }
-        ],
-        "starter_changed": null,
-        "refreshed_at": "2:17 PM CT \u00b7 Aug 26"
-      },
+      "current_lineup_confirmed": null,
+      "current_opp_lineup_confirmed": null,
+      "current_top_factors": [],
+      "model_change": null,
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -1799,8 +1695,8 @@
           "odds": 141
         },
         {
-          "t": "2026-08-26T19:17",
-          "odds": 141
+          "t": "2026-08-26T20:17",
+          "odds": 142
         }
       ],
       "clv": null,
@@ -1813,17 +1709,17 @@
         "FanDuel": 136,
         "LowVig": 138,
         "BetOnline": 138,
-        "MyBookie": 129,
+        "MyBookie": 131,
         "Novig": 141,
-        "Bovada": 134,
+        "Bovada": 133,
         "ESPN Bet": 137,
         "Hard Rock": 140,
         "Betway": 130,
-        "BetRivers": 125,
-        "ProphetX": 140,
-        "DraftKings": 136,
-        "BetMGM": 125,
-        "Pinnacle": 136,
+        "BetRivers": 132,
+        "ProphetX": 142,
+        "DraftKings": 142,
+        "BetMGM": 135,
+        "Pinnacle": 137,
         "BetUS": 136
       },
       "pitcher": "Randy Dobnak",
@@ -1964,17 +1860,17 @@
         "edge": 0.0727
       },
       "total": null,
-      "current_edge": 0.0383,
-      "current_model_prob": 0.4532,
-      "current_refresh_time": "2:17 PM CT \u00b7 Aug 26",
+      "current_edge": 0.0474,
+      "current_model_prob": 0.4606,
+      "current_refresh_time": "3:17 PM CT \u00b7 Aug 26",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Randy Dobnak",
-      "current_fair_odds": "+121",
-      "current_playable_to": 142,
+      "current_fair_odds": "+117",
+      "current_playable_to": 138,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
@@ -1989,23 +1885,23 @@
         },
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": -0.39,
+          "pp": -0.38,
           "positive": false
         }
       ],
       "model_change": {
-        "edge_delta": -0.0068,
-        "model_delta": -0.0051,
-        "market_delta": -0.0007,
+        "edge_delta": 0.0023,
+        "model_delta": 0.0023,
+        "market_delta": -0.0024,
         "posted": {
           "model_prob": 0.4583,
           "market_prob": 0.4159,
           "edge": 0.0451
         },
         "current": {
-          "model_prob": 0.4532,
-          "market_prob": 0.4152,
-          "edge": 0.0383
+          "model_prob": 0.4606,
+          "market_prob": 0.4135,
+          "edge": 0.0474
         },
         "factor_deltas": [
           {
@@ -2016,7 +1912,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:17 PM CT \u00b7 Aug 26"
+        "refreshed_at": "3:17 PM CT \u00b7 Aug 26"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -2027,7 +1923,7 @@
   ],
   "signal_count": 7,
   "posted_count": 7,
-  "games_today": 14,
+  "games_today": 9,
   "yesterday_picks": [
     {
       "game": "HOU @ NYY",
