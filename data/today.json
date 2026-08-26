@@ -1,9 +1,266 @@
 {
   "date": "2026-08-26",
-  "generated_at": "9:17 AM CT \u00b7 Aug 26",
-  "generated_at_utc": "2026-08-26T14:17:23Z",
+  "generated_at": "11:16 AM CT \u00b7 Aug 26",
+  "generated_at_utc": "2026-08-26T16:16:49Z",
   "no_picks_yet": false,
   "picks": [
+    {
+      "game": "HOU @ NYY",
+      "pick": "HOU",
+      "side": "AWAY",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Peter Lambert",
+      "posted_at": "11:16 AM CT",
+      "game_time": "2026-08-26T23:05:00Z",
+      "temp_f": 78.0,
+      "wind_speed_mph": 8.0,
+      "wind_dir_degrees": 180.0,
+      "is_domed": false,
+      "model_prob": 0.544,
+      "market_prob": 0.4692,
+      "edge": 0.0723,
+      "ev_per_100": 15.33,
+      "odds": 112,
+      "best_odds": 112,
+      "best_book": "ProphetX",
+      "fair_odds": "-119",
+      "playable_to": -102,
+      "break_even": 0.4717,
+      "kelly_units": 1.71,
+      "line_open": 109,
+      "line_current": 109,
+      "odds_history": [
+        {
+          "t": "2026-08-26T13:03",
+          "odds": 120
+        },
+        {
+          "t": "2026-08-26T14:17",
+          "odds": 118
+        },
+        {
+          "t": "2026-08-26T16:16",
+          "odds": 112
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "DraftKings": 107,
+        "Novig": 111,
+        "ESPN Bet": 107,
+        "BetMGM": 100,
+        "Betway": 105,
+        "MyBookie": 104,
+        "ProphetX": 112,
+        "FanDuel": 106,
+        "Bovada": 104,
+        "BetRivers": 106,
+        "Hard Rock": 110,
+        "Pinnacle": 109,
+        "BetUS": 108,
+        "BetOnline": 104,
+        "LowVig": 104
+      },
+      "pitcher": "Peter Lambert",
+      "opp_pitcher": "Elmer Rodr\u00edguez",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 1.71
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 4.12,
+        "opp_xfip": 5.934,
+        "pick_oaa": -5,
+        "opp_oaa": -1,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 51.0,
+        "opp_whiff_pct": null,
+        "pick_kbb_pct": 0.1395,
+        "opp_kbb_pct": -0.012,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.4197,
+        "opp_arsenal_fit": -1.0,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 5.5,
+        "opp_proj_ip": 5.0,
+        "pick_era": 3.68,
+        "opp_era": 4.76,
+        "pick_k_pct": 0.2326,
+        "opp_k_pct": 0.1205,
+        "ump_name": "",
+        "pick_home_w": 33,
+        "pick_home_l": 31,
+        "pinnacle_ml_open": 109.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 1.03
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 1.71,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Home field",
+            "pp": -0.2,
+            "positive": false,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 1.51,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "A 7.2pp gap: IBP has HOU at 54.4%, the market at 46.9%. The largest lift is pitcher quality (xfip) (~+1.7pp): Peter Lambert 4.12 xFIP vs Elmer Rodr\u00edguez 5.93 xFIP. The price has held roughly steady since posting \u2014 the current +112 still sits inside the playable range (to -102). The path is exploiting the NYY weakness the model flags before they can stabilize.",
+      "explanation": {
+        "explanation_type": "opponent_fade",
+        "risk_level": "medium",
+        "model_prob": 0.544,
+        "market_prob": 0.4692,
+        "edge_pp": 7.2,
+        "fair_odds": "-119",
+        "current_odds": "+112",
+        "playable_to": "-102",
+        "positive_drivers": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 1.71,
+            "tier": "primary",
+            "group": "pitcher",
+            "detail": "Peter Lambert 4.12 xFIP vs Elmer Rodr\u00edguez 5.93 xFIP.",
+            "attribution": "display_only"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": -0.2,
+            "tier": "data",
+            "group": "team",
+            "detail": "NYY's home-field context weighs against the pick playing on the road.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+109",
+          "current_odds": "+112",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "A 7.2pp gap: IBP has HOU at 54.4%, the market at 46.9%.",
+          "whats_driving_it": "The largest lift is pitcher quality (xfip) (~+1.7pp): Peter Lambert 4.12 xFIP vs Elmer Rodr\u00edguez 5.93 xFIP.",
+          "what_pushes_back": null,
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current +112 still sits inside the playable range (to -102).",
+          "route_to_win": "The path is exploiting the NYY weakness the model flags before they can stabilize.",
+          "read": "This leans on an opponent weakness."
+        },
+        "read_label": "This leans on an opponent weakness.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Pitcher quality (xFIP)",
+          "top_positive_pp": 1.71,
+          "top_negative_label": "Home field",
+          "top_negative_pp": -0.2,
+          "has_primary_driver": true,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 1
+        },
+        "prose": "A 7.2pp gap: IBP has HOU at 54.4%, the market at 46.9%. The largest lift is pitcher quality (xfip) (~+1.7pp): Peter Lambert 4.12 xFIP vs Elmer Rodr\u00edguez 5.93 xFIP. The price has held roughly steady since posting \u2014 the current +112 still sits inside the playable range (to -102). The path is exploiting the NYY weakness the model flags before they can stabilize."
+      },
+      "run_line": {
+        "spread": "+1.5",
+        "model_prob": 0.7752,
+        "fair_odds": "-345",
+        "book_odds": -178,
+        "edge": 0.1349
+      },
+      "total": null,
+      "current_edge": 0.0723,
+      "current_model_prob": 0.544,
+      "current_refresh_time": "11:16 AM CT \u00b7 Aug 26",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Peter Lambert",
+      "current_fair_odds": "-119",
+      "current_playable_to": -102,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 1.71,
+          "positive": true
+        },
+        {
+          "label": "Arsenal fit",
+          "pp": 0.5,
+          "positive": true
+        },
+        {
+          "label": "Home field",
+          "pp": -0.2,
+          "positive": false
+        }
+      ],
+      "model_change": {
+        "edge_delta": 0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.544,
+          "market_prob": 0.4692,
+          "edge": 0.0723
+        },
+        "current": {
+          "model_prob": 0.544,
+          "market_prob": 0.4692,
+          "edge": 0.0723
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": 0.5,
+            "delta_pp": 0.5
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "11:16 AM CT \u00b7 Aug 26"
+      },
+      "verdict": "\u2705 VALUE",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
     {
       "game": "MIN @ OAK",
       "pick": "OAK",
@@ -37,6 +294,10 @@
         {
           "t": "2026-08-26T14:17",
           "odds": 125
+        },
+        {
+          "t": "2026-08-26T16:16",
+          "odds": 127
         }
       ],
       "clv": null,
@@ -47,18 +308,18 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 124,
-        "LowVig": 122,
-        "BetOnline": 122,
-        "Novig": 122,
-        "MyBookie": 115,
-        "Bovada": 114,
-        "DraftKings": 119,
+        "LowVig": 123,
+        "BetOnline": 123,
+        "Novig": 127,
+        "MyBookie": 117,
+        "Bovada": 118,
+        "DraftKings": 126,
         "Hard Rock": 125,
         "ESPN Bet": 121,
-        "BetMGM": 115,
-        "Pinnacle": 119,
+        "BetMGM": 120,
+        "Pinnacle": 123,
         "BetRivers": 123,
-        "Betway": 115,
+        "Betway": 120,
         "BetUS": 122,
         "ProphetX": 125
       },
@@ -219,15 +480,15 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0543,
-      "current_model_prob": 0.4987,
-      "current_refresh_time": "9:17 AM CT \u00b7 Aug 26",
+      "current_edge": 0.0561,
+      "current_model_prob": 0.4966,
+      "current_refresh_time": "11:16 AM CT \u00b7 Aug 26",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "J.T. Ginn",
       "current_fair_odds": "+101",
-      "current_playable_to": 118,
+      "current_playable_to": 119,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -288,6 +549,10 @@
         {
           "t": "2026-08-26T14:17",
           "odds": 125
+        },
+        {
+          "t": "2026-08-26T16:16",
+          "odds": 125
         }
       ],
       "clv": null,
@@ -299,19 +564,19 @@
       "book_odds": {
         "FanDuel": 120,
         "Novig": 125,
-        "MyBookie": 113,
+        "MyBookie": 115,
         "Bovada": 117,
         "Hard Rock": 120,
         "Betway": 115,
         "ESPN Bet": 116,
         "BetRivers": 118,
-        "ProphetX": 125,
-        "BetMGM": 115,
-        "DraftKings": 125,
-        "BetOnline": 119,
-        "LowVig": 119,
-        "Pinnacle": 118,
-        "BetUS": 119
+        "ProphetX": 123,
+        "BetMGM": 118,
+        "DraftKings": 120,
+        "BetOnline": 120,
+        "LowVig": 120,
+        "Pinnacle": 120,
+        "BetUS": 120
       },
       "pitcher": "Bubba Chandler",
       "opp_pitcher": "Randy V\u00e1squez",
@@ -484,15 +749,15 @@
         "edge": 0.0895
       },
       "total": null,
-      "current_edge": 0.0554,
-      "current_model_prob": 0.4998,
-      "current_refresh_time": "9:17 AM CT \u00b7 Aug 26",
+      "current_edge": 0.0542,
+      "current_model_prob": 0.4986,
+      "current_refresh_time": "11:16 AM CT \u00b7 Aug 26",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Bubba Chandler",
-      "current_fair_odds": "+100",
-      "current_playable_to": 117,
+      "current_fair_odds": "+101",
+      "current_playable_to": 118,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -514,18 +779,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0038,
-        "model_delta": -0.0002,
-        "market_delta": -0.0008,
+        "edge_delta": 0.0026,
+        "model_delta": -0.0014,
+        "market_delta": -0.0056,
         "posted": {
           "model_prob": 0.5,
           "market_prob": 0.4505,
           "edge": 0.0516
         },
         "current": {
-          "model_prob": 0.4998,
-          "market_prob": 0.4497,
-          "edge": 0.0554
+          "model_prob": 0.4986,
+          "market_prob": 0.4449,
+          "edge": 0.0542
         },
         "factor_deltas": [
           {
@@ -536,7 +801,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "9:17 AM CT \u00b7 Aug 26"
+        "refreshed_at": "11:16 AM CT \u00b7 Aug 26"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -577,6 +842,10 @@
         {
           "t": "2026-08-26T14:17",
           "odds": -105
+        },
+        {
+          "t": "2026-08-26T16:16",
+          "odds": -102
         }
       ],
       "clv": null,
@@ -586,20 +855,20 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -110,
-        "LowVig": -107,
-        "BetOnline": -107,
-        "MyBookie": -116,
-        "Novig": -106,
-        "Bovada": -112,
-        "DraftKings": -106,
+        "FanDuel": -104,
+        "LowVig": -106,
+        "BetOnline": -106,
+        "MyBookie": -111,
+        "Novig": -104,
+        "Bovada": -111,
+        "DraftKings": -104,
         "Hard Rock": -110,
-        "Betway": -115,
-        "ESPN Bet": -111,
-        "BetMGM": -115,
-        "Pinnacle": -111,
+        "Betway": -110,
+        "ESPN Bet": -105,
+        "BetMGM": -110,
+        "Pinnacle": -105,
         "BetRivers": -114,
-        "ProphetX": -105,
+        "ProphetX": -102,
         "BetUS": -109
       },
       "pitcher": "Landen Roupp",
@@ -773,15 +1042,15 @@
         "edge": 0.0427
       },
       "total": null,
-      "current_edge": 0.0502,
-      "current_model_prob": 0.5624,
-      "current_refresh_time": "9:17 AM CT \u00b7 Aug 26",
+      "current_edge": 0.0539,
+      "current_model_prob": 0.5589,
+      "current_refresh_time": "11:16 AM CT \u00b7 Aug 26",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Landen Roupp",
-      "current_fair_odds": "-129",
-      "current_playable_to": -109,
+      "current_fair_odds": "-127",
+      "current_playable_to": -108,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -803,18 +1072,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0016,
-        "model_delta": -0.0008,
-        "market_delta": -0.0034,
+        "edge_delta": 0.0054,
+        "model_delta": -0.0043,
+        "market_delta": -0.0174,
         "posted": {
           "model_prob": 0.5632,
           "market_prob": 0.5198,
           "edge": 0.0486
         },
         "current": {
-          "model_prob": 0.5624,
-          "market_prob": 0.5164,
-          "edge": 0.0502
+          "model_prob": 0.5589,
+          "market_prob": 0.5024,
+          "edge": 0.0539
         },
         "factor_deltas": [
           {
@@ -825,7 +1094,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "9:17 AM CT \u00b7 Aug 26"
+        "refreshed_at": "11:16 AM CT \u00b7 Aug 26"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -866,6 +1135,10 @@
         {
           "t": "2026-08-26T14:17",
           "odds": -121
+        },
+        {
+          "t": "2026-08-26T16:16",
+          "odds": -120
         }
       ],
       "clv": null,
@@ -878,13 +1151,13 @@
         "FanDuel": -122,
         "ESPN Bet": -125,
         "Novig": -122,
-        "MyBookie": -125,
+        "MyBookie": -128,
         "Betway": -130,
-        "ProphetX": -121,
+        "ProphetX": -120,
         "DraftKings": -124,
-        "BetMGM": -125,
+        "BetMGM": -135,
         "Bovada": -130,
-        "BetRivers": -136,
+        "BetRivers": -137,
         "BetOnline": -127,
         "LowVig": -127,
         "Hard Rock": -125,
@@ -1025,9 +1298,9 @@
         "edge": 0.0798
       },
       "total": null,
-      "current_edge": 0.0442,
+      "current_edge": 0.0462,
       "current_model_prob": 0.5917,
-      "current_refresh_time": "9:17 AM CT \u00b7 Aug 26",
+      "current_refresh_time": "11:16 AM CT \u00b7 Aug 26",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1055,7 +1328,7 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0022,
+        "edge_delta": -0.0002,
         "model_delta": -0.0002,
         "market_delta": -0.0009,
         "posted": {
@@ -1066,7 +1339,7 @@
         "current": {
           "model_prob": 0.5917,
           "market_prob": 0.5414,
-          "edge": 0.0442
+          "edge": 0.0462
         },
         "factor_deltas": [
           {
@@ -1077,7 +1350,263 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "9:17 AM CT \u00b7 Aug 26"
+        "refreshed_at": "11:16 AM CT \u00b7 Aug 26"
+      },
+      "verdict": "\ud83d\udfe1 CONDITIONAL",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "KC @ TOR",
+      "pick": "KC",
+      "side": "AWAY",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Randy Dobnak",
+      "posted_at": "11:16 AM CT",
+      "game_time": "2026-08-26T23:07:00Z",
+      "temp_f": 72.0,
+      "wind_speed_mph": 0.0,
+      "wind_dir_degrees": 0.0,
+      "is_domed": true,
+      "model_prob": 0.4583,
+      "market_prob": 0.4159,
+      "edge": 0.0451,
+      "ev_per_100": 10.91,
+      "odds": 142,
+      "best_odds": 142,
+      "best_book": "ProphetX",
+      "fair_odds": "+118",
+      "playable_to": 139,
+      "break_even": 0.4132,
+      "kelly_units": 0.96,
+      "line_open": 136,
+      "line_current": 136,
+      "odds_history": [
+        {
+          "t": "2026-08-26T13:03",
+          "odds": 130
+        },
+        {
+          "t": "2026-08-26T16:16",
+          "odds": 142
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 136,
+        "LowVig": 136,
+        "BetOnline": 136,
+        "MyBookie": 129,
+        "Novig": 141,
+        "Bovada": 132,
+        "ESPN Bet": 131,
+        "Hard Rock": 140,
+        "Betway": 130,
+        "BetRivers": 125,
+        "ProphetX": 142,
+        "DraftKings": 136,
+        "BetMGM": 125,
+        "Pinnacle": 136,
+        "BetUS": 134
+      },
+      "pitcher": "Randy Dobnak",
+      "opp_pitcher": "Spencer Miles",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": -0.39
+        },
+        {
+          "label": "Home Field",
+          "value": -0.016
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 4.098,
+        "opp_xfip": 3.685,
+        "pick_oaa": 15,
+        "opp_oaa": 13,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 12.0,
+        "opp_whiff_pct": 6.0,
+        "pick_kbb_pct": 0.0459,
+        "opp_kbb_pct": null,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": -0.409,
+        "opp_arsenal_fit": 0.763,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 5.8,
+        "opp_proj_ip": 7.2,
+        "pick_era": 1.58,
+        "opp_era": null,
+        "pick_k_pct": 0.148,
+        "opp_k_pct": null,
+        "ump_name": "",
+        "pick_home_w": 23,
+        "pick_home_l": 44,
+        "pinnacle_ml_open": 136.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 1.002
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": -0.4,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": -0.39,
+            "positive": false,
+            "group": "pitcher"
+          }
+        ],
+        "total_adj_pp": -0.79,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "IBP values KC 4.5pp higher than the market \u2014 45.8% model vs 41.6% implied. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The market has drifted against the pick since posting, widening the available price \u2014 the current +142 still sits inside the playable range (to +139). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does.",
+      "explanation": {
+        "explanation_type": "price_only_value",
+        "risk_level": "medium",
+        "model_prob": 0.4583,
+        "market_prob": 0.4159,
+        "edge_pp": 4.5,
+        "fair_odds": "+118",
+        "current_odds": "+142",
+        "playable_to": "+139",
+        "positive_drivers": [],
+        "negative_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": -0.4,
+            "tier": "data",
+            "group": "team",
+            "detail": "TOR's home-field context weighs against the pick playing on the road.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": -0.39,
+            "tier": "data",
+            "group": "pitcher",
+            "detail": "Randy Dobnak 4.10 xFIP vs Spencer Miles 3.69 xFIP.",
+            "attribution": "display_only"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+136",
+          "current_odds": "+142",
+          "movement_summary": "the market has drifted against the pick since posting, widening the available price"
+        },
+        "sections": {
+          "edge_thesis": "IBP values KC 4.5pp higher than the market \u2014 45.8% model vs 41.6% implied.",
+          "whats_driving_it": "No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market.",
+          "what_pushes_back": null,
+          "bvp_note": null,
+          "betting_note": "The market has drifted against the pick since posting, widening the available price \u2014 the current +142 still sits inside the playable range (to +139).",
+          "route_to_win": "The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does.",
+          "read": "This is mostly a price play; the baseball case is mixed."
+        },
+        "read_label": "This is mostly a price play; the baseball case is mixed.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": null,
+          "top_positive_pp": null,
+          "top_negative_label": "Home field",
+          "top_negative_pp": -0.4,
+          "has_primary_driver": false,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 0
+        },
+        "prose": "IBP values KC 4.5pp higher than the market \u2014 45.8% model vs 41.6% implied. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The market has drifted against the pick since posting, widening the available price \u2014 the current +142 still sits inside the playable range (to +139). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does."
+      },
+      "run_line": {
+        "spread": "+1.5",
+        "model_prob": 0.6727,
+        "fair_odds": "-206",
+        "book_odds": -150,
+        "edge": 0.0727
+      },
+      "total": null,
+      "current_edge": 0.0451,
+      "current_model_prob": 0.4583,
+      "current_refresh_time": "11:16 AM CT \u00b7 Aug 26",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Randy Dobnak",
+      "current_fair_odds": "+118",
+      "current_playable_to": 139,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Arsenal fit",
+          "pp": -0.5,
+          "positive": false
+        },
+        {
+          "label": "Home field",
+          "pp": -0.4,
+          "positive": false
+        },
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": -0.39,
+          "positive": false
+        }
+      ],
+      "model_change": {
+        "edge_delta": -0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.4583,
+          "market_prob": 0.4159,
+          "edge": 0.0451
+        },
+        "current": {
+          "model_prob": 0.4583,
+          "market_prob": 0.4159,
+          "edge": 0.0451
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": -0.5,
+            "delta_pp": -0.5
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "11:16 AM CT \u00b7 Aug 26"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1086,8 +1615,8 @@
       "projected_starter": false
     }
   ],
-  "signal_count": 4,
-  "posted_count": 4,
+  "signal_count": 6,
+  "posted_count": 6,
   "games_today": 15,
   "yesterday_picks": [
     {
