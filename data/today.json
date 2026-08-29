@@ -1,7 +1,7 @@
 {
   "date": "2026-08-29",
-  "generated_at": "9:16 AM CT \u00b7 Aug 29",
-  "generated_at_utc": "2026-08-29T14:16:50Z",
+  "generated_at": "10:17 AM CT \u00b7 Aug 29",
+  "generated_at_utc": "2026-08-29T15:17:05Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -37,6 +37,10 @@
         {
           "t": "2026-08-29T14:16",
           "odds": 203
+        },
+        {
+          "t": "2026-08-29T15:16",
+          "odds": 208
         }
       ],
       "clv": null,
@@ -47,16 +51,16 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 200,
-        "LowVig": 200,
-        "BetOnline": 200,
-        "MyBookie": 183,
-        "Novig": 203,
+        "LowVig": 201,
+        "BetOnline": 201,
+        "MyBookie": 185,
+        "Novig": 208,
         "Betway": 185,
-        "Pinnacle": 195,
+        "Pinnacle": 197,
         "ESPN Bet": 190,
         "Hard Rock": 200,
         "BetMGM": 190,
-        "Bovada": 185,
+        "Bovada": 190,
         "DraftKings": 201,
         "BetUS": 194,
         "BetRivers": 188,
@@ -243,14 +247,14 @@
         "edge": 0.1072
       },
       "total": null,
-      "current_edge": 0.0807,
-      "current_model_prob": 0.4107,
-      "current_refresh_time": "9:16 AM CT \u00b7 Aug 29",
+      "current_edge": 0.0855,
+      "current_model_prob": 0.4102,
+      "current_refresh_time": "10:16 AM CT \u00b7 Aug 29",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Ryan Feltner",
-      "current_fair_odds": "+143",
+      "current_fair_odds": "+144",
       "current_playable_to": 170,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
@@ -263,7 +267,7 @@
         },
         {
           "label": "Defense (OAA)",
-          "pp": -0.61,
+          "pp": -0.6,
           "positive": false
         },
         {
@@ -273,18 +277,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.004,
-        "model_delta": -0.0008,
-        "market_delta": -0.0033,
+        "edge_delta": 0.0008,
+        "model_delta": -0.0013,
+        "market_delta": -0.0054,
         "posted": {
           "model_prob": 0.4115,
           "market_prob": 0.3351,
           "edge": 0.0847
         },
         "current": {
-          "model_prob": 0.4107,
-          "market_prob": 0.3318,
-          "edge": 0.0807
+          "model_prob": 0.4102,
+          "market_prob": 0.3297,
+          "edge": 0.0855
         },
         "factor_deltas": [
           {
@@ -295,9 +299,330 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "9:16 AM CT \u00b7 Aug 29"
+        "refreshed_at": "10:16 AM CT \u00b7 Aug 29"
       },
       "verdict": "\u2705 STRONG",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "BOS @ NYY",
+      "pick": "BOS",
+      "side": "AWAY",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: TBD",
+      "posted_at": "10:16 AM CT",
+      "game_time": "2026-08-29T17:05:00Z",
+      "temp_f": 77.0,
+      "wind_speed_mph": 2.0,
+      "wind_dir_degrees": 225.0,
+      "is_domed": false,
+      "model_prob": 0.5273,
+      "market_prob": 0.4569,
+      "edge": 0.0686,
+      "ev_per_100": 14.95,
+      "odds": 118,
+      "best_odds": 118,
+      "best_book": "FanDuel",
+      "fair_odds": "-112",
+      "playable_to": 105,
+      "break_even": 0.4587,
+      "kelly_units": 1.58,
+      "line_open": 114,
+      "line_current": 114,
+      "odds_history": [
+        {
+          "t": "2026-08-29T13:04",
+          "odds": 122
+        },
+        {
+          "t": "2026-08-29T14:16",
+          "odds": 120
+        },
+        {
+          "t": "2026-08-29T15:16",
+          "odds": 118
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 118,
+        "Novig": 117,
+        "Betway": 110,
+        "ESPN Bet": 110,
+        "Bovada": 109,
+        "DraftKings": 116,
+        "Hard Rock": 115,
+        "BetRivers": 110,
+        "BetMGM": 110,
+        "ProphetX": 118,
+        "Pinnacle": 114,
+        "BetUS": 114
+      },
+      "pitcher": "TBD",
+      "opp_pitcher": "Max Fried",
+      "starter_swapped": true,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 0.43
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": 0.025
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 4.2,
+        "opp_xfip": 3.127,
+        "pick_oaa": 18,
+        "opp_oaa": -1,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": 2.53,
+        "pick_xera_pct": null,
+        "opp_xera_pct": 96.0,
+        "pick_whiff_pct": 43.0,
+        "opp_whiff_pct": 45.0,
+        "pick_kbb_pct": 0.1392,
+        "opp_kbb_pct": 0.1566,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.0,
+        "opp_arsenal_fit": 1.0,
+        "pick_lineup_confirmed": true,
+        "opp_lineup_confirmed": true,
+        "pick_proj_ip": 5.3,
+        "opp_proj_ip": 5.6,
+        "pick_era": 3.49,
+        "opp_era": 2.81,
+        "pick_k_pct": 0.1903,
+        "opp_k_pct": 0.238,
+        "ump_name": "Hunter Wendelstedt",
+        "pick_home_w": 39,
+        "pick_home_l": 29,
+        "pinnacle_ml_open": 114.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 1.03
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.62,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 0.43,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Day/night",
+            "pp": 0.37,
+            "positive": true,
+            "group": "schedule"
+          },
+          {
+            "label": "Lineup quality",
+            "pp": -0.33,
+            "positive": false,
+            "group": "lineup"
+          },
+          {
+            "label": "Home field",
+            "pp": -0.2,
+            "positive": false,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 0.89,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "IBP values BOS 6.9pp higher than the market \u2014 52.7% model vs 45.7% implied. There's no standout starter, lineup, or bullpen signal driving this \u2014 the gap comes from the model's baseline read of the side, not a visible matchup edge. The price has held roughly steady since posting \u2014 the current +118 still sits inside the playable range (to +105). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does.",
+      "explanation": {
+        "explanation_type": "price_only_value",
+        "risk_level": "medium",
+        "model_prob": 0.5273,
+        "market_prob": 0.4569,
+        "edge_pp": 6.9,
+        "fair_odds": "-112",
+        "current_odds": "+118",
+        "playable_to": "+105",
+        "positive_drivers": [
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": 0.62,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "BOS defense grades +19 OAA better on the season \u2014 a run-prevention edge.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 0.43,
+            "tier": "data",
+            "group": "pitcher",
+            "detail": "Jake Bennett 3.74 xFIP vs Carlos Rod\u00f3n 4.19 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Day/night",
+            "impact_pp": 0.37,
+            "tier": "data",
+            "group": "schedule",
+            "detail": "Day/night schedule context favors the pick.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Lineup quality",
+            "impact_pp": -0.33,
+            "tier": "data",
+            "group": "lineup",
+            "detail": "BOS lineup projects below its season baseline against this pitcher handedness.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Home field",
+            "impact_pp": -0.2,
+            "tier": "data",
+            "group": "team",
+            "detail": "NYY's home-field context weighs against the pick playing on the road.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+114",
+          "current_odds": "+118",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "IBP values BOS 6.9pp higher than the market \u2014 52.7% model vs 45.7% implied.",
+          "whats_driving_it": "There's no standout starter, lineup, or bullpen signal driving this \u2014 the gap comes from the model's baseline read of the side, not a visible matchup edge.",
+          "what_pushes_back": null,
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current +118 still sits inside the playable range (to +105).",
+          "route_to_win": "The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does.",
+          "read": "This is mostly a price play; the baseball case is mixed."
+        },
+        "read_label": "This is mostly a price play; the baseball case is mixed.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Defense (OAA)",
+          "top_positive_pp": 0.62,
+          "top_negative_label": "Lineup quality",
+          "top_negative_pp": -0.33,
+          "has_primary_driver": false,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 3
+        },
+        "prose": "IBP values BOS 6.9pp higher than the market \u2014 52.7% model vs 45.7% implied. There's no standout starter, lineup, or bullpen signal driving this \u2014 the gap comes from the model's baseline read of the side, not a visible matchup edge. The price has held roughly steady since posting \u2014 the current +118 still sits inside the playable range (to +105). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does."
+      },
+      "run_line": {
+        "spread": "+1.5",
+        "model_prob": 0.7546,
+        "fair_odds": "-307",
+        "book_odds": -180,
+        "edge": 0.1117
+      },
+      "total": null,
+      "current_edge": 0.0238,
+      "current_model_prob": 0.4825,
+      "current_refresh_time": "10:16 AM CT \u00b7 Aug 29",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "TBD",
+      "current_fair_odds": "+107",
+      "current_playable_to": 126,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": -1.02,
+          "positive": false
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": 0.62,
+          "positive": true
+        },
+        {
+          "label": "Arsenal fit",
+          "pp": -0.5,
+          "positive": false
+        }
+      ],
+      "model_change": {
+        "edge_delta": -0.0448,
+        "model_delta": -0.0448,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.5273,
+          "market_prob": 0.4569,
+          "edge": 0.0686
+        },
+        "current": {
+          "model_prob": 0.4825,
+          "market_prob": 0.4569,
+          "edge": 0.0238
+        },
+        "factor_deltas": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "posted_pp": 0.43,
+            "current_pp": -1.02,
+            "delta_pp": -1.45
+          },
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": -0.5,
+            "delta_pp": -0.5
+          },
+          {
+            "label": "Day/night",
+            "posted_pp": 0.37,
+            "current_pp": 0.0,
+            "delta_pp": -0.37
+          },
+          {
+            "label": "Lineup quality",
+            "posted_pp": -0.33,
+            "current_pp": 0.0,
+            "delta_pp": 0.33
+          }
+        ],
+        "starter_changed": {
+          "from": "Jake Bennett",
+          "to": "TBD"
+        },
+        "refreshed_at": "10:16 AM CT \u00b7 Aug 29"
+      },
+      "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
       "is_flagged": false,
@@ -334,7 +659,7 @@
           "odds": 113
         },
         {
-          "t": "2026-08-29T14:16",
+          "t": "2026-08-29T15:16",
           "odds": 113
         }
       ],
@@ -352,10 +677,10 @@
         "MyBookie": 103,
         "Betway": 100,
         "ESPN Bet": 105,
-        "Pinnacle": 111,
+        "Pinnacle": 110,
         "Hard Rock": 105,
         "BetMGM": 100,
-        "Bovada": 106,
+        "Bovada": 105,
         "DraftKings": 106,
         "BetUS": 108,
         "ProphetX": 113,
@@ -528,9 +853,9 @@
         "edge": 0.1097
       },
       "total": null,
-      "current_edge": 0.0636,
-      "current_model_prob": 0.5331,
-      "current_refresh_time": "9:16 AM CT \u00b7 Aug 29",
+      "current_edge": 0.0622,
+      "current_model_prob": 0.5317,
+      "current_refresh_time": "10:16 AM CT \u00b7 Aug 29",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -538,7 +863,7 @@
       "current_fair_odds": "-114",
       "current_playable_to": 103,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": false,
       "current_top_factors": [
         {
@@ -547,17 +872,41 @@
           "positive": true
         },
         {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 0.42,
-          "positive": true
+          "label": "BvP matchup",
+          "pp": -0.5,
+          "positive": false
         },
         {
-          "label": "Day/night",
-          "pp": 0.37,
+          "label": "Pitcher quality (xFIP)",
+          "pp": 0.44,
           "positive": true
         }
       ],
-      "model_change": null,
+      "model_change": {
+        "edge_delta": -0.0052,
+        "model_delta": -0.0052,
+        "market_delta": -0.0131,
+        "posted": {
+          "model_prob": 0.5369,
+          "market_prob": 0.4802,
+          "edge": 0.0674
+        },
+        "current": {
+          "model_prob": 0.5317,
+          "market_prob": 0.4671,
+          "edge": 0.0622
+        },
+        "factor_deltas": [
+          {
+            "label": "BvP matchup",
+            "posted_pp": 0.0,
+            "current_pp": -0.5,
+            "delta_pp": -0.5
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "10:16 AM CT \u00b7 Aug 29"
+      },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -595,7 +944,7 @@
           "odds": 138
         },
         {
-          "t": "2026-08-29T14:16",
+          "t": "2026-08-29T15:16",
           "odds": 138
         }
       ],
@@ -616,11 +965,11 @@
         "ESPN Bet": 130,
         "Hard Rock": 135,
         "BetMGM": 125,
-        "Bovada": 130,
+        "Bovada": 131,
         "DraftKings": 138,
-        "BetUS": 134,
+        "BetUS": 133,
         "ProphetX": 138,
-        "BetRivers": 132
+        "BetRivers": 138
       },
       "pitcher": "Daniel Lynch IV",
       "opp_pitcher": "Foster Griffin",
@@ -789,9 +1138,9 @@
         "edge": 0.0775
       },
       "total": null,
-      "current_edge": 0.0496,
-      "current_model_prob": 0.4698,
-      "current_refresh_time": "9:16 AM CT \u00b7 Aug 29",
+      "current_edge": 0.0495,
+      "current_model_prob": 0.4697,
+      "current_refresh_time": "10:16 AM CT \u00b7 Aug 29",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -858,6 +1207,10 @@
         {
           "t": "2026-08-29T14:16",
           "odds": 125
+        },
+        {
+          "t": "2026-08-29T15:16",
+          "odds": 125
         }
       ],
       "clv": null,
@@ -869,14 +1222,14 @@
       "book_odds": {
         "FanDuel": 120,
         "ProphetX": 124,
-        "Novig": 122,
+        "Novig": 125,
         "Betway": 115,
         "ESPN Bet": 120,
-        "MyBookie": 119,
-        "BetMGM": 115,
-        "BetOnline": 121,
-        "LowVig": 121,
-        "Bovada": 115,
+        "MyBookie": 120,
+        "BetMGM": 118,
+        "BetOnline": 119,
+        "LowVig": 119,
+        "Bovada": 116,
         "DraftKings": 121,
         "BetRivers": 118,
         "BetUS": 120,
@@ -1056,7 +1409,7 @@
       "total": null,
       "current_edge": 0.0452,
       "current_model_prob": 0.4896,
-      "current_refresh_time": "9:16 AM CT \u00b7 Aug 29",
+      "current_refresh_time": "10:16 AM CT \u00b7 Aug 29",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1106,7 +1459,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "9:16 AM CT \u00b7 Aug 29"
+        "refreshed_at": "10:16 AM CT \u00b7 Aug 29"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1124,7 +1477,7 @@
       "game_time": "2026-08-29T18:20:00Z",
       "temp_f": 79.0,
       "wind_speed_mph": 10.0,
-      "wind_dir_degrees": 225.0,
+      "wind_dir_degrees": 202.5,
       "is_domed": false,
       "model_prob": 0.6769,
       "market_prob": 0.6274,
@@ -1145,8 +1498,8 @@
           "odds": -174
         },
         {
-          "t": "2026-08-29T14:16",
-          "odds": -174
+          "t": "2026-08-29T15:16",
+          "odds": -176
         }
       ],
       "clv": null,
@@ -1163,14 +1516,14 @@
         "MyBookie": -191,
         "Novig": -178,
         "ESPN Bet": -190,
-        "Pinnacle": -180,
+        "Pinnacle": -179,
         "Hard Rock": -185,
         "BetMGM": -200,
-        "Bovada": -190,
-        "DraftKings": -187,
+        "Bovada": -192,
+        "DraftKings": -186,
         "BetUS": -185,
         "BetRivers": -190,
-        "ProphetX": -174
+        "ProphetX": -176
       },
       "pitcher": "Kevin Gausman",
       "opp_pitcher": "Andrew Abbott",
@@ -1343,9 +1696,9 @@
         "edge": 0.1251
       },
       "total": null,
-      "current_edge": 0.0424,
-      "current_model_prob": 0.6774,
-      "current_refresh_time": "9:16 AM CT \u00b7 Aug 29",
+      "current_edge": 0.0401,
+      "current_model_prob": 0.6778,
+      "current_refresh_time": "10:16 AM CT \u00b7 Aug 29",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1354,15 +1707,15 @@
       "current_playable_to": -176,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 0.67,
+          "label": "Home field",
+          "pp": 0.66,
           "positive": true
         },
         {
-          "label": "Home field",
+          "label": "Pitcher quality (xFIP)",
           "pp": 0.66,
           "positive": true
         },
@@ -1373,20 +1726,26 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0005,
-        "model_delta": 0.0005,
-        "market_delta": 0.0018,
+        "edge_delta": -0.0018,
+        "model_delta": 0.0009,
+        "market_delta": 0.0014,
         "posted": {
           "model_prob": 0.6769,
           "market_prob": 0.6274,
           "edge": 0.0419
         },
         "current": {
-          "model_prob": 0.6774,
-          "market_prob": 0.6292,
-          "edge": 0.0424
+          "model_prob": 0.6778,
+          "market_prob": 0.6288,
+          "edge": 0.0401
         },
         "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": 0.28,
+            "delta_pp": 0.28
+          },
           {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
@@ -1395,7 +1754,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "9:16 AM CT \u00b7 Aug 29"
+        "refreshed_at": "10:16 AM CT \u00b7 Aug 29"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1436,6 +1795,10 @@
         {
           "t": "2026-08-29T14:16",
           "odds": -102
+        },
+        {
+          "t": "2026-08-29T15:16",
+          "odds": -102
         }
       ],
       "clv": null,
@@ -1446,18 +1809,18 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": -106,
-        "BetOnline": -108,
-        "LowVig": -108,
-        "MyBookie": -111,
+        "BetOnline": -105,
+        "LowVig": -105,
+        "MyBookie": -110,
         "Novig": -102,
-        "Betway": -115,
+        "Betway": -110,
         "Pinnacle": -105,
         "ESPN Bet": -115,
-        "Hard Rock": -110,
+        "Hard Rock": -105,
         "BetMGM": -110,
         "Bovada": -111,
-        "DraftKings": -106,
-        "BetUS": -108,
+        "DraftKings": -104,
+        "BetUS": -105,
         "BetRivers": -115,
         "ProphetX": -102
       },
@@ -1644,7 +2007,7 @@
       "total": null,
       "current_edge": 0.0415,
       "current_model_prob": 0.5464,
-      "current_refresh_time": "9:16 AM CT \u00b7 Aug 29",
+      "current_refresh_time": "10:16 AM CT \u00b7 Aug 29",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1679,8 +2042,8 @@
       "projected_starter": false
     }
   ],
-  "signal_count": 6,
-  "posted_count": 6,
+  "signal_count": 7,
+  "posted_count": 7,
   "games_today": 15,
   "yesterday_picks": [
     {
