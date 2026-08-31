@@ -1,54 +1,38 @@
 {
-  "date": "2026-08-30",
-  "generated_at": "10:18 PM CT \u00b7 Aug 30",
-  "generated_at_utc": "2026-08-31T03:18:15Z",
+  "date": "2026-08-31",
+  "generated_at": "8:05 AM CT \u00b7 Aug 31",
+  "generated_at_utc": "2026-08-31T13:05:50Z",
   "no_picks_yet": false,
   "picks": [
     {
-      "game": "COL @ ATL",
-      "pick": "COL",
-      "side": "AWAY",
+      "game": "NYY @ LAA",
+      "pick": "LAA",
+      "side": "HOME",
       "pick_type": "MONEYLINE",
-      "meta": "SP: Mason Adams",
-      "posted_at": "8:04 AM CT",
-      "game_time": "2026-08-30T17:35:00Z",
-      "temp_f": 86.2,
-      "wind_speed_mph": 5.3,
-      "wind_dir_degrees": 104.0,
+      "meta": "SP: Walbert Ure\u00f1a",
+      "posted_at": "8:03 AM CT",
+      "game_time": "2026-09-01T01:38:00Z",
+      "temp_f": 80.0,
+      "wind_speed_mph": 10.0,
+      "wind_dir_degrees": 225.0,
       "is_domed": false,
-      "model_prob": 0.4517,
-      "market_prob": 0.3208,
-      "edge": 0.1342,
-      "ev_per_100": 42.29,
-      "odds": 215,
-      "best_odds": 215,
-      "best_book": "ProphetX",
-      "fair_odds": "+121",
-      "playable_to": 143,
-      "break_even": 0.3175,
-      "kelly_units": 2.46,
-      "line_open": 205,
-      "line_current": 205,
+      "model_prob": 0.515,
+      "market_prob": 0.4362,
+      "edge": 0.0745,
+      "ev_per_100": 16.91,
+      "odds": 127,
+      "best_odds": 127,
+      "best_book": "Novig",
+      "fair_odds": "-106",
+      "playable_to": 111,
+      "break_even": 0.4405,
+      "kelly_units": 1.66,
+      "line_open": 125,
+      "line_current": 125,
       "odds_history": [
         {
-          "t": "2026-08-30T13:04",
-          "odds": 215
-        },
-        {
-          "t": "2026-08-30T14:16",
-          "odds": 213
-        },
-        {
-          "t": "2026-08-30T15:16",
-          "odds": 223
-        },
-        {
-          "t": "2026-08-30T16:18",
-          "odds": 220
-        },
-        {
-          "t": "2026-08-30T17:16",
-          "odds": 223
+          "t": "2026-08-31T13:03",
+          "odds": 127
         }
       ],
       "clv": null,
@@ -57,14 +41,579 @@
       "steam_move": false,
       "model_total": null,
       "market_total": null,
-      "book_odds": {},
-      "pitcher": "Mason Adams",
-      "opp_pitcher": "Tyler Mahle",
+      "book_odds": {
+        "FanDuel": 116,
+        "Novig": 127,
+        "MyBookie": 120,
+        "Bovada": 119,
+        "ESPN Bet": 126,
+        "Hard Rock": 125,
+        "DraftKings": 120,
+        "BetMGM": 118,
+        "ProphetX": 126,
+        "BetRivers": 114,
+        "Pinnacle": 125,
+        "LowVig": 125,
+        "BetOnline": 125,
+        "BetUS": 125,
+        "Betway": 120
+      },
+      "pitcher": "Walbert Ure\u00f1a",
+      "opp_pitcher": "Elmer Rodr\u00edguez",
       "starter_swapped": false,
       "factors": [
         {
           "label": "Pitcher Quality (xFIP)",
-          "value": -0.11
+          "value": 1.29
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": -0.025
+        },
+        {
+          "label": "Travel / Rest",
+          "value": 0.024
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 3.916,
+        "opp_xfip": 5.271,
+        "pick_oaa": -26,
+        "opp_oaa": 1,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 65.0,
+        "opp_whiff_pct": null,
+        "pick_kbb_pct": 0.096,
+        "opp_kbb_pct": 0.0286,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.432,
+        "opp_arsenal_fit": -1.0,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 5.3,
+        "opp_proj_ip": 5.1,
+        "pick_era": 2.94,
+        "opp_era": 4.7,
+        "pick_k_pct": 0.224,
+        "opp_k_pct": 0.1524,
+        "ump_name": "",
+        "pick_home_w": 29,
+        "pick_home_l": 42,
+        "pinnacle_ml_open": 125.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 0.962
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 1.29,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.62,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Travel/B2B",
+            "pp": 0.6,
+            "positive": true,
+            "group": "schedule"
+          },
+          {
+            "label": "Home field",
+            "pp": 0.2,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 1.47,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "The model prices LAA at 51.5% to win where the no-vig market implies 43.6%, a 7.4pp disagreement. The largest lift is pitcher quality (xfip) (~+1.3pp): Walbert Ure\u00f1a 3.92 xFIP vs Elmer Rodr\u00edguez 5.27 xFIP. The main pushback is defense (oaa) (~-0.6pp): NYY defense grades +27 OAA better on the season \u2014 a run-prevention headwind. The price has held roughly steady since posting \u2014 the current +127 still sits inside the playable range (to +111). The win condition is pressuring NYY's soft spot before they can settle in.",
+      "explanation": {
+        "explanation_type": "opponent_fade",
+        "risk_level": "medium",
+        "model_prob": 0.515,
+        "market_prob": 0.4362,
+        "edge_pp": 7.4,
+        "fair_odds": "-106",
+        "current_odds": "+127",
+        "playable_to": "+111",
+        "positive_drivers": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 1.29,
+            "tier": "primary",
+            "group": "pitcher",
+            "detail": "Walbert Ure\u00f1a 3.92 xFIP vs Elmer Rodr\u00edguez 5.27 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Travel/B2B",
+            "impact_pp": 0.6,
+            "tier": "secondary",
+            "group": "schedule",
+            "detail": "Schedule and travel context weigh on the opponent more than the pick.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Home field",
+            "impact_pp": 0.2,
+            "tier": "data",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for LAA.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": -0.62,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "NYY defense grades +27 OAA better on the season \u2014 a run-prevention headwind.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+125",
+          "current_odds": "+127",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "The model prices LAA at 51.5% to win where the no-vig market implies 43.6%, a 7.4pp disagreement.",
+          "whats_driving_it": "The largest lift is pitcher quality (xfip) (~+1.3pp): Walbert Ure\u00f1a 3.92 xFIP vs Elmer Rodr\u00edguez 5.27 xFIP.",
+          "what_pushes_back": "The main pushback is defense (oaa) (~-0.6pp): NYY defense grades +27 OAA better on the season \u2014 a run-prevention headwind.",
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current +127 still sits inside the playable range (to +111).",
+          "route_to_win": "The win condition is pressuring NYY's soft spot before they can settle in.",
+          "read": "This leans on an opponent weakness."
+        },
+        "read_label": "This leans on an opponent weakness.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Pitcher quality (xFIP)",
+          "top_positive_pp": 1.29,
+          "top_negative_label": "Defense (OAA)",
+          "top_negative_pp": -0.62,
+          "has_primary_driver": true,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 3
+        },
+        "prose": "The model prices LAA at 51.5% to win where the no-vig market implies 43.6%, a 7.4pp disagreement. The largest lift is pitcher quality (xfip) (~+1.3pp): Walbert Ure\u00f1a 3.92 xFIP vs Elmer Rodr\u00edguez 5.27 xFIP. The main pushback is defense (oaa) (~-0.6pp): NYY defense grades +27 OAA better on the season \u2014 a run-prevention headwind. The price has held roughly steady since posting \u2014 the current +127 still sits inside the playable range (to +111). The win condition is pressuring NYY's soft spot before they can settle in."
+      },
+      "run_line": {
+        "spread": "-1.5",
+        "model_prob": 0.3434,
+        "fair_odds": "+191",
+        "book_odds": null,
+        "edge": null
+      },
+      "total": null,
+      "current_edge": 0.0745,
+      "current_model_prob": 0.515,
+      "current_refresh_time": "8:03 AM CT \u00b7 Aug 31",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Walbert Ure\u00f1a",
+      "current_fair_odds": "-106",
+      "current_playable_to": 111,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 1.29,
+          "positive": true
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": -0.62,
+          "positive": false
+        },
+        {
+          "label": "Travel/B2B",
+          "pp": 0.6,
+          "positive": true
+        }
+      ],
+      "model_change": {
+        "edge_delta": -0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.515,
+          "market_prob": 0.4362,
+          "edge": 0.0745
+        },
+        "current": {
+          "model_prob": 0.515,
+          "market_prob": 0.4362,
+          "edge": 0.0745
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": 0.5,
+            "delta_pp": 0.5
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "8:03 AM CT \u00b7 Aug 31"
+      },
+      "verdict": "\u2705 VALUE",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "OAK @ TEX",
+      "pick": "OAK",
+      "side": "AWAY",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Gage Jump",
+      "posted_at": "8:03 AM CT",
+      "game_time": "2026-09-01T00:05:00Z",
+      "temp_f": 72.0,
+      "wind_speed_mph": 0.0,
+      "wind_dir_degrees": 0.0,
+      "is_domed": true,
+      "model_prob": 0.3973,
+      "market_prob": 0.3318,
+      "edge": 0.0673,
+      "ev_per_100": 20.38,
+      "odds": 203,
+      "best_odds": 203,
+      "best_book": "Novig",
+      "fair_odds": "+152",
+      "playable_to": 180,
+      "break_even": 0.33,
+      "kelly_units": 0.63,
+      "line_open": 195,
+      "line_current": 195,
+      "odds_history": [
+        {
+          "t": "2026-08-31T13:03",
+          "odds": 203
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 194,
+        "Novig": 203,
+        "BetOnline": 193,
+        "LowVig": 193,
+        "Bovada": 185,
+        "BetUS": 190,
+        "BetMGM": 180,
+        "DraftKings": 199,
+        "ESPN Bet": 203,
+        "Hard Rock": 200,
+        "Pinnacle": 195,
+        "ProphetX": 198,
+        "Betway": 185,
+        "MyBookie": 185,
+        "BetRivers": 185
+      },
+      "pitcher": "Gage Jump",
+      "opp_pitcher": "Jacob deGrom",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": -0.98
+        },
+        {
+          "label": "Home Field",
+          "value": -0.044
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": -0.025
+        },
+        {
+          "label": "Travel / Rest",
+          "value": -0.016
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 4.249,
+        "opp_xfip": 3.176,
+        "pick_oaa": -40,
+        "opp_oaa": 17,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 47.0,
+        "opp_whiff_pct": 95.0,
+        "pick_kbb_pct": 0.1429,
+        "opp_kbb_pct": 0.2259,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.0378,
+        "opp_arsenal_fit": 0.2937,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 5.2,
+        "opp_proj_ip": 5.2,
+        "pick_era": 4.69,
+        "opp_era": 4.21,
+        "pick_k_pct": 0.2519,
+        "opp_k_pct": 0.2944,
+        "ump_name": "",
+        "pick_home_w": 28,
+        "pick_home_l": 40,
+        "pinnacle_ml_open": 195.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 1.02
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": -1.05,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": -0.98,
+            "positive": false,
+            "group": "pitcher"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.6,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Travel/B2B",
+            "pp": -0.38,
+            "positive": false,
+            "group": "schedule"
+          }
+        ],
+        "total_adj_pp": -3.01,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "A 6.7pp gap: IBP has OAK at 39.7%, the market at 33.2%. The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself. The main pushback is home field (~-1.1pp): TEX's home-field context weighs against the pick playing on the road. With a headwind that size, this is not a clean all-signal read. The price has held roughly steady since posting \u2014 the current +203 still sits inside the playable range (to +180). This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed.",
+      "explanation": {
+        "explanation_type": "price_only_value",
+        "risk_level": "medium",
+        "model_prob": 0.3973,
+        "market_prob": 0.3318,
+        "edge_pp": 6.7,
+        "fair_odds": "+152",
+        "current_odds": "+203",
+        "playable_to": "+180",
+        "positive_drivers": [],
+        "negative_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": -1.05,
+            "tier": "primary",
+            "group": "team",
+            "detail": "TEX's home-field context weighs against the pick playing on the road.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": -0.98,
+            "tier": "secondary",
+            "group": "pitcher",
+            "detail": "Gage Jump 4.25 xFIP vs Jacob deGrom 3.18 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": -0.6,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "The model's defensive-efficiency adjustment leans to the opponent.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Travel/B2B",
+            "impact_pp": -0.38,
+            "tier": "data",
+            "group": "schedule",
+            "detail": "Schedule and travel context weigh on the pick more than the opponent.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+195",
+          "current_odds": "+203",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "A 6.7pp gap: IBP has OAK at 39.7%, the market at 33.2%.",
+          "whats_driving_it": "The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself.",
+          "what_pushes_back": "The main pushback is home field (~-1.1pp): TEX's home-field context weighs against the pick playing on the road. With a headwind that size, this is not a clean all-signal read.",
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current +203 still sits inside the playable range (to +180).",
+          "route_to_win": "This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed.",
+          "read": "This is mostly a price play; the baseball case is mixed."
+        },
+        "read_label": "This is mostly a price play; the baseball case is mixed.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": null,
+          "top_positive_pp": null,
+          "top_negative_label": "Home field",
+          "top_negative_pp": -1.05,
+          "has_primary_driver": false,
+          "has_material_headwind": true,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 0
+        },
+        "prose": "A 6.7pp gap: IBP has OAK at 39.7%, the market at 33.2%. The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself. The main pushback is home field (~-1.1pp): TEX's home-field context weighs against the pick playing on the road. With a headwind that size, this is not a clean all-signal read. The price has held roughly steady since posting \u2014 the current +203 still sits inside the playable range (to +180). This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed."
+      },
+      "run_line": {
+        "spread": "+1.5",
+        "model_prob": 0.6047,
+        "fair_odds": "-153",
+        "book_odds": -113,
+        "edge": 0.0742
+      },
+      "total": null,
+      "current_edge": 0.0673,
+      "current_model_prob": 0.3973,
+      "current_refresh_time": "8:03 AM CT \u00b7 Aug 31",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Gage Jump",
+      "current_fair_odds": "+152",
+      "current_playable_to": 180,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Home field",
+          "pp": -1.05,
+          "positive": false
+        },
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": -0.98,
+          "positive": false
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": -0.6,
+          "positive": false
+        }
+      ],
+      "model_change": null,
+      "verdict": "\u2b07\ufe0f REDUCED CONF.",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "away_worse_sp_fip",
+      "is_flagged": true,
+      "projected_starter": false
+    },
+    {
+      "game": "MIA @ WSH",
+      "pick": "WSH",
+      "side": "HOME",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Will Dion",
+      "posted_at": "8:03 AM CT",
+      "game_time": "2026-08-31T22:45:00Z",
+      "temp_f": 89.0,
+      "wind_speed_mph": 5.0,
+      "wind_dir_degrees": 90.0,
+      "is_domed": false,
+      "model_prob": 0.5455,
+      "market_prob": 0.4825,
+      "edge": 0.0624,
+      "ev_per_100": 12.92,
+      "odds": 107,
+      "best_odds": 107,
+      "best_book": "DraftKings",
+      "fair_odds": "-120",
+      "playable_to": -102,
+      "break_even": 0.4831,
+      "kelly_units": 1.51,
+      "line_open": 103,
+      "line_current": 103,
+      "odds_history": [
+        {
+          "t": "2026-08-31T13:03",
+          "odds": 107
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 102,
+        "Bovada": -102,
+        "ESPN Bet": 102,
+        "Hard Rock": 105,
+        "BetOnline": 105,
+        "LowVig": 105,
+        "BetMGM": 100,
+        "DraftKings": 107,
+        "BetUS": 106,
+        "Pinnacle": 103,
+        "Novig": 106,
+        "Betway": 100,
+        "ProphetX": 105,
+        "BetRivers": 104,
+        "MyBookie": 102
+      },
+      "pitcher": "Will Dion",
+      "opp_pitcher": "Ryan Gusto",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 0.32
         },
         {
           "label": "Defense (OAA)",
@@ -72,10 +621,10 @@
         }
       ],
       "raw_stats": {
-        "pick_xfip": 4.2,
-        "opp_xfip": 4.085,
-        "pick_oaa": -15,
-        "opp_oaa": 13,
+        "pick_xfip": 4.047,
+        "opp_xfip": 4.383,
+        "pick_oaa": -14,
+        "opp_oaa": 7,
         "pick_bp_pitches": 150,
         "opp_bp_pitches": 150,
         "pick_bp_xfip": 4.35,
@@ -85,24 +634,287 @@
         "pick_xera_pct": null,
         "opp_xera_pct": null,
         "pick_whiff_pct": null,
-        "opp_whiff_pct": 31.0,
+        "opp_whiff_pct": 16.0,
         "pick_kbb_pct": null,
-        "opp_kbb_pct": 0.1408,
+        "opp_kbb_pct": 0.125,
         "pick_bvp_shift": 0.0,
-        "pick_arsenal_fit": 0.0,
-        "opp_arsenal_fit": -0.075,
+        "pick_arsenal_fit": 1.0,
+        "opp_arsenal_fit": -0.2048,
         "pick_lineup_confirmed": false,
         "opp_lineup_confirmed": false,
         "pick_proj_ip": 5.3,
-        "opp_proj_ip": 5.4,
+        "opp_proj_ip": 5.1,
         "pick_era": null,
-        "opp_era": 4.41,
+        "opp_era": 3.98,
         "pick_k_pct": null,
-        "opp_k_pct": 0.2254,
+        "opp_k_pct": 0.1893,
         "ump_name": "",
-        "pick_home_w": 25,
-        "pick_home_l": 46,
-        "pinnacle_ml_open": 205.0,
+        "pick_home_w": 31,
+        "pick_home_l": 39,
+        "pinnacle_ml_open": 103.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 0.974
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.62,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 0.32,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Home field",
+            "pp": 0.27,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": -0.03,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "The model sees WSH as a 54.5% side; the market is pricing 48.2%, leaving a 6.2pp edge. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The main pushback is defense (oaa) (~-0.6pp): MIA defense grades +21 OAA better on the season \u2014 a run-prevention headwind. The price has held roughly steady since posting \u2014 the current +107 still sits inside the playable range (to -102). This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability.",
+      "explanation": {
+        "explanation_type": "price_only_value",
+        "risk_level": "medium",
+        "model_prob": 0.5455,
+        "market_prob": 0.4825,
+        "edge_pp": 6.2,
+        "fair_odds": "-120",
+        "current_odds": "+107",
+        "playable_to": "-102",
+        "positive_drivers": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 0.32,
+            "tier": "data",
+            "group": "pitcher",
+            "detail": "Will Dion 4.05 xFIP vs Ryan Gusto 4.38 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Home field",
+            "impact_pp": 0.27,
+            "tier": "data",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for WSH.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": -0.62,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "MIA defense grades +21 OAA better on the season \u2014 a run-prevention headwind.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+103",
+          "current_odds": "+107",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "The model sees WSH as a 54.5% side; the market is pricing 48.2%, leaving a 6.2pp edge.",
+          "whats_driving_it": "No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market.",
+          "what_pushes_back": "The main pushback is defense (oaa) (~-0.6pp): MIA defense grades +21 OAA better on the season \u2014 a run-prevention headwind.",
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current +107 still sits inside the playable range (to -102).",
+          "route_to_win": "This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability.",
+          "read": "This is mostly a price play; the baseball case is mixed."
+        },
+        "read_label": "This is mostly a price play; the baseball case is mixed.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Pitcher quality (xFIP)",
+          "top_positive_pp": 0.32,
+          "top_negative_label": "Defense (OAA)",
+          "top_negative_pp": -0.62,
+          "has_primary_driver": false,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 2
+        },
+        "prose": "The model sees WSH as a 54.5% side; the market is pricing 48.2%, leaving a 6.2pp edge. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The main pushback is defense (oaa) (~-0.6pp): MIA defense grades +21 OAA better on the season \u2014 a run-prevention headwind. The price has held roughly steady since posting \u2014 the current +107 still sits inside the playable range (to -102). This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability."
+      },
+      "run_line": {
+        "spread": "-1.5",
+        "model_prob": 0.3926,
+        "fair_odds": "+155",
+        "book_odds": null,
+        "edge": null
+      },
+      "total": null,
+      "current_edge": 0.0624,
+      "current_model_prob": 0.5455,
+      "current_refresh_time": "8:03 AM CT \u00b7 Aug 31",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Will Dion",
+      "current_fair_odds": "-120",
+      "current_playable_to": -102,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Defense (OAA)",
+          "pp": -0.62,
+          "positive": false
+        },
+        {
+          "label": "Arsenal fit",
+          "pp": 0.5,
+          "positive": true
+        },
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 0.32,
+          "positive": true
+        }
+      ],
+      "model_change": {
+        "edge_delta": 0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.5455,
+          "market_prob": 0.4825,
+          "edge": 0.0624
+        },
+        "current": {
+          "model_prob": 0.5455,
+          "market_prob": 0.4825,
+          "edge": 0.0624
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": 0.5,
+            "delta_pp": 0.5
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "8:03 AM CT \u00b7 Aug 31"
+      },
+      "verdict": "\u2705 VALUE",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "SF @ ATL",
+      "pick": "SF",
+      "side": "AWAY",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Anthony Molina",
+      "posted_at": "8:03 AM CT",
+      "game_time": "2026-08-31T22:05:00Z",
+      "temp_f": 91.0,
+      "wind_speed_mph": 5.0,
+      "wind_dir_degrees": 45.0,
+      "is_domed": false,
+      "model_prob": 0.4485,
+      "market_prob": 0.3902,
+      "edge": 0.0609,
+      "ev_per_100": 15.71,
+      "odds": 158,
+      "best_odds": 158,
+      "best_book": "ProphetX",
+      "fair_odds": "+123",
+      "playable_to": 145,
+      "break_even": 0.3876,
+      "kelly_units": 1.24,
+      "line_open": 151,
+      "line_current": 151,
+      "odds_history": [
+        {
+          "t": "2026-08-31T13:03",
+          "odds": 158
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 150,
+        "MyBookie": 141,
+        "Betway": 145,
+        "Novig": 156,
+        "Bovada": 145,
+        "BetOnline": 149,
+        "LowVig": 149,
+        "BetMGM": 145,
+        "ESPN Bet": 149,
+        "BetUS": 146,
+        "DraftKings": 153,
+        "Pinnacle": 151,
+        "ProphetX": 158,
+        "BetRivers": 143,
+        "Hard Rock": 150
+      },
+      "pitcher": "Anthony Molina",
+      "opp_pitcher": "Bryce Elder",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Defense (OAA)",
+          "value": -0.025
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 4.244,
+        "opp_xfip": 4.259,
+        "pick_oaa": -17,
+        "opp_oaa": 15,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": null,
+        "opp_whiff_pct": 23.0,
+        "pick_kbb_pct": null,
+        "opp_kbb_pct": 0.1188,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.0,
+        "opp_arsenal_fit": 0.0455,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 5.3,
+        "opp_proj_ip": 5.6,
+        "pick_era": null,
+        "opp_era": 3.95,
+        "pick_k_pct": null,
+        "opp_k_pct": 0.1947,
+        "ump_name": "",
+        "pick_home_w": 23,
+        "pick_home_l": 45,
+        "pinnacle_ml_open": 151.0,
         "pick_bullpen_recent_xfip": null,
         "opp_bullpen_recent_xfip": null,
         "opp_starter_hand": "R",
@@ -118,49 +930,34 @@
             "group": "team"
           },
           {
-            "label": "Day/night",
-            "pp": 0.37,
-            "positive": true,
-            "group": "schedule"
-          },
-          {
             "label": "Home field",
             "pp": -0.27,
             "positive": false,
             "group": "team"
           }
         ],
-        "total_adj_pp": -0.52,
+        "total_adj_pp": -0.89,
         "shrink_note": null,
         "note": "~"
       },
-      "narrative": "IBP makes COL 45.2% fair versus a 32.1% no-vig market price \u2014 a 13.4pp gap. There's no standout starter, lineup, or bullpen signal driving this \u2014 the gap comes from the model's baseline read of the side, not a visible matchup edge. The main pushback is defense (oaa) (~-0.6pp): ATL defense grades +28 OAA better on the season \u2014 a run-prevention headwind. The market has drifted against the pick since posting, widening the available price \u2014 the current +215 still sits inside the playable range (to +143). This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability.",
+      "narrative": "IBP values SF 6.1pp higher than the market \u2014 44.9% model vs 39.0% implied. There's no standout starter, lineup, or bullpen signal driving this \u2014 the gap comes from the model's baseline read of the side, not a visible matchup edge. The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent. The market has drifted against the pick since posting, widening the available price \u2014 the current +158 still sits inside the playable range (to +145). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does.",
       "explanation": {
         "explanation_type": "price_only_value",
         "risk_level": "medium",
-        "model_prob": 0.4517,
-        "market_prob": 0.3208,
-        "edge_pp": 13.4,
-        "fair_odds": "+121",
-        "current_odds": "+215",
-        "playable_to": "+143",
-        "positive_drivers": [
-          {
-            "label": "Day/night",
-            "impact_pp": 0.37,
-            "tier": "data",
-            "group": "schedule",
-            "detail": "Day/night schedule context favors the pick.",
-            "attribution": "log_odds"
-          }
-        ],
+        "model_prob": 0.4485,
+        "market_prob": 0.3902,
+        "edge_pp": 6.1,
+        "fair_odds": "+123",
+        "current_odds": "+158",
+        "playable_to": "+145",
+        "positive_drivers": [],
         "negative_drivers": [
           {
             "label": "Defense (OAA)",
             "impact_pp": -0.62,
             "tier": "secondary",
             "group": "team",
-            "detail": "ATL defense grades +28 OAA better on the season \u2014 a run-prevention headwind.",
+            "detail": "The model's defensive-efficiency adjustment leans to the opponent.",
             "attribution": "log_odds"
           },
           {
@@ -173,504 +970,16 @@
           }
         ],
         "line_movement": {
-          "posted_odds": "+205",
-          "current_odds": "+215",
+          "posted_odds": "+151",
+          "current_odds": "+158",
           "movement_summary": "the market has drifted against the pick since posting, widening the available price"
         },
         "sections": {
-          "edge_thesis": "IBP makes COL 45.2% fair versus a 32.1% no-vig market price \u2014 a 13.4pp gap.",
+          "edge_thesis": "IBP values SF 6.1pp higher than the market \u2014 44.9% model vs 39.0% implied.",
           "whats_driving_it": "There's no standout starter, lineup, or bullpen signal driving this \u2014 the gap comes from the model's baseline read of the side, not a visible matchup edge.",
-          "what_pushes_back": "The main pushback is defense (oaa) (~-0.6pp): ATL defense grades +28 OAA better on the season \u2014 a run-prevention headwind.",
+          "what_pushes_back": "The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent.",
           "bvp_note": null,
-          "betting_note": "The market has drifted against the pick since posting, widening the available price \u2014 the current +215 still sits inside the playable range (to +143).",
-          "route_to_win": "This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability.",
-          "read": "This is mostly a price play; the baseball case is mixed."
-        },
-        "read_label": "This is mostly a price play; the baseball case is mixed.",
-        "drivers_are_approximate": true,
-        "drivers_sum_to_edge": false,
-        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
-        "debug": {
-          "top_positive_label": "Day/night",
-          "top_positive_pp": 0.37,
-          "top_negative_label": "Defense (OAA)",
-          "top_negative_pp": -0.62,
-          "has_primary_driver": false,
-          "has_material_headwind": false,
-          "bvp_present": false,
-          "contains_display_only_drivers": false,
-          "n_positive_core": 1
-        },
-        "prose": "IBP makes COL 45.2% fair versus a 32.1% no-vig market price \u2014 a 13.4pp gap. There's no standout starter, lineup, or bullpen signal driving this \u2014 the gap comes from the model's baseline read of the side, not a visible matchup edge. The main pushback is defense (oaa) (~-0.6pp): ATL defense grades +28 OAA better on the season \u2014 a run-prevention headwind. The market has drifted against the pick since posting, widening the available price \u2014 the current +215 still sits inside the playable range (to +143). This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability."
-      },
-      "run_line": {
-        "spread": "1.5",
-        "model_prob": 0.6939,
-        "fair_odds": "-227",
-        "book_odds": 104,
-        "edge": 0.2037
-      },
-      "total": null,
-      "current_edge": null,
-      "current_model_prob": null,
-      "current_refresh_time": "10:18 PM CT \u00b7 Aug 30",
-      "current_recommendation": null,
-      "current_flipped_team": null,
-      "current_flipped_edge": null,
-      "current_pitcher": null,
-      "current_fair_odds": null,
-      "current_playable_to": null,
-      "current_stale_market_guard": false,
-      "current_lineup_confirmed": null,
-      "current_opp_lineup_confirmed": null,
-      "current_top_factors": [],
-      "model_change": null,
-      "verdict": "\u2705 STRONG",
-      "kelly_multiplier": 1.0,
-      "downgrade_reasons": "",
-      "is_flagged": false,
-      "projected_starter": false
-    },
-    {
-      "game": "CHW @ MIN",
-      "pick": "CHW",
-      "side": "AWAY",
-      "pick_type": "MONEYLINE",
-      "meta": "SP: Jordan Hicks",
-      "posted_at": "8:04 AM CT",
-      "game_time": "2026-08-30T18:10:00Z",
-      "temp_f": 72.0,
-      "wind_speed_mph": 0.0,
-      "wind_dir_degrees": 0.0,
-      "is_domed": true,
-      "model_prob": 0.54,
-      "market_prob": 0.4714,
-      "edge": 0.0661,
-      "ev_per_100": 13.94,
-      "odds": 111,
-      "best_odds": 111,
-      "best_book": "Novig",
-      "fair_odds": "-117",
-      "playable_to": -100,
-      "break_even": 0.4739,
-      "kelly_units": 1.57,
-      "line_open": 108,
-      "line_current": 108,
-      "odds_history": [
-        {
-          "t": "2026-08-30T13:04",
-          "odds": 111
-        },
-        {
-          "t": "2026-08-30T15:16",
-          "odds": 108
-        },
-        {
-          "t": "2026-08-30T17:16",
-          "odds": 108
-        }
-      ],
-      "clv": null,
-      "closing_prob": null,
-      "sharp_movement": false,
-      "steam_move": false,
-      "model_total": null,
-      "market_total": null,
-      "book_odds": {},
-      "pitcher": "Jordan Hicks",
-      "opp_pitcher": "Zebby Matthews",
-      "starter_swapped": false,
-      "factors": [
-        {
-          "label": "Pitcher Quality (xFIP)",
-          "value": 0.25
-        },
-        {
-          "label": "Defense (OAA)",
-          "value": 0.025
-        }
-      ],
-      "raw_stats": {
-        "pick_xfip": 3.973,
-        "opp_xfip": 4.233,
-        "pick_oaa": 10,
-        "opp_oaa": -22,
-        "pick_bp_pitches": 150,
-        "opp_bp_pitches": 150,
-        "pick_bp_xfip": 4.35,
-        "opp_bp_xfip": 4.35,
-        "pick_xera": null,
-        "opp_xera": null,
-        "pick_xera_pct": null,
-        "opp_xera_pct": null,
-        "pick_whiff_pct": 56.0,
-        "opp_whiff_pct": 31.0,
-        "pick_kbb_pct": null,
-        "opp_kbb_pct": 0.1281,
-        "pick_bvp_shift": 0.0,
-        "pick_arsenal_fit": 0.6704,
-        "opp_arsenal_fit": -0.1936,
-        "pick_lineup_confirmed": false,
-        "opp_lineup_confirmed": false,
-        "pick_proj_ip": 5.3,
-        "opp_proj_ip": 5.6,
-        "pick_era": null,
-        "opp_era": 4.86,
-        "pick_k_pct": null,
-        "opp_k_pct": 0.2014,
-        "ump_name": "",
-        "pick_home_w": 31,
-        "pick_home_l": 36,
-        "pinnacle_ml_open": 108.0,
-        "pick_bullpen_recent_xfip": null,
-        "opp_bullpen_recent_xfip": null,
-        "opp_starter_hand": "R",
-        "pick_ops_vs_hand": null,
-        "park_factor": 1.006
-      },
-      "adj_breakdown": {
-        "adjustments": [
-          {
-            "label": "Defense (OAA)",
-            "pp": 0.62,
-            "positive": true,
-            "group": "team"
-          },
-          {
-            "label": "Day/night",
-            "pp": 0.37,
-            "positive": true,
-            "group": "schedule"
-          },
-          {
-            "label": "Pitcher quality (xFIP)",
-            "pp": 0.25,
-            "positive": true,
-            "group": "pitcher"
-          },
-          {
-            "label": "Home field",
-            "pp": -0.2,
-            "positive": false,
-            "group": "team"
-          }
-        ],
-        "total_adj_pp": 1.04,
-        "shrink_note": null,
-        "note": "~"
-      },
-      "narrative": "Model and market disagree on CHW by 6.6pp \u2014 54.0% fair against a 47.1% price. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The price has held roughly steady since posting \u2014 the current +111 still sits inside the playable range (to -100). This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed.",
-      "explanation": {
-        "explanation_type": "price_only_value",
-        "risk_level": "medium",
-        "model_prob": 0.54,
-        "market_prob": 0.4714,
-        "edge_pp": 6.6,
-        "fair_odds": "-117",
-        "current_odds": "+111",
-        "playable_to": "-100",
-        "positive_drivers": [
-          {
-            "label": "Defense (OAA)",
-            "impact_pp": 0.62,
-            "tier": "secondary",
-            "group": "team",
-            "detail": "The model's defensive-efficiency adjustment favors the pick.",
-            "attribution": "log_odds"
-          },
-          {
-            "label": "Day/night",
-            "impact_pp": 0.37,
-            "tier": "data",
-            "group": "schedule",
-            "detail": "Day/night schedule context favors the pick.",
-            "attribution": "log_odds"
-          },
-          {
-            "label": "Pitcher quality (xFIP)",
-            "impact_pp": 0.25,
-            "tier": "data",
-            "group": "pitcher",
-            "detail": "Jordan Hicks 3.97 xFIP vs Zebby Matthews 4.23 xFIP.",
-            "attribution": "display_only"
-          }
-        ],
-        "negative_drivers": [
-          {
-            "label": "Home field",
-            "impact_pp": -0.2,
-            "tier": "data",
-            "group": "team",
-            "detail": "MIN's home-field context weighs against the pick playing on the road.",
-            "attribution": "log_odds"
-          }
-        ],
-        "line_movement": {
-          "posted_odds": "+108",
-          "current_odds": "+111",
-          "movement_summary": "the price has held roughly steady since posting"
-        },
-        "sections": {
-          "edge_thesis": "Model and market disagree on CHW by 6.6pp \u2014 54.0% fair against a 47.1% price.",
-          "whats_driving_it": "No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market.",
-          "what_pushes_back": null,
-          "bvp_note": null,
-          "betting_note": "The price has held roughly steady since posting \u2014 the current +111 still sits inside the playable range (to -100).",
-          "route_to_win": "This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed.",
-          "read": "This is mostly a price play; the baseball case is mixed."
-        },
-        "read_label": "This is mostly a price play; the baseball case is mixed.",
-        "drivers_are_approximate": true,
-        "drivers_sum_to_edge": false,
-        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
-        "debug": {
-          "top_positive_label": "Defense (OAA)",
-          "top_positive_pp": 0.62,
-          "top_negative_label": "Home field",
-          "top_negative_pp": -0.2,
-          "has_primary_driver": false,
-          "has_material_headwind": false,
-          "bvp_present": false,
-          "contains_display_only_drivers": true,
-          "n_positive_core": 3
-        },
-        "prose": "Model and market disagree on CHW by 6.6pp \u2014 54.0% fair against a 47.1% price. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The price has held roughly steady since posting \u2014 the current +111 still sits inside the playable range (to -100). This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed."
-      },
-      "run_line": {
-        "spread": "1.5",
-        "model_prob": 0.7675,
-        "fair_odds": "-330",
-        "book_odds": -185,
-        "edge": 0.1184
-      },
-      "total": null,
-      "current_edge": null,
-      "current_model_prob": null,
-      "current_refresh_time": "10:18 PM CT \u00b7 Aug 30",
-      "current_recommendation": null,
-      "current_flipped_team": null,
-      "current_flipped_edge": null,
-      "current_pitcher": null,
-      "current_fair_odds": null,
-      "current_playable_to": null,
-      "current_stale_market_guard": false,
-      "current_lineup_confirmed": null,
-      "current_opp_lineup_confirmed": null,
-      "current_top_factors": [],
-      "model_change": null,
-      "verdict": "\u2705 VALUE",
-      "kelly_multiplier": 1.0,
-      "downgrade_reasons": "",
-      "is_flagged": false,
-      "projected_starter": false
-    },
-    {
-      "game": "PHI @ LAA",
-      "pick": "LAA",
-      "side": "HOME",
-      "pick_type": "MONEYLINE",
-      "meta": "SP: Yusei Kikuchi",
-      "posted_at": "8:04 AM CT",
-      "game_time": "2026-08-30T20:07:00Z",
-      "temp_f": 87.1,
-      "wind_speed_mph": 6.2,
-      "wind_dir_degrees": 200.0,
-      "is_domed": false,
-      "model_prob": 0.4109,
-      "market_prob": 0.3681,
-      "edge": 0.0459,
-      "ev_per_100": 12.59,
-      "odds": 174,
-      "best_odds": 174,
-      "best_book": "ProphetX",
-      "fair_odds": "+143",
-      "playable_to": 170,
-      "break_even": 0.365,
-      "kelly_units": 0.9,
-      "line_open": 166,
-      "line_current": 166,
-      "odds_history": [
-        {
-          "t": "2026-08-30T13:04",
-          "odds": 174
-        },
-        {
-          "t": "2026-08-30T14:16",
-          "odds": 170
-        },
-        {
-          "t": "2026-08-30T15:16",
-          "odds": 163
-        },
-        {
-          "t": "2026-08-30T18:16",
-          "odds": 165
-        },
-        {
-          "t": "2026-08-30T19:17",
-          "odds": 165
-        }
-      ],
-      "clv": null,
-      "closing_prob": null,
-      "sharp_movement": false,
-      "steam_move": false,
-      "model_total": null,
-      "market_total": null,
-      "book_odds": {},
-      "pitcher": "Yusei Kikuchi",
-      "opp_pitcher": "Zack Wheeler",
-      "starter_swapped": false,
-      "factors": [
-        {
-          "label": "Pitcher Quality (xFIP)",
-          "value": -0.52
-        },
-        {
-          "label": "Defense (OAA)",
-          "value": -0.024
-        }
-      ],
-      "raw_stats": {
-        "pick_xfip": 4.618,
-        "opp_xfip": 4.053,
-        "pick_oaa": -26,
-        "opp_oaa": -10,
-        "pick_bp_pitches": 150,
-        "opp_bp_pitches": 150,
-        "pick_bp_xfip": 4.35,
-        "opp_bp_xfip": 4.35,
-        "pick_xera": null,
-        "opp_xera": null,
-        "pick_xera_pct": null,
-        "opp_xera_pct": null,
-        "pick_whiff_pct": null,
-        "opp_whiff_pct": 87.0,
-        "pick_kbb_pct": 0.1333,
-        "opp_kbb_pct": 0.2204,
-        "pick_bvp_shift": 0.0,
-        "pick_arsenal_fit": -0.2652,
-        "opp_arsenal_fit": 0.7004,
-        "pick_lineup_confirmed": false,
-        "opp_lineup_confirmed": false,
-        "pick_proj_ip": 4.9,
-        "opp_proj_ip": 5.5,
-        "pick_era": 6.25,
-        "opp_era": 3.4,
-        "pick_k_pct": 0.2242,
-        "opp_k_pct": 0.2966,
-        "ump_name": "",
-        "pick_home_w": 29,
-        "pick_home_l": 41,
-        "pinnacle_ml_open": 166.0,
-        "pick_bullpen_recent_xfip": null,
-        "opp_bullpen_recent_xfip": null,
-        "opp_starter_hand": "R",
-        "pick_ops_vs_hand": null,
-        "park_factor": 0.962
-      },
-      "adj_breakdown": {
-        "adjustments": [
-          {
-            "label": "Defense (OAA)",
-            "pp": -0.58,
-            "positive": false,
-            "group": "team"
-          },
-          {
-            "label": "Pitcher quality (xFIP)",
-            "pp": -0.52,
-            "positive": false,
-            "group": "pitcher"
-          },
-          {
-            "label": "Day/night",
-            "pp": -0.36,
-            "positive": false,
-            "group": "schedule"
-          },
-          {
-            "label": "Home field",
-            "pp": 0.19,
-            "positive": true,
-            "group": "team"
-          },
-          {
-            "label": "Starter rest",
-            "pp": 0.17,
-            "positive": true,
-            "group": "schedule"
-          }
-        ],
-        "total_adj_pp": -1.1,
-        "shrink_note": null,
-        "note": "~"
-      },
-      "narrative": "The model prices LAA at 41.1% to win where the no-vig market implies 36.8%, a 4.6pp disagreement. The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself. The main pushback is defense (oaa) (~-0.6pp): PHI defense grades +16 OAA better on the season \u2014 a run-prevention headwind. The market has drifted against the pick since posting, widening the available price \u2014 the current +174 still sits inside the playable range (to +170). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does.",
-      "explanation": {
-        "explanation_type": "price_only_value",
-        "risk_level": "medium",
-        "model_prob": 0.4109,
-        "market_prob": 0.3681,
-        "edge_pp": 4.6,
-        "fair_odds": "+143",
-        "current_odds": "+174",
-        "playable_to": "+170",
-        "positive_drivers": [
-          {
-            "label": "Home field",
-            "impact_pp": 0.19,
-            "tier": "data",
-            "group": "team",
-            "detail": "Home-park and 2026 home-game context add a modest edge for LAA.",
-            "attribution": "log_odds"
-          },
-          {
-            "label": "Starter rest",
-            "impact_pp": 0.17,
-            "tier": "data",
-            "group": "schedule",
-            "detail": "Rest-day alignment favors the pick's starter.",
-            "attribution": "log_odds"
-          }
-        ],
-        "negative_drivers": [
-          {
-            "label": "Defense (OAA)",
-            "impact_pp": -0.58,
-            "tier": "secondary",
-            "group": "team",
-            "detail": "PHI defense grades +16 OAA better on the season \u2014 a run-prevention headwind.",
-            "attribution": "log_odds"
-          },
-          {
-            "label": "Pitcher quality (xFIP)",
-            "impact_pp": -0.52,
-            "tier": "secondary",
-            "group": "pitcher",
-            "detail": "Yusei Kikuchi 4.62 xFIP vs Zack Wheeler 4.05 xFIP.",
-            "attribution": "display_only"
-          },
-          {
-            "label": "Day/night",
-            "impact_pp": -0.36,
-            "tier": "data",
-            "group": "schedule",
-            "detail": "Day/night schedule context leans to the opponent.",
-            "attribution": "log_odds"
-          }
-        ],
-        "line_movement": {
-          "posted_odds": "+166",
-          "current_odds": "+174",
-          "movement_summary": "the market has drifted against the pick since posting, widening the available price"
-        },
-        "sections": {
-          "edge_thesis": "The model prices LAA at 41.1% to win where the no-vig market implies 36.8%, a 4.6pp disagreement.",
-          "whats_driving_it": "The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself.",
-          "what_pushes_back": "The main pushback is defense (oaa) (~-0.6pp): PHI defense grades +16 OAA better on the season \u2014 a run-prevention headwind.",
-          "bvp_note": null,
-          "betting_note": "The market has drifted against the pick since posting, widening the available price \u2014 the current +174 still sits inside the playable range (to +170).",
+          "betting_note": "The market has drifted against the pick since posting, widening the available price \u2014 the current +158 still sits inside the playable range (to +145).",
           "route_to_win": "The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does.",
           "read": "This is mostly a price play; the baseball case is mixed."
         },
@@ -679,40 +988,308 @@
         "drivers_sum_to_edge": false,
         "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
         "debug": {
-          "top_positive_label": "Home field",
-          "top_positive_pp": 0.19,
+          "top_positive_label": null,
+          "top_positive_pp": null,
           "top_negative_label": "Defense (OAA)",
-          "top_negative_pp": -0.58,
+          "top_negative_pp": -0.62,
           "has_primary_driver": false,
           "has_material_headwind": false,
           "bvp_present": false,
-          "contains_display_only_drivers": true,
+          "contains_display_only_drivers": false,
+          "n_positive_core": 0
+        },
+        "prose": "IBP values SF 6.1pp higher than the market \u2014 44.9% model vs 39.0% implied. There's no standout starter, lineup, or bullpen signal driving this \u2014 the gap comes from the model's baseline read of the side, not a visible matchup edge. The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent. The market has drifted against the pick since posting, widening the available price \u2014 the current +158 still sits inside the playable range (to +145). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does."
+      },
+      "run_line": {
+        "spread": "+1.5",
+        "model_prob": 0.6581,
+        "fair_odds": "-192",
+        "book_odds": -138,
+        "edge": 0.0783
+      },
+      "total": null,
+      "current_edge": 0.0609,
+      "current_model_prob": 0.4485,
+      "current_refresh_time": "8:03 AM CT \u00b7 Aug 31",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Anthony Molina",
+      "current_fair_odds": "+123",
+      "current_playable_to": 145,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Defense (OAA)",
+          "pp": -0.62,
+          "positive": false
+        },
+        {
+          "label": "Home field",
+          "pp": -0.27,
+          "positive": false
+        },
+        {
+          "label": "Starter rest",
+          "pp": -0.12,
+          "positive": false
+        }
+      ],
+      "model_change": null,
+      "verdict": "\u2705 VALUE",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "MIL @ CHC",
+      "pick": "CHC",
+      "side": "HOME",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Clay Holmes",
+      "posted_at": "8:03 AM CT",
+      "game_time": "2026-08-31T23:40:00Z",
+      "temp_f": 85.0,
+      "wind_speed_mph": 10.0,
+      "wind_dir_degrees": 225.0,
+      "is_domed": false,
+      "model_prob": 0.5666,
+      "market_prob": 0.5047,
+      "edge": 0.0592,
+      "ev_per_100": 11.67,
+      "odds": -103,
+      "best_odds": -103,
+      "best_book": "ProphetX",
+      "fair_odds": "-131",
+      "playable_to": -111,
+      "break_even": 0.5074,
+      "kelly_units": 1.5,
+      "line_open": -106,
+      "line_current": -106,
+      "odds_history": [
+        {
+          "t": "2026-08-31T13:03",
+          "odds": -103
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": -108,
+        "LowVig": -109,
+        "Novig": -104,
+        "BetOnline": -109,
+        "MyBookie": -108,
+        "Bovada": -113,
+        "Hard Rock": -110,
+        "BetMGM": -115,
+        "ESPN Bet": -111,
+        "DraftKings": -108,
+        "Pinnacle": -106,
+        "Betway": -115,
+        "ProphetX": -103,
+        "BetUS": -109,
+        "BetRivers": -115
+      },
+      "pitcher": "Clay Holmes",
+      "opp_pitcher": "Kyle Harrison",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Home Field",
+          "value": 0.03
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": 0.025
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 3.693,
+        "opp_xfip": 3.738,
+        "pick_oaa": 62,
+        "opp_oaa": 9,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 13.0,
+        "opp_whiff_pct": 79.0,
+        "pick_kbb_pct": 0.099,
+        "opp_kbb_pct": 0.2364,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.025,
+        "opp_arsenal_fit": 0.6572,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 5.6,
+        "opp_proj_ip": 5.0,
+        "pick_era": 2.26,
+        "opp_era": 2.79,
+        "pick_k_pct": 0.1815,
+        "opp_k_pct": 0.3002,
+        "ump_name": "",
+        "pick_home_w": 39,
+        "pick_home_l": 29,
+        "pinnacle_ml_open": -106.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 1.025
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": 0.74,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.61,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 1.35,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Model and market disagree on CHC by 5.9pp \u2014 56.7% fair against a 50.5% price. The largest lift is home field (~+0.7pp): Home-park and 2026 home-game context add a modest edge for CHC. The price has held roughly steady since posting \u2014 the current -103 still sits inside the playable range (to -111). This is value in the number more than the matchup \u2014 the model just makes CHC a better side than the price does.",
+      "explanation": {
+        "explanation_type": "market_dislocation",
+        "risk_level": "medium",
+        "model_prob": 0.5666,
+        "market_prob": 0.5047,
+        "edge_pp": 5.9,
+        "fair_odds": "-131",
+        "current_odds": "-103",
+        "playable_to": "-111",
+        "positive_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": 0.74,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for CHC.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": 0.61,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "The model's defensive-efficiency adjustment favors the pick.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [],
+        "line_movement": {
+          "posted_odds": "-106",
+          "current_odds": "-103",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "Model and market disagree on CHC by 5.9pp \u2014 56.7% fair against a 50.5% price.",
+          "whats_driving_it": "The largest lift is home field (~+0.7pp): Home-park and 2026 home-game context add a modest edge for CHC.",
+          "what_pushes_back": null,
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current -103 still sits inside the playable range (to -111).",
+          "route_to_win": "This is value in the number more than the matchup \u2014 the model just makes CHC a better side than the price does.",
+          "read": "This is a price-driven read more than a matchup edge."
+        },
+        "read_label": "This is a price-driven read more than a matchup edge.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Home field",
+          "top_positive_pp": 0.74,
+          "top_negative_label": null,
+          "top_negative_pp": null,
+          "has_primary_driver": false,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": false,
           "n_positive_core": 2
         },
-        "prose": "The model prices LAA at 41.1% to win where the no-vig market implies 36.8%, a 4.6pp disagreement. The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself. The main pushback is defense (oaa) (~-0.6pp): PHI defense grades +16 OAA better on the season \u2014 a run-prevention headwind. The market has drifted against the pick since posting, widening the available price \u2014 the current +174 still sits inside the playable range (to +170). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does."
+        "prose": "Model and market disagree on CHC by 5.9pp \u2014 56.7% fair against a 50.5% price. The largest lift is home field (~+0.7pp): Home-park and 2026 home-game context add a modest edge for CHC. The price has held roughly steady since posting \u2014 the current -103 still sits inside the playable range (to -111). This is value in the number more than the matchup \u2014 the model just makes CHC a better side than the price does."
       },
       "run_line": {
         "spread": "-1.5",
-        "model_prob": 0.2092,
-        "fair_odds": "+378",
-        "book_odds": null,
-        "edge": null
+        "model_prob": 0.4303,
+        "fair_odds": "+132",
+        "book_odds": 182,
+        "edge": 0.0757
       },
       "total": null,
-      "current_edge": null,
-      "current_model_prob": null,
-      "current_refresh_time": "10:18 PM CT \u00b7 Aug 30",
-      "current_recommendation": null,
+      "current_edge": 0.0592,
+      "current_model_prob": 0.5666,
+      "current_refresh_time": "8:03 AM CT \u00b7 Aug 31",
+      "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": null,
-      "current_fair_odds": null,
-      "current_playable_to": null,
+      "current_pitcher": "Clay Holmes",
+      "current_fair_odds": "-131",
+      "current_playable_to": -111,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": null,
-      "current_opp_lineup_confirmed": null,
-      "current_top_factors": [],
-      "model_change": null,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Home field",
+          "pp": 0.74,
+          "positive": true
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": 0.61,
+          "positive": true
+        },
+        {
+          "label": "Arsenal fit",
+          "pp": -0.49,
+          "positive": false
+        }
+      ],
+      "model_change": {
+        "edge_delta": 0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.5666,
+          "market_prob": 0.5047,
+          "edge": 0.0592
+        },
+        "current": {
+          "model_prob": 0.5666,
+          "market_prob": 0.5047,
+          "edge": 0.0592
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": -0.49,
+            "delta_pp": -0.49
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "8:03 AM CT \u00b7 Aug 31"
+      },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -720,97 +1297,42 @@
       "projected_starter": false
     }
   ],
-  "signal_count": 3,
-  "posted_count": 3,
-  "games_today": 3,
+  "signal_count": 5,
+  "posted_count": 5,
+  "games_today": 12,
   "yesterday_picks": [
-    {
-      "game": "CHW @ MIN",
-      "pick": "CHW",
-      "pitcher": "Erick Fedde",
-      "odds": 113,
-      "edge": 0.0674,
-      "result": "W",
-      "clv": null,
-      "pnl_u": 1.13,
-      "kelly_units": 1.59
-    },
-    {
-      "game": "CIN @ CHC",
-      "pick": "CHC",
-      "pitcher": "Kevin Gausman",
-      "odds": -174,
-      "edge": 0.0419,
-      "result": "W",
-      "clv": null,
-      "pnl_u": 0.57,
-      "kelly_units": 1.43
-    },
-    {
-      "game": "KC @ CLE",
-      "pick": "KC",
-      "pitcher": "Daniel Lynch IV",
-      "odds": 138,
-      "edge": 0.0499,
-      "result": "W",
-      "clv": null,
-      "pnl_u": 1.38,
-      "kelly_units": 1.08
-    },
-    {
-      "game": "HOU @ MET",
-      "pick": "HOU",
-      "pitcher": "Bennett Sousa",
-      "odds": 127,
-      "edge": 0.0495,
-      "result": "L",
-      "clv": null,
-      "pnl_u": -1.0,
-      "kelly_units": 1.11
-    },
     {
       "game": "COL @ ATL",
       "pick": "COL",
-      "pitcher": "Ryan Feltner",
-      "odds": 206,
-      "edge": 0.0847,
+      "pitcher": "Mason Adams",
+      "odds": 215,
+      "edge": 0.1342,
+      "result": "L",
+      "clv": null,
+      "pnl_u": -1.0,
+      "kelly_units": 2.46
+    },
+    {
+      "game": "CHW @ MIN",
+      "pick": "CHW",
+      "pitcher": "Jordan Hicks",
+      "odds": 111,
+      "edge": 0.0661,
       "result": "L",
       "clv": null,
       "pnl_u": -1.0,
       "kelly_units": 1.57
     },
     {
-      "game": "MIA @ WSH",
-      "pick": "WSH",
-      "pitcher": "Cade Cavalli",
-      "odds": -102,
-      "edge": 0.0414,
-      "result": "W",
-      "clv": null,
-      "pnl_u": 0.98,
-      "kelly_units": 1.05
-    },
-    {
-      "game": "BOS @ NYY",
-      "pick": "BOS",
-      "pitcher": "Jake Bennett",
-      "odds": 118,
-      "edge": 0.0686,
-      "result": "W",
-      "clv": null,
-      "pnl_u": 1.18,
-      "kelly_units": 1.58
-    },
-    {
-      "game": "ARI @ SF",
-      "pick": "SF",
-      "pitcher": "Yunior Marte",
-      "odds": 117,
-      "edge": 0.0497,
+      "game": "PHI @ LAA",
+      "pick": "LAA",
+      "pitcher": "Yusei Kikuchi",
+      "odds": 174,
+      "edge": 0.0459,
       "result": "L",
       "clv": null,
       "pnl_u": -1.0,
-      "kelly_units": 1.15
+      "kelly_units": 0.9
     }
   ],
   "correlated_warning": null,
@@ -822,31 +1344,13 @@
     "roi": 0.0488
   },
   "last7": {
-    "wins": 21,
-    "losses": 32,
-    "units": -8.09,
-    "roi": -0.1526,
-    "bets": 53
+    "wins": 18,
+    "losses": 24,
+    "units": -3.66,
+    "roi": -0.0871,
+    "bets": 42
   },
   "week_picks": [
-    {
-      "date": "2026-08-23",
-      "pick": "WSH",
-      "game": "WSH @ MIA",
-      "odds": 145,
-      "edge": 0.063,
-      "result": "L",
-      "pnl_u": -1.0
-    },
-    {
-      "date": "2026-08-23",
-      "pick": "COL",
-      "game": "CLE @ COL",
-      "odds": 156,
-      "edge": 0.072,
-      "result": "L",
-      "pnl_u": -1.0
-    },
     {
       "date": "2026-08-24",
       "pick": "CHC",
