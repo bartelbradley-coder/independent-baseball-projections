@@ -1,7 +1,7 @@
 {
   "date": "2026-09-02",
-  "generated_at": "8:07 AM CT \u00b7 Sep 2",
-  "generated_at_utc": "2026-09-02T13:07:29Z",
+  "generated_at": "9:17 AM CT \u00b7 Sep 2",
+  "generated_at_utc": "2026-09-02T14:17:58Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -33,6 +33,10 @@
         {
           "t": "2026-09-02T13:05",
           "odds": 144
+        },
+        {
+          "t": "2026-09-02T14:17",
+          "odds": 130
         }
       ],
       "clv": null,
@@ -42,21 +46,21 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 130,
-        "Novig": 144,
-        "Betway": 130,
-        "MyBookie": 133,
-        "ESPN Bet": 140,
-        "Hard Rock": 135,
-        "Bovada": 135,
-        "BetRivers": 135,
-        "ProphetX": 142,
-        "DraftKings": 134,
-        "BetMGM": 135,
-        "BetUS": 137,
-        "LowVig": 139,
-        "BetOnline": 139,
-        "Pinnacle": 143
+        "FanDuel": 126,
+        "Novig": 130,
+        "Betway": 125,
+        "MyBookie": 123,
+        "ESPN Bet": 123,
+        "Hard Rock": 125,
+        "Bovada": 123,
+        "BetRivers": 130,
+        "ProphetX": 130,
+        "DraftKings": 119,
+        "BetMGM": 125,
+        "BetUS": 126,
+        "LowVig": 123,
+        "BetOnline": 123,
+        "Pinnacle": 129
       },
       "pitcher": "Brad Lord",
       "opp_pitcher": "Grant Holmes",
@@ -225,19 +229,24 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.1189,
-      "current_model_prob": 0.5287,
-      "current_refresh_time": "8:05 AM CT \u00b7 Sep 2",
+      "current_edge": 0.1123,
+      "current_model_prob": 0.5471,
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 2",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Brad Lord",
-      "current_fair_odds": "-112",
-      "current_playable_to": 105,
+      "current_fair_odds": "-121",
+      "current_playable_to": -103,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
+        {
+          "label": "Lineup quality",
+          "pp": 0.65,
+          "positive": true
+        },
         {
           "label": "Defense (OAA)",
           "pp": -0.62,
@@ -247,37 +256,38 @@
           "label": "Day/night",
           "pp": -0.37,
           "positive": false
-        },
-        {
-          "label": "Arsenal fit",
-          "pp": 0.36,
-          "positive": true
         }
       ],
       "model_change": {
-        "edge_delta": -0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": -0.0066,
+        "model_delta": 0.0184,
+        "market_delta": 0.025,
         "posted": {
           "model_prob": 0.5287,
           "market_prob": 0.4031,
           "edge": 0.1189
         },
         "current": {
-          "model_prob": 0.5287,
-          "market_prob": 0.4031,
-          "edge": 0.1189
+          "model_prob": 0.5471,
+          "market_prob": 0.4281,
+          "edge": 0.1123
         },
         "factor_deltas": [
           {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": 0.65,
+            "delta_pp": 0.65
+          },
+          {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
-            "current_pp": 0.36,
-            "delta_pp": 0.36
+            "current_pp": 0.33,
+            "delta_pp": 0.33
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:05 AM CT \u00b7 Sep 2"
+        "refreshed_at": "9:17 AM CT \u00b7 Sep 2"
       },
       "verdict": "\u2705 STRONG",
       "kelly_multiplier": 1.0,
@@ -314,6 +324,10 @@
         {
           "t": "2026-09-02T13:05",
           "odds": 147
+        },
+        {
+          "t": "2026-09-02T14:17",
+          "odds": 147
         }
       ],
       "clv": null,
@@ -331,11 +345,11 @@
         "Novig": 147,
         "ESPN Bet": 143,
         "Betway": 135,
-        "BetMGM": 135,
+        "BetMGM": 140,
         "Hard Rock": 140,
         "Bovada": 135,
-        "BetRivers": 123,
-        "ProphetX": 146,
+        "BetRivers": 132,
+        "ProphetX": 144,
         "BetUS": 140,
         "Pinnacle": 140
       },
@@ -503,7 +517,7 @@
         "prose": "IBP makes OAK 48.8% fair versus a 40.8% no-vig market price \u2014 a 8.3pp gap. There's no standout starter, lineup, or bullpen signal driving this \u2014 the gap comes from the model's baseline read of the side, not a visible matchup edge. The main pushback is home field (~-1.1pp): TEX's home-field context weighs against the pick playing on the road. With a headwind that size, this is not a clean all-signal read. The market has drifted against the pick since posting, widening the available price \u2014 the current +147 still sits inside the playable range (to +123). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does."
       },
       "run_line": {
-        "spread": "+1.5",
+        "spread": "1.5",
         "model_prob": 0.719,
         "fair_odds": "-256",
         "book_odds": -147,
@@ -512,7 +526,7 @@
       "total": null,
       "current_edge": 0.0832,
       "current_model_prob": 0.4881,
-      "current_refresh_time": "8:05 AM CT \u00b7 Sep 2",
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 2",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -562,9 +576,308 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:05 AM CT \u00b7 Sep 2"
+        "refreshed_at": "9:17 AM CT \u00b7 Sep 2"
       },
       "verdict": "\u2705 STRONG",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "SD @ CIN",
+      "pick": "SD",
+      "side": "AWAY",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Casey Mize",
+      "posted_at": "9:17 AM CT",
+      "game_time": "2026-09-02T16:40:00Z",
+      "temp_f": 91.0,
+      "wind_speed_mph": 5.0,
+      "wind_dir_degrees": 270.0,
+      "is_domed": false,
+      "model_prob": 0.6374,
+      "market_prob": 0.5755,
+      "edge": 0.0541,
+      "ev_per_100": 9.27,
+      "odds": -140,
+      "best_odds": -140,
+      "best_book": "ProphetX",
+      "fair_odds": "-176",
+      "playable_to": -148,
+      "break_even": 0.5833,
+      "kelly_units": 1.62,
+      "line_open": -142,
+      "line_current": -142,
+      "odds_history": [
+        {
+          "t": "2026-09-02T13:05",
+          "odds": -141
+        },
+        {
+          "t": "2026-09-02T14:17",
+          "odds": -140
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": -154,
+        "Novig": -141,
+        "Betway": -160,
+        "MyBookie": -152,
+        "BetOnline": -149,
+        "LowVig": -149,
+        "DraftKings": -157,
+        "ESPN Bet": -152,
+        "BetMGM": -155,
+        "Hard Rock": -155,
+        "Bovada": -149,
+        "BetRivers": -143,
+        "ProphetX": -140,
+        "Pinnacle": -142,
+        "BetUS": -145
+      },
+      "pitcher": "Casey Mize",
+      "opp_pitcher": "Brandon Williamson",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 2.16
+        },
+        {
+          "label": "Home Field",
+          "value": -0.02
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 4.705,
+        "opp_xfip": 7.162,
+        "pick_oaa": 10,
+        "opp_oaa": 1,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 42.0,
+        "opp_whiff_pct": null,
+        "pick_kbb_pct": 0.1547,
+        "opp_kbb_pct": -0.0078,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.3794,
+        "opp_arsenal_fit": -1.0,
+        "pick_lineup_confirmed": true,
+        "opp_lineup_confirmed": true,
+        "pick_proj_ip": 5.2,
+        "opp_proj_ip": 5.1,
+        "pick_era": 3.45,
+        "opp_era": 6.11,
+        "pick_k_pct": 0.2152,
+        "opp_k_pct": 0.1484,
+        "ump_name": "Jacob Metz",
+        "pick_home_w": 32,
+        "pick_home_l": 38,
+        "pinnacle_ml_open": -142.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 1.068
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 2.16,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Lineup quality",
+            "pp": 0.54,
+            "positive": true,
+            "group": "lineup"
+          },
+          {
+            "label": "Home field",
+            "pp": -0.46,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Day/night",
+            "pp": 0.35,
+            "positive": true,
+            "group": "schedule"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.31,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 2.9,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "The model sees SD as a 63.7% side; the market is pricing 57.6%, leaving a 5.4pp edge. The largest lift is pitcher quality (xfip) (~+2.2pp): Casey Mize 4.71 xFIP vs Brandon Williamson 7.16 xFIP. The price has held roughly steady since posting \u2014 the current -140 still sits inside the playable range (to -148). The win condition is pressuring CIN's soft spot before they can settle in.",
+      "explanation": {
+        "explanation_type": "opponent_fade",
+        "risk_level": "medium",
+        "model_prob": 0.6374,
+        "market_prob": 0.5755,
+        "edge_pp": 5.4,
+        "fair_odds": "-176",
+        "current_odds": "-140",
+        "playable_to": "-148",
+        "positive_drivers": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 2.16,
+            "tier": "primary",
+            "group": "pitcher",
+            "detail": "Casey Mize 4.71 xFIP vs Brandon Williamson 7.16 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Lineup quality",
+            "impact_pp": 0.54,
+            "tier": "secondary",
+            "group": "lineup",
+            "detail": "SD projects above its season baseline against this pitcher handedness.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Day/night",
+            "impact_pp": 0.35,
+            "tier": "data",
+            "group": "schedule",
+            "detail": "Day/night schedule context favors the pick.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": 0.31,
+            "tier": "data",
+            "group": "team",
+            "detail": "SD defense grades +9 OAA better on the season \u2014 a run-prevention edge.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": -0.46,
+            "tier": "data",
+            "group": "team",
+            "detail": "CIN's home-field context weighs against the pick playing on the road.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "-142",
+          "current_odds": "-140",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "The model sees SD as a 63.7% side; the market is pricing 57.6%, leaving a 5.4pp edge.",
+          "whats_driving_it": "The largest lift is pitcher quality (xfip) (~+2.2pp): Casey Mize 4.71 xFIP vs Brandon Williamson 7.16 xFIP.",
+          "what_pushes_back": null,
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current -140 still sits inside the playable range (to -148).",
+          "route_to_win": "The win condition is pressuring CIN's soft spot before they can settle in.",
+          "read": "This leans on an opponent weakness."
+        },
+        "read_label": "This leans on an opponent weakness.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Pitcher quality (xFIP)",
+          "top_positive_pp": 2.16,
+          "top_negative_label": "Home field",
+          "top_negative_pp": -0.46,
+          "has_primary_driver": true,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 4
+        },
+        "prose": "The model sees SD as a 63.7% side; the market is pricing 57.6%, leaving a 5.4pp edge. The largest lift is pitcher quality (xfip) (~+2.2pp): Casey Mize 4.71 xFIP vs Brandon Williamson 7.16 xFIP. The price has held roughly steady since posting \u2014 the current -140 still sits inside the playable range (to -148). The win condition is pressuring CIN's soft spot before they can settle in."
+      },
+      "run_line": {
+        "spread": "+1.5",
+        "model_prob": 0.8531,
+        "fair_odds": "-581",
+        "book_odds": null,
+        "edge": null
+      },
+      "total": null,
+      "current_edge": 0.0541,
+      "current_model_prob": 0.6374,
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 2",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Casey Mize",
+      "current_fair_odds": "-176",
+      "current_playable_to": -148,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 2.16,
+          "positive": true
+        },
+        {
+          "label": "Lineup quality",
+          "pp": 0.54,
+          "positive": true
+        },
+        {
+          "label": "Home field",
+          "pp": -0.46,
+          "positive": false
+        }
+      ],
+      "model_change": {
+        "edge_delta": -0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.6374,
+          "market_prob": 0.5755,
+          "edge": 0.0541
+        },
+        "current": {
+          "model_prob": 0.6374,
+          "market_prob": 0.5755,
+          "edge": 0.0541
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": 0.46,
+            "delta_pp": 0.46
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "9:17 AM CT \u00b7 Sep 2"
+      },
+      "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
       "is_flagged": false,
@@ -599,6 +912,10 @@
         {
           "t": "2026-09-02T13:05",
           "odds": 144
+        },
+        {
+          "t": "2026-09-02T14:17",
+          "odds": 146
         }
       ],
       "clv": null,
@@ -609,20 +926,20 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 136,
-        "LowVig": 137,
-        "BetOnline": 137,
+        "LowVig": 138,
+        "BetOnline": 138,
         "MyBookie": 131,
         "DraftKings": 134,
         "Novig": 144,
-        "ESPN Bet": 140,
+        "ESPN Bet": 146,
         "Hard Rock": 135,
         "BetMGM": 135,
-        "Bovada": 133,
-        "BetRivers": 138,
+        "Bovada": 135,
+        "BetRivers": 135,
         "Betway": 130,
         "ProphetX": 144,
-        "Pinnacle": 138,
-        "BetUS": 135
+        "Pinnacle": 140,
+        "BetUS": 136
       },
       "pitcher": "David Peterson",
       "opp_pitcher": "Jacob Misiorowski",
@@ -781,15 +1098,15 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0497,
-      "current_model_prob": 0.4595,
-      "current_refresh_time": "8:05 AM CT \u00b7 Sep 2",
+      "current_edge": 0.0522,
+      "current_model_prob": 0.4587,
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 2",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "David Peterson",
       "current_fair_odds": "+118",
-      "current_playable_to": 138,
+      "current_playable_to": 139,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -801,7 +1118,7 @@
         },
         {
           "label": "Home field",
-          "pp": 0.75,
+          "pp": 0.74,
           "positive": true
         },
         {
@@ -811,18 +1128,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": 0.0025,
+        "model_delta": -0.0008,
+        "market_delta": -0.0033,
         "posted": {
           "model_prob": 0.4595,
           "market_prob": 0.4119,
           "edge": 0.0497
         },
         "current": {
-          "model_prob": 0.4595,
-          "market_prob": 0.4119,
-          "edge": 0.0497
+          "model_prob": 0.4587,
+          "market_prob": 0.4086,
+          "edge": 0.0522
         },
         "factor_deltas": [
           {
@@ -833,7 +1150,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:05 AM CT \u00b7 Sep 2"
+        "refreshed_at": "9:17 AM CT \u00b7 Sep 2"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -870,6 +1187,10 @@
         {
           "t": "2026-09-02T13:05",
           "odds": 150
+        },
+        {
+          "t": "2026-09-02T14:17",
+          "odds": 150
         }
       ],
       "clv": null,
@@ -880,20 +1201,20 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 140,
-        "LowVig": 146,
-        "BetOnline": 146,
-        "MyBookie": 136,
+        "LowVig": 145,
+        "BetOnline": 145,
+        "MyBookie": 138,
         "DraftKings": 141,
         "Novig": 150,
-        "ESPN Bet": 140,
+        "ESPN Bet": 146,
         "BetMGM": 140,
         "Hard Rock": 140,
-        "Bovada": 142,
+        "Bovada": 141,
         "BetRivers": 135,
-        "ProphetX": 148,
+        "ProphetX": 150,
         "Betway": 140,
-        "BetUS": 143,
-        "Pinnacle": 149
+        "BetUS": 142,
+        "Pinnacle": 148
       },
       "pitcher": "Reid Detmers",
       "opp_pitcher": "Cam Schlittler",
@@ -1048,9 +1369,9 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0467,
-      "current_model_prob": 0.4467,
-      "current_refresh_time": "8:05 AM CT \u00b7 Sep 2",
+      "current_edge": 0.0471,
+      "current_model_prob": 0.4471,
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 2",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1078,18 +1399,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": 0.0004,
+        "model_delta": 0.0004,
+        "market_delta": 0.0015,
         "posted": {
           "model_prob": 0.4467,
           "market_prob": 0.3938,
           "edge": 0.0467
         },
         "current": {
-          "model_prob": 0.4467,
-          "market_prob": 0.3938,
-          "edge": 0.0467
+          "model_prob": 0.4471,
+          "market_prob": 0.3953,
+          "edge": 0.0471
         },
         "factor_deltas": [
           {
@@ -1100,7 +1421,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:05 AM CT \u00b7 Sep 2"
+        "refreshed_at": "9:17 AM CT \u00b7 Sep 2"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1116,7 +1437,7 @@
       "meta": "SP: Landen Roupp",
       "posted_at": "8:05 AM CT",
       "game_time": "2026-09-02T22:40:00Z",
-      "temp_f": 88.0,
+      "temp_f": 89.0,
       "wind_speed_mph": 7.0,
       "wind_dir_degrees": 225.0,
       "is_domed": false,
@@ -1137,6 +1458,10 @@
         {
           "t": "2026-09-02T13:05",
           "odds": 143
+        },
+        {
+          "t": "2026-09-02T14:17",
+          "odds": 138
         }
       ],
       "clv": null,
@@ -1147,20 +1472,20 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 128,
-        "MyBookie": 129,
+        "MyBookie": 130,
         "BetOnline": 132,
         "LowVig": 132,
         "DraftKings": 129,
         "Novig": 138,
-        "ESPN Bet": 130,
-        "BetMGM": 125,
+        "ESPN Bet": 137,
+        "BetMGM": 130,
         "Hard Rock": 130,
-        "Bovada": 128,
+        "Bovada": 127,
         "Betway": 125,
-        "ProphetX": 138,
-        "Pinnacle": 134,
-        "BetRivers": 143,
-        "BetUS": 138
+        "ProphetX": 136,
+        "Pinnacle": 133,
+        "BetRivers": 133,
+        "BetUS": 131
       },
       "pitcher": "Landen Roupp",
       "opp_pitcher": "Bubba Chandler",
@@ -1270,16 +1595,16 @@
         "prose": "Model and market disagree on SF by 4.4pp \u2014 45.5% fair against a 41.9% price. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The market has drifted against the pick since posting, widening the available price \u2014 the current +143 still sits inside the playable range (to +141). This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed."
       },
       "run_line": {
-        "spread": "+1.5",
+        "spread": "1.5",
         "model_prob": 0.6526,
         "fair_odds": "-188",
         "book_odds": -152,
         "edge": 0.0494
       },
       "total": null,
-      "current_edge": 0.0437,
-      "current_model_prob": 0.4552,
-      "current_refresh_time": "8:05 AM CT \u00b7 Sep 2",
+      "current_edge": 0.0353,
+      "current_model_prob": 0.4555,
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 2",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1307,18 +1632,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": -0.0084,
+        "model_delta": 0.0003,
+        "market_delta": 0.001,
         "posted": {
           "model_prob": 0.4552,
           "market_prob": 0.4193,
           "edge": 0.0437
         },
         "current": {
-          "model_prob": 0.4552,
-          "market_prob": 0.4193,
-          "edge": 0.0437
+          "model_prob": 0.4555,
+          "market_prob": 0.4203,
+          "edge": 0.0353
         },
         "factor_deltas": [
           {
@@ -1329,7 +1654,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:05 AM CT \u00b7 Sep 2"
+        "refreshed_at": "9:17 AM CT \u00b7 Sep 2"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1338,8 +1663,8 @@
       "projected_starter": false
     }
   ],
-  "signal_count": 5,
-  "posted_count": 5,
+  "signal_count": 6,
+  "posted_count": 6,
   "games_today": 15,
   "yesterday_picks": [
     {
