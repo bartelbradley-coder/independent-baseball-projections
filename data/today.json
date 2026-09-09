@@ -1,9 +1,256 @@
 {
   "date": "2026-09-09",
-  "generated_at": "8:07 AM CT \u00b7 Sep 9",
-  "generated_at_utc": "2026-09-09T13:07:14Z",
+  "generated_at": "9:17 AM CT \u00b7 Sep 9",
+  "generated_at_utc": "2026-09-09T14:17:37Z",
   "no_picks_yet": false,
   "picks": [
+    {
+      "game": "TOR @ OAK",
+      "pick": "OAK",
+      "side": "HOME",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Brady Basso",
+      "posted_at": "9:17 AM CT",
+      "game_time": "2026-09-09T19:05:00Z",
+      "temp_f": 87.0,
+      "wind_speed_mph": 3.0,
+      "wind_dir_degrees": 270.0,
+      "is_domed": false,
+      "model_prob": 0.4743,
+      "market_prob": 0.3734,
+      "edge": 0.0955,
+      "ev_per_100": 25.22,
+      "odds": 164,
+      "best_odds": 164,
+      "best_book": "ProphetX",
+      "fair_odds": "+111",
+      "playable_to": 130,
+      "break_even": 0.3788,
+      "kelly_units": 1.92,
+      "line_open": 161,
+      "line_current": 161,
+      "odds_history": [
+        {
+          "t": "2026-09-09T13:04",
+          "odds": 167
+        },
+        {
+          "t": "2026-09-09T14:17",
+          "odds": 164
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": 150,
+        "Novig": 163,
+        "ProphetX": 164,
+        "ESPN Bet": 150,
+        "Betway": 150,
+        "DraftKings": 153,
+        "Bovada": 150,
+        "Hard Rock": 155,
+        "BetRivers": 150,
+        "BetMGM": 150,
+        "MyBookie": 153,
+        "BetUS": 150,
+        "LowVig": 154,
+        "BetOnline": 154,
+        "Pinnacle": 161
+      },
+      "pitcher": "Brady Basso",
+      "opp_pitcher": "Braydon Fisher",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Home Field",
+          "value": 0.029
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": -0.025
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 4.169,
+        "opp_xfip": 4.103,
+        "pick_oaa": -37,
+        "opp_oaa": 12,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": null,
+        "opp_whiff_pct": 71.0,
+        "pick_kbb_pct": null,
+        "opp_kbb_pct": null,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.3878,
+        "opp_arsenal_fit": 0.1659,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 6.2,
+        "opp_proj_ip": 6.8,
+        "pick_era": null,
+        "opp_era": null,
+        "pick_k_pct": null,
+        "opp_k_pct": null,
+        "ump_name": "",
+        "pick_home_w": 26,
+        "pick_home_l": 45,
+        "pinnacle_ml_open": 161.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 0.932
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Home field",
+            "pp": 0.72,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": -0.62,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Day/night",
+            "pp": -0.37,
+            "positive": false,
+            "group": "schedule"
+          }
+        ],
+        "total_adj_pp": -0.27,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "The model sees OAK as a 47.4% side; the market is pricing 37.3%, leaving a 9.6pp edge. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent. The price has held roughly steady since posting \u2014 the current +164 still sits inside the playable range (to +130). This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed.",
+      "explanation": {
+        "explanation_type": "price_only_value",
+        "risk_level": "medium",
+        "model_prob": 0.4743,
+        "market_prob": 0.3734,
+        "edge_pp": 9.6,
+        "fair_odds": "+111",
+        "current_odds": "+164",
+        "playable_to": "+130",
+        "positive_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": 0.72,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for OAK.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": -0.62,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "The model's defensive-efficiency adjustment leans to the opponent.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Day/night",
+            "impact_pp": -0.37,
+            "tier": "data",
+            "group": "schedule",
+            "detail": "Day/night schedule context leans to the opponent.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "+161",
+          "current_odds": "+164",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "The model sees OAK as a 47.4% side; the market is pricing 37.3%, leaving a 9.6pp edge.",
+          "whats_driving_it": "No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market.",
+          "what_pushes_back": "The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent.",
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current +164 still sits inside the playable range (to +130).",
+          "route_to_win": "This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed.",
+          "read": "This is mostly a price play; the baseball case is mixed."
+        },
+        "read_label": "This is mostly a price play; the baseball case is mixed.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Home field",
+          "top_positive_pp": 0.72,
+          "top_negative_label": "Defense (OAA)",
+          "top_negative_pp": -0.62,
+          "has_primary_driver": false,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": false,
+          "n_positive_core": 1
+        },
+        "prose": "The model sees OAK as a 47.4% side; the market is pricing 37.3%, leaving a 9.6pp edge. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent. The price has held roughly steady since posting \u2014 the current +164 still sits inside the playable range (to +130). This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed."
+      },
+      "run_line": {
+        "spread": "-1.5",
+        "model_prob": 0.3149,
+        "fair_odds": "+218",
+        "book_odds": null,
+        "edge": null
+      },
+      "total": null,
+      "current_edge": 0.0955,
+      "current_model_prob": 0.4743,
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 9",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Brady Basso",
+      "current_fair_odds": "+111",
+      "current_playable_to": 130,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Home field",
+          "pp": 0.72,
+          "positive": true
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": -0.62,
+          "positive": false
+        },
+        {
+          "label": "Day/night",
+          "pp": -0.37,
+          "positive": false
+        }
+      ],
+      "model_change": null,
+      "verdict": "\u2705 STRONG",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
     {
       "game": "COL @ NYY",
       "pick": "COL",
@@ -33,6 +280,10 @@
         {
           "t": "2026-09-09T13:04",
           "odds": 223
+        },
+        {
+          "t": "2026-09-09T14:17",
+          "odds": 223
         }
       ],
       "clv": null,
@@ -43,20 +294,20 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 200,
-        "MyBookie": 199,
+        "MyBookie": 202,
         "ESPN Bet": 200,
         "Hard Rock": 210,
         "Novig": 223,
         "Betway": 200,
-        "DraftKings": 203,
+        "DraftKings": 208,
         "ProphetX": 220,
         "LowVig": 213,
         "BetOnline": 213,
         "BetUS": 205,
         "BetMGM": 200,
-        "Bovada": 200,
-        "BetRivers": 215,
-        "Pinnacle": 211
+        "Bovada": 205,
+        "BetRivers": 220,
+        "Pinnacle": 212
       },
       "pitcher": "Tomoyuki Sugano",
       "opp_pitcher": "Will Warren",
@@ -222,16 +473,16 @@
         "prose": "A 8.5pp gap: IBP has COL at 39.5%, the market at 31.5%. The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself. The main pushback is pitcher quality (xfip) (~-1.0pp): Tomoyuki Sugano 5.15 xFIP vs Will Warren 4.07 xFIP. The market has drifted against the pick since posting, widening the available price \u2014 the current +223 still sits inside the playable range (to +182). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does."
       },
       "run_line": {
-        "spread": "+1.5",
+        "spread": "1.5",
         "model_prob": 0.5912,
         "fair_odds": "-145",
         "book_odds": 108,
         "edge": 0.1104
       },
       "total": null,
-      "current_edge": 0.0854,
-      "current_model_prob": 0.395,
-      "current_refresh_time": "8:04 AM CT \u00b7 Sep 9",
+      "current_edge": 0.0851,
+      "current_model_prob": 0.3947,
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 9",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -259,18 +510,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": -0.0003,
+        "model_delta": -0.0003,
+        "market_delta": -0.0013,
         "posted": {
           "model_prob": 0.395,
           "market_prob": 0.3146,
           "edge": 0.0854
         },
         "current": {
-          "model_prob": 0.395,
-          "market_prob": 0.3146,
-          "edge": 0.0854
+          "model_prob": 0.3947,
+          "market_prob": 0.3133,
+          "edge": 0.0851
         },
         "factor_deltas": [
           {
@@ -281,7 +532,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:04 AM CT \u00b7 Sep 9"
+        "refreshed_at": "9:17 AM CT \u00b7 Sep 9"
       },
       "verdict": "\u26a0\ufe0f FLAGGED",
       "kelly_multiplier": 1.0,
@@ -318,6 +569,10 @@
         {
           "t": "2026-09-09T13:04",
           "odds": 167
+        },
+        {
+          "t": "2026-09-09T14:17",
+          "odds": 168
         }
       ],
       "clv": null,
@@ -328,20 +583,20 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": 160,
-        "MyBookie": 149,
+        "MyBookie": 152,
         "LowVig": 163,
         "BetOnline": 163,
         "ESPN Bet": 155,
-        "DraftKings": 142,
+        "DraftKings": 141,
         "Novig": 167,
         "Betway": 145,
-        "Hard Rock": 160,
+        "Hard Rock": 155,
         "BetMGM": 154,
         "Pinnacle": 163,
         "Bovada": 156,
-        "BetRivers": 145,
-        "ProphetX": 166,
-        "BetUS": 159
+        "BetRivers": 140,
+        "ProphetX": 168,
+        "BetUS": 160
       },
       "pitcher": "Jackson Kent",
       "opp_pitcher": "Walker Buehler",
@@ -507,16 +762,16 @@
         "prose": "Model and market disagree on WSH by 8.3pp \u2014 45.7% fair against a 37.2% price. No scored baseball driver clears the bar; the standout context is a pitcher-friendly park (0.92 factor), which the model's run-environment baseline already reflects. The main pushback is defense (oaa) (~-0.6pp): The model's defensive-efficiency adjustment leans to the opponent. The price has held roughly steady since posting \u2014 the current +167 still sits inside the playable range (to +140). This is largely a price play in a notable run environment \u2014 the park/weather context is the backdrop, not a scored matchup edge."
       },
       "run_line": {
-        "spread": "+1.5",
+        "spread": "1.5",
         "model_prob": 0.6853,
         "fair_odds": "-218",
         "book_odds": -132,
         "edge": 0.1163
       },
       "total": null,
-      "current_edge": 0.0827,
+      "current_edge": 0.0841,
       "current_model_prob": 0.4572,
-      "current_refresh_time": "8:04 AM CT \u00b7 Sep 9",
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 9",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -544,7 +799,7 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0,
+        "edge_delta": 0.0014,
         "model_delta": 0.0,
         "market_delta": 0.0,
         "posted": {
@@ -555,7 +810,7 @@
         "current": {
           "model_prob": 0.4572,
           "market_prob": 0.3721,
-          "edge": 0.0827
+          "edge": 0.0841
         },
         "factor_deltas": [
           {
@@ -566,7 +821,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:04 AM CT \u00b7 Sep 9"
+        "refreshed_at": "9:17 AM CT \u00b7 Sep 9"
       },
       "verdict": "\u2705 STRONG",
       "kelly_multiplier": 1.0,
@@ -603,6 +858,10 @@
         {
           "t": "2026-09-09T13:04",
           "odds": 120
+        },
+        {
+          "t": "2026-09-09T14:17",
+          "odds": 120
         }
       ],
       "clv": null,
@@ -615,18 +874,18 @@
         "FanDuel": 112,
         "Novig": 120,
         "Betway": 110,
-        "MyBookie": 110,
-        "BetOnline": 115,
-        "LowVig": 115,
+        "MyBookie": 111,
+        "BetOnline": 118,
+        "LowVig": 118,
         "ESPN Bet": 110,
         "DraftKings": 107,
         "BetMGM": 110,
         "Hard Rock": 110,
-        "ProphetX": 118,
-        "BetUS": 116,
-        "Pinnacle": 116,
+        "ProphetX": 117,
+        "BetUS": 118,
+        "Pinnacle": 117,
         "Bovada": 111,
-        "BetRivers": 118
+        "BetRivers": 110
       },
       "pitcher": "Zebby Matthews",
       "opp_pitcher": "Keider Montero",
@@ -788,26 +1047,31 @@
         "prose": "IBP makes MIN 52.0% fair versus a 45.4% no-vig market price \u2014 a 6.6pp gap. There's no standout starter, lineup, or bullpen signal driving this \u2014 the gap comes from the model's baseline read of the side, not a visible matchup edge. The price has held roughly steady since posting \u2014 the current +120 still sits inside the playable range (to +108). This is mostly a price play \u2014 the model likes the number more than the matchup, so the baseball case is mixed."
       },
       "run_line": {
-        "spread": "+1.5",
+        "spread": "1.5",
         "model_prob": 0.75,
         "fair_odds": "-300",
         "book_odds": -180,
         "edge": 0.1071
       },
       "total": null,
-      "current_edge": 0.066,
-      "current_model_prob": 0.5205,
-      "current_refresh_time": "8:04 AM CT \u00b7 Sep 9",
+      "current_edge": 0.0476,
+      "current_model_prob": 0.5021,
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 9",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Zebby Matthews",
-      "current_fair_odds": "-109",
-      "current_playable_to": 108,
+      "current_fair_odds": "-101",
+      "current_playable_to": 116,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
+        {
+          "label": "Lineup quality",
+          "pp": -0.76,
+          "positive": false
+        },
         {
           "label": "Arsenal fit",
           "pp": -0.5,
@@ -817,28 +1081,29 @@
           "label": "Defense (OAA)",
           "pp": 0.41,
           "positive": true
-        },
-        {
-          "label": "Day/night",
-          "pp": 0.37,
-          "positive": true
         }
       ],
       "model_change": {
-        "edge_delta": -0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": -0.0184,
+        "model_delta": -0.0184,
+        "market_delta": -0.0012,
         "posted": {
           "model_prob": 0.5205,
           "market_prob": 0.4537,
           "edge": 0.066
         },
         "current": {
-          "model_prob": 0.5205,
-          "market_prob": 0.4537,
-          "edge": 0.066
+          "model_prob": 0.5021,
+          "market_prob": 0.4525,
+          "edge": 0.0476
         },
         "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.76,
+            "delta_pp": -0.76
+          },
           {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
@@ -847,7 +1112,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:04 AM CT \u00b7 Sep 9"
+        "refreshed_at": "9:17 AM CT \u00b7 Sep 9"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -884,6 +1149,10 @@
         {
           "t": "2026-09-09T13:04",
           "odds": 135
+        },
+        {
+          "t": "2026-09-09T14:17",
+          "odds": 135
         }
       ],
       "clv": null,
@@ -895,18 +1164,18 @@
       "book_odds": {
         "FanDuel": 132,
         "MyBookie": 129,
-        "Betway": 130,
-        "Novig": 135,
+        "Betway": 125,
+        "Novig": 133,
         "Hard Rock": 135,
         "ESPN Bet": 130,
         "BetRivers": 135,
-        "LowVig": 129,
-        "BetOnline": 129,
-        "DraftKings": 129,
-        "Pinnacle": 130,
+        "LowVig": 128,
+        "BetOnline": 128,
+        "DraftKings": 128,
+        "Pinnacle": 131,
         "Bovada": 125,
         "ProphetX": 134,
-        "BetUS": 128,
+        "BetUS": 127,
         "BetMGM": 125
       },
       "pitcher": "Cody Bradford",
@@ -1073,16 +1342,16 @@
         "prose": "The model sees TEX as a 48.8% side; the market is pricing 42.6%, leaving a 6.3pp edge. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The main pushback is home field (~-1.1pp): SEA's home-field context weighs against the pick playing on the road. With a headwind that size, this is not a clean all-signal read. The price has held roughly steady since posting \u2014 the current +135 still sits inside the playable range (to +123). This isn't a clean all-signal agreement \u2014 it's the model calling the posted number too generous for the true win probability."
       },
       "run_line": {
-        "spread": "+1.5",
+        "spread": "1.5",
         "model_prob": 0.7124,
         "fair_odds": "-248",
         "book_odds": -160,
         "edge": 0.097
       },
       "total": null,
-      "current_edge": 0.0628,
-      "current_model_prob": 0.4883,
-      "current_refresh_time": "8:04 AM CT \u00b7 Sep 9",
+      "current_edge": 0.0625,
+      "current_model_prob": 0.488,
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 9",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1110,18 +1379,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": -0.0003,
+        "model_delta": -0.0003,
+        "market_delta": -0.0011,
         "posted": {
           "model_prob": 0.4883,
           "market_prob": 0.4256,
           "edge": 0.0628
         },
         "current": {
-          "model_prob": 0.4883,
-          "market_prob": 0.4256,
-          "edge": 0.0628
+          "model_prob": 0.488,
+          "market_prob": 0.4245,
+          "edge": 0.0625
         },
         "factor_deltas": [
           {
@@ -1132,7 +1401,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:04 AM CT \u00b7 Sep 9"
+        "refreshed_at": "9:17 AM CT \u00b7 Sep 9"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
@@ -1169,6 +1438,10 @@
         {
           "t": "2026-09-09T13:04",
           "odds": 135
+        },
+        {
+          "t": "2026-09-09T14:17",
+          "odds": 133
         }
       ],
       "clv": null,
@@ -1181,18 +1454,18 @@
         "FanDuel": 126,
         "MyBookie": 128,
         "Betway": 125,
-        "ProphetX": 134,
-        "Novig": 135,
+        "ProphetX": 132,
+        "Novig": 130,
         "ESPN Bet": 130,
         "BetMGM": 125,
         "DraftKings": 129,
         "Hard Rock": 125,
         "LowVig": 133,
         "BetOnline": 133,
-        "BetRivers": 133,
-        "Bovada": 126,
+        "BetRivers": 128,
+        "Bovada": 124,
         "BetUS": 132,
-        "Pinnacle": 131
+        "Pinnacle": 130
       },
       "pitcher": "Lake Bachar",
       "opp_pitcher": "Davis Martin",
@@ -1340,16 +1613,16 @@
         "prose": "The model prices PIT at 48.1% to win where the no-vig market implies 42.2%, a 5.5pp disagreement. No individual baseball factor clears the bar for a headline here \u2014 this is not a single visible mismatch, it is the model pricing the side differently than the market. The main pushback is defense (oaa) (~-0.6pp): CHW defense grades +29 OAA better on the season \u2014 a run-prevention headwind. The price has held roughly steady since posting \u2014 the current +135 still sits inside the playable range (to +127). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does."
       },
       "run_line": {
-        "spread": "+1.5",
+        "spread": "1.5",
         "model_prob": 0.6951,
         "fair_odds": "-228",
         "book_odds": -161,
         "edge": 0.0782
       },
       "total": null,
-      "current_edge": 0.0551,
-      "current_model_prob": 0.4806,
-      "current_refresh_time": "8:04 AM CT \u00b7 Sep 9",
+      "current_edge": 0.0518,
+      "current_model_prob": 0.481,
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 9",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1377,18 +1650,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": -0.0033,
+        "model_delta": 0.0004,
+        "market_delta": 0.0017,
         "posted": {
           "model_prob": 0.4806,
           "market_prob": 0.4225,
           "edge": 0.0551
         },
         "current": {
-          "model_prob": 0.4806,
-          "market_prob": 0.4225,
-          "edge": 0.0551
+          "model_prob": 0.481,
+          "market_prob": 0.4242,
+          "edge": 0.0518
         },
         "factor_deltas": [
           {
@@ -1399,7 +1672,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:04 AM CT \u00b7 Sep 9"
+        "refreshed_at": "9:17 AM CT \u00b7 Sep 9"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1436,6 +1709,10 @@
         {
           "t": "2026-09-09T13:04",
           "odds": 102
+        },
+        {
+          "t": "2026-09-09T14:17",
+          "odds": 113
         }
       ],
       "clv": null,
@@ -1445,21 +1722,21 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -104,
-        "Novig": 100,
-        "ESPN Bet": -105,
-        "Betway": -105,
-        "ProphetX": 102,
-        "MyBookie": -105,
-        "BetMGM": -105,
-        "DraftKings": -105,
-        "Bovada": -104,
+        "FanDuel": 104,
+        "Novig": 111,
+        "ESPN Bet": 105,
+        "Betway": 100,
+        "ProphetX": 113,
+        "MyBookie": 100,
+        "BetMGM": 100,
+        "DraftKings": 100,
+        "Bovada": 101,
         "BetRivers": -103,
-        "LowVig": 100,
-        "BetOnline": 100,
-        "BetUS": 100,
-        "Hard Rock": -105,
-        "Pinnacle": 100
+        "LowVig": 104,
+        "BetOnline": 104,
+        "BetUS": 107,
+        "Hard Rock": 100,
+        "Pinnacle": 112
       },
       "pitcher": "Daniel Lynch IV",
       "opp_pitcher": "Zac Gallen",
@@ -1614,15 +1891,15 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0428,
-      "current_model_prob": 0.5378,
-      "current_refresh_time": "8:04 AM CT \u00b7 Sep 9",
+      "current_edge": 0.0612,
+      "current_model_prob": 0.5307,
+      "current_refresh_time": "9:17 AM CT \u00b7 Sep 9",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Daniel Lynch IV",
-      "current_fair_odds": "-116",
-      "current_playable_to": 101,
+      "current_fair_odds": "-113",
+      "current_playable_to": 104,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -1644,18 +1921,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": 0.0184,
+        "model_delta": -0.0071,
+        "market_delta": -0.0283,
         "posted": {
           "model_prob": 0.5378,
           "market_prob": 0.4884,
           "edge": 0.0428
         },
         "current": {
-          "model_prob": 0.5378,
-          "market_prob": 0.4884,
-          "edge": 0.0428
+          "model_prob": 0.5307,
+          "market_prob": 0.4601,
+          "edge": 0.0612
         },
         "factor_deltas": [
           {
@@ -1666,7 +1943,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:04 AM CT \u00b7 Sep 9"
+        "refreshed_at": "9:17 AM CT \u00b7 Sep 9"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1675,8 +1952,8 @@
       "projected_starter": false
     }
   ],
-  "signal_count": 6,
-  "posted_count": 6,
+  "signal_count": 7,
+  "posted_count": 7,
   "games_today": 15,
   "yesterday_picks": [
     {
