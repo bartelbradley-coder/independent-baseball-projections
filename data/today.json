@@ -1,7 +1,7 @@
 {
   "date": "2026-09-12",
-  "generated_at": "11:17 AM CT \u00b7 Sep 12",
-  "generated_at_utc": "2026-09-12T16:17:43Z",
+  "generated_at": "12:17 PM CT \u00b7 Sep 12",
+  "generated_at_utc": "2026-09-12T17:17:40Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -43,8 +43,8 @@
           "odds": 156
         },
         {
-          "t": "2026-09-12T16:17",
-          "odds": 156
+          "t": "2026-09-12T17:17",
+          "odds": 154
         }
       ],
       "clv": null,
@@ -64,9 +64,9 @@
         "Hard Rock": 145,
         "Bovada": 146,
         "ESPN Bet": 145,
-        "Pinnacle": 156,
+        "Pinnacle": 153,
         "Betway": 145,
-        "BetUS": 146,
+        "BetUS": 147,
         "ProphetX": 154,
         "BetRivers": 148
       },
@@ -241,15 +241,15 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.1063,
-      "current_model_prob": 0.4969,
-      "current_refresh_time": "11:17 AM CT \u00b7 Sep 12",
+      "current_edge": 0.1043,
+      "current_model_prob": 0.498,
+      "current_refresh_time": "12:17 PM CT \u00b7 Sep 12",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Gage Jump",
       "current_fair_odds": "+101",
-      "current_playable_to": 119,
+      "current_playable_to": 118,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -271,18 +271,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.002,
-        "model_delta": -0.002,
-        "market_delta": -0.0083,
+        "edge_delta": -0.004,
+        "model_delta": -0.0009,
+        "market_delta": -0.0035,
         "posted": {
           "model_prob": 0.4989,
           "market_prob": 0.3907,
           "edge": 0.1083
         },
         "current": {
-          "model_prob": 0.4969,
-          "market_prob": 0.3824,
-          "edge": 0.1063
+          "model_prob": 0.498,
+          "market_prob": 0.3872,
+          "edge": 0.1043
         },
         "factor_deltas": [
           {
@@ -293,7 +293,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "11:17 AM CT \u00b7 Sep 12"
+        "refreshed_at": "12:17 PM CT \u00b7 Sep 12"
       },
       "verdict": "\u2705 STRONG",
       "kelly_multiplier": 1.0,
@@ -338,6 +338,10 @@
         {
           "t": "2026-09-12T16:17",
           "odds": 164
+        },
+        {
+          "t": "2026-09-12T17:17",
+          "odds": 166
         }
       ],
       "clv": null,
@@ -355,12 +359,12 @@
         "DraftKings": 153,
         "Hard Rock": 145,
         "Betway": 150,
-        "Bovada": 151,
+        "Bovada": 150,
         "BetMGM": 150,
         "Pinnacle": 158,
         "MyBookie": 154,
         "BetRivers": 148,
-        "ProphetX": 164,
+        "ProphetX": 166,
         "BetUS": 157
       },
       "pitcher": "Cesar Perdomo",
@@ -534,17 +538,17 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.1192,
-      "current_model_prob": 0.498,
-      "current_refresh_time": "11:17 AM CT \u00b7 Sep 12",
+      "current_edge": 0.1105,
+      "current_model_prob": 0.4864,
+      "current_refresh_time": "12:17 PM CT \u00b7 Sep 12",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Cesar Perdomo",
-      "current_fair_odds": "+101",
-      "current_playable_to": 118,
+      "current_fair_odds": "+106",
+      "current_playable_to": 124,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": false,
       "current_top_factors": [
         {
@@ -553,19 +557,19 @@
           "positive": true
         },
         {
-          "label": "Defense (OAA)",
-          "pp": -0.62,
+          "label": "Lineup quality",
+          "pp": -0.82,
           "positive": false
         },
         {
-          "label": "Pitcher quality (xFIP)",
-          "pp": 0.49,
-          "positive": true
+          "label": "Defense (OAA)",
+          "pp": -0.62,
+          "positive": false
         }
       ],
       "model_change": {
-        "edge_delta": 0.0191,
-        "model_delta": -0.0053,
+        "edge_delta": 0.0104,
+        "model_delta": -0.0169,
         "market_delta": -0.0215,
         "posted": {
           "model_prob": 0.5033,
@@ -573,13 +577,26 @@
           "edge": 0.1001
         },
         "current": {
-          "model_prob": 0.498,
+          "model_prob": 0.4864,
           "market_prob": 0.38,
-          "edge": 0.1192
+          "edge": 0.1105
         },
-        "factor_deltas": [],
+        "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.82,
+            "delta_pp": -0.82
+          },
+          {
+            "label": "BvP matchup",
+            "posted_pp": 0.0,
+            "current_pp": 0.25,
+            "delta_pp": 0.25
+          }
+        ],
         "starter_changed": null,
-        "refreshed_at": "11:17 AM CT \u00b7 Sep 12"
+        "refreshed_at": "12:17 PM CT \u00b7 Sep 12"
       },
       "verdict": "\u2705 STRONG",
       "kelly_multiplier": 1.0,
@@ -624,6 +641,10 @@
         {
           "t": "2026-09-12T16:17",
           "odds": 199
+        },
+        {
+          "t": "2026-09-12T17:17",
+          "odds": 200
         }
       ],
       "clv": null,
@@ -638,16 +659,16 @@
         "LowVig": 190,
         "BetOnline": 190,
         "BetMGM": 180,
-        "Novig": 199,
+        "Novig": 194,
         "ESPN Bet": 190,
-        "DraftKings": 183,
+        "DraftKings": 184,
         "Hard Rock": 180,
         "Betway": 175,
         "Bovada": 185,
         "BetUS": 184,
         "Pinnacle": 192,
-        "ProphetX": 196,
-        "BetRivers": 175
+        "ProphetX": 200,
+        "BetRivers": 180
       },
       "pitcher": "Randy Dobnak",
       "opp_pitcher": "Ranger Suarez",
@@ -816,22 +837,22 @@
         "edge": 0.1376
       },
       "total": null,
-      "current_edge": 0.1116,
-      "current_model_prob": 0.446,
-      "current_refresh_time": "11:17 AM CT \u00b7 Sep 12",
+      "current_edge": 0.0868,
+      "current_model_prob": 0.4201,
+      "current_refresh_time": "12:17 PM CT \u00b7 Sep 12",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Randy Dobnak",
-      "current_fair_odds": "+124",
-      "current_playable_to": 146,
+      "current_fair_odds": "+138",
+      "current_playable_to": 163,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": -0.57,
+          "pp": -0.56,
           "positive": false
         },
         {
@@ -846,8 +867,8 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0165,
-        "model_delta": -0.0062,
+        "edge_delta": -0.0083,
+        "model_delta": -0.0321,
         "market_delta": -0.0248,
         "posted": {
           "model_prob": 0.4522,
@@ -855,9 +876,9 @@
           "edge": 0.0951
         },
         "current": {
-          "model_prob": 0.446,
+          "model_prob": 0.4201,
           "market_prob": 0.3351,
-          "edge": 0.1116
+          "edge": 0.0868
         },
         "factor_deltas": [
           {
@@ -868,7 +889,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "11:17 AM CT \u00b7 Sep 12"
+        "refreshed_at": "12:17 PM CT \u00b7 Sep 12"
       },
       "verdict": "\u2705 STRONG",
       "kelly_multiplier": 1.0,
@@ -928,19 +949,19 @@
       "book_odds": {
         "DraftKings": 138,
         "ESPN Bet": 140,
-        "Novig": 144,
+        "Novig": 147,
         "Betway": 140,
         "MyBookie": 140,
-        "ProphetX": 144,
+        "ProphetX": 146,
         "FanDuel": 140,
-        "Bovada": 133,
-        "BetRivers": 135,
+        "Bovada": 134,
+        "BetRivers": 128,
         "BetMGM": 135,
         "LowVig": 145,
         "BetOnline": 145,
         "Hard Rock": 145,
         "BetUS": 142,
-        "Pinnacle": 139
+        "Pinnacle": 140
       },
       "pitcher": "Tanner Gordon",
       "opp_pitcher": "Andrew Sears",
@@ -1109,60 +1130,20 @@
         "edge": 0.133
       },
       "total": null,
-      "current_edge": 0.0756,
-      "current_model_prob": 0.4838,
-      "current_refresh_time": "11:17 AM CT \u00b7 Sep 12",
-      "current_recommendation": "same",
+      "current_edge": null,
+      "current_model_prob": null,
+      "current_refresh_time": "12:17 PM CT \u00b7 Sep 12",
+      "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
-      "current_pitcher": "Tanner Gordon",
-      "current_fair_odds": "+107",
-      "current_playable_to": 125,
+      "current_pitcher": null,
+      "current_fair_odds": null,
+      "current_playable_to": null,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": true,
-      "current_top_factors": [
-        {
-          "label": "Arsenal fit",
-          "pp": -0.5,
-          "positive": false
-        },
-        {
-          "label": "Starter rest",
-          "pp": 0.37,
-          "positive": true
-        },
-        {
-          "label": "Day/night",
-          "pp": 0.37,
-          "positive": true
-        }
-      ],
-      "model_change": {
-        "edge_delta": -0.0107,
-        "model_delta": 0.0099,
-        "market_delta": 0.0245,
-        "posted": {
-          "model_prob": 0.4739,
-          "market_prob": 0.3857,
-          "edge": 0.0863
-        },
-        "current": {
-          "model_prob": 0.4838,
-          "market_prob": 0.4102,
-          "edge": 0.0756
-        },
-        "factor_deltas": [
-          {
-            "label": "Arsenal fit",
-            "posted_pp": 0.0,
-            "current_pp": -0.5,
-            "delta_pp": -0.5
-          }
-        ],
-        "starter_changed": null,
-        "refreshed_at": "11:17 AM CT \u00b7 Sep 12"
-      },
+      "current_lineup_confirmed": null,
+      "current_opp_lineup_confirmed": null,
+      "current_top_factors": [],
+      "model_change": null,
       "verdict": "\u2705 STRONG",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
@@ -1208,8 +1189,8 @@
           "odds": -115
         },
         {
-          "t": "2026-09-12T16:17",
-          "odds": -115
+          "t": "2026-09-12T17:17",
+          "odds": -117
         }
       ],
       "clv": null,
@@ -1219,21 +1200,21 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -122,
+        "FanDuel": -126,
         "LowVig": -123,
         "BetOnline": -123,
         "Betway": -125,
-        "Novig": -115,
+        "Novig": -117,
         "ESPN Bet": -125,
-        "DraftKings": -126,
+        "DraftKings": -132,
         "Hard Rock": -125,
-        "Bovada": -125,
+        "Bovada": -128,
         "BetMGM": -130,
         "BetRivers": -125,
         "BetUS": -123,
         "Pinnacle": -119,
-        "ProphetX": -116,
-        "MyBookie": -124
+        "ProphetX": -118,
+        "MyBookie": -126
       },
       "pitcher": "Clay Holmes",
       "opp_pitcher": "Paul Skenes",
@@ -1420,9 +1401,9 @@
         "edge": 0.0801
       },
       "total": null,
-      "current_edge": 0.0564,
+      "current_edge": 0.0521,
       "current_model_prob": 0.5913,
-      "current_refresh_time": "11:17 AM CT \u00b7 Sep 12",
+      "current_refresh_time": "12:17 PM CT \u00b7 Sep 12",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -1450,7 +1431,7 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0,
+        "edge_delta": -0.0043,
         "model_delta": 0.0,
         "market_delta": 0.0,
         "posted": {
@@ -1461,7 +1442,7 @@
         "current": {
           "model_prob": 0.5913,
           "market_prob": 0.5329,
-          "edge": 0.0564
+          "edge": 0.0521
         },
         "factor_deltas": [
           {
@@ -1472,7 +1453,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "11:17 AM CT \u00b7 Sep 12"
+        "refreshed_at": "12:17 PM CT \u00b7 Sep 12"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1519,8 +1500,8 @@
           "odds": -103
         },
         {
-          "t": "2026-09-12T16:17",
-          "odds": -103
+          "t": "2026-09-12T17:17",
+          "odds": -102
         }
       ],
       "clv": null,
@@ -1531,19 +1512,19 @@
       "market_total": null,
       "book_odds": {
         "FanDuel": -112,
-        "MyBookie": -114,
+        "MyBookie": -111,
         "LowVig": -104,
         "BetOnline": -104,
         "BetMGM": -110,
         "ESPN Bet": -115,
         "Novig": -104,
-        "DraftKings": -112,
+        "DraftKings": -110,
         "Hard Rock": -115,
-        "Bovada": -113,
+        "Bovada": -112,
         "Betway": -110,
-        "Pinnacle": -107,
-        "ProphetX": -103,
-        "BetUS": -104,
+        "Pinnacle": -106,
+        "ProphetX": -102,
+        "BetUS": -105,
         "BetRivers": -114
       },
       "pitcher": "Kyle Leahy",
@@ -1717,15 +1698,15 @@
         "edge": 0.0276
       },
       "total": null,
-      "current_edge": 0.0365,
-      "current_model_prob": 0.5439,
-      "current_refresh_time": "11:17 AM CT \u00b7 Sep 12",
+      "current_edge": 0.0384,
+      "current_model_prob": 0.5433,
+      "current_refresh_time": "12:17 PM CT \u00b7 Sep 12",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Kyle Leahy",
       "current_fair_odds": "-119",
-      "current_playable_to": -102,
+      "current_playable_to": -101,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -1747,18 +1728,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0118,
-        "model_delta": 0.0006,
-        "market_delta": 0.0024,
+        "edge_delta": -0.01,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
         "posted": {
           "model_prob": 0.5433,
           "market_prob": 0.5047,
           "edge": 0.0483
         },
         "current": {
-          "model_prob": 0.5439,
-          "market_prob": 0.5071,
-          "edge": 0.0365
+          "model_prob": 0.5433,
+          "market_prob": 0.5047,
+          "edge": 0.0384
         },
         "factor_deltas": [
           {
@@ -1769,7 +1750,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "11:17 AM CT \u00b7 Sep 12"
+        "refreshed_at": "12:17 PM CT \u00b7 Sep 12"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -1780,7 +1761,7 @@
   ],
   "signal_count": 6,
   "posted_count": 6,
-  "games_today": 15,
+  "games_today": 14,
   "yesterday_picks": [
     {
       "game": "COL @ DET",
