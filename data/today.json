@@ -1,7 +1,7 @@
 {
   "date": "2026-09-18",
-  "generated_at": "2:17 PM CT \u00b7 Sep 18",
-  "generated_at_utc": "2026-09-18T19:17:57Z",
+  "generated_at": "3:17 PM CT \u00b7 Sep 18",
+  "generated_at_utc": "2026-09-18T20:17:12Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -37,6 +37,10 @@
         {
           "t": "2026-09-18T19:17",
           "odds": 277
+        },
+        {
+          "t": "2026-09-18T20:16",
+          "odds": 280
         }
       ],
       "clv": null,
@@ -46,7 +50,7 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "DraftKings": 248,
+        "DraftKings": 247,
         "LowVig": 257,
         "BetOnline": 257,
         "FanDuel": 250,
@@ -55,7 +59,7 @@
         "BetMGM": 240,
         "BetUS": 250,
         "Bovada": 250,
-        "ProphetX": 275,
+        "ProphetX": 280,
         "Pinnacle": 262,
         "Betway": 240,
         "Hard Rock": 240,
@@ -236,9 +240,9 @@
         "edge": 0.1414
       },
       "total": null,
-      "current_edge": 0.115,
+      "current_edge": 0.1171,
       "current_model_prob": 0.3803,
-      "current_refresh_time": "2:17 PM CT \u00b7 Sep 18",
+      "current_refresh_time": "3:16 PM CT \u00b7 Sep 18",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -266,7 +270,7 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0043,
+        "edge_delta": 0.0064,
         "model_delta": -0.0007,
         "market_delta": -0.0032,
         "posted": {
@@ -277,7 +281,7 @@
         "current": {
           "model_prob": 0.3803,
           "market_prob": 0.2698,
-          "edge": 0.115
+          "edge": 0.1171
         },
         "factor_deltas": [
           {
@@ -288,7 +292,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:17 PM CT \u00b7 Sep 18"
+        "refreshed_at": "3:16 PM CT \u00b7 Sep 18"
       },
       "verdict": "\u26a0\ufe0f FLAGGED",
       "kelly_multiplier": 1.0,
@@ -341,6 +345,10 @@
         {
           "t": "2026-09-18T19:17",
           "odds": 172
+        },
+        {
+          "t": "2026-09-18T20:16",
+          "odds": 172
         }
       ],
       "clv": null,
@@ -353,12 +361,12 @@
         "FanDuel": 160,
         "Novig": 170,
         "Betway": 160,
-        "ESPN Bet": 165,
-        "DraftKings": 163,
+        "ESPN Bet": 160,
+        "DraftKings": 159,
         "Hard Rock": 155,
-        "BetMGM": 165,
+        "BetMGM": 154,
         "Bovada": 161,
-        "BetRivers": 155,
+        "BetRivers": 150,
         "ProphetX": 172,
         "BetUS": 162,
         "Pinnacle": 169,
@@ -522,18 +530,18 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0989,
-      "current_model_prob": 0.4665,
-      "current_refresh_time": "2:17 PM CT \u00b7 Sep 18",
+      "current_edge": 0.1067,
+      "current_model_prob": 0.4743,
+      "current_refresh_time": "3:16 PM CT \u00b7 Sep 18",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Gabriel Hughes",
-      "current_fair_odds": "+114",
-      "current_playable_to": 134,
+      "current_fair_odds": "+111",
+      "current_playable_to": 130,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Home field",
@@ -547,12 +555,356 @@
         },
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": -0.6,
+          "pp": -0.59,
           "positive": false
         }
       ],
-      "model_change": null,
+      "model_change": {
+        "edge_delta": 0.0078,
+        "model_delta": 0.0078,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.4665,
+          "market_prob": 0.3641,
+          "edge": 0.0989
+        },
+        "current": {
+          "model_prob": 0.4743,
+          "market_prob": 0.3641,
+          "edge": 0.1067
+        },
+        "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": 0.43,
+            "delta_pp": 0.43
+          },
+          {
+            "label": "BvP matchup",
+            "posted_pp": 0.0,
+            "current_pp": 0.25,
+            "delta_pp": 0.25
+          },
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": -0.25,
+            "delta_pp": -0.25
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "3:16 PM CT \u00b7 Sep 18"
+      },
       "verdict": "\u2705 STRONG",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    },
+    {
+      "game": "PHI @ MET",
+      "pick": "PHI",
+      "side": "AWAY",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Tim Mayza",
+      "posted_at": "3:16 PM CT",
+      "game_time": "2026-09-18T23:15:00Z",
+      "temp_f": 80.0,
+      "wind_speed_mph": 12.0,
+      "wind_dir_degrees": 0.0,
+      "is_domed": false,
+      "model_prob": 0.5529,
+      "market_prob": 0.4976,
+      "edge": 0.0579,
+      "ev_per_100": 11.69,
+      "odds": 102,
+      "best_odds": 102,
+      "best_book": "ProphetX",
+      "fair_odds": "-124",
+      "playable_to": -105,
+      "break_even": 0.495,
+      "kelly_units": 1.43,
+      "line_open": -103,
+      "line_current": -103,
+      "odds_history": [
+        {
+          "t": "2026-09-18T13:04",
+          "odds": 109
+        },
+        {
+          "t": "2026-09-18T14:16",
+          "odds": 106
+        },
+        {
+          "t": "2026-09-18T15:16",
+          "odds": 104
+        },
+        {
+          "t": "2026-09-18T16:16",
+          "odds": 106
+        },
+        {
+          "t": "2026-09-18T17:17",
+          "odds": 103
+        },
+        {
+          "t": "2026-09-18T18:17",
+          "odds": 101
+        },
+        {
+          "t": "2026-09-18T20:16",
+          "odds": 102
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": -104,
+        "Novig": 100,
+        "Betway": -105,
+        "Bovada": -108,
+        "ProphetX": 102,
+        "DraftKings": -107,
+        "ESPN Bet": -105,
+        "BetRivers": -103,
+        "BetMGM": -105,
+        "Hard Rock": -110,
+        "BetUS": -103,
+        "Pinnacle": -103,
+        "BetOnline": 100,
+        "LowVig": 100
+      },
+      "pitcher": "Tim Mayza",
+      "opp_pitcher": "Zac Thornton",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 1.28
+        },
+        {
+          "label": "Home Field",
+          "value": -0.026
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": 0.021
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 3.472,
+        "opp_xfip": 4.836,
+        "pick_oaa": -10,
+        "opp_oaa": -24,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": 39.0,
+        "opp_whiff_pct": 6.0,
+        "pick_kbb_pct": null,
+        "opp_kbb_pct": 0.1331,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 0.5516,
+        "opp_arsenal_fit": -0.2736,
+        "pick_lineup_confirmed": true,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 7.2,
+        "opp_proj_ip": 5.5,
+        "pick_era": null,
+        "opp_era": 3.44,
+        "pick_k_pct": null,
+        "opp_k_pct": 0.1877,
+        "ump_name": "Paul Clemons",
+        "pick_home_w": 44,
+        "pick_home_l": 34,
+        "pinnacle_ml_open": -103.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 0.968
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "pp": 1.28,
+            "positive": true,
+            "group": "pitcher"
+          },
+          {
+            "label": "Home field",
+            "pp": -0.64,
+            "positive": false,
+            "group": "team"
+          },
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.52,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Lineup quality",
+            "pp": 0.39,
+            "positive": true,
+            "group": "lineup"
+          }
+        ],
+        "total_adj_pp": 1.55,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "Model and market disagree on PHI by 5.8pp \u2014 55.3% fair against a 49.8% price. The largest lift is pitcher quality (xfip) (~+1.3pp): Tim Mayza 3.47 xFIP vs Zac Thornton 4.84 xFIP. The main pushback is home field (~-0.6pp): MET's home-field context weighs against the pick playing on the road. The market has drifted against the pick since posting, widening the available price \u2014 the current +102 still sits inside the playable range (to -105). The win condition is five-plus quality innings from Tim Mayza and avoiding early bullpen exposure.",
+      "explanation": {
+        "explanation_type": "starter_mismatch",
+        "risk_level": "medium",
+        "model_prob": 0.5529,
+        "market_prob": 0.4976,
+        "edge_pp": 5.8,
+        "fair_odds": "-124",
+        "current_odds": "+102",
+        "playable_to": "-105",
+        "positive_drivers": [
+          {
+            "label": "Pitcher quality (xFIP)",
+            "impact_pp": 1.28,
+            "tier": "primary",
+            "group": "pitcher",
+            "detail": "Tim Mayza 3.47 xFIP vs Zac Thornton 4.84 xFIP.",
+            "attribution": "display_only"
+          },
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": 0.52,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "PHI defense grades +14 OAA better on the season \u2014 a run-prevention edge.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Lineup quality",
+            "impact_pp": 0.39,
+            "tier": "data",
+            "group": "lineup",
+            "detail": "PHI projects above its season baseline against this pitcher handedness.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "label": "Home field",
+            "impact_pp": -0.64,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "MET's home-field context weighs against the pick playing on the road.",
+            "attribution": "log_odds"
+          }
+        ],
+        "line_movement": {
+          "posted_odds": "-103",
+          "current_odds": "+102",
+          "movement_summary": "the market has drifted against the pick since posting, widening the available price"
+        },
+        "sections": {
+          "edge_thesis": "Model and market disagree on PHI by 5.8pp \u2014 55.3% fair against a 49.8% price.",
+          "whats_driving_it": "The largest lift is pitcher quality (xfip) (~+1.3pp): Tim Mayza 3.47 xFIP vs Zac Thornton 4.84 xFIP.",
+          "what_pushes_back": "The main pushback is home field (~-0.6pp): MET's home-field context weighs against the pick playing on the road.",
+          "bvp_note": null,
+          "betting_note": "The market has drifted against the pick since posting, widening the available price \u2014 the current +102 still sits inside the playable range (to -105).",
+          "route_to_win": "The win condition is five-plus quality innings from Tim Mayza and avoiding early bullpen exposure.",
+          "read": "This is a starting-pitcher edge."
+        },
+        "read_label": "This is a starting-pitcher edge.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Pitcher quality (xFIP)",
+          "top_positive_pp": 1.28,
+          "top_negative_label": "Home field",
+          "top_negative_pp": -0.64,
+          "has_primary_driver": true,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": true,
+          "n_positive_core": 3
+        },
+        "prose": "Model and market disagree on PHI by 5.8pp \u2014 55.3% fair against a 49.8% price. The largest lift is pitcher quality (xfip) (~+1.3pp): Tim Mayza 3.47 xFIP vs Zac Thornton 4.84 xFIP. The main pushback is home field (~-0.6pp): MET's home-field context weighs against the pick playing on the road. The market has drifted against the pick since posting, widening the available price \u2014 the current +102 still sits inside the playable range (to -105). The win condition is five-plus quality innings from Tim Mayza and avoiding early bullpen exposure."
+      },
+      "run_line": {
+        "spread": "+1.5",
+        "model_prob": 0.7803,
+        "fair_odds": "-355",
+        "book_odds": -209,
+        "edge": 0.1039
+      },
+      "total": null,
+      "current_edge": 0.0578,
+      "current_model_prob": 0.5529,
+      "current_refresh_time": "3:16 PM CT \u00b7 Sep 18",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Tim Mayza",
+      "current_fair_odds": "-124",
+      "current_playable_to": -105,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Pitcher quality (xFIP)",
+          "pp": 1.28,
+          "positive": true
+        },
+        {
+          "label": "Home field",
+          "pp": -0.64,
+          "positive": false
+        },
+        {
+          "label": "Defense (OAA)",
+          "pp": 0.52,
+          "positive": true
+        }
+      ],
+      "model_change": {
+        "edge_delta": -0.0001,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.5529,
+          "market_prob": 0.4976,
+          "edge": 0.0579
+        },
+        "current": {
+          "model_prob": 0.5529,
+          "market_prob": 0.4976,
+          "edge": 0.0578
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": 0.49,
+            "delta_pp": 0.49
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "3:16 PM CT \u00b7 Sep 18"
+      },
+      "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
       "is_flagged": false,
@@ -597,8 +949,8 @@
           "odds": -102
         },
         {
-          "t": "2026-09-18T19:17",
-          "odds": -102
+          "t": "2026-09-18T20:16",
+          "odds": -101
         }
       ],
       "clv": null,
@@ -613,7 +965,7 @@
         "LowVig": -110,
         "DraftKings": -115,
         "ESPN Bet": -120,
-        "Novig": -106,
+        "Novig": -104,
         "Hard Rock": -115,
         "Bovada": -115,
         "BetMGM": -115,
@@ -621,7 +973,7 @@
         "BetUS": -108,
         "Betway": -115,
         "BetRivers": -114,
-        "ProphetX": -102
+        "ProphetX": -101
       },
       "pitcher": "Connor Prielipp",
       "opp_pitcher": "Grayson Rodriguez",
@@ -776,14 +1128,14 @@
         "edge": null
       },
       "total": null,
-      "current_edge": 0.0534,
-      "current_model_prob": 0.5583,
-      "current_refresh_time": "2:17 PM CT \u00b7 Sep 18",
+      "current_edge": 0.056,
+      "current_model_prob": 0.5585,
+      "current_refresh_time": "3:16 PM CT \u00b7 Sep 18",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Connor Prielipp",
-      "current_fair_odds": "-126",
+      "current_fair_odds": "-127",
       "current_playable_to": -108,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
@@ -806,18 +1158,18 @@
         }
       ],
       "model_change": {
-        "edge_delta": 0.0043,
-        "model_delta": -0.0006,
-        "market_delta": -0.0035,
+        "edge_delta": 0.0069,
+        "model_delta": -0.0004,
+        "market_delta": -0.0023,
         "posted": {
           "model_prob": 0.5589,
           "market_prob": 0.5094,
           "edge": 0.0491
         },
         "current": {
-          "model_prob": 0.5583,
-          "market_prob": 0.5059,
-          "edge": 0.0534
+          "model_prob": 0.5585,
+          "market_prob": 0.5071,
+          "edge": 0.056
         },
         "factor_deltas": [
           {
@@ -828,7 +1180,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:17 PM CT \u00b7 Sep 18"
+        "refreshed_at": "3:16 PM CT \u00b7 Sep 18"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
@@ -885,6 +1237,10 @@
         {
           "t": "2026-09-18T19:17",
           "odds": -126
+        },
+        {
+          "t": "2026-09-18T20:16",
+          "odds": -130
         }
       ],
       "clv": null,
@@ -894,20 +1250,20 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": -134,
-        "BetOnline": -132,
-        "LowVig": -132,
-        "DraftKings": -136,
+        "FanDuel": -138,
+        "BetOnline": -136,
+        "LowVig": -136,
+        "DraftKings": -137,
         "ESPN Bet": -135,
         "BetMGM": -140,
-        "Novig": -127,
-        "Hard Rock": -135,
-        "Bovada": -138,
+        "Novig": -130,
+        "Hard Rock": -140,
+        "Bovada": -142,
         "Betway": -135,
-        "BetUS": -133,
-        "ProphetX": -126,
-        "Pinnacle": -132,
-        "BetRivers": -141
+        "BetUS": -141,
+        "ProphetX": -130,
+        "Pinnacle": -135,
+        "BetRivers": -148
       },
       "pitcher": "Ian Seymour",
       "opp_pitcher": "Ranger Suarez",
@@ -1076,15 +1432,15 @@
         "edge": 0.0806
       },
       "total": null,
-      "current_edge": 0.0462,
-      "current_model_prob": 0.6037,
-      "current_refresh_time": "2:17 PM CT \u00b7 Sep 18",
+      "current_edge": 0.0399,
+      "current_model_prob": 0.6051,
+      "current_refresh_time": "3:16 PM CT \u00b7 Sep 18",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Ian Seymour",
-      "current_fair_odds": "-152",
-      "current_playable_to": -129,
+      "current_fair_odds": "-153",
+      "current_playable_to": -130,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": true,
       "current_opp_lineup_confirmed": true,
@@ -1113,8 +1469,8 @@
       "projected_starter": false
     }
   ],
-  "signal_count": 4,
-  "posted_count": 4,
+  "signal_count": 5,
+  "posted_count": 5,
   "games_today": 15,
   "yesterday_picks": [
     {
