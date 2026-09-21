@@ -1,7 +1,7 @@
 {
   "date": "2026-09-21",
-  "generated_at": "1:16 PM CT \u00b7 Sep 21",
-  "generated_at_utc": "2026-09-21T18:16:48Z",
+  "generated_at": "2:16 PM CT \u00b7 Sep 21",
+  "generated_at_utc": "2026-09-21T19:16:40Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -13,7 +13,7 @@
       "posted_at": "8:02 AM CT",
       "game_time": "2026-09-21T22:40:00Z",
       "temp_f": 62.0,
-      "wind_speed_mph": 13.0,
+      "wind_speed_mph": 12.0,
       "wind_dir_degrees": 45.0,
       "is_domed": false,
       "model_prob": 0.5032,
@@ -47,7 +47,7 @@
           "odds": 125
         },
         {
-          "t": "2026-09-21T18:16",
+          "t": "2026-09-21T19:16",
           "odds": 125
         }
       ],
@@ -61,7 +61,7 @@
         "FanDuel": 114,
         "Betway": 115,
         "Bovada": 116,
-        "ProphetX": 123,
+        "ProphetX": 124,
         "LowVig": 116,
         "BetOnline": 116,
         "DraftKings": 113,
@@ -69,9 +69,9 @@
         "Hard Rock": 115,
         "BetMGM": 115,
         "ESPN Bet": 115,
-        "Pinnacle": 122,
+        "Pinnacle": 121,
         "MyBookie": 115,
-        "BetUS": 119,
+        "BetUS": 118,
         "Novig": 125
       },
       "pitcher": "DJ Herz",
@@ -209,19 +209,24 @@
         "edge": 0.1155
       },
       "total": null,
-      "current_edge": 0.0631,
-      "current_model_prob": 0.5075,
-      "current_refresh_time": "1:16 PM CT \u00b7 Sep 21",
+      "current_edge": 0.0464,
+      "current_model_prob": 0.4908,
+      "current_refresh_time": "2:16 PM CT \u00b7 Sep 21",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "DJ Herz",
-      "current_fair_odds": "-103",
-      "current_playable_to": 114,
+      "current_fair_odds": "+104",
+      "current_playable_to": 122,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
+        {
+          "label": "Lineup quality",
+          "pp": -0.69,
+          "positive": false
+        },
         {
           "label": "Defense (OAA)",
           "pp": 0.62,
@@ -234,22 +239,29 @@
         }
       ],
       "model_change": {
-        "edge_delta": -0.0164,
-        "model_delta": 0.0043,
-        "market_delta": 0.0174,
+        "edge_delta": -0.0331,
+        "model_delta": -0.0124,
+        "market_delta": 0.0185,
         "posted": {
           "model_prob": 0.5032,
           "market_prob": 0.4245,
           "edge": 0.0795
         },
         "current": {
-          "model_prob": 0.5075,
-          "market_prob": 0.4419,
-          "edge": 0.0631
+          "model_prob": 0.4908,
+          "market_prob": 0.443,
+          "edge": 0.0464
         },
-        "factor_deltas": [],
+        "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.69,
+            "delta_pp": -0.69
+          }
+        ],
         "starter_changed": null,
-        "refreshed_at": "1:16 PM CT \u00b7 Sep 21"
+        "refreshed_at": "2:16 PM CT \u00b7 Sep 21"
       },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
