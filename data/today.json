@@ -1,7 +1,7 @@
 {
   "date": "2026-09-21",
-  "generated_at": "8:04 AM CT \u00b7 Sep 21",
-  "generated_at_utc": "2026-09-21T13:04:14Z",
+  "generated_at": "9:16 AM CT \u00b7 Sep 21",
+  "generated_at_utc": "2026-09-21T14:16:43Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -33,6 +33,10 @@
         {
           "t": "2026-09-21T13:02",
           "odds": 136
+        },
+        {
+          "t": "2026-09-21T14:16",
+          "odds": 124
         }
       ],
       "clv": null,
@@ -42,20 +46,21 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 128,
-        "Betway": 130,
-        "Bovada": 125,
-        "ProphetX": 136,
-        "LowVig": 134,
-        "BetOnline": 134,
-        "DraftKings": 129,
-        "BetRivers": 130,
-        "Hard Rock": 130,
-        "BetMGM": 125,
-        "ESPN Bet": 130,
-        "Pinnacle": 131,
-        "MyBookie": 130,
-        "BetUS": 133
+        "FanDuel": 114,
+        "Betway": 115,
+        "Bovada": 113,
+        "ProphetX": 124,
+        "LowVig": 114,
+        "BetOnline": 114,
+        "DraftKings": 112,
+        "BetRivers": 118,
+        "Hard Rock": 115,
+        "BetMGM": 110,
+        "ESPN Bet": 115,
+        "Pinnacle": 118,
+        "MyBookie": 115,
+        "BetUS": 118,
+        "Novig": 122
       },
       "pitcher": "DJ Herz",
       "opp_pitcher": "River Ryan",
@@ -185,22 +190,22 @@
         "prose": "IBP makes WSH 50.3% fair versus a 42.4% no-vig market price \u2014 a 8.0pp gap. There's no standout starter, lineup, or bullpen signal driving this \u2014 the gap comes from the model's baseline read of the side, not a visible matchup edge. The price has held roughly steady since posting \u2014 the current +136 still sits inside the playable range (to +116). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does."
       },
       "run_line": {
-        "spread": "+1.5",
+        "spread": "1.5",
         "model_prob": 0.7294,
         "fair_odds": "-270",
         "book_odds": -159,
         "edge": 0.1155
       },
       "total": null,
-      "current_edge": 0.0795,
-      "current_model_prob": 0.5032,
-      "current_refresh_time": "8:02 AM CT \u00b7 Sep 21",
+      "current_edge": 0.0631,
+      "current_model_prob": 0.5095,
+      "current_refresh_time": "9:16 AM CT \u00b7 Sep 21",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "DJ Herz",
-      "current_fair_odds": "-101",
-      "current_playable_to": 116,
+      "current_fair_odds": "-104",
+      "current_playable_to": 113,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
       "current_opp_lineup_confirmed": false,
@@ -216,7 +221,24 @@
           "positive": false
         }
       ],
-      "model_change": null,
+      "model_change": {
+        "edge_delta": -0.0164,
+        "model_delta": 0.0063,
+        "market_delta": 0.0252,
+        "posted": {
+          "model_prob": 0.5032,
+          "market_prob": 0.4245,
+          "edge": 0.0795
+        },
+        "current": {
+          "model_prob": 0.5095,
+          "market_prob": 0.4497,
+          "edge": 0.0631
+        },
+        "factor_deltas": [],
+        "starter_changed": null,
+        "refreshed_at": "9:16 AM CT \u00b7 Sep 21"
+      },
       "verdict": "\u2705 VALUE",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
