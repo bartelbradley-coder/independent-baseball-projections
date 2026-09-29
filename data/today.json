@@ -1,7 +1,7 @@
 {
   "date": "2026-09-29",
-  "generated_at": "4:16 PM CT \u00b7 Sep 29",
-  "generated_at_utc": "2026-09-29T21:16:41Z",
+  "generated_at": "5:16 PM CT \u00b7 Sep 29",
+  "generated_at_utc": "2026-09-29T22:16:39Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -201,7 +201,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "4:16 PM CT \u00b7 Sep 29",
+      "current_refresh_time": "5:16 PM CT \u00b7 Sep 29",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -273,21 +273,18 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "DraftKings": 102,
-        "MyBookie": 104,
-        "FanDuel": 102,
-        "ProphetX": 111,
-        "BetRivers": 100,
-        "BetMGM": 100,
-        "Bovada": 103,
-        "Betway": -105,
-        "ESPN Bet": 112,
-        "Novig": 111,
-        "Hard Rock": 105,
-        "BetUS": 108,
-        "Pinnacle": 108,
-        "BetOnline": 107,
-        "LowVig": 107
+        "DraftKings": -508,
+        "MyBookie": -500,
+        "FanDuel": -530,
+        "ProphetX": -440,
+        "BetRivers": -590,
+        "BetMGM": -450,
+        "Bovada": -550,
+        "Betway": -500,
+        "ESPN Bet": -600,
+        "Novig": -471,
+        "Hard Rock": -550,
+        "Pinnacle": -483
       },
       "pitcher": "Hagen Smith",
       "opp_pitcher": "AJ Blubaugh",
@@ -462,7 +459,7 @@
       "total": null,
       "current_edge": null,
       "current_model_prob": null,
-      "current_refresh_time": "4:16 PM CT \u00b7 Sep 29",
+      "current_refresh_time": "5:16 PM CT \u00b7 Sep 29",
       "current_recommendation": null,
       "current_flipped_team": null,
       "current_flipped_edge": null,
@@ -525,6 +522,10 @@
         {
           "t": "2026-09-29T21:16",
           "odds": 122
+        },
+        {
+          "t": "2026-09-29T22:16",
+          "odds": 120
         }
       ],
       "clv": null,
@@ -534,21 +535,21 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 108,
-        "ESPN Bet": 113,
+        "FanDuel": 112,
+        "ESPN Bet": 115,
         "DraftKings": 103,
-        "Betway": 110,
-        "MyBookie": 107,
+        "Betway": 105,
+        "MyBookie": 108,
         "BetMGM": 105,
-        "Bovada": 110,
-        "LowVig": 117,
-        "BetOnline": 117,
+        "Bovada": 109,
+        "LowVig": 118,
+        "BetOnline": 118,
         "Pinnacle": 117,
-        "ProphetX": 122,
-        "BetRivers": 106,
+        "ProphetX": 120,
+        "BetRivers": 102,
         "Novig": 120,
-        "Hard Rock": 105,
-        "BetUS": 111
+        "Hard Rock": 110,
+        "BetUS": 118
       },
       "pitcher": "Matthew Boyd",
       "opp_pitcher": "Michael King",
@@ -682,25 +683,25 @@
         "prose": "A 4.0pp gap: IBP has CHC at 49.1%, the market at 45.2%. The largest lift is defense (oaa) (~+0.6pp): The model's defensive-efficiency adjustment favors the pick. The market has drifted against the pick since posting, widening the available price \u2014 the current +122 still sits inside the playable range (to +122). The edge is the model pricing CHC differently than the market rather than one of the marquee starter/lineup/bullpen buckets \u2014 worth taking at the number, not chasing past it."
       },
       "run_line": {
-        "spread": "+1.5",
+        "spread": "1.5",
         "model_prob": 0.7007,
         "fair_odds": "-234",
         "book_odds": -180,
         "edge": 0.0578
       },
       "total": null,
-      "current_edge": 0.0404,
-      "current_model_prob": 0.4909,
-      "current_refresh_time": "4:16 PM CT \u00b7 Sep 29",
-      "current_recommendation": "same",
+      "current_edge": 0.0125,
+      "current_model_prob": 0.467,
+      "current_refresh_time": "5:16 PM CT \u00b7 Sep 29",
+      "current_recommendation": "reduced",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Matthew Boyd",
-      "current_fair_odds": "+104",
-      "current_playable_to": 122,
+      "current_fair_odds": "+114",
+      "current_playable_to": 134,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Defense (OAA)",
@@ -708,17 +709,41 @@
           "positive": true
         },
         {
-          "label": "Home field",
-          "pp": -0.42,
+          "label": "Lineup quality",
+          "pp": -0.55,
           "positive": false
         },
         {
-          "label": "Starter rest",
-          "pp": -0.12,
+          "label": "Home field",
+          "pp": -0.42,
           "positive": false
         }
       ],
-      "model_change": null,
+      "model_change": {
+        "edge_delta": -0.0279,
+        "model_delta": -0.0239,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.4909,
+          "market_prob": 0.4517,
+          "edge": 0.0404
+        },
+        "current": {
+          "model_prob": 0.467,
+          "market_prob": 0.4517,
+          "edge": 0.0125
+        },
+        "factor_deltas": [
+          {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.55,
+            "delta_pp": -0.55
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "5:16 PM CT \u00b7 Sep 29"
+      },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
       "downgrade_reasons": "",
