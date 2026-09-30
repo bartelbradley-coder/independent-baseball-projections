@@ -1,7 +1,7 @@
 {
   "date": "2026-09-30",
-  "generated_at": "2:17 PM CT \u00b7 Sep 30",
-  "generated_at_utc": "2026-09-30T19:17:11Z",
+  "generated_at": "3:16 PM CT \u00b7 Sep 30",
+  "generated_at_utc": "2026-09-30T20:16:52Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -39,7 +39,7 @@
           "odds": 141
         },
         {
-          "t": "2026-09-30T19:16",
+          "t": "2026-09-30T20:16",
           "odds": 141
         }
       ],
@@ -50,7 +50,7 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "DraftKings": 129,
+        "DraftKings": 124,
         "Novig": 141,
         "Betway": 125,
         "FanDuel": 128,
@@ -251,38 +251,38 @@
         "edge": 0.0552
       },
       "total": null,
-      "current_edge": 0.0589,
-      "current_model_prob": 0.4738,
-      "current_refresh_time": "2:16 PM CT \u00b7 Sep 30",
+      "current_edge": 0.0377,
+      "current_model_prob": 0.4526,
+      "current_refresh_time": "3:16 PM CT \u00b7 Sep 30",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Sean Burke",
-      "current_fair_odds": "+111",
-      "current_playable_to": 131,
+      "current_fair_odds": "+121",
+      "current_playable_to": 142,
       "current_stale_market_guard": false,
       "current_lineup_confirmed": true,
-      "current_opp_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
+          "label": "Lineup quality",
+          "pp": -0.8,
+          "positive": false
+        },
+        {
           "label": "Home field",
-          "pp": -0.75,
+          "pp": -0.74,
           "positive": false
         },
         {
           "label": "Pitcher quality (xFIP)",
-          "pp": -0.68,
+          "pp": -0.67,
           "positive": false
-        },
-        {
-          "label": "Defense (OAA)",
-          "pp": 0.62,
-          "positive": true
         }
       ],
       "model_change": {
-        "edge_delta": 0.0167,
-        "model_delta": 0.0114,
+        "edge_delta": -0.0045,
+        "model_delta": -0.0098,
         "market_delta": 0.0017,
         "posted": {
           "model_prob": 0.4624,
@@ -290,16 +290,22 @@
           "edge": 0.0422
         },
         "current": {
-          "model_prob": 0.4738,
+          "model_prob": 0.4526,
           "market_prob": 0.4203,
-          "edge": 0.0589
+          "edge": 0.0377
         },
         "factor_deltas": [
           {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.8,
+            "delta_pp": -0.8
+          },
+          {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
-            "current_pp": -0.31,
-            "delta_pp": -0.31
+            "current_pp": -0.3,
+            "delta_pp": -0.3
           },
           {
             "label": "BvP matchup",
@@ -309,7 +315,7 @@
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "2:16 PM CT \u00b7 Sep 30"
+        "refreshed_at": "3:16 PM CT \u00b7 Sep 30"
       },
       "verdict": "\ud83d\udfe1 CONDITIONAL",
       "kelly_multiplier": 1.0,
