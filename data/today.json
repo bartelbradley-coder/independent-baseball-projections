@@ -1,11 +1,268 @@
 {
   "date": "2026-10-01",
-  "generated_at": "10:17 AM CT \u00b7 Oct 1",
-  "generated_at_utc": "2026-10-01T15:17:20Z",
-  "no_picks_yet": true,
-  "picks": [],
-  "signal_count": 0,
-  "posted_count": 0,
+  "generated_at": "11:16 AM CT \u00b7 Oct 1",
+  "generated_at_utc": "2026-10-01T16:16:22Z",
+  "no_picks_yet": false,
+  "picks": [
+    {
+      "game": "PHI @ ATL",
+      "pick": "ATL",
+      "side": "HOME",
+      "pick_type": "MONEYLINE",
+      "meta": "SP: Ray Kerr",
+      "posted_at": "11:16 AM CT",
+      "game_time": "2026-10-02T00:00:00Z",
+      "temp_f": 79.0,
+      "wind_speed_mph": 5.0,
+      "wind_dir_degrees": 135.0,
+      "is_domed": false,
+      "model_prob": 0.5444,
+      "market_prob": 0.4953,
+      "edge": 0.0444,
+      "ev_per_100": 8.88,
+      "odds": 100,
+      "best_odds": 100,
+      "best_book": "Novig",
+      "fair_odds": "-119",
+      "playable_to": -102,
+      "break_even": 0.5,
+      "kelly_units": 1.11,
+      "line_open": -102,
+      "line_current": -102,
+      "odds_history": [
+        {
+          "t": "2026-10-01T13:03",
+          "odds": 100
+        },
+        {
+          "t": "2026-10-01T16:16",
+          "odds": 100
+        }
+      ],
+      "clv": null,
+      "closing_prob": null,
+      "sharp_movement": false,
+      "steam_move": false,
+      "model_total": null,
+      "market_total": null,
+      "book_odds": {
+        "FanDuel": -106,
+        "BetMGM": -110,
+        "Bovada": -108,
+        "Novig": 100,
+        "LowVig": -103,
+        "BetOnline": -103,
+        "Hard Rock": -105,
+        "ProphetX": -101,
+        "DraftKings": -108,
+        "Betway": -110,
+        "ESPN Bet": -105,
+        "BetRivers": -112,
+        "MyBookie": -105,
+        "Pinnacle": -102,
+        "BetUS": -103
+      },
+      "pitcher": "Ray Kerr",
+      "opp_pitcher": "Aaron Nola",
+      "starter_swapped": false,
+      "factors": [
+        {
+          "label": "Pitcher Quality (xFIP)",
+          "value": 0.11
+        },
+        {
+          "label": "Defense (OAA)",
+          "value": 0.025
+        }
+      ],
+      "raw_stats": {
+        "pick_xfip": 4.148,
+        "opp_xfip": 4.262,
+        "pick_oaa": 24,
+        "opp_oaa": -17,
+        "pick_bp_pitches": 150,
+        "opp_bp_pitches": 150,
+        "pick_bp_xfip": 4.35,
+        "opp_bp_xfip": 4.35,
+        "pick_xera": null,
+        "opp_xera": null,
+        "pick_xera_pct": null,
+        "opp_xera_pct": null,
+        "pick_whiff_pct": null,
+        "opp_whiff_pct": 64.0,
+        "pick_kbb_pct": null,
+        "opp_kbb_pct": 0.1586,
+        "pick_bvp_shift": 0.0,
+        "pick_arsenal_fit": 1.0,
+        "opp_arsenal_fit": -0.0722,
+        "pick_lineup_confirmed": false,
+        "opp_lineup_confirmed": false,
+        "pick_proj_ip": 5.3,
+        "opp_proj_ip": 5.3,
+        "pick_era": null,
+        "opp_era": 4.67,
+        "pick_k_pct": null,
+        "opp_k_pct": 0.2379,
+        "ump_name": "",
+        "pick_home_w": 52,
+        "pick_home_l": 29,
+        "pinnacle_ml_open": -102.0,
+        "pick_bullpen_recent_xfip": null,
+        "opp_bullpen_recent_xfip": null,
+        "opp_starter_hand": "R",
+        "pick_ops_vs_hand": null,
+        "park_factor": 1.005
+      },
+      "adj_breakdown": {
+        "adjustments": [
+          {
+            "label": "Defense (OAA)",
+            "pp": 0.62,
+            "positive": true,
+            "group": "team"
+          },
+          {
+            "label": "Home field",
+            "pp": 0.27,
+            "positive": true,
+            "group": "team"
+          }
+        ],
+        "total_adj_pp": 0.89,
+        "shrink_note": null,
+        "note": "~"
+      },
+      "narrative": "A 4.4pp gap: IBP has ATL at 54.4%, the market at 49.5%. The largest lift is defense (oaa) (~+0.6pp): The model's defensive-efficiency adjustment favors the pick. The price has held roughly steady since posting \u2014 the current +100 still sits inside the playable range (to -102). This is value in the number more than the matchup \u2014 the model just makes ATL a better side than the price does.",
+      "explanation": {
+        "explanation_type": "market_dislocation",
+        "risk_level": "medium",
+        "model_prob": 0.5444,
+        "market_prob": 0.4953,
+        "edge_pp": 4.4,
+        "fair_odds": "-119",
+        "current_odds": "+100",
+        "playable_to": "-102",
+        "positive_drivers": [
+          {
+            "label": "Defense (OAA)",
+            "impact_pp": 0.62,
+            "tier": "secondary",
+            "group": "team",
+            "detail": "The model's defensive-efficiency adjustment favors the pick.",
+            "attribution": "log_odds"
+          },
+          {
+            "label": "Home field",
+            "impact_pp": 0.27,
+            "tier": "data",
+            "group": "team",
+            "detail": "Home-park and 2026 home-game context add a modest edge for ATL.",
+            "attribution": "log_odds"
+          }
+        ],
+        "negative_drivers": [],
+        "line_movement": {
+          "posted_odds": "-102",
+          "current_odds": "+100",
+          "movement_summary": "the price has held roughly steady since posting"
+        },
+        "sections": {
+          "edge_thesis": "A 4.4pp gap: IBP has ATL at 54.4%, the market at 49.5%.",
+          "whats_driving_it": "The largest lift is defense (oaa) (~+0.6pp): The model's defensive-efficiency adjustment favors the pick.",
+          "what_pushes_back": null,
+          "bvp_note": null,
+          "betting_note": "The price has held roughly steady since posting \u2014 the current +100 still sits inside the playable range (to -102).",
+          "route_to_win": "This is value in the number more than the matchup \u2014 the model just makes ATL a better side than the price does.",
+          "read": "This is a price-driven read more than a matchup edge."
+        },
+        "read_label": "This is a price-driven read more than a matchup edge.",
+        "drivers_are_approximate": true,
+        "drivers_sum_to_edge": false,
+        "attribution_note": "Driver impacts are approximate probability-point contributions and do not sum to the edge.",
+        "debug": {
+          "top_positive_label": "Defense (OAA)",
+          "top_positive_pp": 0.62,
+          "top_negative_label": null,
+          "top_negative_pp": null,
+          "has_primary_driver": false,
+          "has_material_headwind": false,
+          "bvp_present": false,
+          "contains_display_only_drivers": false,
+          "n_positive_core": 2
+        },
+        "prose": "A 4.4pp gap: IBP has ATL at 54.4%, the market at 49.5%. The largest lift is defense (oaa) (~+0.6pp): The model's defensive-efficiency adjustment favors the pick. The price has held roughly steady since posting \u2014 the current +100 still sits inside the playable range (to -102). This is value in the number more than the matchup \u2014 the model just makes ATL a better side than the price does."
+      },
+      "run_line": {
+        "spread": "-1.5",
+        "model_prob": 0.3747,
+        "fair_odds": "+167",
+        "book_odds": null,
+        "edge": null
+      },
+      "total": null,
+      "current_edge": 0.0444,
+      "current_model_prob": 0.5444,
+      "current_refresh_time": "11:16 AM CT \u00b7 Oct 1",
+      "current_recommendation": "same",
+      "current_flipped_team": null,
+      "current_flipped_edge": null,
+      "current_pitcher": "Ray Kerr",
+      "current_fair_odds": "-119",
+      "current_playable_to": -102,
+      "current_stale_market_guard": false,
+      "current_lineup_confirmed": false,
+      "current_opp_lineup_confirmed": false,
+      "current_top_factors": [
+        {
+          "label": "Defense (OAA)",
+          "pp": 0.62,
+          "positive": true
+        },
+        {
+          "label": "Arsenal fit",
+          "pp": 0.5,
+          "positive": true
+        },
+        {
+          "label": "Home field",
+          "pp": 0.27,
+          "positive": true
+        }
+      ],
+      "model_change": {
+        "edge_delta": 0.0,
+        "model_delta": 0.0,
+        "market_delta": 0.0,
+        "posted": {
+          "model_prob": 0.5444,
+          "market_prob": 0.4953,
+          "edge": 0.0444
+        },
+        "current": {
+          "model_prob": 0.5444,
+          "market_prob": 0.4953,
+          "edge": 0.0444
+        },
+        "factor_deltas": [
+          {
+            "label": "Arsenal fit",
+            "posted_pp": 0.0,
+            "current_pp": 0.5,
+            "delta_pp": 0.5
+          }
+        ],
+        "starter_changed": null,
+        "refreshed_at": "11:16 AM CT \u00b7 Oct 1"
+      },
+      "verdict": "\ud83d\udfe1 CONDITIONAL",
+      "kelly_multiplier": 1.0,
+      "downgrade_reasons": "",
+      "is_flagged": false,
+      "projected_starter": false
+    }
+  ],
+  "signal_count": 1,
+  "posted_count": 1,
   "games_today": 1,
   "yesterday_picks": [
     {
