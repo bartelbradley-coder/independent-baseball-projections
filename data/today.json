@@ -1,7 +1,7 @@
 {
   "date": "2026-10-03",
-  "generated_at": "8:05 AM CT \u00b7 Oct 3",
-  "generated_at_utc": "2026-10-03T13:05:44Z",
+  "generated_at": "9:16 AM CT \u00b7 Oct 3",
+  "generated_at_utc": "2026-10-03T14:16:44Z",
   "no_picks_yet": false,
   "picks": [
     {
@@ -33,6 +33,10 @@
         {
           "t": "2026-10-03T13:03",
           "odds": 138
+        },
+        {
+          "t": "2026-10-03T14:16",
+          "odds": 138
         }
       ],
       "clv": null,
@@ -42,12 +46,12 @@
       "model_total": null,
       "market_total": null,
       "book_odds": {
-        "FanDuel": 130,
+        "FanDuel": 128,
         "DraftKings": 124,
         "BetMGM": 125,
-        "BetRivers": 123,
-        "ProphetX": 134,
-        "Bovada": 125,
+        "BetRivers": 138,
+        "ProphetX": 136,
+        "Bovada": 124,
         "MyBookie": 126,
         "ESPN Bet": 130,
         "Betway": 125,
@@ -55,8 +59,8 @@
         "BetOnline": 127,
         "LowVig": 127,
         "BetUS": 126,
-        "Novig": 138,
-        "Pinnacle": 131
+        "Novig": 135,
+        "Pinnacle": 130
       },
       "pitcher": "Hagen Smith",
       "opp_pitcher": "Parker Messick",
@@ -232,25 +236,25 @@
         "prose": "The model prices CHW at 48.2% to win where the no-vig market implies 42.4%, a 6.2pp disagreement. The model isn't leaning on a marquee matchup here \u2014 no single baseball factor rises to a headline; the disagreement is with the posted price itself. The main pushback is home field (~-1.1pp): CLE's home-field context weighs against the pick playing on the road. With a headwind that size, this is not a clean all-signal read. The market has drifted against the pick since posting, widening the available price \u2014 the current +138 still sits inside the playable range (to +126). The read here is the price, not the profile \u2014 the model just makes this a better side than the posted number does."
       },
       "run_line": {
-        "spread": "+1.5",
+        "spread": "1.5",
         "model_prob": 0.7052,
         "fair_odds": "-239",
         "book_odds": -163,
         "edge": 0.0854
       },
       "total": null,
-      "current_edge": 0.0617,
-      "current_model_prob": 0.4819,
-      "current_refresh_time": "8:03 AM CT \u00b7 Oct 3",
+      "current_edge": 0.0357,
+      "current_model_prob": 0.4559,
+      "current_refresh_time": "9:16 AM CT \u00b7 Oct 3",
       "current_recommendation": "same",
       "current_flipped_team": null,
       "current_flipped_edge": null,
       "current_pitcher": "Hagen Smith",
-      "current_fair_odds": "+108",
-      "current_playable_to": 126,
+      "current_fair_odds": "+119",
+      "current_playable_to": 140,
       "current_stale_market_guard": false,
-      "current_lineup_confirmed": false,
-      "current_opp_lineup_confirmed": false,
+      "current_lineup_confirmed": true,
+      "current_opp_lineup_confirmed": true,
       "current_top_factors": [
         {
           "label": "Home field",
@@ -258,40 +262,46 @@
           "positive": false
         },
         {
-          "label": "Pitcher quality (xFIP)",
-          "pp": -0.75,
+          "label": "Lineup quality",
+          "pp": -0.82,
           "positive": false
         },
         {
-          "label": "Arsenal fit",
-          "pp": 0.4,
-          "positive": true
+          "label": "Pitcher quality (xFIP)",
+          "pp": -0.74,
+          "positive": false
         }
       ],
       "model_change": {
-        "edge_delta": 0.0,
-        "model_delta": 0.0,
-        "market_delta": 0.0,
+        "edge_delta": -0.026,
+        "model_delta": -0.026,
+        "market_delta": 0.0018,
         "posted": {
           "model_prob": 0.4819,
           "market_prob": 0.4245,
           "edge": 0.0617
         },
         "current": {
-          "model_prob": 0.4819,
-          "market_prob": 0.4245,
-          "edge": 0.0617
+          "model_prob": 0.4559,
+          "market_prob": 0.4263,
+          "edge": 0.0357
         },
         "factor_deltas": [
           {
+            "label": "Lineup quality",
+            "posted_pp": 0.0,
+            "current_pp": -0.82,
+            "delta_pp": -0.82
+          },
+          {
             "label": "Arsenal fit",
             "posted_pp": 0.0,
-            "current_pp": 0.4,
-            "delta_pp": 0.4
+            "current_pp": 0.39,
+            "delta_pp": 0.39
           }
         ],
         "starter_changed": null,
-        "refreshed_at": "8:03 AM CT \u00b7 Oct 3"
+        "refreshed_at": "9:16 AM CT \u00b7 Oct 3"
       },
       "verdict": "\u2b07\ufe0f REDUCED CONF.",
       "kelly_multiplier": 1.0,
