@@ -1262,3 +1262,39 @@ details[open] .faq-q::after { content: '−'; }
   /* The ≤760 ticket already owns the row layout; just tighten padding on small phones. */
   .pr-row { padding:11px 12px; }
 }
+
+/* Static offseason state; no data or model logic changes. */
+.offseason-notice {
+  width: calc(100% - 48px);
+  max-width: 1052px;
+  margin: 24px auto 0;
+  padding: 22px 24px;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  border-left: 4px solid var(--amber);
+  border-radius: 10px;
+  background: rgba(245, 158, 11, 0.065);
+  color: var(--text);
+}
+.offseason-notice .offseason-date {
+  margin-bottom: 6px;
+  color: var(--amber-lt);
+  font-size: 12px;
+  font-weight: 600;
+}
+.offseason-notice h1, .offseason-notice h2 { margin-bottom: 8px; font-size: 23px; line-height: 1.25; }
+.offseason-notice p { max-width: 80ch; line-height: 1.65; }
+.offseason-notice a { display: inline-block; margin-top: 12px; color: var(--amber-lt); font-weight: 600; }
+/* Override inline live-state display rules while the static archive flag is set. */
+body[data-season-state="offseason"] #email-capture,
+body[data-season-state="offseason"] #refresh-indicator,
+body[data-season-state="offseason"] #status-strip,
+body[data-season-state="offseason"] #corr-warning,
+body[data-season-state="offseason"] #picks-anchor,
+body[data-season-state="offseason"] #marginal-section,
+body[data-season-state="offseason"] #yesterday-recap,
+body[data-season-state="offseason"] #how-to-use,
+body[data-offseason-view="daily"] #main { display: none !important; }
+@media (max-width: 600px) {
+  .offseason-notice { width: calc(100% - 32px); padding: 18px; margin-top: 16px; }
+  .offseason-notice h1, .offseason-notice h2 { font-size: 21px; }
+}

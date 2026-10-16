@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=40">
+<link rel="stylesheet" href="style.css?v=43">
 <link rel="stylesheet" href="index.css?v=6">
 <link rel="stylesheet" href="history.css?v=7">
 <!-- Google tag (gtag.js) -->
@@ -45,7 +45,7 @@
   gtag('config', 'G-DTTFTBVZJN');
 </script>
 </head>
-<body>
+<body data-season-state="offseason">
 <a class="skip-link" href="#main">Skip to content</a>
 
 <nav>
@@ -54,8 +54,8 @@
     <div class="nav-name"><span class="nav-fair">INDEPENDENT BASEBALL</span> <span class="nav-bold">PROJECTIONS</span></div>
   </a>
   <div class="nav-links">
-    <a class="nav-link" href="index.html">Today's Picks</a>
-    <a class="nav-link" href="preview.html">Tomorrow</a>
+    <a class="nav-link" href="index.html">Season Archive</a>
+    <a class="nav-link" href="preview.html">Preview Archive</a>
     <a class="nav-link active" aria-current="page" href="history.html">Pick History</a>
     <a class="nav-link" href="performance.html">Model Dashboard</a>
     <a class="nav-link" href="model.html">Methodology</a>
@@ -69,6 +69,15 @@
     <span id="auto-refresh-pill" class="auto-refresh-pill" style="display:none"><span class="arp-dot pulse"></span>&nbsp;Live</span>
   </div>
 </nav>
+
+<!-- Offseason notice: revert the reviewed offseason presentation change when production is approved to resume. -->
+<section class="offseason-notice" aria-labelledby="offseason-title">
+  <p class="offseason-date">Season archive · <time datetime="2026-10-16">October 16, 2026</time></p>
+  <h2 id="offseason-title">IBP is paused for the offseason.</h2>
+  <p>Daily MLB projections, picks and updates are paused. Historical results remain available. Displayed picks and odds are archived, not current betting recommendations.</p>
+  <a href="history.html">View pick history <span aria-hidden="true">→</span></a>
+</section>
+
 
 <div class="page" id="main" role="main" tabindex="-1">
 

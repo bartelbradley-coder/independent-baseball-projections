@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=42">
+<link rel="stylesheet" href="style.css?v=43">
 <link rel="stylesheet" href="index.css?v=6">
 <style>
 .gen-at { font-size: 11px; color: var(--text-4); margin-bottom: 16px; }
@@ -46,8 +46,8 @@
   gtag('config', 'G-DTTFTBVZJN');
 </script>
 </head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
+<body data-season-state="offseason" data-offseason-view="daily">
+<a class="skip-link" href="#offseason-main">Skip to content</a>
 
 <nav>
   <a class="nav-brand" href="index.html">
@@ -55,8 +55,8 @@
     <div class="nav-name"><span class="nav-fair">INDEPENDENT BASEBALL</span> <span class="nav-bold">PROJECTIONS</span></div>
   </a>
   <div class="nav-links">
-    <a class="nav-link" href="index.html">Today's Picks</a>
-    <a class="nav-link active" aria-current="page" href="preview.html">Tomorrow</a>
+    <a class="nav-link" href="index.html">Season Archive</a>
+    <a class="nav-link active" aria-current="page" href="preview.html">Preview Archive</a>
     <a class="nav-link" href="history.html">Pick History</a>
     <a class="nav-link" href="performance.html">Model Dashboard</a>
     <a class="nav-link" href="model.html">Methodology</a>
@@ -69,6 +69,15 @@
     <span class="nav-updated" id="last-updated">—</span>
   </div>
 </nav>
+
+<!-- Offseason notice: revert the reviewed offseason presentation change when production is approved to resume. -->
+<section class="offseason-notice" id="offseason-main" role="main" tabindex="-1" aria-labelledby="offseason-title">
+  <p class="offseason-date">Season archive · <time datetime="2026-10-16">October 16, 2026</time></p>
+  <h1 id="offseason-title">IBP is paused for the offseason.</h1>
+  <p>Daily MLB projections, picks and updates are paused. Historical results remain available. Displayed picks and odds are archived, not current betting recommendations.</p>
+  <a href="history.html">View pick history <span aria-hidden="true">→</span></a>
+</section>
+
 
 <div class="page" id="main" role="main" tabindex="-1">
 

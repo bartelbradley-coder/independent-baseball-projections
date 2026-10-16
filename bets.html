@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=40">
+<link rel="stylesheet" href="style.css?v=43">
 <link rel="stylesheet" href="bets.css?v=1">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DTTFTBVZJN"></script>
@@ -32,16 +32,16 @@
   gtag('config', 'G-DTTFTBVZJN');
 </script>
 </head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
+<body data-season-state="offseason" data-offseason-view="daily">
+<a class="skip-link" href="#offseason-main">Skip to content</a>
 <nav>
   <a class="nav-brand" href="index.html">
     <div class="nav-logo"><svg width="32" height="32" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg"><circle cx="44" cy="44" r="32" fill="rgba(99,102,241,0.1)"/><circle cx="44" cy="44" r="32" stroke="rgba(255,255,255,0.82)" stroke-width="1.8" fill="none"/><path d="M18,26 Q26,34 19,44 Q13,54 20,62" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M70,26 Q62,34 69,44 Q75,54 68,62" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/><text x="19" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="white">IB</text><text x="44" y="52" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#60a5fa">P</text><line x1="56" y1="60" x2="64" y2="50" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/><circle cx="64" cy="50" r="3.3" fill="#22c55e"/></svg></div>
     <div class="nav-name"><span class="nav-fair">INDEPENDENT BASEBALL</span> <span class="nav-bold">PROJECTIONS</span></div>
   </a>
   <div class="nav-links">
-    <a class="nav-link" href="index.html">Today's Picks</a>
-    <a class="nav-link" href="preview.html">Tomorrow</a>
+    <a class="nav-link" href="index.html">Season Archive</a>
+    <a class="nav-link" href="preview.html">Preview Archive</a>
     <a class="nav-link" href="history.html">Pick History</a>
     <a class="nav-link" href="performance.html">Model Dashboard</a>
     <a class="nav-link" href="model.html">Methodology</a>
@@ -53,6 +53,15 @@
   <div class="nav-right">
   </div>
 </nav>
+
+<!-- Offseason notice: revert the reviewed offseason presentation change when production is approved to resume. -->
+<section class="offseason-notice" id="offseason-main" role="main" tabindex="-1" aria-labelledby="offseason-title">
+  <p class="offseason-date">Season archive · <time datetime="2026-10-16">October 16, 2026</time></p>
+  <h1 id="offseason-title">IBP is paused for the offseason.</h1>
+  <p>Daily MLB projections, picks and updates are paused. Historical results remain available. Displayed picks and odds are archived, not current betting recommendations.</p>
+  <a href="history.html">View pick history <span aria-hidden="true">→</span></a>
+</section>
+
 
 <main class="zk-wrap" id="main" role="main" tabindex="-1">
   <h1>Just Tell Me What To Bet</h1>
